@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Chat Room</title>
+</head>
+<body>
+    <div id="chat-box">
+        <div id="message-area"></div>
+        <form id="message-form">
+            <input type="text" id="message-input" placeholder="Enter your message...">
+            <button type="submit">Send</button>
+        </form>
+    </div>
+
+    <script type="text/javascript">
+        // WebSocket 連線建立
+        var socket = new WebSocket("ws://127.0.0.1:9090/chat");
+
+        // 註冊 WebSocket 事件監聽器
+        socket.onopen = function(event) {
+            console.log("WebSocket connection established.");
+        }
+
+        socket.onmessage = function(event) {
+            var message = event.data;
+            var messageArea = document.getElementById("message-area");
+            messageArea.innerHTML += "<p>" + message + "</p>";
+        }
+
+        // 註冊表單送出事件監聽器
+        var messageForm = document.getElementById("message-form");
+        messageForm.addEventListener("submit", function(event) {
+            event.preventDefault();
+
+            var messageInput = document.getElementById("message-input");
+            var message = messageInput.value;
+            messageInput.value = "";
+
+            socket.send(message);
+        });
+    </script>
+</body>
+</html>

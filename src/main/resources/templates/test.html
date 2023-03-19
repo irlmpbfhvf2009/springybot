@@ -1,0 +1,85 @@
+<!doctype html>
+<html>
+<head>
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+    <script src="https://cdn.bootcss.com/sockjs-client/1.3.0/sockjs.js"></script>
+    <script src="https://cdn.bootcss.com/stomp.js/2.3.3/stomp.js"></script>
+    <style>
+        .box {
+            width: 300px;
+            float: left;
+            margin: 0 20px 0 20px;
+        }
+        .box div, .box input {
+            border: 1px solid;
+            -moz-border-radius: 4px;
+            border-radius: 4px;
+            width: 100%;
+            padding: 0px;
+            margin: 5px;
+        }
+        .box div {
+            border-color: grey;
+            height: 300px;
+            overflow: auto;
+        }
+        .box input {
+            height: 30px;
+        }
+        h1 {
+            margin-left: 30px;
+        }
+        body {
+            background-color: #F0F0F0;
+            font-family: "Arial";
+        }
+    </style>
+</head>
+<body lang="en">
+<h1>Index</h1>
+<div id="first" class="box">
+    <div></div>
+    <input autocomplete="off" value="Type here..."></input>
+    <button onclick="connect()">登陆客户端</button>
+    <button onclick="send()">发送消息</button>
+</div>
+<script>
+    var stompClient = null;
+    var sockjs_url = '/tmax/ws';
+
+    function connect() {
+        var sockjs = new SockJS(sockjs_url);
+        stompClient = Stomp.over(sockjs);
+        stompClient.connect({}, function(frame) {
+            console.log('Connected: ' + frame);
+            stompClient.subscribe('/topic/greetings', function(greeting){
+                console.log("返回内容："+greeting.body);
+                print('服务器：', greeting.body);
+            });
+        });
+    }
+
+    function send() {
+        if(stompClient == null){
+            print('系统提示：', '请先点击客户端登陆');
+            return false;
+        }
+        print('客户端：', inp.val());
+        stompClient.send("/app/top", {}, inp.val());
+        inp.val('');
+    }
+
+    $('#first input').focus();
+    var div  = $('#first div');
+    var inp  = $('#first input');
+
+    var print = function(m, p) {
+        p = (p === undefined) ? '' : p;
+        div.append($("<code>").text(m + ' ' + p));
+        div.append($("<br>"));
+        div.scrollTop(div.scrollTop()+10000);
+    };
+
+</script>
+</body>
+</html>

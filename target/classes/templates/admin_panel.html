@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Admin Panel</title>
+    <link rel="icon" href="data:image/ico;base64,aWNv">
+</head>
+<body>
+    <h1>Welcome to Admin Panel</h1>
+    
+    <!-- Form for sending a message to a user -->
+    <form id="send-message-form">
+        <input type="text" name="senderEmail" placeholder="senderEmail" required>
+        <input type="text" name="message" placeholder="Message" required>
+        <button type="submit">Send</button>
+    </form>
+    
+    <hr>
+    
+    <!-- Table for displaying all chat messages -->
+    <table>
+        <thead>
+            <tr>
+                <th>From</th>
+                <th>To</th>
+                <th>Message</th>
+                <th>Timestamp</th>
+            </tr>
+        </thead>
+        <tbody id="chat-messages">
+        </tbody>
+    </table>
+    
+    <!-- Script for handling the form submission and updating the table -->
+    <script src="https://code.jquery.com/jquery-3.6.3.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            $('#send-message-form').submit(function(event) {
+                event.preventDefault();
+                
+                var formData = {
+                    'senderEmail': $('input[name=senderEmail]').val(),
+                    'message': $('input[name=message]').val()
+                };
+                console.log(formData)
+                $.ajax({
+                    type: 'POST',
+                    url: '/admin/send-message',
+                    data: formData,
+                    dataType: 'json',
+                    encode: true
+                }).done(function(data) {
+                    console.log(data);
+                    $('input[name=userId]').val('');
+                    $('input[name=message]').val('');
+                });
+            });
+            
+            var socket = new WebSocket('ws://' + window.location.host + '/chat');
+            
+            socket.onmessage = function(event) {
+                var chatMessage = JSON.parse(event.data);
+                console.log(chatMessage);
+                
+                var tableRow = '<tr>' +
+                    '<td>' + chatMessage.fromUser.username + '</td>' +
+                    '<td>' + chatMessage.toUser.username + '</td>' +
+                    '<td>' + chatMessage.content + '</td>' +
+                    '<td>' + chatMessage.timestamp + '</td>' +
+                    '</tr>';
+                
+                $('#chat-messages').prepend(tableRow);
+            };
+        });
+    </script>
+</body>
+</html>
