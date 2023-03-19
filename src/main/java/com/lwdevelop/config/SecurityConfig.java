@@ -55,6 +55,7 @@ public class SecurityConfig {
         "/tmax/ws/**",
         "/springybot/**",
         "/admins/login",
+        "/api.telegram.org"
       };
 
     @Bean

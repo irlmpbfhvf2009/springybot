@@ -27,8 +27,8 @@ import com.lwdevelop.utils.RetEnum;
 import com.lwdevelop.utils.ResponseUtils.ResponseData;
 import lombok.extern.slf4j.Slf4j;
 
-@Service
 @Slf4j
+@Service
 public class AdminServiceImpl implements AdminService, UserDetailsService {
 
     @Autowired
