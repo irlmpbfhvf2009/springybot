@@ -1,4 +1,4 @@
-package com.lwdevelop.bot;
+package com.lwdevelop.controller;
 
 import javax.annotation.Resource;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -8,18 +8,19 @@ import org.telegram.telegrambots.bots.DefaultBotOptions;
 import org.telegram.telegrambots.meta.TelegramBotsApi;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 import org.telegram.telegrambots.meta.generics.BotSession;
+
+import com.lwdevelop.bot.Custom;
+
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @RestController
 @RequestMapping("/springybot")
-public class Controller {
+public class SpringyBotController {
 
     @Resource
     private TelegramBotsApi telegramBotsApi;
 
-    @Resource
-    private DefaultBotOptions defaultBotOptions;
 
     private BotSession botSession;
 
@@ -29,7 +30,9 @@ public class Controller {
             if (isBotRunning()){
                 stopTelegramBot();
             }
-            botSession = telegramBotsApi.registerBot(new Custom(new DefaultBotOptions()));
+            String token = "5855785269:AAH9bvPpYudd2wSAvMnBTiKakCeoB92_Z_8";
+            String username = "CCP1121_BOT";
+            botSession = telegramBotsApi.registerBot(new Custom(token,username,new DefaultBotOptions()));
             log.info("Common Telegram bot started.");
         } catch (TelegramApiException e) {
             log.error("Catch TelegramApiException", e);

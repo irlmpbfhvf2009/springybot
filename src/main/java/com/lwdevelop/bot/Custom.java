@@ -11,11 +11,13 @@ import lombok.SneakyThrows;
 
 public class Custom extends TelegramLongPollingBot {
     // 填你自己的token和username
-    private final String token = "5855785269:AAH9bvPpYudd2wSAvMnBTiKakCeoB92_Z_8";
-    private final String username = "CCP1121_BOT";
+    private String token;
+    private String username;
 
-    public Custom(DefaultBotOptions options) {
+    public Custom(String token,String username,DefaultBotOptions options) {
         super(options);
+        this.token = token;
+        this.username = username;
     }
 
     @Override

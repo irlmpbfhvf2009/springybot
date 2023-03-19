@@ -20,9 +20,9 @@ public class AdminPanelController {
     @Autowired
     private AdminServiceImpl adminService;
 
-    @GetMapping("/admin_panel")
-    public String adminPanel() {
-        return "admin_panel";
+    @GetMapping("/index")
+    public String index() {
+        return "index";
     }
 
     @PostMapping("/login")

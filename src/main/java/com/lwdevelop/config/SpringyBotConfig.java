@@ -1,4 +1,4 @@
-package com.lwdevelop.bot;
+package com.lwdevelop.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

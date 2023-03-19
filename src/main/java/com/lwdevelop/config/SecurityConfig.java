@@ -55,6 +55,7 @@ public class SecurityConfig {
         "/tmax/ws/**",
         "/springybot/**",
         "/admins/login",
+        "/admins/index",
         "/api.telegram.org"
       };
 
@@ -67,8 +68,8 @@ public class SecurityConfig {
                 .addFilterBefore(JwtFilter(), UsernamePasswordAuthenticationFilter.class)
                 .authorizeRequests()
                 .requestMatchers(CorsUtils::isPreFlightRequest).permitAll()
-                .antMatchers(ALL_AUTH_LIST).permitAll()
                 .antMatchers(ADMIN_AUTH_LIST).hasAuthority("ADMIN")
+                .antMatchers(ALL_AUTH_LIST).permitAll()
                 .anyRequest().authenticated()
                 .and()
                 .build();
