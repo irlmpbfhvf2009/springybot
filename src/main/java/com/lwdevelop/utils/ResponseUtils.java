@@ -10,6 +10,16 @@ public class ResponseUtils {
         throw new IllegalStateException("Utility class");
     }
 
+    public static ResponseEntity<ResponseData> response(RetEnum retEnum) {
+
+
+        ResponseData responseData = new ResponseData(retEnum.getCode());
+        if(retEnum.getCode() != 200) {
+            responseData.setMsg(retEnum.getMessage());
+        } 
+        return new ResponseEntity<>(responseData, HttpStatus.OK);
+    }
+
     public static ResponseEntity<ResponseData> response(RetEnum retEnum,
                                                         HashMap<String, Object> data) {
 
@@ -18,6 +28,15 @@ public class ResponseUtils {
         if(retEnum.getCode() != 200) {
             responseData.setMsg(retEnum.getMessage());
         } 
+        return new ResponseEntity<>(responseData, HttpStatus.OK);
+    }
+
+
+    public static ResponseEntity<ResponseData> response(RetEnum retEnum,
+                                                        String msg) {
+
+        String message = retEnum.getCode() == 200 ? msg : retEnum.getMessage();
+        ResponseData responseData = new ResponseData(retEnum.getCode(), message);
         return new ResponseEntity<>(responseData, HttpStatus.OK);
     }
 
@@ -31,13 +50,23 @@ public class ResponseUtils {
 
     @Data
     public static class ResponseData {
-        private final int code;
-        private final HashMap<String, Object> data;
+        private int code;
+        private HashMap<String, Object> data;
         private String msg;
+
+
+        public ResponseData(int code) {
+            this.code = code;
+        }
 
         public ResponseData(int code, HashMap<String, Object> data) {
             this.code = code;
             this.data = data;
+        }
+
+        public ResponseData(int code,  String msg) {
+            this.code = code;
+            this.msg = msg;
         }
 
         public ResponseData(int code, String msg, HashMap<String, Object> data) {

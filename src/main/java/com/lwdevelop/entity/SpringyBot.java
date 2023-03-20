@@ -5,16 +5,12 @@ import javax.persistence.EntityListeners;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.Table;
-
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
-
 import lombok.Data;
 
 @Data
 @Entity
 @EntityListeners(AuditingEntityListener.class)
-@Table(name = "config")
 public class SpringyBot {
     
     @Id
@@ -24,4 +20,6 @@ public class SpringyBot {
     private String token;
     
     private String username;
+
+    private Boolean state;
 }

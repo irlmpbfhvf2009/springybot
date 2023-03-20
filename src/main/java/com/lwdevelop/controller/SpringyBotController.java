@@ -1,58 +1,65 @@
 package com.lwdevelop.controller;
 
+import java.util.Map;
+
 import javax.annotation.Resource;
-import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import org.telegram.telegrambots.bots.DefaultBotOptions;
 import org.telegram.telegrambots.meta.TelegramBotsApi;
-import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
-import org.telegram.telegrambots.meta.generics.BotSession;
 
-import com.lwdevelop.bot.Custom;
+import com.lwdevelop.dto.SpringyBotDTO;
+import com.lwdevelop.service.impl.SpringyBotServiceImpl;
+import com.lwdevelop.utils.ResponseUtils;
 
-import lombok.extern.slf4j.Slf4j;
-
-@Slf4j
 @RestController
 @RequestMapping("/springybot")
 public class SpringyBotController {
 
     @Resource
     private TelegramBotsApi telegramBotsApi;
+    
+    @Autowired
+    private SpringyBotServiceImpl springyBotService;
 
 
-    private BotSession botSession;
-
-    @GetMapping("start")
-    private synchronized void startTelegramBot() {
-        try {
-            if (isBotRunning()){
-                stopTelegramBot();
-            }
-            String token = "5855785269:AAH9bvPpYudd2wSAvMnBTiKakCeoB92_Z_8";
-            String username = "CCP1121_BOT";
-            botSession = telegramBotsApi.registerBot(new Custom(token,username,new DefaultBotOptions()));
-            log.info("Common Telegram bot started.");
-        } catch (TelegramApiException e) {
-            log.error("Catch TelegramApiException", e);
-        }
+    @PostMapping("/start")
+    private synchronized ResponseEntity<ResponseUtils.ResponseData> start(@RequestBody SpringyBotDTO springyBotDTO) {
+        return springyBotService.start(springyBotDTO);
     }
 
-    @GetMapping("stop")
-    private void stopTelegramBot() {
-        try {
-            if (botSession != null) {
-                botSession.stop();
-                botSession = null;
-            }
-        } catch (Exception e) {
-            log.error("Catch exception", e);
-        }
+    @PostMapping("/stop")
+    private synchronized ResponseEntity<ResponseUtils.ResponseData> stop(@RequestBody SpringyBotDTO springyBotDTO) {
+        return springyBotService.stop(springyBotDTO);
+    }
+    @PostMapping("/addBot")
+    public ResponseEntity<ResponseUtils.ResponseData> addBot(
+            @RequestBody SpringyBotDTO springyBotDTO) throws Exception {
+
+        return springyBotService.addBot(springyBotDTO);
     }
 
-    public boolean isBotRunning() {
-        return botSession != null && botSession.isRunning();
-    }
+    @PostMapping("/getAllBot")
+    public ResponseEntity<ResponseUtils.ResponseData> getAllBot(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int pageSize) throws Exception {
 
+        return springyBotService.getAllBot(page, pageSize);
+    }
+    @PostMapping("/deleteBot")
+    public ResponseEntity<ResponseUtils.ResponseData> deleteBot(
+            @RequestBody Map<String, String> requestData) throws Exception {
+
+        return springyBotService.deleteBot(requestData);
+    }
+    @PostMapping("/updateBot")
+    public ResponseEntity<ResponseUtils.ResponseData> updateBot(
+            @RequestBody SpringyBotDTO springyBotDTO) throws Exception {
+
+        return springyBotService.updateBot(springyBotDTO);
+    }
 }

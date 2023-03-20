@@ -16,6 +16,12 @@ public enum RetEnum {
     RET_USER_DISABLED(1004, "用戶停用中"),
     RET_LOGIN_FAIL(1005, "登入失敗"),
 
+    // BOT相关
+    RET_START_FAIL(1006, "启动失败"),
+    RET_START_EXIST(1007, "程序进行中"),
+    RET_STOP_FAIL(1008, "停止失败"),
+
+
     // 失败(01开始标示参数校验相关错误码)
     RET_PARAM_NOT_FOUND(0101, "参数不存在"),
     RET_PARAM_INVALID(0102, "无效的参数"),

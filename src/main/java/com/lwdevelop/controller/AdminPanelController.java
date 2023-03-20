@@ -17,6 +17,7 @@ import com.lwdevelop.utils.ResponseUtils;
 @Controller
 @RequestMapping("/admins")
 public class AdminPanelController {
+    
     @Autowired
     private AdminServiceImpl adminService;
 
@@ -36,36 +37,32 @@ public class AdminPanelController {
 
     @PostMapping("/loginOut")
     public ResponseEntity<ResponseUtils.ResponseData> loginOut(
-            HttpServletRequest request,
             @RequestParam("token") String token) throws Exception {
 
-        return adminService.loginOutProcess(request, token);
+        return adminService.loginOutProcess(token);
     }
 
     @PostMapping("/info")
     public ResponseEntity<ResponseUtils.ResponseData> getInfoApi(
-            HttpServletRequest request,
             @RequestParam("token") String token) throws Exception {
 
-        return adminService.getInfoProcess(request, token);
+        return adminService.getInfoProcess( token);
     }
 
     @PostMapping("/getAllAdmins")
     public ResponseEntity<ResponseUtils.ResponseData> getAllAdmins(
-            HttpServletRequest request,
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int pageSize,
             @RequestParam("input") String input) throws Exception {
 
-        return adminService.getAllAdminsProcess(request, page, pageSize, input);
+        return adminService.getAllAdminsProcess(page, pageSize, input);
     }
 
     @PostMapping("/updateAdmin")
     public ResponseEntity<ResponseUtils.ResponseData> updateAdmin(
-            HttpServletRequest request,
             @RequestBody AdminDTO adminDTO) throws Exception {
 
-        return adminService.updateAdminProcess(request, adminDTO);
+        return adminService.updateAdminProcess(adminDTO);
     }
 
     @PostMapping("/addAdmin")
@@ -78,18 +75,16 @@ public class AdminPanelController {
 
     @PostMapping("/delAdmin")
     public ResponseEntity<ResponseUtils.ResponseData> delAdmin(
-            HttpServletRequest request,
             @RequestBody Map<String, String> requestData) throws Exception {
 
-        return adminService.deleteAdminProcess(request, requestData);
+        return adminService.deleteAdminProcess(requestData);
     }
 
     @PostMapping("/passwordChange")
     public ResponseEntity<ResponseUtils.ResponseData> passwordChange(
-            HttpServletRequest request,
             @RequestBody AdminDTO adminDTO) throws Exception {
 
-        return adminService.passwordChangeProcess(request, adminDTO);
+        return adminService.passwordChangeProcess(adminDTO);
     }
 
 

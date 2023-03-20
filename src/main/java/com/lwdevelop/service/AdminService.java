@@ -22,13 +22,13 @@ public interface AdminService {
 
     // Custom
     ResponseEntity<ResponseUtils.ResponseData> loginProcess(HttpServletRequest request, String username, String password);
-    ResponseEntity<ResponseUtils.ResponseData> loginOutProcess(HttpServletRequest request, String token);
-    ResponseEntity<ResponseUtils.ResponseData> getInfoProcess(HttpServletRequest request, String token);
-    ResponseEntity<ResponseUtils.ResponseData> getAllAdminsProcess(HttpServletRequest request, int page,int pageSize, String input);
-    ResponseEntity<ResponseUtils.ResponseData> updateAdminProcess(HttpServletRequest request, AdminDTO adminDTO);
+    ResponseEntity<ResponseUtils.ResponseData> loginOutProcess(String token);
+    ResponseEntity<ResponseUtils.ResponseData> getInfoProcess(String token);
+    ResponseEntity<ResponseUtils.ResponseData> getAllAdminsProcess(int page,int pageSize,String input);
+    ResponseEntity<ResponseUtils.ResponseData> updateAdminProcess( AdminDTO adminDTO);
     ResponseEntity<ResponseUtils.ResponseData> addAdminProcess(HttpServletRequest request, AdminDTO adminDTO);
-    ResponseEntity<ResponseUtils.ResponseData> deleteAdminProcess(HttpServletRequest request, Map<String, String> requestData);
-    ResponseEntity<ResponseUtils.ResponseData> passwordChangeProcess(HttpServletRequest request, AdminDTO adminDTO);
+    ResponseEntity<ResponseUtils.ResponseData> deleteAdminProcess(Map<String, String> requestData);
+    ResponseEntity<ResponseUtils.ResponseData> passwordChangeProcess(AdminDTO adminDTO);
     
 
 

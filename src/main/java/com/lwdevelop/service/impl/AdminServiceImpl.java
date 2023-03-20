@@ -96,26 +96,26 @@ public class AdminServiceImpl implements AdminService, UserDetailsService {
             }
             admin.setLastLoginIP(CommUtils.getClientIP(request));
             saveAdmin(admin);
-            log.info("AdminPanelController ==> login ... [ {}{} ]", username, "登入成功");
+            log.info("AdminServiceImpl ==> loginProcess ... [ {}{} ]", username, "登入成功");
             JwtUtils jwtToken = new JwtUtils();
             String token = jwtToken.generateToken(admin); // 取得token
             data.put("token", token);
             return ResponseUtils.response(RetEnum.RET_SUCCESS, data, "登入成功");
         } catch (Exception e) {
-            log.info("AdminPanelController ==> login ... [ {} ] Exception:{}", "登入失敗", e.toString());
+            log.info("AdminServiceImpl ==> loginProcess ... [ {} ] Exception:{}", "登入失敗", e.toString());
             return ResponseUtils.response(RetEnum.RET_LOGIN_FAIL, data);
         }
 
     }
 
     @Override
-    public ResponseEntity<ResponseData> loginOutProcess(HttpServletRequest request, String token) {
+    public ResponseEntity<ResponseData> loginOutProcess(String token) {
         new JwtUtils().invalidateToken(token);
         return ResponseUtils.response(RetEnum.RET_SUCCESS, new HashMap<>());
     }
 
     @Override
-    public ResponseEntity<ResponseData> getInfoProcess(HttpServletRequest request, String token) {
+    public ResponseEntity<ResponseData> getInfoProcess(String token) {
         String username = new JwtUtils().verifyToken(token);
         Admin admin = findByUsername(username);
         HashMap<String, Object> data = new HashMap<>();
@@ -124,7 +124,7 @@ public class AdminServiceImpl implements AdminService, UserDetailsService {
     }
 
     @Override
-    public ResponseEntity<ResponseData> getAllAdminsProcess(HttpServletRequest request, int page, int pageSize,
+    public ResponseEntity<ResponseData> getAllAdminsProcess(int page, int pageSize,
             String input) {
         HashMap<String, Object> data = new HashMap<>();
         List<Admin> adminList = findAll(input, page, pageSize);
@@ -135,30 +135,30 @@ public class AdminServiceImpl implements AdminService, UserDetailsService {
     }
 
     @Override
-    public ResponseEntity<ResponseData> updateAdminProcess(HttpServletRequest request, AdminDTO adminDTO) {
+    public ResponseEntity<ResponseData> updateAdminProcess(AdminDTO adminDTO) {
         String adminDTOUsername = adminDTO.getUsername();
         Admin username = findByUsername(adminDTOUsername);
 
         if (username != null) {
-            log.info("AdminPanelController ==> addAdmin ... 用戶已經存在 [ {} ]", adminDTOUsername);
-            return ResponseUtils.response(RetEnum.RET_USER_EXIST, new HashMap<>());
+            log.info("AdminServiceImpl ==> updateAdminProcess ... 用戶已經存在 [ {} ]", adminDTOUsername);
+            return ResponseUtils.response(RetEnum.RET_USER_EXIST);
         }
         Admin admin = findById(adminDTO.getId()).get();
         admin.setUsername(adminDTO.getUsername());
         admin.setPassword(adminDTO.getPassword());
         admin.setEnabled(adminDTO.getEnabled());
         saveAdmin(admin);
-        log.info("AdminPanelController ==> updateAdmin ... [ {} ]", "done");
-        return ResponseUtils.response(RetEnum.RET_SUCCESS, new HashMap<>(), "編輯成功");
+        log.info("AdminServiceImpl ==> updateAdminProcess ... [ {} ]", "done");
+        return ResponseUtils.response(RetEnum.RET_SUCCESS, "編輯成功");
     }
 
     @Override
-    public ResponseEntity<ResponseData> deleteAdminProcess(HttpServletRequest request, Map<String, String> requestData) {
+    public ResponseEntity<ResponseData> deleteAdminProcess(Map<String, String> requestData) {
         String[] ids = requestData.get(requestData.keySet().toArray()[0]).split(",");
         for (String id : ids) {
             deleteById(Long.parseLong(id));
         }
-        return ResponseUtils.response(RetEnum.RET_SUCCESS, new HashMap<>(), "刪除成功");
+        return ResponseUtils.response(RetEnum.RET_SUCCESS, "刪除成功");
     }
 
     @Override
@@ -167,8 +167,8 @@ public class AdminServiceImpl implements AdminService, UserDetailsService {
         Admin username = findByUsername(adminDTOUsername);
 
         if (username != null) {
-            log.info("AdminPanelController ==> addAdmin ... 用戶已經存在 [ {} ]", adminDTOUsername);
-            return ResponseUtils.response(RetEnum.RET_USER_EXIST, new HashMap<>());
+            log.info("AdminServiceImpl ==> addAdminProcess ... 用戶已經存在 [ {} ]", adminDTOUsername);
+            return ResponseUtils.response(RetEnum.RET_USER_EXIST);
         }
 
         Admin admin = new Admin();
@@ -180,18 +180,18 @@ public class AdminServiceImpl implements AdminService, UserDetailsService {
         admin.setRegIp(CommUtils.getClientIP(request));
         admin.setLastLoginIP(CommUtils.getClientIP(request));
         saveAdmin(admin);
-        log.info("AdminPanelController ==> addAdmin ... [ {} ]", adminDTOUsername + "新增成功");
-        return ResponseUtils.response(RetEnum.RET_SUCCESS, new HashMap<>(), "新增成功");
+        log.info("AdminServiceImpl ==> addAdminProcess ... [ {} ] 新增成功", adminDTOUsername);
+        return ResponseUtils.response(RetEnum.RET_SUCCESS,  "新增成功");
     }
 
     @Override
-    public ResponseEntity<ResponseData> passwordChangeProcess(HttpServletRequest request, AdminDTO adminDTO) {
+    public ResponseEntity<ResponseData> passwordChangeProcess(AdminDTO adminDTO) {
 
         Long id = adminDTO.getId();
         String password = adminDTO.getPassword();
         Admin admin = findById(id).get();
         admin.setPassword(password);
         saveAdmin(admin);
-        return ResponseUtils.response(RetEnum.RET_SUCCESS, new HashMap<>(), "修改密碼成功，即將跳轉到登入頁面");
+        return ResponseUtils.response(RetEnum.RET_SUCCESS, "修改密碼成功，即將跳轉到登入頁面");
     }
 }
