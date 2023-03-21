@@ -1,6 +1,12 @@
-package com.lwdevelop.bot;
+package com.lwdevelop.bot.utils;
 
-enum SpringyBotEnum {
+public enum SpringyBotEnum {
+
+    // chatType
+    CHAT_TYPE_PRIVATE("private"),
+    CHAT_TYPE_GROUP("supergroup"),
+    CHAT_TYPE_CHANNEL("channel"),
+
 
     // KeyboardButton
     HOW_TO_ADD_ME_TO_YOUR_GROUP("如何将我添加到您的群组"),
@@ -17,7 +23,7 @@ enum SpringyBotEnum {
         this.text = text;
     }
 
-    String getText(){
+    public String getText(){
         return this.text;
     }
 }

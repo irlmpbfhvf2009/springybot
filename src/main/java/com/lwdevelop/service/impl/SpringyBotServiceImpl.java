@@ -42,6 +42,7 @@ public class SpringyBotServiceImpl implements SpringyBotService {
         return springyBotRepository.findById(id);
     }
 
+
     @Override
     public List<SpringyBot> findAll(int page, int pageSize) {
         Pageable pageable = PageRequest.of(page, pageSize);
@@ -105,7 +106,6 @@ public class SpringyBotServiceImpl implements SpringyBotService {
 
     @Override
     public ResponseEntity<ResponseData> addBot(SpringyBotDTO springyBotDTO) {
-        System.out.println(springyBotDTO);
         SpringyBot springyBot = new SpringyBot();
         springyBot.setToken(springyBotDTO.getToken());
         springyBot.setUsername(springyBotDTO.getUsername());
@@ -167,6 +167,8 @@ public class SpringyBotServiceImpl implements SpringyBotService {
         
         return ResponseUtils.response(RetEnum.RET_SUCCESS, "删除成功");
     }
+
+
 
 
 

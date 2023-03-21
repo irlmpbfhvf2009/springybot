@@ -56,6 +56,7 @@ public class SecurityConfig {
         "/springybot/**",
         "/admins/login",
         "/admins/index",
+        "/admins/addAdmin",
         "/api.telegram.org"
       };
 

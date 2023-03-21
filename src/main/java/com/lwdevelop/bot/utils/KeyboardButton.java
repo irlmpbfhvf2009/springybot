@@ -1,4 +1,4 @@
-package com.lwdevelop.bot;
+package com.lwdevelop.bot.utils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -8,8 +8,8 @@ import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboardMar
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKeyboardButton;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.KeyboardRow;
 
-class KeyboardButton {
-    final ReplyKeyboardMarkup StartReplyKeyboardMarkup(){
+public class KeyboardButton {
+    public final ReplyKeyboardMarkup startReplyKeyboardMarkup(){
         ReplyKeyboardMarkup keyboardMarkup = new ReplyKeyboardMarkup();
         List<KeyboardRow> keyboard = new ArrayList<>();
         KeyboardRow row = new KeyboardRow();
@@ -23,7 +23,7 @@ class KeyboardButton {
         keyboardMarkup.setKeyboard(keyboard);
         return keyboardMarkup;
     }
-    final InlineKeyboardMarkup addToGroupOrChannelMarkupInline(String url,String type){
+    public final InlineKeyboardMarkup addToGroupOrChannelMarkupInline(String url,String type){
         InlineKeyboardButton dk1=new InlineKeyboardButton();
         dk1.setText("Add to "+type);
         dk1.setUrl(url);
@@ -33,7 +33,6 @@ class KeyboardButton {
         rowInline.add(dk1);
         rowsInline.add(rowInline);
         markupInline.setKeyboard(rowsInline);
-
         return markupInline;
     }
 

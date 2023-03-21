@@ -6,6 +6,12 @@ import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.Update;
+import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
+
+import com.lwdevelop.bot.handler.ChannelMessage;
+import com.lwdevelop.bot.handler.GroupMessage;
+import com.lwdevelop.bot.handler.PrivateMessage;
+import com.lwdevelop.bot.utils.CommonUtils;
 
 import lombok.SneakyThrows;
 
@@ -27,54 +33,48 @@ public class Custom extends TelegramLongPollingBot {
 
     @Override
     public String getBotUsername() {
+        try {
+            this.username = getMe().getUserName();
+        } catch (TelegramApiException e) {
+            e.printStackTrace();
+        }
         return this.username;
     }
 
     @Override
     public void onUpdateReceived(Update update) {
-        
-        System.out.println(update.getMessage().getNewChatMembers());
+        CommonUtils commonUtils = new CommonUtils();
 
+        // deal message if chatType = group or private
         if (update.hasMessage()) {
             Message message = update.getMessage();
-            System.out.println(update);
             Long chatId = message.getChatId();
             String text = message.getText();
             SendMessage response = new SendMessage();
+            String chatType = message.getChat().getType();
             if (update.getMessage().hasText()) {
-                // System.out.println(message);
-                // System.out.println(message.getChat().getType());
-                if (message.getChat().getType().equals("private")) {
-                    switch (text) {
-                        case "/start":
-                            text = SpringyBotEnum.CALLBACKS.getText();
-                            response.setReplyMarkup(new KeyboardButton().StartReplyKeyboardMarkup());
-                            break;
-                        case "如何将我添加到您的群组":
-                            String groupUrl = "http://t.me/"+this.username+"?startgroup&admin=change_info";
-                            text = "Tap on this link and then choose your group.\n"
-                                                        + groupUrl
-                                                        + "\n\n\"Add admins\" permission is required.";
-                            response.setReplyMarkup(new KeyboardButton().addToGroupOrChannelMarkupInline(groupUrl,"group"));
-                            break;
-                            case "如何将我添加到您的频道":
+                // type : private
+                if (commonUtils.chatTypeIsPrivate(chatType)) {
+                    PrivateMessage privateMessage = new PrivateMessage();
+                    privateMessage.handler(commonUtils, text, response, chatType);
+                    this.sendTextMsg(text, chatId.toString(), response);
+                }
 
-                            String channelUrl = "http://t.me/"+this.username+"?startchannel&admin=change_info";
-                                                        text = "Tap on this link and then choose your channel.\n"
-                                                        + channelUrl
-                                                        + "\n\n\"Add admins\" permission is required.";
-
-                            response.setReplyMarkup(new KeyboardButton().addToGroupOrChannelMarkupInline(channelUrl,"channel"));
-                            break;
-                            
-                        case "管理面板":
-                            break;
-                        case "支援团队列表":
-                            break;
-                        case "管理员设置":
-                            break;
-                    }
-                    this.sendTextMsg(text, chatId.toString(),response);
+                // type : group
+                if (commonUtils.chatTypeIsGroup(chatType)) {
+                    GroupMessage groupMessage = new GroupMessage();
+                    groupMessage.handler();
+                }
+            }
+        }
+        // deal message if chatType = channel
+        if (update.getChannelPost() != null) {
+            // type : channel
+            String chatType = update.getChannelPost().getChat().getType();
+            if (update.getChannelPost().hasText()) {
+                if(commonUtils.chatTypeIsChannel(chatType)){
+                    ChannelMessage channelMessage = new ChannelMessage();
+                    channelMessage.handler();
                 }
             }
         }
@@ -92,12 +92,11 @@ public class Custom extends TelegramLongPollingBot {
 
     @SneakyThrows
     @Async
-    public void sendTextMsg(String text, String chatId,SendMessage response) {
+    public void sendTextMsg(String text, String chatId, SendMessage response) {
         response.setDisableNotification(false);
         response.setChatId(chatId);
         response.setText(text);
         executeAsync(response);
-        System.out.println(getMe());
     }
 
 }
