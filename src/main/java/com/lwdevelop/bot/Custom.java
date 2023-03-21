@@ -33,13 +33,17 @@ public class Custom extends TelegramLongPollingBot {
     @Override
     public void onUpdateReceived(Update update) {
         
+        System.out.println(update.getMessage().getNewChatMembers());
+
         if (update.hasMessage()) {
             Message message = update.getMessage();
+            System.out.println(update);
             Long chatId = message.getChatId();
             String text = message.getText();
             SendMessage response = new SendMessage();
-            System.out.println(message);
             if (update.getMessage().hasText()) {
+                // System.out.println(message);
+                // System.out.println(message.getChat().getType());
                 if (message.getChat().getType().equals("private")) {
                     switch (text) {
                         case "/start":
@@ -51,14 +55,16 @@ public class Custom extends TelegramLongPollingBot {
                             text = "Tap on this link and then choose your group.\n"
                                                         + groupUrl
                                                         + "\n\n\"Add admins\" permission is required.";
-                            response.setReplyMarkup(new KeyboardButton().addToGroupMarkupInline(groupUrl));
+                            response.setReplyMarkup(new KeyboardButton().addToGroupOrChannelMarkupInline(groupUrl,"group"));
                             break;
                             case "如何将我添加到您的频道":
+
                             String channelUrl = "http://t.me/"+this.username+"?startchannel&admin=change_info";
-                            text = "Tap on this link and then choose your channel.\n"
-                            + channelUrl
-                            + "\n\n\"Add admins\" permission is required.";
-                            response.setReplyMarkup(new KeyboardButton().addToChannelMarkupInline(channelUrl));
+                                                        text = "Tap on this link and then choose your channel.\n"
+                                                        + channelUrl
+                                                        + "\n\n\"Add admins\" permission is required.";
+
+                            response.setReplyMarkup(new KeyboardButton().addToGroupOrChannelMarkupInline(channelUrl,"channel"));
                             break;
                             
                         case "管理面板":
@@ -68,9 +74,8 @@ public class Custom extends TelegramLongPollingBot {
                         case "管理员设置":
                             break;
                     }
+                    this.sendTextMsg(text, chatId.toString(),response);
                 }
-                // this.sendTextMsg(text, chatId.toString());
-                this.customize_sendTextMsg(text, chatId.toString(),response);
             }
         }
     }
@@ -87,13 +92,12 @@ public class Custom extends TelegramLongPollingBot {
 
     @SneakyThrows
     @Async
-    public void customize_sendTextMsg(String text, String chatId,SendMessage response) {
-        // SendMessage response = new SendMessage();
-        // response.setReplyMarkup(new KeyboardButton().StartReplyKeyboardMarkup());
+    public void sendTextMsg(String text, String chatId,SendMessage response) {
         response.setDisableNotification(false);
         response.setChatId(chatId);
         response.setText(text);
         executeAsync(response);
+        System.out.println(getMe());
     }
 
 }

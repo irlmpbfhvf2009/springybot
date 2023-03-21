@@ -17,7 +17,7 @@ enum SpringyBotEnum {
         this.text = text;
     }
 
-    public String getText(){
+    String getText(){
         return this.text;
     }
 }

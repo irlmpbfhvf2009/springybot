@@ -9,7 +9,7 @@ import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKe
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.KeyboardRow;
 
 class KeyboardButton {
-    protected final ReplyKeyboardMarkup StartReplyKeyboardMarkup(){
+    final ReplyKeyboardMarkup StartReplyKeyboardMarkup(){
         ReplyKeyboardMarkup keyboardMarkup = new ReplyKeyboardMarkup();
         List<KeyboardRow> keyboard = new ArrayList<>();
         KeyboardRow row = new KeyboardRow();
@@ -23,22 +23,9 @@ class KeyboardButton {
         keyboardMarkup.setKeyboard(keyboard);
         return keyboardMarkup;
     }
-    protected final InlineKeyboardMarkup addToGroupMarkupInline(String url){
+    final InlineKeyboardMarkup addToGroupOrChannelMarkupInline(String url,String type){
         InlineKeyboardButton dk1=new InlineKeyboardButton();
-        dk1.setText("Add to group");
-        dk1.setUrl(url);
-        InlineKeyboardMarkup markupInline = new InlineKeyboardMarkup();
-        List<List<InlineKeyboardButton>> rowsInline = new ArrayList<>();
-        List<InlineKeyboardButton> rowInline = new ArrayList<>();
-        rowInline.add(dk1);
-        rowsInline.add(rowInline);
-        markupInline.setKeyboard(rowsInline);
-
-        return markupInline;
-    }
-    protected final InlineKeyboardMarkup addToChannelMarkupInline(String url){
-        InlineKeyboardButton dk1=new InlineKeyboardButton();
-        dk1.setText("Add to channel");
+        dk1.setText("Add to "+type);
         dk1.setUrl(url);
         InlineKeyboardMarkup markupInline = new InlineKeyboardMarkup();
         List<List<InlineKeyboardButton>> rowsInline = new ArrayList<>();

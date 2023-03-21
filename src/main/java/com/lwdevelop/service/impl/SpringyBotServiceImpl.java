@@ -32,6 +32,11 @@ public class SpringyBotServiceImpl implements SpringyBotService {
     @Autowired
     private SpringyBotRepository springyBotRepository;
 
+    @Resource
+    private TelegramBotsApi telegramBotsApi;
+
+    private static Map<Long,BotSession> springyBotMap = new HashMap<>();
+
     @Override
     public Optional<SpringyBot> findById(Long id) {
         return springyBotRepository.findById(id);
@@ -55,13 +60,6 @@ public class SpringyBotServiceImpl implements SpringyBotService {
         springyBotRepository.save(springyBot);
     }
 
-    @Resource
-    private TelegramBotsApi telegramBotsApi;
-
-    // private BotSession botSession;
-
-    private static Map<Long,BotSession> springyBotMap = new HashMap<>();
-
     @Override
     public synchronized ResponseEntity<ResponseData> start(SpringyBotDTO springyBotDTO) {
         try {
@@ -78,7 +76,6 @@ public class SpringyBotServiceImpl implements SpringyBotService {
             save(springyBot);
             log.info("Common Telegram bot started.");
             return ResponseUtils.response(RetEnum.RET_SUCCESS, "启动成功");
-
         } catch (TelegramApiException e) {
             log.error("Catch TelegramApiException", e);
             return ResponseUtils.response(RetEnum.RET_START_FAIL);
@@ -108,16 +105,22 @@ public class SpringyBotServiceImpl implements SpringyBotService {
 
     @Override
     public ResponseEntity<ResponseData> addBot(SpringyBotDTO springyBotDTO) {
-        String token = springyBotDTO.getToken();
-        String username = springyBotDTO.getUsername();
+        System.out.println(springyBotDTO);
         SpringyBot springyBot = new SpringyBot();
-
-        springyBot.setToken(token);
-        springyBot.setUsername(username);
-        springyBot.setState(false);
+        springyBot.setToken(springyBotDTO.getToken());
+        springyBot.setUsername(springyBotDTO.getUsername());
+        springyBot.setState(springyBotDTO.getState());
+        springyBot.setInviteFriendsAutoClearTime(springyBotDTO.getInviteFriendsAutoClearTime());
+        springyBot.setInviteFriendsSet(springyBotDTO.getInviteFriendsSet());
+        springyBot.setFollowChannelSet(springyBotDTO.getFollowChannelSet());
+        springyBot.setInviteFriendsQuantity(springyBotDTO.getInviteFriendsQuantity());
+        springyBot.setDeleteSeconds(springyBotDTO.getDeleteSeconds());
+        springyBot.setInvitationBonusSet(springyBotDTO.getInvitationBonusSet());
+        springyBot.setInviteMembers(springyBotDTO.getInviteMembers());
+        springyBot.setInviteEarnedOutstand(springyBotDTO.getInviteEarnedOutstand());
+        springyBot.setContactPerson(springyBotDTO.getContactPerson());
         save(springyBot);
-
-        log.info("SpringyBotServiceImpl ==> addBot ... [ {} ] 新增成功", username);
+        log.info("SpringyBotServiceImpl ==> addBot ... [ {} ] 新增成功", springyBotDTO.getUsername());
         return ResponseUtils.response(RetEnum.RET_SUCCESS, "新增成功");
     }
 
@@ -125,6 +128,14 @@ public class SpringyBotServiceImpl implements SpringyBotService {
     public ResponseEntity<ResponseData> getAllBot(int page, int pageSize) {
         HashMap<String, Object> data = new HashMap<>();
         List<SpringyBot> springyBotList = findAll(page, pageSize);
+
+        for (SpringyBot springyBot : springyBotList) {
+            if(!springyBotMap.containsKey(springyBot.getId())){
+                springyBot.setState(false);
+                save(springyBot);
+            };
+        }
+
         Object pager = CommUtils.Pager(page, pageSize, springyBotList.size());
 
         data.put("list", springyBotList);
@@ -141,7 +152,7 @@ public class SpringyBotServiceImpl implements SpringyBotService {
         springyBot.setToken(springyBotDTO.getToken());
         save(springyBot);
 
-        log.info("SpringyBotServiceImpl ==> updateBot ... [ {} ]", "done");
+        log.info("SpringyBotServiceImpl ==> updateBot ... [ {} ] 编辑成功", springyBotDTO.getUsername());
         return ResponseUtils.response(RetEnum.RET_SUCCESS, "编辑成功");
     }
 
@@ -151,10 +162,12 @@ public class SpringyBotServiceImpl implements SpringyBotService {
 
         for (String id : ids) {
             deleteById(Long.parseLong(id));
+            log.info("SpringyBotServiceImpl ==> deleteBot ... [ {} ] 刪除成功", id);
         }
         
         return ResponseUtils.response(RetEnum.RET_SUCCESS, "删除成功");
     }
+
 
 
 }

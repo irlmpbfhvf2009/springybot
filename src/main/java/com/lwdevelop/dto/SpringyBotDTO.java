@@ -22,4 +22,22 @@ public class SpringyBotDTO {
     private String username;
 
     private Boolean state;
+
+    private Boolean inviteFriendsSet;
+    
+    private Boolean followChannelSet;
+
+    private Boolean invitationBonusSet;
+    
+    private int deleteSeconds;
+
+    private int inviteFriendsAutoClearTime;
+
+    private int inviteFriendsQuantity;
+
+    private int inviteMembers;
+
+    private double inviteEarnedOutstand;
+
+    private String contactPerson;
 }
