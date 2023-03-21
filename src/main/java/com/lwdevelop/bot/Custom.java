@@ -7,7 +7,6 @@ import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
-
 import com.lwdevelop.bot.handler.ChannelMessage;
 import com.lwdevelop.bot.handler.GroupMessage;
 import com.lwdevelop.bot.handler.PrivateMessage;
@@ -52,29 +51,29 @@ public class Custom extends TelegramLongPollingBot {
             String text = message.getText();
             SendMessage response = new SendMessage();
             String chatType = message.getChat().getType();
+
             if (update.getMessage().hasText()) {
                 // type : private
                 if (commonUtils.chatTypeIsPrivate(chatType)) {
-                    PrivateMessage privateMessage = new PrivateMessage();
-                    privateMessage.handler(commonUtils, text, response, chatType);
-                    this.sendTextMsg(text, chatId.toString(), response);
+                    if(new PrivateMessage().handler(commonUtils, message, response, this.username)){
+                        this.sendTextMsg(text, chatId.toString(), response);
+                    }
                 }
 
                 // type : group
                 if (commonUtils.chatTypeIsGroup(chatType)) {
-                    GroupMessage groupMessage = new GroupMessage();
-                    groupMessage.handler();
+                    new GroupMessage().handler(commonUtils, message, response);
                 }
             }
         }
+
         // deal message if chatType = channel
         if (update.getChannelPost() != null) {
             // type : channel
             String chatType = update.getChannelPost().getChat().getType();
             if (update.getChannelPost().hasText()) {
-                if(commonUtils.chatTypeIsChannel(chatType)){
-                    ChannelMessage channelMessage = new ChannelMessage();
-                    channelMessage.handler();
+                if (commonUtils.chatTypeIsChannel(chatType)) {
+                    new ChannelMessage().handler();
                 }
             }
         }

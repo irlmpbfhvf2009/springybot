@@ -1,15 +1,17 @@
 package com.lwdevelop.bot.handler;
 
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
-
+import org.telegram.telegrambots.meta.api.objects.Message;
 import com.lwdevelop.bot.utils.CommonUtils;
 import com.lwdevelop.bot.utils.KeyboardButton;
 import com.lwdevelop.bot.utils.SpringyBotEnum;
 
+
 public class PrivateMessage {
 
-    public void handler(CommonUtils common,String text,SendMessage response,String username){
+    public boolean handler(CommonUtils common,Message message,SendMessage response,String username){
         String type;
+        String text = message.getText();
         switch (text) {
             case "管理面板":
                 break;
@@ -36,9 +38,11 @@ public class PrivateMessage {
                 text = common.howToAddForText(username,common.getUrl(type,username),type);
                 response.setReplyMarkup(new KeyboardButton().addToGroupOrChannelMarkupInline(common.getUrl(type,username),type));
                 break;
+            default:
+                return false;
                 
         }
+        return true;
     }
 
-    
 }
