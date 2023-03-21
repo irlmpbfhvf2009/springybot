@@ -19,6 +19,7 @@ public class Custom extends TelegramLongPollingBot {
         this.token = token;
         this.username = username;
     }
+
     @Override
     public String getBotToken() {
         return this.token;
@@ -31,23 +32,46 @@ public class Custom extends TelegramLongPollingBot {
 
     @Override
     public void onUpdateReceived(Update update) {
+        
         if (update.hasMessage()) {
             Message message = update.getMessage();
             Long chatId = message.getChatId();
             String text = message.getText();
-            if (text != null) {
-                switch (text) {
-                    case "/start":
-                        if(message.getChat().getType().equals("private")){
-                            text = SpringyBotEnum.CALLBACKSENUM.getText();
-                        }
-                        break;
-                    default:
-                        text = "不处理该类指令";
-                        break;
+            SendMessage response = new SendMessage();
+            System.out.println(message);
+            if (update.getMessage().hasText()) {
+                if (message.getChat().getType().equals("private")) {
+                    switch (text) {
+                        case "/start":
+                            text = SpringyBotEnum.CALLBACKS.getText();
+                            response.setReplyMarkup(new KeyboardButton().StartReplyKeyboardMarkup());
+                            break;
+                        case "如何将我添加到您的群组":
+                            String groupUrl = "http://t.me/"+this.username+"?startgroup&admin=change_info";
+                            text = "Tap on this link and then choose your group.\n"
+                                                        + groupUrl
+                                                        + "\n\n\"Add admins\" permission is required.";
+                            response.setReplyMarkup(new KeyboardButton().addToGroupMarkupInline(groupUrl));
+                            break;
+                            case "如何将我添加到您的频道":
+                            String channelUrl = "http://t.me/"+this.username+"?startchannel&admin=change_info";
+                            text = "Tap on this link and then choose your channel.\n"
+                            + channelUrl
+                            + "\n\n\"Add admins\" permission is required.";
+                            response.setReplyMarkup(new KeyboardButton().addToChannelMarkupInline(channelUrl));
+                            break;
+                            
+                        case "管理面板":
+                            break;
+                        case "支援团队列表":
+                            break;
+                        case "管理员设置":
+                            break;
+                    }
                 }
+                // this.sendTextMsg(text, chatId.toString());
+                this.customize_sendTextMsg(text, chatId.toString(),response);
             }
-            this.sendTextMsg(text, chatId.toString());
         }
     }
 
@@ -55,8 +79,17 @@ public class Custom extends TelegramLongPollingBot {
     @Async
     public void sendTextMsg(String text, String chatId) {
         SendMessage response = new SendMessage();
-        KeyboardButton k = new KeyboardButton();
-        response.setReplyMarkup(k.StartReplyKeyboardMarkup());
+        response.setDisableNotification(false);
+        response.setChatId(chatId);
+        response.setText(text);
+        executeAsync(response);
+    }
+
+    @SneakyThrows
+    @Async
+    public void customize_sendTextMsg(String text, String chatId,SendMessage response) {
+        // SendMessage response = new SendMessage();
+        // response.setReplyMarkup(new KeyboardButton().StartReplyKeyboardMarkup());
         response.setDisableNotification(false);
         response.setChatId(chatId);
         response.setText(text);

@@ -9,7 +9,7 @@ enum SpringyBotEnum {
     SUPPORT_TEAM_LIST("支援团队列表"),
     ADMINISTRATOR_SETTING("管理员设置"),
 
-    CALLBACKSENUM("What con this bot do?\nPlease tap on START");
+    CALLBACKS("What con this bot do?\nPlease tap on START");
 
     private String text;
 

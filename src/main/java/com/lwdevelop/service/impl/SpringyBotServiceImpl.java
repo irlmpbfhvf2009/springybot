@@ -69,11 +69,10 @@ public class SpringyBotServiceImpl implements SpringyBotService {
             String token = springyBotDTO.getToken();
             String username = springyBotDTO.getUsername();
             SpringyBot springyBot = findById(id).get();
-            BotSession botSession = telegramBotsApi.registerBot(new Custom(token, username, new DefaultBotOptions()));
-
             if(springyBotMap.containsKey(id)){
                 return ResponseUtils.response(RetEnum.RET_START_EXIST);
             }
+            BotSession botSession = telegramBotsApi.registerBot(new Custom(token, username, new DefaultBotOptions()));
             springyBotMap.put(id, botSession);
             springyBot.setState(true);
             save(springyBot);
