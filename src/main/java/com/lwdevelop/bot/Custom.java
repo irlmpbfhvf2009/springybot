@@ -9,6 +9,8 @@ import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 import com.lwdevelop.bot.handler.ChannelMessage;
 import com.lwdevelop.bot.handler.GroupMessage;
+import com.lwdevelop.bot.handler.JoinGroupEvent;
+import com.lwdevelop.bot.handler.LeaveGroupEvent;
 import com.lwdevelop.bot.handler.PrivateMessage;
 import com.lwdevelop.bot.utils.CommonUtils;
 
@@ -55,7 +57,7 @@ public class Custom extends TelegramLongPollingBot {
             if (update.getMessage().hasText()) {
                 // type : private
                 if (commonUtils.chatTypeIsPrivate(chatType)) {
-                    if(new PrivateMessage().handler(commonUtils, message, response, this.username)){
+                    if (new PrivateMessage().handler(commonUtils, message, response, this.username)) {
                         this.sendTextMsg(text, chatId.toString(), response);
                     }
                 }
@@ -77,6 +79,21 @@ public class Custom extends TelegramLongPollingBot {
                 }
             }
         }
+
+        // 群組新成員
+        try {
+            if (update.getMessage().getNewChatMembers() != null) {
+                Message message = update.getMessage();
+                new JoinGroupEvent().handler(message,username);
+            }
+        } catch (NullPointerException e) {
+        }
+
+        // 退群或被踢
+        if (update.getMessage().getLeftChatMember() != null) {
+            new LeaveGroupEvent().handler();
+        }
+
     }
 
     @SneakyThrows

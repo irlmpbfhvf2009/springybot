@@ -7,7 +7,8 @@ import com.lwdevelop.bot.utils.CommonUtils;
 
 public class GroupMessage {
     public void handler(CommonUtils common,Message message,SendMessage response){
-        System.out.println(message);
+        // System.out.println(message.getNewChatMembers());
+        // System.out.println(message);
         
     }
 }
