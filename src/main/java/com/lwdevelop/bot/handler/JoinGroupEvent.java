@@ -18,7 +18,7 @@ public class JoinGroupEvent {
             // userName=CCP1121_BOT, languageCode=null,
             // canJoinGroups=null, canReadAllGroupMessages=null, supportInlineQueries=null)
             if (username.equals(member.getUserName()) && member.getIsBot()) {
-
+                System.out.println("test JoinGroupEvent");
             }
         }
     }

@@ -82,16 +82,16 @@ public class Custom extends TelegramLongPollingBot {
 
         // 群組新成員
         try {
-            if (update.getMessage().getNewChatMembers() != null) {
+            if (update.getMessage().getNewChatMembers() != null && update.getMessage().getNewChatMembers().size()!=0) {
                 Message message = update.getMessage();
                 new JoinGroupEvent().handler(message,username);
             }
+            
+            // 退群或被踢
+            if (update.getMessage().getLeftChatMember() != null) {
+                new LeaveGroupEvent().handler();
+            }
         } catch (NullPointerException e) {
-        }
-
-        // 退群或被踢
-        if (update.getMessage().getLeftChatMember() != null) {
-            new LeaveGroupEvent().handler();
         }
 
     }

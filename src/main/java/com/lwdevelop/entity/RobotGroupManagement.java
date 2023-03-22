@@ -7,28 +7,23 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToOne;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-
 import lombok.Data;
 
 @Data
 @Entity
-public class SpringyBot {
-    
+public class RobotGroupManagement {
+
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
-    private String token;
-    
-    private String username;
+    private String groupId;
 
-    private Boolean state;
+    private String groupTitle;
 
-    @OneToOne(cascade = CascadeType.ALL)
-    private Config config;
+    private String link;
 
     @OneToOne(cascade = CascadeType.ALL)
-    @JsonIgnore
-    private RobotGroupManagement robotGroupManagement;
+    private SpringyBot springyBot;
+
 }

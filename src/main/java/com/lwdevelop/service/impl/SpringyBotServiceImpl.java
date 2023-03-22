@@ -15,6 +15,7 @@ import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 import org.telegram.telegrambots.meta.generics.BotSession;
 import com.lwdevelop.bot.Custom;
 import com.lwdevelop.dto.SpringyBotDTO;
+import com.lwdevelop.entity.Config;
 import com.lwdevelop.entity.SpringyBot;
 import com.lwdevelop.repository.SpringyBotRepository;
 import com.lwdevelop.service.SpringyBotService;
@@ -107,18 +108,20 @@ public class SpringyBotServiceImpl implements SpringyBotService {
     @Override
     public ResponseEntity<ResponseData> addBot(SpringyBotDTO springyBotDTO) {
         SpringyBot springyBot = new SpringyBot();
+        Config config = new Config();
         springyBot.setToken(springyBotDTO.getToken());
         springyBot.setUsername(springyBotDTO.getUsername());
         springyBot.setState(springyBotDTO.getState());
-        springyBot.setInviteFriendsAutoClearTime(springyBotDTO.getInviteFriendsAutoClearTime());
-        springyBot.setInviteFriendsSet(springyBotDTO.getInviteFriendsSet());
-        springyBot.setFollowChannelSet(springyBotDTO.getFollowChannelSet());
-        springyBot.setInviteFriendsQuantity(springyBotDTO.getInviteFriendsQuantity());
-        springyBot.setDeleteSeconds(springyBotDTO.getDeleteSeconds());
-        springyBot.setInvitationBonusSet(springyBotDTO.getInvitationBonusSet());
-        springyBot.setInviteMembers(springyBotDTO.getInviteMembers());
-        springyBot.setInviteEarnedOutstand(springyBotDTO.getInviteEarnedOutstand());
-        springyBot.setContactPerson(springyBotDTO.getContactPerson());
+        config.setInviteFriendsAutoClearTime(springyBotDTO.getInviteFriendsAutoClearTime());
+        config.setInviteFriendsSet(springyBotDTO.getInviteFriendsSet());
+        config.setFollowChannelSet(springyBotDTO.getFollowChannelSet());
+        config.setInviteFriendsQuantity(springyBotDTO.getInviteFriendsQuantity());
+        config.setDeleteSeconds(springyBotDTO.getDeleteSeconds());
+        config.setInvitationBonusSet(springyBotDTO.getInvitationBonusSet());
+        config.setInviteMembers(springyBotDTO.getInviteMembers());
+        config.setInviteEarnedOutstand(springyBotDTO.getInviteEarnedOutstand());
+        config.setContactPerson(springyBotDTO.getContactPerson());
+        springyBot.setConfig(config);
         save(springyBot);
         log.info("SpringyBotServiceImpl ==> addBot ... [ {} ] 新增成功", springyBotDTO.getUsername());
         return ResponseUtils.response(RetEnum.RET_SUCCESS, "新增成功");
