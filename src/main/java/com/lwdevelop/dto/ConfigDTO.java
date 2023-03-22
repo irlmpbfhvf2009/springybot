@@ -1,19 +1,10 @@
-package com.lwdevelop.entity;
+package com.lwdevelop.dto;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
 import lombok.Data;
 
 @Data
-@Entity
-public class Config {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long id;
-
+public class ConfigDTO {
+    
     private Boolean inviteFriendsSet;
     
     private Boolean followChannelSet;
@@ -31,5 +22,7 @@ public class Config {
     private double inviteEarnedOutstand;
 
     private String contactPerson;
+
+    // private Long springyBotId;
 
 }

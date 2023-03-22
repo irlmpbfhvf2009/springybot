@@ -109,18 +109,19 @@ public class SpringyBotServiceImpl implements SpringyBotService {
     public ResponseEntity<ResponseData> addBot(SpringyBotDTO springyBotDTO) {
         SpringyBot springyBot = new SpringyBot();
         Config config = new Config();
+        System.out.println(springyBotDTO);
         springyBot.setToken(springyBotDTO.getToken());
         springyBot.setUsername(springyBotDTO.getUsername());
         springyBot.setState(springyBotDTO.getState());
-        config.setInviteFriendsAutoClearTime(springyBotDTO.getInviteFriendsAutoClearTime());
-        config.setInviteFriendsSet(springyBotDTO.getInviteFriendsSet());
-        config.setFollowChannelSet(springyBotDTO.getFollowChannelSet());
-        config.setInviteFriendsQuantity(springyBotDTO.getInviteFriendsQuantity());
-        config.setDeleteSeconds(springyBotDTO.getDeleteSeconds());
-        config.setInvitationBonusSet(springyBotDTO.getInvitationBonusSet());
-        config.setInviteMembers(springyBotDTO.getInviteMembers());
-        config.setInviteEarnedOutstand(springyBotDTO.getInviteEarnedOutstand());
-        config.setContactPerson(springyBotDTO.getContactPerson());
+        config.setInviteFriendsAutoClearTime(springyBotDTO.getConfig().getInviteFriendsAutoClearTime());
+        config.setInviteFriendsSet(springyBotDTO.getConfig().getInviteFriendsSet());
+        config.setFollowChannelSet(springyBotDTO.getConfig().getFollowChannelSet());
+        config.setInviteFriendsQuantity(springyBotDTO.getConfig().getInviteFriendsQuantity());
+        config.setDeleteSeconds(springyBotDTO.getConfig().getDeleteSeconds());
+        config.setInvitationBonusSet(springyBotDTO.getConfig().getInvitationBonusSet());
+        config.setInviteMembers(springyBotDTO.getConfig().getInviteMembers());
+        config.setInviteEarnedOutstand(springyBotDTO.getConfig().getInviteEarnedOutstand());
+        config.setContactPerson(springyBotDTO.getConfig().getContactPerson());
         springyBot.setConfig(config);
         save(springyBot);
         log.info("SpringyBotServiceImpl ==> addBot ... [ {} ] 新增成功", springyBotDTO.getUsername());
@@ -135,9 +136,8 @@ public class SpringyBotServiceImpl implements SpringyBotService {
             if (!springyBotMap.containsKey(springyBot.getId())) {
                 springyBot.setState(false);
                 save(springyBot);
-            }
-            ;
-        }
+            };
+        };
         Object pager = CommUtils.Pager(page, pageSize, springyBotList.size());
         data.put("list", springyBotList);
         data.put("pager", pager);
@@ -155,9 +155,20 @@ public class SpringyBotServiceImpl implements SpringyBotService {
         }
         springyBot.setUsername(springyBotDTO.getUsername());
         springyBot.setToken(springyBotDTO.getToken());
+        // SpringyBotDTO(id=1, token=1, username=1, state=false, config=ConfigDTO(inviteFriendsSet=true, followChannelSet=true, invitationBonusSet=true, deleteSeconds=9, inviteFriendsAutoClearTime=9, inviteFriendsQuantity=9, inviteMembers=9, inviteEarnedOutstand=9.0, contactPerson=@9))
+        System.out.println(springyBotDTO);
+        springyBot.getConfig().setContactPerson(springyBotDTO.getConfig().getContactPerson());;
+        springyBot.getConfig().setDeleteSeconds(springyBotDTO.getConfig().getDeleteSeconds());
+        springyBot.getConfig().setFollowChannelSet(springyBotDTO.getConfig().getFollowChannelSet());
+        springyBot.getConfig().setInvitationBonusSet(springyBotDTO.getConfig().getInvitationBonusSet());
+        springyBot.getConfig().setInviteEarnedOutstand(springyBotDTO.getConfig().getInviteEarnedOutstand());
+        springyBot.getConfig().setInviteFriendsAutoClearTime(springyBotDTO.getConfig().getInviteFriendsAutoClearTime());
+        springyBot.getConfig().setInviteFriendsQuantity(springyBotDTO.getConfig().getInviteFriendsQuantity());
+        springyBot.getConfig().setInviteFriendsSet(springyBotDTO.getConfig().getInviteFriendsSet());
+        springyBot.getConfig().setInviteMembers(springyBotDTO.getConfig().getInviteMembers());
         save(springyBot);
-        log.info("SpringyBotServiceImpl ==> updateBot ... [ {} ] 编辑成功", springyBotDTO.getUsername());
-        return ResponseUtils.response(RetEnum.RET_SUCCESS, "编辑成功");
+        log.info("SpringyBotServiceImpl ==> updateBot ... [ {} ] 修改成功", springyBotDTO.getUsername());
+        return ResponseUtils.response(RetEnum.RET_SUCCESS, "修改成功");
     }
 
     @Override
