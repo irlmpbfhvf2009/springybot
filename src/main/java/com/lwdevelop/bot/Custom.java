@@ -1,8 +1,10 @@
 package com.lwdevelop.bot;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Async;
 import org.telegram.telegrambots.bots.DefaultBotOptions;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
+import org.telegram.telegrambots.meta.api.methods.groupadministration.ExportChatInviteLink;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.Update;
@@ -13,11 +15,20 @@ import com.lwdevelop.bot.handler.JoinGroupEvent;
 import com.lwdevelop.bot.handler.LeaveGroupEvent;
 import com.lwdevelop.bot.handler.PrivateMessage;
 import com.lwdevelop.bot.utils.CommonUtils;
+import com.lwdevelop.service.impl.SpringyBotServiceImpl;
+import com.lwdevelop.utils.SpringUtils;
 
 import lombok.SneakyThrows;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 public class Custom extends TelegramLongPollingBot {
 
+
+    @Autowired
+    private SpringyBotServiceImpl springyBotServiceImpl = SpringUtils.getApplicationContext()
+            .getBean(SpringyBotServiceImpl.class);
+            
     private String token;
     private String username;
 
@@ -45,24 +56,20 @@ public class Custom extends TelegramLongPollingBot {
     @Override
     public void onUpdateReceived(Update update) {
         CommonUtils commonUtils = new CommonUtils();
-
         // deal message if chatType = group or private
         if (update.hasMessage()) {
             Message message = update.getMessage();
             Long chatId = message.getChatId();
-            // String text = message.getText();
             SendMessage response = new SendMessage();
-            String chatType = message.getChat().getType();
-
             if (update.getMessage().hasText()) {
                 // type : private
-                if (commonUtils.chatTypeIsPrivate(chatType)) {
+                if (update.getMessage().isUserMessage()) {
                     String privateMessage = new PrivateMessage().handler(commonUtils, message, response, this.username);
-                        this.sendTextMsg(privateMessage, chatId.toString(), response);
+                        this.sendTextMsg(chatId.toString(),privateMessage,  response);
                 }
 
                 // type : group
-                if (commonUtils.chatTypeIsGroup(chatType)) {
+                if (update.getMessage().isSuperGroupMessage()) {
                     new GroupMessage().handler(commonUtils, message, response);
                 }
             }
@@ -83,7 +90,12 @@ public class Custom extends TelegramLongPollingBot {
         try {
             if (update.getMessage().getNewChatMembers() != null && update.getMessage().getNewChatMembers().size()!=0) {
                 Message message = update.getMessage();
-                new JoinGroupEvent().handler(message,username,this.token);
+                try {
+                    String link = execute(new ExportChatInviteLink(String.valueOf(message.getChat().getId())));
+                    new JoinGroupEvent().handler(message,username,this.token,link,springyBotServiceImpl);
+                } catch (TelegramApiException e) {
+                    log.error(e.toString());
+                }
             }
             
             // 退群或被踢
@@ -97,7 +109,7 @@ public class Custom extends TelegramLongPollingBot {
 
     @SneakyThrows
     @Async
-    public void sendTextMsg(String text, String chatId) {
+    public void sendTextMsg(String chatId,String text) {
         SendMessage response = new SendMessage();
         response.setDisableNotification(false);
         response.setChatId(chatId);
@@ -107,7 +119,7 @@ public class Custom extends TelegramLongPollingBot {
 
     @SneakyThrows
     @Async
-    public void sendTextMsg(String text,String chatId, SendMessage response) {
+    public void sendTextMsg(String chatId,String text, SendMessage response) {
         response.setDisableNotification(false);
         response.setChatId(chatId);
         response.setText(text);

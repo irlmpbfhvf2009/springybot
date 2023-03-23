@@ -160,9 +160,7 @@ public class SpringyBotServiceImpl implements SpringyBotService {
         }
         springyBot.setUsername(springyBotDTO.getUsername());
         springyBot.setToken(springyBotDTO.getToken());
-        // SpringyBotDTO(id=1, token=1, username=1, state=false, config=ConfigDTO(inviteFriendsSet=true, followChannelSet=true, invitationBonusSet=true, deleteSeconds=9, inviteFriendsAutoClearTime=9, inviteFriendsQuantity=9, inviteMembers=9, inviteEarnedOutstand=9.0, contactPerson=@9))
-        System.out.println(springyBotDTO);
-        springyBot.getConfig().setContactPerson(springyBotDTO.getConfig().getContactPerson());;
+        springyBot.getConfig().setContactPerson(springyBotDTO.getConfig().getContactPerson());
         springyBot.getConfig().setDeleteSeconds(springyBotDTO.getConfig().getDeleteSeconds());
         springyBot.getConfig().setFollowChannelSet(springyBotDTO.getConfig().getFollowChannelSet());
         springyBot.getConfig().setInvitationBonusSet(springyBotDTO.getConfig().getInvitationBonusSet());

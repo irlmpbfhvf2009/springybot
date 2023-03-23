@@ -2,13 +2,9 @@ package com.lwdevelop.dto;
 
 import java.util.Date;
 
-import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 
 @Data
-@NoArgsConstructor
-@AllArgsConstructor
 public class ChatMessageDTO {
 
     // 傳送者

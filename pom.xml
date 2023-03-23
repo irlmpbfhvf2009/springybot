@@ -73,11 +73,11 @@
 			<artifactId>spring-boot-starter-websocket</artifactId>
 		</dependency>
 		<!-- RabbitMQ dependencies -->
-		<dependency>
+		<!-- <dependency>
 			<groupId>org.springframework.amqp</groupId>
-			<artifactId>spring-rabbit</artifactId>
+			<artifactId>spring-rabbit</artifactId> -->
 			<!-- <version>${spring-amqp.version}</version> -->
-		</dependency>
+		<!-- </dependency> -->
 		<dependency>
 			<groupId>com.rabbitmq</groupId>
 			<artifactId>amqp-client</artifactId>

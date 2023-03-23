@@ -39,7 +39,7 @@ public class PrivateMessage {
                 response.setReplyMarkup(new KeyboardButton().addToGroupOrChannelMarkupInline(common.getUrl(type,username),type));
                 break;
             default:
-                return null;
+                return "";
                 
         }
         return text;
