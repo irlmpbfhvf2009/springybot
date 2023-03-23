@@ -3,6 +3,7 @@ package com.lwdevelop.entity;
 import java.util.Set;
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -10,9 +11,8 @@ import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 import lombok.Data;
-import lombok.EqualsAndHashCode;
 
 @Data
 @Entity
@@ -31,9 +31,7 @@ public class SpringyBot {
     @OneToOne(cascade = CascadeType.ALL)
     private Config config;
 
-    @JsonManagedReference
-    @OneToMany(cascade = CascadeType.ALL,mappedBy = "springyBot")
-    @EqualsAndHashCode.Exclude
+    @OneToMany(fetch = FetchType.EAGER,cascade = CascadeType.ALL)
     @JsonIgnore
     private Set<RobotGroupManagement> robotGroupManagement;
 }

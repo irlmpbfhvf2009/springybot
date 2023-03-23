@@ -20,7 +20,7 @@ public class CommonUtils {
     }
 
     public String getUrl(String type, String username) {
-        return type == "group" ? "http://t.me/" + username + "?startgroup&admin=change_info"
+        return type == "supergroup" ? "http://t.me/" + username + "?startgroup&admin=change_info"
                 : "http://t.me/" + username + "?startchannel&admin=change_info";
     }
 }

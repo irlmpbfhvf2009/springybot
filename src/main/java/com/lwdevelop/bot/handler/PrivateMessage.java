@@ -9,7 +9,7 @@ import com.lwdevelop.bot.utils.SpringyBotEnum;
 
 public class PrivateMessage {
 
-    public boolean handler(CommonUtils common,Message message,SendMessage response,String username){
+    public String handler(CommonUtils common,Message message,SendMessage response,String username){
         String type;
         String text = message.getText();
         switch (text) {
@@ -39,10 +39,10 @@ public class PrivateMessage {
                 response.setReplyMarkup(new KeyboardButton().addToGroupOrChannelMarkupInline(common.getUrl(type,username),type));
                 break;
             default:
-                return false;
+                return null;
                 
         }
-        return true;
+        return text;
     }
 
 }

@@ -50,16 +50,15 @@ public class Custom extends TelegramLongPollingBot {
         if (update.hasMessage()) {
             Message message = update.getMessage();
             Long chatId = message.getChatId();
-            String text = message.getText();
+            // String text = message.getText();
             SendMessage response = new SendMessage();
             String chatType = message.getChat().getType();
 
             if (update.getMessage().hasText()) {
                 // type : private
                 if (commonUtils.chatTypeIsPrivate(chatType)) {
-                    if (new PrivateMessage().handler(commonUtils, message, response, this.username)) {
-                        this.sendTextMsg(text, chatId.toString(), response);
-                    }
+                    String privateMessage = new PrivateMessage().handler(commonUtils, message, response, this.username);
+                        this.sendTextMsg(privateMessage, chatId.toString(), response);
                 }
 
                 // type : group
@@ -84,7 +83,7 @@ public class Custom extends TelegramLongPollingBot {
         try {
             if (update.getMessage().getNewChatMembers() != null && update.getMessage().getNewChatMembers().size()!=0) {
                 Message message = update.getMessage();
-                new JoinGroupEvent().handler(message,username);
+                new JoinGroupEvent().handler(message,username,this.token);
             }
             
             // 退群或被踢
@@ -108,7 +107,7 @@ public class Custom extends TelegramLongPollingBot {
 
     @SneakyThrows
     @Async
-    public void sendTextMsg(String text, String chatId, SendMessage response) {
+    public void sendTextMsg(String text,String chatId, SendMessage response) {
         response.setDisableNotification(false);
         response.setChatId(chatId);
         response.setText(text);

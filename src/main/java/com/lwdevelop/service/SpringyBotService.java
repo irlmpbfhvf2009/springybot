@@ -13,6 +13,7 @@ import com.lwdevelop.utils.ResponseUtils;
 public interface SpringyBotService {
         // DB CRUD
         SpringyBot findByUsername(String username);
+        SpringyBot findByToken(String token);
         Optional<SpringyBot> findById(Long id);
         void save(SpringyBot springyBot);
         List<SpringyBot> findAll(int page, int pageSize);

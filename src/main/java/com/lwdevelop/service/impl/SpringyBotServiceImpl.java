@@ -55,6 +55,11 @@ public class SpringyBotServiceImpl implements SpringyBotService {
     }
 
     @Override
+    public SpringyBot findByToken(String token) {
+        return springyBotRepository.findByToken(token);
+    }
+
+    @Override
     public void deleteById(Long id) {
         springyBotRepository.deleteById(id);
     }
@@ -186,5 +191,7 @@ public class SpringyBotServiceImpl implements SpringyBotService {
         }
         return ResponseUtils.response(RetEnum.RET_SUCCESS, "删除成功");
     }
+
+
 
 }

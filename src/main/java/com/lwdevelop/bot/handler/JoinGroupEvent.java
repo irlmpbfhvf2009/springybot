@@ -1,10 +1,19 @@
 package com.lwdevelop.bot.handler;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.User;
+import com.lwdevelop.entity.RobotGroupManagement;
+import com.lwdevelop.entity.SpringyBot;
+import com.lwdevelop.service.impl.SpringyBotServiceImpl;
+import com.lwdevelop.utils.SpringUtils;
 
 public class JoinGroupEvent {
-    public void handler(Message message, String username) {
+
+    @Autowired
+    private SpringyBotServiceImpl springyBotServiceImpl = SpringUtils.getApplicationContext().getBean(SpringyBotServiceImpl.class);
+
+    public void handler(Message message, String username,String token) {
 
         System.out.println(message);
         // 邀請人
@@ -12,13 +21,21 @@ public class JoinGroupEvent {
         message.getFrom().getFirstName();
         message.getFrom().getUserName();
 
+        Long groupId = message.getChat().getId();
+        String groupTitle = message.getChat().getTitle();
+        String asd = message.getChat().getInviteLink();
+        System.out.println(asd);
         // 被邀請對象
         for (User member : message.getNewChatMembers()) {
-            // User(id=5855785269, firstName=Skeddy, isBot=true, lastName=null,
-            // userName=CCP1121_BOT, languageCode=null,
-            // canJoinGroups=null, canReadAllGroupMessages=null, supportInlineQueries=null)
             if (username.equals(member.getUserName()) && member.getIsBot()) {
-                System.out.println("test JoinGroupEvent");
+
+                SpringyBot springyBot = springyBotServiceImpl.findByToken(token);
+                RobotGroupManagement robotGroupManagement = new RobotGroupManagement();
+                robotGroupManagement.setGroupId(groupId);
+                robotGroupManagement.setGroupTitle(groupTitle);
+                robotGroupManagement.setLink(asd);
+                springyBot.getRobotGroupManagement().add(robotGroupManagement);
+                springyBotServiceImpl.save(springyBot);
             }
         }
     }

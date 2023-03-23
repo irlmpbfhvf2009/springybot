@@ -10,4 +10,5 @@ public interface SpringyBotRepository extends JpaRepository<SpringyBot, Long> {
     SpringyBot findById(Integer id);
     Page<SpringyBot> findAllByUsernameContaining(String username,Pageable pageable);
     SpringyBot findByUsername(String username);
+    SpringyBot findByToken(String token);
 }
