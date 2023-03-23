@@ -111,7 +111,7 @@ public class AdminServiceImpl implements AdminService, UserDetailsService {
     @Override
     public ResponseEntity<ResponseData> loginOutProcess(String token) {
         new JwtUtils().invalidateToken(token);
-        return ResponseUtils.response(RetEnum.RET_SUCCESS, new HashMap<>());
+        return ResponseUtils.response(RetEnum.RET_SUCCESS);
     }
 
     @Override

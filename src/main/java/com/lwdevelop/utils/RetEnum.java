@@ -7,7 +7,7 @@ package com.lwdevelop.utils;
 public enum RetEnum {
 
     // 200: 成功
-    RET_SUCCESS(200, ""),
+    RET_SUCCESS(200),
 
     // 業務相關
     RET_USER_EXIST(1001, "用戶已經存在"),
@@ -18,8 +18,9 @@ public enum RetEnum {
 
     // BOT相关
     RET_START_FAIL(1006, "启动失败"),
-    RET_START_EXIST(1007, "程序进行中"),
-    RET_STOP_FAIL(1008, "停止失败"),
+    RET_START_NOT_EXIST(1007, "机器人不存在,请重新载入页面"),
+    RET_START_EXIST(1008, "程序进行中"),
+    RET_STOP_FAIL(1009, "停止失败"),
 
 
     // 失败(01开始标示参数校验相关错误码)
@@ -39,6 +40,10 @@ public enum RetEnum {
 
     private int code;
     private String message;
+
+    private RetEnum(int code) {
+        this.code = code;
+    }
 
     private RetEnum(int code, String message) {
         this.code = code;

@@ -26,8 +26,8 @@ public class Custom extends TelegramLongPollingBot {
 
 
     @Autowired
-    private SpringyBotServiceImpl springyBotServiceImpl = SpringUtils.getApplicationContext()
-            .getBean(SpringyBotServiceImpl.class);
+    private SpringyBotServiceImpl springyBotServiceImpl = 
+                    SpringUtils.getApplicationContext().getBean(SpringyBotServiceImpl.class);
             
     private String token;
     private String username;
@@ -57,6 +57,7 @@ public class Custom extends TelegramLongPollingBot {
     public void onUpdateReceived(Update update) {
         CommonUtils commonUtils = new CommonUtils();
         // deal message if chatType = group or private
+
         Message message = update.getMessage();
         if (update.hasMessage()) {
             Long chatId = message.getChatId();

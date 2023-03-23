@@ -9,6 +9,8 @@ public class LeaveGroupEvent {
         System.out.println("test LeaveGroupEvent");
         System.out.println(message);
         System.out.println("------------------");
-        System.out.println(message.getLeftChatMember());
+        System.out.println(message.getLeftChatMember().getLanguageCode());
+        
+        System.out.println(message.getLeftChatMember().getCanJoinGroups());
     }
 }

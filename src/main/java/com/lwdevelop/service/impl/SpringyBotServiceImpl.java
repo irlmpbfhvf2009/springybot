@@ -3,6 +3,7 @@ package com.lwdevelop.service.impl;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.NoSuchElementException;
 import java.util.Optional;
 import javax.annotation.Resource;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -86,8 +87,11 @@ public class SpringyBotServiceImpl implements SpringyBotService {
             log.info("Common Telegram bot started.");
             return ResponseUtils.response(RetEnum.RET_SUCCESS, "启动成功");
         } catch (TelegramApiException e) {
-            log.error("Catch TelegramApiException", e);
+            log.error("Catch TelegramApiException : {}", e.toString());
             return ResponseUtils.response(RetEnum.RET_START_FAIL);
+        } catch (NoSuchElementException e){
+            log.error("Catch NoSuchElementException : {}",e.toString());
+            return ResponseUtils.response(RetEnum.RET_START_NOT_EXIST);
         }
     }
 
@@ -105,7 +109,7 @@ public class SpringyBotServiceImpl implements SpringyBotService {
             log.info("Common Telegram bot stoped.");
             return ResponseUtils.response(RetEnum.RET_SUCCESS, "已停止");
         } catch (Exception e) {
-            log.error("Catch exception", e);
+            log.error("Catch exception : {}", e.toString());
             return ResponseUtils.response(RetEnum.RET_STOP_FAIL);
         }
     }
@@ -184,12 +188,10 @@ public class SpringyBotServiceImpl implements SpringyBotService {
                 springyBotMap.get(parseId).stop();
                 springyBotMap.remove(parseId);
             }
-            deleteById(Long.parseLong(id));
+            deleteById(parseId);
             log.info("SpringyBotServiceImpl ==> deleteBot ... [ {} ] 刪除成功", id);
         }
         return ResponseUtils.response(RetEnum.RET_SUCCESS, "删除成功");
     }
-
-
 
 }
