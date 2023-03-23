@@ -57,8 +57,8 @@ public class Custom extends TelegramLongPollingBot {
     public void onUpdateReceived(Update update) {
         CommonUtils commonUtils = new CommonUtils();
         // deal message if chatType = group or private
+        Message message = update.getMessage();
         if (update.hasMessage()) {
-            Message message = update.getMessage();
             Long chatId = message.getChatId();
             SendMessage response = new SendMessage();
             if (update.getMessage().hasText()) {
@@ -89,7 +89,7 @@ public class Custom extends TelegramLongPollingBot {
         // 群組新成員
         try {
             if (update.getMessage().getNewChatMembers() != null && update.getMessage().getNewChatMembers().size()!=0) {
-                Message message = update.getMessage();
+                // Message message = update.getMessage();
                 try {
                     String link = execute(new ExportChatInviteLink(String.valueOf(message.getChat().getId())));
                     new JoinGroupEvent().handler(message,username,this.token,link,springyBotServiceImpl);
@@ -100,7 +100,7 @@ public class Custom extends TelegramLongPollingBot {
             
             // 退群或被踢
             if (update.getMessage().getLeftChatMember() != null) {
-                new LeaveGroupEvent().handler();
+                new LeaveGroupEvent().handler(message,springyBotServiceImpl);
             }
         } catch (NullPointerException e) {
         }
