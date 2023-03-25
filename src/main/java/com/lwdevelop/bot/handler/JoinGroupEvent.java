@@ -17,10 +17,12 @@ public class JoinGroupEvent {
         this.inviteId = message.getFrom().getId();
         this.inviteFirstname = message.getFrom().getFirstName();
         this.inviteUsername = message.getFrom().getUserName();
+
+
         // group info
         this.groupId = message.getChat().getId();
         this.groupTitle = message.getChat().getTitle();
-        
+
         this.botId = botId;
         this.link = link;
 
@@ -37,7 +39,7 @@ public class JoinGroupEvent {
                         });
             // user invite other user
             }else if(isUserInviteEvent(member,username)){
-
+                System.out.println(message);
             }
         }
     }

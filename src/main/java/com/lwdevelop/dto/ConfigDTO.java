@@ -23,6 +23,4 @@ public class ConfigDTO {
 
     private String contactPerson;
 
-    // private Long springyBotId;
-
 }

@@ -9,7 +9,6 @@ import com.lwdevelop.service.impl.SpringyBotServiceImpl;
 
 public class LeaveGroupEvent {
     public void handler(Message message, Long botId,SpringyBot springyBot,RobotGroupManagementServiceImpl robotGroupManagementServiceImpl, SpringyBotServiceImpl springyBotServiceImpl) {
-        System.out.println(springyBot);
         Long groupId = message.getChat().getId();
         springyBot.getRobotGroupManagement().removeIf(rgm -> rgm.getGroupId().equals(groupId) && rgm.getBotId().equals(botId));
         springyBotServiceImpl.save(springyBot);
