@@ -88,7 +88,7 @@ public class Custom extends TelegramLongPollingBot {
 
                 // type : group
                 if (update.getMessage().isSuperGroupMessage()) {
-                    new GroupMessage().handler(commonUtils, message, response, springyBotServiceImpl);
+                    new GroupMessage().handler(commonUtils, message, response, springyBot);
                 }
             }
         }

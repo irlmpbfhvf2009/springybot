@@ -8,34 +8,64 @@ import com.lwdevelop.service.impl.SpringyBotServiceImpl;
 
 public class JoinGroupEvent {
 
+    Long inviteId;
+    String inviteFirstname;
+    String inviteUsername;
+    Long groupId;
+    String groupTitle;
+    Long botId;
+    String link;
+
     public void handler(Message message, String username, Long botId,SpringyBot springyBot,String link, SpringyBotServiceImpl springyBotServiceImpl) {
 
         // 邀請人
-        Long inviteId = message.getFrom().getId();
-        String inviteFirstname = message.getFrom().getFirstName();
-        String inviteUsername = message.getFrom().getUserName();
-        Long groupId = message.getChat().getId();
-        String groupTitle = message.getChat().getTitle();
+        this.inviteId = message.getFrom().getId();
+        this.inviteFirstname = message.getFrom().getFirstName();
+        this.inviteUsername = message.getFrom().getUserName();
+        this.groupId = message.getChat().getId();
+        this.groupTitle = message.getChat().getTitle();
+        this.botId = botId;
+        this.link = link;
 
-        // 被邀請對象
         for (User member : message.getNewChatMembers()) {
-            if (username.equals(member.getUserName()) && member.getIsBot()) {
+            // bot join group
+            if (isBotJoinGroup(member,username)) {
                 springyBot.getRobotGroupManagement().stream()
-                        .filter(rgm -> rgm.getGroupId().equals(groupId) && rgm.getBotId().equals(botId))
+                        .filter(rgm -> hasTarget(rgm))
                         .findFirst()
                         .ifPresentOrElse(null, () -> {
-                            RobotGroupManagement robotGroupManagement = new RobotGroupManagement();
-                            robotGroupManagement.setBotId(botId);
-                            robotGroupManagement.setInviteId(inviteId);
-                            robotGroupManagement.setInviteFirstname(inviteFirstname);
-                            robotGroupManagement.setInviteUsername(inviteUsername);
-                            robotGroupManagement.setGroupId(groupId);
-                            robotGroupManagement.setGroupTitle(groupTitle);
-                            robotGroupManagement.setLink(link);
+                            RobotGroupManagement robotGroupManagement = getRobotGroupManagement();
                             springyBot.getRobotGroupManagement().add(robotGroupManagement);
                             springyBotServiceImpl.save(springyBot);
                         });
+            // user invite other user
+            }else if(isUserInviteEvent(member,username)){
+
             }
         }
     }
+    private Boolean isBotJoinGroup(User member,String username){
+        return username.equals(member.getUserName()) && member.getIsBot();
+    }
+
+    private Boolean isUserInviteEvent(User member,String username){
+        return !username.equals(member.getUserName()) && !member.getIsBot();
+    }
+
+    private Boolean hasTarget(RobotGroupManagement rgm){
+        return rgm.getGroupId().equals(this.groupId) && rgm.getBotId().equals(this.botId);
+    }
+
+    private RobotGroupManagement getRobotGroupManagement(){
+        RobotGroupManagement robotGroupManagement = new RobotGroupManagement();
+        robotGroupManagement.setBotId(this.botId);
+        robotGroupManagement.setInviteId(this.inviteId);
+        robotGroupManagement.setInviteFirstname(this.inviteFirstname);
+        robotGroupManagement.setInviteUsername(this.inviteUsername);
+        robotGroupManagement.setGroupId(this.groupId);
+        robotGroupManagement.setGroupTitle(this.groupTitle);
+        robotGroupManagement.setLink(this.link);
+        return robotGroupManagement;
+    }
+
 }
