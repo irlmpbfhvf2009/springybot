@@ -23,7 +23,7 @@ public class PrivateMessage {
                 break;
 
             case "/start":
-                text = SpringyBotEnum.CALLBACKS.getText();
+                text = SpringyBotEnum.COMMONS_START.getText();
                 response.setReplyMarkup(new KeyboardButton().startReplyKeyboardMarkup());
                 break;
 

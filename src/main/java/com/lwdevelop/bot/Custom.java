@@ -15,9 +15,9 @@ import com.lwdevelop.bot.handler.JoinGroupEvent;
 import com.lwdevelop.bot.handler.LeaveGroupEvent;
 import com.lwdevelop.bot.handler.PrivateMessage;
 import com.lwdevelop.bot.utils.CommonUtils;
+import com.lwdevelop.bot.utils.SpringyBotEnum;
 import com.lwdevelop.service.impl.SpringyBotServiceImpl;
 import com.lwdevelop.utils.SpringUtils;
-
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 
@@ -45,7 +45,6 @@ public class Custom extends TelegramLongPollingBot {
 
     public Custom(String token, String username) {
         super(new DefaultBotOptions());
-        // super(options);
         this.token = token;
         this.username = username;
         try {
@@ -122,7 +121,7 @@ public class Custom extends TelegramLongPollingBot {
                 } catch (TelegramApiException e) {
                     String chatId = String.valueOf(message.getFrom().getId());
                     String title = message.getChat().getTitle();
-                    sendTextMsg(chatId, "目前，"+title+" 群组的权限设定不足以让机器人有效地管理该群组。\n为了让机器人能够正常运作，请将其设定为该群组的管理员，以便它能够更好地管理该群组。");
+                    sendTextMsg(chatId, title+SpringyBotEnum.BOT_NOT_ENOUGH_RIGHTS.getText());
                     log.error(e.toString());
                 }
             }
