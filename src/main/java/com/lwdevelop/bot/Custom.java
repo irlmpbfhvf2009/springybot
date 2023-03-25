@@ -59,6 +59,9 @@ public class Custom extends TelegramLongPollingBot {
         // deal message if chatType = group or private
 
         Message message = update.getMessage();
+
+        System.out.println(message);
+
         if (update.hasMessage()) {
             Long chatId = message.getChatId();
             SendMessage response = new SendMessage();
@@ -95,7 +98,11 @@ public class Custom extends TelegramLongPollingBot {
                     String link = execute(new ExportChatInviteLink(String.valueOf(message.getChat().getId())));
                     new JoinGroupEvent().handler(message,username,this.token,link,springyBotServiceImpl);
                 } catch (TelegramApiException e) {
+                    String chatId = String.valueOf(message.getFrom().getId());
+                    String title = message.getChat().getTitle();
+                    sendTextMsg(chatId, "目前，"+title+" 群组的权限设定不足以让机器人有效地管理该群组。\n为了让机器人能够正常运作，请将其设定为该群组的管理员，以便它能够更好地管理该群组。");
                     log.error(e.toString());
+                    //Message(messageId=1724, from=User(id=5036779522
                 }
             }
             

@@ -118,7 +118,6 @@ public class SpringyBotServiceImpl implements SpringyBotService {
     public ResponseEntity<ResponseData> addBot(SpringyBotDTO springyBotDTO) {
         SpringyBot springyBot = new SpringyBot();
         Config config = new Config();
-        System.out.println(springyBotDTO);
         springyBot.setToken(springyBotDTO.getToken());
         springyBot.setUsername(springyBotDTO.getUsername());
         springyBot.setState(springyBotDTO.getState());
