@@ -8,22 +8,19 @@ import com.lwdevelop.service.impl.SpringyBotServiceImpl;
 
 public class JoinGroupEvent {
 
-    Long inviteId;
-    String inviteFirstname;
-    String inviteUsername;
-    Long groupId;
-    String groupTitle;
-    Long botId;
-    String link;
+    Long inviteId,groupId,botId;
+    String inviteFirstname,inviteUsername,groupTitle,link;
 
     public void handler(Message message, String username, Long botId,SpringyBot springyBot,String link, SpringyBotServiceImpl springyBotServiceImpl) {
 
-        // 邀請人
+        // invite user
         this.inviteId = message.getFrom().getId();
         this.inviteFirstname = message.getFrom().getFirstName();
         this.inviteUsername = message.getFrom().getUserName();
+        // group info
         this.groupId = message.getChat().getId();
         this.groupTitle = message.getChat().getTitle();
+        
         this.botId = botId;
         this.link = link;
 

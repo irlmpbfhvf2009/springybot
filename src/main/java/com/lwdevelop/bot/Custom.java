@@ -104,7 +104,7 @@ public class Custom extends TelegramLongPollingBot {
             }
         }
 
-        // 群組新成員
+        // join group event
         try {
             if (update.getMessage().getNewChatMembers() != null
                     && update.getMessage().getNewChatMembers().size() != 0) {
@@ -121,7 +121,7 @@ public class Custom extends TelegramLongPollingBot {
                 }
             }
 
-            // 退群或被踢
+            // leave event
             if (update.getMessage().getLeftChatMember() != null) {
                 new LeaveGroupEvent().handler(message, this.botId, springyBot, robotGroupManagementServiceImpl,
                         springyBotServiceImpl);
