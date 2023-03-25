@@ -7,6 +7,7 @@ import com.lwdevelop.entity.SpringyBot;
 import com.lwdevelop.service.impl.SpringyBotServiceImpl;
 
 public class JoinGroupEvent {
+    
 
     public void handler(Message message, String username, String token, String link,SpringyBotServiceImpl springyBotServiceImpl) {
 
