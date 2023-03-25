@@ -31,9 +31,6 @@ public class SpringyBot {
     @OneToOne(cascade = CascadeType.ALL)
     private Config config;
 
-    @OneToOne(cascade = CascadeType.ALL)
-    private SpringyBotDetails springyBotDetails;
-
     @OneToMany(fetch = FetchType.EAGER,cascade = CascadeType.ALL)
     @JsonIgnore
     private Set<RobotGroupManagement> robotGroupManagement;

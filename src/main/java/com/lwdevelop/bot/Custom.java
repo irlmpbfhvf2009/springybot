@@ -33,20 +33,30 @@ public class Custom extends TelegramLongPollingBot {
     private String username;
 
     // bot details
-    private Long id;
-    private String firstname;
-    private String lastname;
-    private boolean isBot;
+
+    private Long botId;
+    // private String botUsername;
+    // private String botFirstname;
+    // private String botLastname;
+    // private Boolean canJoinGroups;
+    // private Boolean canReadAllGroupMessages;
+    // private Boolean supportInlineQueries;
 
 
-    public Custom(String token, String username, DefaultBotOptions options) {
-        super(options);
+    public Custom(String token, String username) {
+        super(new DefaultBotOptions());
+        // super(options);
         this.token = token;
-        // this.username = username;
+        this.username = username;
         try {
-            // User(id=5855785269, firstName=Skeddy, isBot=true, lastName=null, userName=CCP1121_BOT, languageCode=null, canJoinGroups=true, canReadAllGroupMessages=true, supportInlineQueries=true)
-            System.out.println(getMe().getUserName());
-            this.username = getMe().getUserName();
+            this.botId = getMe().getId();
+            // this.botFirstname = getMe().getFirstName();
+            // this.botUsername = getMe().getUserName();
+            // this.botLastname = getMe().getLastName();
+            // this.canJoinGroups = getMe().getCanJoinGroups();
+            // this.canReadAllGroupMessages = getMe().getCanReadAllGroupMessages();
+            // this.supportInlineQueries = getMe().getSupportInlineQueries();
+
         } catch (TelegramApiException e) {
             e.printStackTrace();
         }

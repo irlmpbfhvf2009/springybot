@@ -80,7 +80,7 @@ public class SpringyBotServiceImpl implements SpringyBotService {
             if (springyBotMap.containsKey(id)) {
                 return ResponseUtils.response(RetEnum.RET_START_EXIST);
             }
-            BotSession botSession = telegramBotsApi.registerBot(new Custom(token, new DefaultBotOptions()));
+            BotSession botSession = telegramBotsApi.registerBot(new Custom(token,username));
             // BotSession botSession = telegramBotsApi.registerBot(new Custom(token, username, new DefaultBotOptions()));
             springyBotMap.put(id, botSession);
             springyBot.setState(true);
