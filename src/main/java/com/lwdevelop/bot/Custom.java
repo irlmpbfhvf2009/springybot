@@ -16,6 +16,8 @@ import com.lwdevelop.bot.handler.LeaveGroupEvent;
 import com.lwdevelop.bot.handler.PrivateMessage;
 import com.lwdevelop.bot.utils.CommonUtils;
 import com.lwdevelop.bot.utils.SpringyBotEnum;
+import com.lwdevelop.dto.SpringyBotDTO;
+import com.lwdevelop.entity.SpringyBot;
 import com.lwdevelop.service.impl.RobotGroupManagementServiceImpl;
 import com.lwdevelop.service.impl.SpringyBotServiceImpl;
 import com.lwdevelop.utils.SpringUtils;
@@ -25,44 +27,35 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class Custom extends TelegramLongPollingBot {
 
+    @Autowired
+    private RobotGroupManagementServiceImpl robotGroupManagementServiceImpl = SpringUtils.getApplicationContext()
+            .getBean(RobotGroupManagementServiceImpl.class);
 
     @Autowired
-    private RobotGroupManagementServiceImpl robotGroupManagementServiceImpl = 
-                    SpringUtils.getApplicationContext().getBean(RobotGroupManagementServiceImpl.class);
+    private SpringyBotServiceImpl springyBotServiceImpl = SpringUtils.getApplicationContext()
+            .getBean(SpringyBotServiceImpl.class);
 
-    @Autowired
-    private SpringyBotServiceImpl springyBotServiceImpl = 
-                    SpringUtils.getApplicationContext().getBean(SpringyBotServiceImpl.class);
-            
+    private Long id;
+    private Long botId;
     private String token;
     private String username;
 
-    // bot details
-    private Long botId;
-    // private String botUsername;
-    // private String botFirstname;
-    // private String botLastname;
-    // private Boolean canJoinGroups;
-    // private Boolean canReadAllGroupMessages;
-    // private Boolean supportInlineQueries;
 
-
-    public Custom(String token, String username) {
+    public Custom(SpringyBotDTO springyBotDTO) {
         super(new DefaultBotOptions());
-        this.token = token;
-        this.username = username;
-        try {
-            this.botId = getMe().getId();
-            // this.botFirstname = getMe().getFirstName();
-            // this.botUsername = getMe().getUserName();
-            // this.botLastname = getMe().getLastName();
-            // this.canJoinGroups = getMe().getCanJoinGroups();
-            // this.canReadAllGroupMessages = getMe().getCanReadAllGroupMessages();
-            // this.supportInlineQueries = getMe().getSupportInlineQueries();
 
+        SpringyBot springyBot = springyBotServiceImpl.findById(springyBotDTO.getId()).get();
+        springyBot.setState(true);
+        springyBotServiceImpl.save(springyBot);
+        this.id = springyBotDTO.getId();
+        this.token = springyBot.getToken();
+        try {
+            this.username = getMe().getUserName();
+            this.botId = getMe().getId();
         } catch (TelegramApiException e) {
             e.printStackTrace();
         }
+
     }
 
     @Override
@@ -72,11 +65,6 @@ public class Custom extends TelegramLongPollingBot {
 
     @Override
     public String getBotUsername() {
-        try {
-            this.username = getMe().getUserName();
-        } catch (TelegramApiException e) {
-            e.printStackTrace();
-        }
         return this.username;
     }
 
@@ -84,6 +72,7 @@ public class Custom extends TelegramLongPollingBot {
     public void onUpdateReceived(Update update) {
         CommonUtils commonUtils = new CommonUtils();
         Message message = update.getMessage();
+        SpringyBot springyBot = springyBotServiceImpl.findById(this.id).get();
 
         // deal message if chatType = group or private
         if (update.hasMessage()) {
@@ -93,12 +82,13 @@ public class Custom extends TelegramLongPollingBot {
                 // type : private
                 if (update.getMessage().isUserMessage()) {
                     String privateMessage = new PrivateMessage().handler(commonUtils, message, response, this.username);
-                        this.sendTextMsg(chatId.toString(),privateMessage,  response);
+                    this.sendTextMsg(chatId.toString(), privateMessage, response);
+
                 }
 
                 // type : group
                 if (update.getMessage().isSuperGroupMessage()) {
-                    new GroupMessage().handler(commonUtils, message, response);
+                    new GroupMessage().handler(commonUtils, message, response, springyBotServiceImpl);
                 }
             }
         }
@@ -116,24 +106,25 @@ public class Custom extends TelegramLongPollingBot {
 
         // 群組新成員
         try {
-            if (update.getMessage().getNewChatMembers() != null && update.getMessage().getNewChatMembers().size()!=0) {
-                // Message message = update.getMessage();
-                String link="";
+            if (update.getMessage().getNewChatMembers() != null
+                    && update.getMessage().getNewChatMembers().size() != 0) {
+                String link = "";
                 try {
                     link = execute(new ExportChatInviteLink(String.valueOf(message.getChat().getId())));
                 } catch (TelegramApiException e) {
                     String chatId = String.valueOf(message.getFrom().getId());
                     String title = message.getChat().getTitle();
-                    sendTextMsg(chatId, title+SpringyBotEnum.BOT_NOT_ENOUGH_RIGHTS.getText());
+                    sendTextMsg(chatId, title + SpringyBotEnum.BOT_NOT_ENOUGH_RIGHTS.getText());
                     log.error(e.toString());
-                }finally{
-                    new JoinGroupEvent().handler(message,username,this.token,this.botId,link,springyBotServiceImpl);
+                } finally {
+                    new JoinGroupEvent().handler(message, this.username, this.botId,springyBot, link,springyBotServiceImpl);
                 }
             }
-            
+
             // 退群或被踢
             if (update.getMessage().getLeftChatMember() != null) {
-                new LeaveGroupEvent().handler(message,springyBotServiceImpl,robotGroupManagementServiceImpl,this.token,this.botId);
+                new LeaveGroupEvent().handler(message, this.botId, springyBot, robotGroupManagementServiceImpl,
+                        springyBotServiceImpl);
             }
         } catch (NullPointerException e) {
         }
@@ -142,7 +133,7 @@ public class Custom extends TelegramLongPollingBot {
 
     @SneakyThrows
     @Async
-    public void sendTextMsg(String chatId,String text) {
+    public void sendTextMsg(String chatId, String text) {
         SendMessage response = new SendMessage();
         response.setDisableNotification(false);
         response.setChatId(chatId);
@@ -152,7 +143,7 @@ public class Custom extends TelegramLongPollingBot {
 
     @SneakyThrows
     @Async
-    public void sendTextMsg(String chatId,String text, SendMessage response) {
+    public void sendTextMsg(String chatId, String text, SendMessage response) {
         response.setDisableNotification(false);
         response.setChatId(chatId);
         response.setText(text);

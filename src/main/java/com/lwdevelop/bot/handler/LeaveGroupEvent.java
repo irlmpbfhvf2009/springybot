@@ -8,16 +8,12 @@ import com.lwdevelop.service.impl.RobotGroupManagementServiceImpl;
 import com.lwdevelop.service.impl.SpringyBotServiceImpl;
 
 public class LeaveGroupEvent {
-    public void handler(Message message, SpringyBotServiceImpl springyBotServiceImpl,
-            RobotGroupManagementServiceImpl robotGroupManagementServiceImpl, String token,Long botId) {
-                
+    public void handler(Message message, Long botId,SpringyBot springyBot,RobotGroupManagementServiceImpl robotGroupManagementServiceImpl, SpringyBotServiceImpl springyBotServiceImpl) {
+        System.out.println(springyBot);
         Long groupId = message.getChat().getId();
-        SpringyBot springyBot = springyBotServiceImpl.findByToken(token);
-        RobotGroupManagement robotGroupManagement = robotGroupManagementServiceImpl.findByBotIdAndGroupId(botId, groupId);
-
-        springyBot.getRobotGroupManagement().removeIf(rgm -> rgm.getGroupId().equals(groupId) && rgm.getBotId().equals(botId) );
+        springyBot.getRobotGroupManagement().removeIf(rgm -> rgm.getGroupId().equals(groupId) && rgm.getBotId().equals(botId));
         springyBotServiceImpl.save(springyBot);
+        RobotGroupManagement robotGroupManagement = robotGroupManagementServiceImpl.findByBotIdAndGroupId(botId, groupId);
         robotGroupManagementServiceImpl.deleteById(robotGroupManagement.getId());
-        
     }
 }

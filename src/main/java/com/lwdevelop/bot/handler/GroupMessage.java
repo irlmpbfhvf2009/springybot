@@ -4,9 +4,10 @@ import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Message;
 
 import com.lwdevelop.bot.utils.CommonUtils;
+import com.lwdevelop.service.impl.SpringyBotServiceImpl;
 
 public class GroupMessage {
-    public void handler(CommonUtils common,Message message,SendMessage response){
+    public void handler(CommonUtils common,Message message,SendMessage response,SpringyBotServiceImpl springyBotServiceImpl){
         // System.out.println(message.getNewChatMembers());
         // System.out.println(message);
         

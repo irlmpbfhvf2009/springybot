@@ -7,9 +7,8 @@ import com.lwdevelop.entity.SpringyBot;
 import com.lwdevelop.service.impl.SpringyBotServiceImpl;
 
 public class JoinGroupEvent {
-    
 
-    public void handler(Message message, String username, String token,Long botId, String link,SpringyBotServiceImpl springyBotServiceImpl) {
+    public void handler(Message message, String username, Long botId,SpringyBot springyBot,String link, SpringyBotServiceImpl springyBotServiceImpl) {
 
         // 邀請人
         Long inviteId = message.getFrom().getId();
@@ -21,8 +20,8 @@ public class JoinGroupEvent {
         // 被邀請對象
         for (User member : message.getNewChatMembers()) {
             if (username.equals(member.getUserName()) && member.getIsBot()) {
-                SpringyBot springyBot = springyBotServiceImpl.findByToken(token);
-                springyBot.getRobotGroupManagement().stream().filter(rgm -> rgm.getGroupId().equals(groupId) && rgm.getBotId().equals(botId))
+                springyBot.getRobotGroupManagement().stream()
+                        .filter(rgm -> rgm.getGroupId().equals(groupId) && rgm.getBotId().equals(botId))
                         .findFirst()
                         .ifPresentOrElse(null, () -> {
                             RobotGroupManagement robotGroupManagement = new RobotGroupManagement();

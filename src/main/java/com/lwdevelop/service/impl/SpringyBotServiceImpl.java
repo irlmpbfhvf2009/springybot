@@ -76,17 +76,14 @@ public class SpringyBotServiceImpl implements SpringyBotService {
     public synchronized ResponseEntity<ResponseData> start(SpringyBotDTO springyBotDTO) {
         try {
             Long id = springyBotDTO.getId();
-            String token = springyBotDTO.getToken();
-            String username = springyBotDTO.getUsername();
-            SpringyBot springyBot = findById(id).get();
+
             if (springyBotMap.containsKey(id)) {
                 return ResponseUtils.response(RetEnum.RET_START_EXIST);
             }
-            BotSession botSession = telegramBotsApi.registerBot(new Custom(token,username));
-            // BotSession botSession = telegramBotsApi.registerBot(new Custom(token, username, new DefaultBotOptions()));
+            BotSession botSession = telegramBotsApi.registerBot(new Custom(springyBotDTO));
             springyBotMap.put(id, botSession);
-            springyBot.setState(true);
-            save(springyBot);
+
+
             log.info("Common Telegram bot started.");
             return ResponseUtils.response(RetEnum.RET_SUCCESS, "启动成功");
         } catch (TelegramApiException e) {
@@ -102,13 +99,15 @@ public class SpringyBotServiceImpl implements SpringyBotService {
     public synchronized ResponseEntity<ResponseData> stop(SpringyBotDTO springyBotDTO) {
         try {
             Long id = springyBotDTO.getId();
-            SpringyBot springyBot = findById(springyBotDTO.getId()).get();
             if (springyBotMap.containsKey(id)) {
                 springyBotMap.get(id).stop();
                 springyBotMap.remove(id);
             }
+
+            SpringyBot springyBot = findById(springyBotDTO.getId()).get();
             springyBot.setState(false);
             save(springyBot);
+
             log.info("Common Telegram bot stoped.");
             return ResponseUtils.response(RetEnum.RET_SUCCESS, "已停止");
         } catch (Exception e) {
