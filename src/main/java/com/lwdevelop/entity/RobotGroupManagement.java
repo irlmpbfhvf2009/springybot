@@ -14,7 +14,7 @@ public class RobotGroupManagement {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
-    private Long fromBotId;
+    private Long botId;
 
     private Long inviteId;
 

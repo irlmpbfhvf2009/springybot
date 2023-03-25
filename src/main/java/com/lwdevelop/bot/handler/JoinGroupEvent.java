@@ -22,11 +22,11 @@ public class JoinGroupEvent {
         for (User member : message.getNewChatMembers()) {
             if (username.equals(member.getUserName()) && member.getIsBot()) {
                 SpringyBot springyBot = springyBotServiceImpl.findByToken(token);
-                springyBot.getRobotGroupManagement().stream().filter(rgm -> rgm.getGroupId().equals(groupId))
+                springyBot.getRobotGroupManagement().stream().filter(rgm -> rgm.getGroupId().equals(groupId) && rgm.getBotId().equals(botId))
                         .findFirst()
                         .ifPresentOrElse(null, () -> {
                             RobotGroupManagement robotGroupManagement = new RobotGroupManagement();
-                            robotGroupManagement.setFromBotId(botId);
+                            robotGroupManagement.setBotId(botId);
                             robotGroupManagement.setInviteId(inviteId);
                             robotGroupManagement.setInviteFirstname(inviteFirstname);
                             robotGroupManagement.setInviteUsername(inviteUsername);
