@@ -9,7 +9,7 @@ import com.lwdevelop.service.impl.SpringyBotServiceImpl;
 public class JoinGroupEvent {
     
 
-    public void handler(Message message, String username, String token, String link,SpringyBotServiceImpl springyBotServiceImpl) {
+    public void handler(Message message, String username, String token,Long botId, String link,SpringyBotServiceImpl springyBotServiceImpl) {
 
         // 邀請人
         Long inviteId = message.getFrom().getId();
@@ -26,6 +26,7 @@ public class JoinGroupEvent {
                         .findFirst()
                         .ifPresentOrElse(null, () -> {
                             RobotGroupManagement robotGroupManagement = new RobotGroupManagement();
+                            robotGroupManagement.setFromBotId(botId);
                             robotGroupManagement.setInviteId(inviteId);
                             robotGroupManagement.setInviteFirstname(inviteFirstname);
                             robotGroupManagement.setInviteUsername(inviteUsername);

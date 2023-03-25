@@ -30,14 +30,16 @@ import org.springframework.data.domain.Pageable;
 @Service
 public class SpringyBotServiceImpl implements SpringyBotService {
 
-    @Autowired
-    private SpringyBotRepository springyBotRepository;
-
     @Resource
     private TelegramBotsApi telegramBotsApi;
 
+    @Autowired
+    private SpringyBotRepository springyBotRepository;
+
+
     private static Map<Long, BotSession> springyBotMap = new HashMap<>();
 
+    // SpringyBot CRUD
     @Override
     public Optional<SpringyBot> findById(Long id) {
         return springyBotRepository.findById(id);
@@ -68,6 +70,7 @@ public class SpringyBotServiceImpl implements SpringyBotService {
     public void save(SpringyBot springyBot) {
         springyBotRepository.save(springyBot);
     }
+
 
     @Override
     public synchronized ResponseEntity<ResponseData> start(SpringyBotDTO springyBotDTO) {
@@ -192,5 +195,7 @@ public class SpringyBotServiceImpl implements SpringyBotService {
         }
         return ResponseUtils.response(RetEnum.RET_SUCCESS, "删除成功");
     }
+
+
 
 }

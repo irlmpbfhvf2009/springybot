@@ -16,6 +16,7 @@ import com.lwdevelop.bot.handler.LeaveGroupEvent;
 import com.lwdevelop.bot.handler.PrivateMessage;
 import com.lwdevelop.bot.utils.CommonUtils;
 import com.lwdevelop.bot.utils.SpringyBotEnum;
+import com.lwdevelop.service.impl.RobotGroupManagementServiceImpl;
 import com.lwdevelop.service.impl.SpringyBotServiceImpl;
 import com.lwdevelop.utils.SpringUtils;
 import lombok.SneakyThrows;
@@ -26,6 +27,10 @@ public class Custom extends TelegramLongPollingBot {
 
 
     @Autowired
+    private RobotGroupManagementServiceImpl robotGroupManagementServiceImpl = 
+                    SpringUtils.getApplicationContext().getBean(RobotGroupManagementServiceImpl.class);
+
+    @Autowired
     private SpringyBotServiceImpl springyBotServiceImpl = 
                     SpringUtils.getApplicationContext().getBean(SpringyBotServiceImpl.class);
             
@@ -33,7 +38,6 @@ public class Custom extends TelegramLongPollingBot {
     private String username;
 
     // bot details
-
     private Long botId;
     // private String botUsername;
     // private String botFirstname;
@@ -79,10 +83,9 @@ public class Custom extends TelegramLongPollingBot {
     @Override
     public void onUpdateReceived(Update update) {
         CommonUtils commonUtils = new CommonUtils();
-        // deal message if chatType = group or private
-
         Message message = update.getMessage();
 
+        // deal message if chatType = group or private
         if (update.hasMessage()) {
             Long chatId = message.getChatId();
             SendMessage response = new SendMessage();
@@ -115,20 +118,22 @@ public class Custom extends TelegramLongPollingBot {
         try {
             if (update.getMessage().getNewChatMembers() != null && update.getMessage().getNewChatMembers().size()!=0) {
                 // Message message = update.getMessage();
+                String link="";
                 try {
-                    String link = execute(new ExportChatInviteLink(String.valueOf(message.getChat().getId())));
-                    new JoinGroupEvent().handler(message,username,this.token,link,springyBotServiceImpl);
+                    link = execute(new ExportChatInviteLink(String.valueOf(message.getChat().getId())));
                 } catch (TelegramApiException e) {
                     String chatId = String.valueOf(message.getFrom().getId());
                     String title = message.getChat().getTitle();
                     sendTextMsg(chatId, title+SpringyBotEnum.BOT_NOT_ENOUGH_RIGHTS.getText());
                     log.error(e.toString());
+                }finally{
+                    new JoinGroupEvent().handler(message,username,this.token,this.botId,link,springyBotServiceImpl);
                 }
             }
             
             // 退群或被踢
             if (update.getMessage().getLeftChatMember() != null) {
-                new LeaveGroupEvent().handler(message,springyBotServiceImpl);
+                new LeaveGroupEvent().handler(message,springyBotServiceImpl,robotGroupManagementServiceImpl,this.token,this.botId);
             }
         } catch (NullPointerException e) {
         }
