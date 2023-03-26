@@ -5,7 +5,7 @@ import org.telegram.telegrambots.meta.api.objects.Message;
 import lombok.Data;
 
 @Data
-public class CommonUtils {
+public class Common {
 
     private Long springyBotId;
 
@@ -19,7 +19,7 @@ public class CommonUtils {
 
     private SendMessage response;
 
-    public CommonUtils(Long springyBotId, Long botId, String username) {
+    public Common(Long springyBotId, Long botId, String username) {
         this.springyBotId=springyBotId;
         this.botId = botId;
         this.username = username;

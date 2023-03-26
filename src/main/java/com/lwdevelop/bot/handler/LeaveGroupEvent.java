@@ -3,7 +3,7 @@ package com.lwdevelop.bot.handler;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.telegram.telegrambots.meta.api.objects.Message;
 
-import com.lwdevelop.bot.utils.CommonUtils;
+import com.lwdevelop.bot.utils.Common;
 import com.lwdevelop.entity.RobotGroupManagement;
 import com.lwdevelop.entity.SpringyBot;
 import com.lwdevelop.service.impl.RobotGroupManagementServiceImpl;
@@ -23,7 +23,7 @@ public class LeaveGroupEvent {
     private Long groupId;
     private Long botId;
 
-    public void isBotLeave(CommonUtils common) {
+    public void isBotLeave(Common common) {
 
         Message message = common.getMessage();
         SpringyBot springyBot = springyBotServiceImpl.findById(common.getSpringyBotId()).get();

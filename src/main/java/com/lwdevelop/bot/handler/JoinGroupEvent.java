@@ -3,7 +3,7 @@ package com.lwdevelop.bot.handler;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.User;
-import com.lwdevelop.bot.utils.CommonUtils;
+import com.lwdevelop.bot.utils.Common;
 import com.lwdevelop.entity.RobotGroupManagement;
 import com.lwdevelop.entity.SpringyBot;
 import com.lwdevelop.service.impl.SpringyBotServiceImpl;
@@ -21,8 +21,8 @@ public class JoinGroupEvent {
     private String inviteFirstname;
     private String inviteUsername;
     private String groupTitle;
-    private CommonUtils common;
-    public void isUserJoinGroup(CommonUtils common) {
+    private Common common;
+    public void isUserJoinGroup(Common common) {
         Message message = common.getMessage();
         this.common = common;
 
@@ -37,24 +37,9 @@ public class JoinGroupEvent {
 
         this.botId = common.getBotId();
 
-        // for (User member : message.getNewChatMembers()) {
-        // // bot join group
-        // if (isBotJoinGroup(member,username)) {
-        // springyBot.getRobotGroupManagement().stream()
-        // .filter(rgm -> hasTarget(rgm))
-        // .findFirst()
-        // .ifPresentOrElse(null, () -> {
-        // RobotGroupManagement robotGroupManagement = getRobotGroupManagement();
-        // springyBot.getRobotGroupManagement().add(robotGroupManagement);
-        // springyBotServiceImpl.save(springyBot);
-        // });
-        // // user invite other user
-        // }else if(isUserInviteEvent(member,username)){
-        // }
-        // }
     }
 
-    public void isBotJoinGroup(CommonUtils common) {
+    public void isBotJoinGroup(Common common) {
         // init
         Message message = common.getMessage();
         SpringyBot springyBot = springyBotServiceImpl.findById(common.getSpringyBotId()).get();

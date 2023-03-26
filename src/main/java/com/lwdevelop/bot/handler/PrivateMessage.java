@@ -1,13 +1,13 @@
 package com.lwdevelop.bot.handler;
 
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
-import com.lwdevelop.bot.utils.CommonUtils;
+import com.lwdevelop.bot.utils.Common;
 import com.lwdevelop.bot.utils.KeyboardButton;
 import com.lwdevelop.bot.utils.SpringyBotEnum;
 
 public class PrivateMessage {
 
-    public void handler(CommonUtils common) {
+    public void handler(Common common) {
 
         common.privateMessageSettings(common.getMessage());
         
