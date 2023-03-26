@@ -1,7 +1,5 @@
 package com.lwdevelop.bot;
 
-import java.util.List;
-
 import org.springframework.scheduling.annotation.Async;
 import org.telegram.telegrambots.bots.DefaultBotOptions;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
@@ -26,7 +24,6 @@ public class Custom extends TelegramLongPollingBot {
     private Common common;
     private SpringyBotDTO dto;
     private Message message;
-    private Update update;
 
     public Custom(SpringyBotDTO springyBotDTO) {
         super(new DefaultBotOptions());
@@ -55,29 +52,30 @@ public class Custom extends TelegramLongPollingBot {
 
         this.common.setMessage(update.getMessage());
         this.message = update.getMessage();
-        this.update = update;
 
         // deal message group or private chat
-        if (isHasMessage()) {
-            if (hasMessage()) {
+        if (update.hasMessage()) {
+            if (this.message.hasText()) {
 
                 // private
-                if (isUserMessage()) {
-                    privateMessageHandler();
+                if (this.message.isUserMessage()) {
+                    new PrivateMessage().handler(this.common);
+                    this.sendTextMsg();
                 }
 
                 // group
-                if (isSuperGroupMessage()) {
-                    groupMessageHandler();
+                if (this.message.isSuperGroupMessage()) {
+                    new GroupMessage().handler(this.common);
                 }
             }
         }
 
         // // deal message channel chat
-        if (getChannelPostNotNull()) {
-            if (isChannelPostHasText()) {
-                if (chatTypeIsChannel()) {
-                    channelMessageHandler();
+        if (update.getChannelPost() != null) {
+            if (update.getChannelPost().hasText()) {
+                String chatType = update.getChannelPost().getChat().getType();
+                if (this.common.chatTypeIsChannel(chatType)) {
+                    new ChannelMessage().handler(this.common);
                 }
             }
         }
@@ -86,11 +84,12 @@ public class Custom extends TelegramLongPollingBot {
         try {
             if (isNewChatMembersNotNullAndIsNewChatMembersNotEmpty()) {
                 // is robot join group
-                for (User member : getNewChatMembers()) {
+                for (User member : this.message.getNewChatMembers()) {
                     if (isBot(member)) {
-                        joinGroupEventIsBotJoinGroup();
+                        dealInviteLink();
+                        new JoinGroupEvent().isBotJoinGroup(this.common);
                     } else {
-                        joinGroupEventIsUserJoinGroup();
+                        new JoinGroupEvent().isUserJoinGroup(this.common);
                     }
                 }
             }
@@ -113,34 +112,6 @@ public class Custom extends TelegramLongPollingBot {
         executeAsync(this.common.getResponse());
     }
 
-    private Boolean chatTypeIsChannel() {
-        return this.common.chatTypeIsChannel(getChannelPostChatTyoe());
-    }
-
-    private Boolean getChannelPostNotNull() {
-        return this.update.getChannelPost() != null;
-    }
-
-    private Boolean hasMessage() {
-        return this.message.hasText();
-    }
-
-    private Boolean isHasMessage() {
-        return this.update.hasMessage();
-    }
-
-    private Boolean isChannelPostHasText() {
-        return this.update.getChannelPost().hasText();
-    }
-
-    private Boolean isUserMessage() {
-        return this.message.isUserMessage();
-    }
-
-    private Boolean isSuperGroupMessage() {
-        return this.message.isSuperGroupMessage();
-    }
-
     private Boolean isNewChatMembersNotNullAndIsNewChatMembersNotEmpty() {
         return this.message.getNewChatMembers() != null && this.message.getNewChatMembers().size() != 0;
     }
@@ -150,45 +121,12 @@ public class Custom extends TelegramLongPollingBot {
     }
 
     private Boolean isBot_leftChat() {
-        return this.message.getLeftChatMember().getIsBot()
-                && this.message.getLeftChatMember().getUserName().equals(this.common.getUsername());
+        return this.message.getLeftChatMember().getIsBot() && this.message.getLeftChatMember().getUserName().equals(this.common.getUsername());
     }
 
     private Boolean isLeftChatMemberNotNull() {
         return this.message.getLeftChatMember() != null;
     }
-
-    private String getChannelPostChatTyoe() {
-        return this.update.getChannelPost().getChat().getType();
-    }
-    
-    private List<User> getNewChatMembers() {
-        return this.message.getNewChatMembers();
-    }
-
-    private void channelMessageHandler() {
-        new ChannelMessage().handler(this.common);
-    }
-
-    private void privateMessageHandler() {
-        new PrivateMessage().handler(this.common);
-        this.sendTextMsg();
-    }
-
-    private void groupMessageHandler() {
-        new GroupMessage().handler(this.common);
-    }
-
-
-    private void joinGroupEventIsUserJoinGroup(){
-        new JoinGroupEvent().isUserJoinGroup(this.common);
-    }
-
-    private void joinGroupEventIsBotJoinGroup() {
-        dealInviteLink();
-        new JoinGroupEvent().isBotJoinGroup(this.common);
-    }
-
 
     private void dealInviteLink() {
         try {
