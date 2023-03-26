@@ -1,60 +1,105 @@
 package com.lwdevelop.bot.handler;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.User;
+import com.lwdevelop.bot.utils.CommonUtils;
 import com.lwdevelop.entity.RobotGroupManagement;
 import com.lwdevelop.entity.SpringyBot;
 import com.lwdevelop.service.impl.SpringyBotServiceImpl;
+import com.lwdevelop.utils.SpringUtils;
 
 public class JoinGroupEvent {
 
-    Long inviteId,groupId,botId;
-    String inviteFirstname,inviteUsername,groupTitle,link;
+    @Autowired
+    private SpringyBotServiceImpl springyBotServiceImpl = SpringUtils.getApplicationContext()
+            .getBean(SpringyBotServiceImpl.class);
 
-    public void handler(Message message, String username, Long botId,SpringyBot springyBot,String link, SpringyBotServiceImpl springyBotServiceImpl) {
+    private Long inviteId;
+    private Long groupId;
+    private Long botId;
+    private String inviteFirstname;
+    private String inviteUsername;
+    private String groupTitle;
+    private CommonUtils common;
+    public void isUserJoinGroup(CommonUtils common) {
+        Message message = common.getMessage();
+        this.common = common;
 
         // invite user
         this.inviteId = message.getFrom().getId();
         this.inviteFirstname = message.getFrom().getFirstName();
         this.inviteUsername = message.getFrom().getUserName();
 
+        // group info
+        this.groupId = message.getChat().getId();
+        this.groupTitle = message.getChat().getTitle();
+
+        this.botId = common.getBotId();
+
+        // for (User member : message.getNewChatMembers()) {
+        // // bot join group
+        // if (isBotJoinGroup(member,username)) {
+        // springyBot.getRobotGroupManagement().stream()
+        // .filter(rgm -> hasTarget(rgm))
+        // .findFirst()
+        // .ifPresentOrElse(null, () -> {
+        // RobotGroupManagement robotGroupManagement = getRobotGroupManagement();
+        // springyBot.getRobotGroupManagement().add(robotGroupManagement);
+        // springyBotServiceImpl.save(springyBot);
+        // });
+        // // user invite other user
+        // }else if(isUserInviteEvent(member,username)){
+        // }
+        // }
+    }
+
+    public void isBotJoinGroup(CommonUtils common) {
+        // init
+        Message message = common.getMessage();
+        SpringyBot springyBot = springyBotServiceImpl.findById(common.getSpringyBotId()).get();
+        this.common=common;
+
+        // invite user
+        this.inviteId = message.getFrom().getId();
+        this.inviteFirstname = message.getFrom().getFirstName();
+        this.inviteUsername = message.getFrom().getUserName();
 
         // group info
         this.groupId = message.getChat().getId();
         this.groupTitle = message.getChat().getTitle();
 
-        this.botId = botId;
-        this.link = link;
-
+        this.botId = common.getBotId();
+        
         for (User member : message.getNewChatMembers()) {
             // bot join group
-            if (isBotJoinGroup(member,username)) {
+            if (isBot(member)) {
                 springyBot.getRobotGroupManagement().stream()
                         .filter(rgm -> hasTarget(rgm))
                         .findFirst()
                         .ifPresentOrElse(null, () -> {
-                            RobotGroupManagement robotGroupManagement = getRobotGroupManagement();
-                            springyBot.getRobotGroupManagement().add(robotGroupManagement);
+                            springyBot.getRobotGroupManagement().add(getRobotGroupManagement());
                             springyBotServiceImpl.save(springyBot);
                         });
-            // user invite other user
-            }else if(isUserInviteEvent(member,username)){
+                // user invite other user
+            } else if (isUserInviteEvent(member)) {
             }
         }
     }
-    private Boolean isBotJoinGroup(User member,String username){
-        return username.equals(member.getUserName()) && member.getIsBot();
+
+    private Boolean isBot(User member){
+        return this.common.getUsername().equals(member.getUserName()) && member.getIsBot();
     }
 
-    private Boolean isUserInviteEvent(User member,String username){
-        return !username.equals(member.getUserName()) && !member.getIsBot();
+    private Boolean isUserInviteEvent(User member) {
+        return !this.common.getUsername().equals(member.getUserName()) && !member.getIsBot();
     }
 
-    private Boolean hasTarget(RobotGroupManagement rgm){
+    private Boolean hasTarget(RobotGroupManagement rgm) {
         return rgm.getGroupId().equals(this.groupId) && rgm.getBotId().equals(this.botId);
     }
 
-    private RobotGroupManagement getRobotGroupManagement(){
+    private RobotGroupManagement getRobotGroupManagement() {
         RobotGroupManagement robotGroupManagement = new RobotGroupManagement();
         robotGroupManagement.setBotId(this.botId);
         robotGroupManagement.setInviteId(this.inviteId);
@@ -62,7 +107,7 @@ public class JoinGroupEvent {
         robotGroupManagement.setInviteUsername(this.inviteUsername);
         robotGroupManagement.setGroupId(this.groupId);
         robotGroupManagement.setGroupTitle(this.groupTitle);
-        robotGroupManagement.setLink(this.link);
+        robotGroupManagement.setLink(this.common.getInviteLink());
         return robotGroupManagement;
     }
 

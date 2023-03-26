@@ -76,12 +76,18 @@ public class SpringyBotServiceImpl implements SpringyBotService {
     public synchronized ResponseEntity<ResponseData> start(SpringyBotDTO springyBotDTO) {
         try {
             Long id = springyBotDTO.getId();
-
+            
             if (springyBotMap.containsKey(id)) {
                 return ResponseUtils.response(RetEnum.RET_START_EXIST);
             }
+            
+            SpringyBot springyBot = findById(springyBotDTO.getId()).get();
+            springyBot.setState(true);
+            save(springyBot);
+            
             BotSession botSession = telegramBotsApi.registerBot(new Custom(springyBotDTO));
             springyBotMap.put(id, botSession);
+
             log.info("Common Telegram bot started.");
             return ResponseUtils.response(RetEnum.RET_SUCCESS, "启动成功");
         } catch (TelegramApiException e) {
