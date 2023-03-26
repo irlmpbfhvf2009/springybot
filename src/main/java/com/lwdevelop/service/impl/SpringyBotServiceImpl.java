@@ -82,12 +82,13 @@ public class SpringyBotServiceImpl implements SpringyBotService {
             }
             BotSession botSession = telegramBotsApi.registerBot(new Custom(springyBotDTO));
             springyBotMap.put(id, botSession);
-
-
             log.info("Common Telegram bot started.");
             return ResponseUtils.response(RetEnum.RET_SUCCESS, "启动成功");
         } catch (TelegramApiException e) {
             log.error("Catch TelegramApiException : {}", e.toString());
+            if(e.getMessage().equals("Bot token and username can't be empty")){
+                return ResponseUtils.response(RetEnum.RET_TOKEN_EMPTY);
+            }
             return ResponseUtils.response(RetEnum.RET_START_FAIL);
         } catch (NoSuchElementException e){
             log.error("Catch NoSuchElementException : {}",e.toString());

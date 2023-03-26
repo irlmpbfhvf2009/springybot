@@ -21,7 +21,7 @@ public enum RetEnum {
     RET_START_NOT_EXIST(1007, "机器人不存在,请重新载入页面"),
     RET_START_EXIST(1008, "程序进行中"),
     RET_STOP_FAIL(1009, "停止失败"),
-
+    RET_TOKEN_EMPTY(1010, "启动失败，Token输入错误"),
 
     // 失败(01开始标示参数校验相关错误码)
     RET_PARAM_NOT_FOUND(0101, "参数不存在"),

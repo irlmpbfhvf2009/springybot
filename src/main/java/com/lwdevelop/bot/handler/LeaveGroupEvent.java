@@ -8,11 +8,27 @@ import com.lwdevelop.service.impl.RobotGroupManagementServiceImpl;
 import com.lwdevelop.service.impl.SpringyBotServiceImpl;
 
 public class LeaveGroupEvent {
-    public void handler(Message message, Long botId,SpringyBot springyBot,RobotGroupManagementServiceImpl robotGroupManagementServiceImpl, SpringyBotServiceImpl springyBotServiceImpl) {
-        Long groupId = message.getChat().getId();
-        springyBot.getRobotGroupManagement().removeIf(rgm -> rgm.getGroupId().equals(groupId) && rgm.getBotId().equals(botId));
-        springyBotServiceImpl.save(springyBot);
-        RobotGroupManagement robotGroupManagement = robotGroupManagementServiceImpl.findByBotIdAndGroupId(botId, groupId);
-        robotGroupManagementServiceImpl.deleteById(robotGroupManagement.getId());
+    
+    private Long groupId;
+    private Long botId;
+
+    public void handler(Message message,String username, Long botId,SpringyBot springyBot,RobotGroupManagementServiceImpl robotGroupManagementServiceImpl, SpringyBotServiceImpl springyBotServiceImpl) {
+        this.groupId = message.getChat().getId();
+        this.botId = botId;
+
+        if (isRobotBody(message,username)){
+            springyBot.getRobotGroupManagement().removeIf(rgm -> hasTarget(rgm));
+            springyBotServiceImpl.save(springyBot);
+            RobotGroupManagement robotGroupManagement = robotGroupManagementServiceImpl.findByBotIdAndGroupId(botId, groupId);
+            robotGroupManagementServiceImpl.deleteById(robotGroupManagement.getId());
+        }
+    }
+    private Boolean isRobotBody(Message message,String username){
+        return message.getLeftChatMember().getUserName().equals(username);
+    }
+
+    private Boolean hasTarget(RobotGroupManagement rgm){
+        return rgm.getGroupId().equals(this.groupId) && rgm.getBotId().equals(this.botId);
     }
 }
+

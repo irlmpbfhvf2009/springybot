@@ -34,4 +34,8 @@ public class SpringyBot {
     @OneToMany(fetch = FetchType.EAGER,cascade = CascadeType.ALL)
     @JsonIgnore
     private Set<RobotGroupManagement> robotGroupManagement;
+
+    @OneToOne(cascade = CascadeType.ALL)
+    @JsonIgnore
+    private InvitationThreshold invitationThreshold;
 }

@@ -39,7 +39,6 @@ public class JoinGroupEvent {
                         });
             // user invite other user
             }else if(isUserInviteEvent(member,username)){
-                System.out.println(message);
             }
         }
     }

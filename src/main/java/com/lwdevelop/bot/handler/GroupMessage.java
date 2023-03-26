@@ -13,8 +13,6 @@ public class GroupMessage {
         if(springyBot.getConfig().getInviteFriendsSet()){
 
         }
-        // System.out.println(message.getNewChatMembers());
-        // System.out.println(message);
         
     }
 }
