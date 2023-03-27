@@ -28,7 +28,8 @@ public class PrivateMessage {
             case "管理员设置":
                 break;
 
-            case "/start":
+            case "/job":
+                setResponse_job();
                 break;
 
             case "/manage":
@@ -46,6 +47,9 @@ public class PrivateMessage {
                 response.setText("");
                 break;
         }
+    }
+    private void setResponse_job(){
+        // this.response.set
     }
 
     private void setResponse_manage() {

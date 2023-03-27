@@ -16,13 +16,13 @@ public class JoinGroupEvent {
             .getBean(SpringyBotServiceImpl.class);
 
     private Common common;
-    private Message message = common.getUpdate().getMessage();
-    private Long botId = common.getBotId();
-    private Long inviteId = message.getFrom().getId();
-    private String inviteFirstname = message.getFrom().getFirstName();
-    private String inviteUsername = message.getFrom().getUserName();
-    private Long groupId = message.getChat().getId();
-    private String groupTitle = message.getChat().getTitle();
+    private Message message;
+    private Long botId;
+    private Long inviteId;
+    private String inviteFirstname;
+    private String inviteUsername;
+    private Long groupId;
+    private String groupTitle;
 
     public void isUserJoinGroup(Common common) {
         this.common = common;
@@ -30,8 +30,16 @@ public class JoinGroupEvent {
     }
 
     public void isBotJoinGroup(Common common) {
-        this.common = common;
+
         SpringyBot springyBot = springyBotServiceImpl.findById(common.getSpringyBotId()).get();
+        this.common = common;
+        this.message = common.getUpdate().getMessage();
+        this.botId = common.getBotId();
+        this.inviteId = message.getFrom().getId();
+        this.inviteFirstname = message.getFrom().getFirstName();
+        this.inviteUsername = message.getFrom().getUserName();
+        this.groupId = message.getChat().getId();
+        this.groupTitle = message.getChat().getTitle();
 
         for (User member : this.message.getNewChatMembers()) {
             // bot join group

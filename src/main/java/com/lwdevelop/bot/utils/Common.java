@@ -15,8 +15,6 @@ public class Common {
 
     private String username;
 
-    // private Message message;
-
     private Update update;
 
     private String inviteLink;

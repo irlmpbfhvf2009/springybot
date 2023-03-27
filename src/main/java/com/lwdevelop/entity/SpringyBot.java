@@ -34,8 +34,19 @@ public class SpringyBot {
     @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JsonIgnore
     private Set<RobotGroupManagement> robotGroupManagement;
-
+    
+    // 群組發言(邀請人數)門檻
     @OneToOne(cascade = CascadeType.ALL)
     @JsonIgnore
     private InvitationThreshold invitationThreshold;
+
+    // （求职人员）
+    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @JsonIgnore
+    private Set<JobSeeker> jobSeeker;
+
+    // （招聘信息）
+    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @JsonIgnore
+    private Set<JobPosting> jobPosting ;
 }
