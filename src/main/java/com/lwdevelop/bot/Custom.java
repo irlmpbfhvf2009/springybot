@@ -1,5 +1,7 @@
 package com.lwdevelop.bot;
 
+import java.util.HashMap;
+
 import org.springframework.scheduling.annotation.Async;
 import org.telegram.telegrambots.bots.DefaultBotOptions;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
@@ -32,6 +34,7 @@ public class Custom extends TelegramLongPollingBot {
 
         try {
             this.common = new Common(dto.getId(), getMe().getId(), getMe().getUserName());
+            this.common.setUserState(new HashMap<>());
         } catch (TelegramApiException e) {
             e.printStackTrace();
         }
@@ -51,8 +54,7 @@ public class Custom extends TelegramLongPollingBot {
     @Override
     public void onUpdateReceived(Update update) {
 
-        this.common.setUpdate(update);
-        this.message = update.getMessage();
+        this.init(update);
 
         // deal message group or private chat
         if (update.hasMessage()) {
@@ -112,8 +114,10 @@ public class Custom extends TelegramLongPollingBot {
     public void sendMsg() {
         executeAsync(this.common.getResponse());
     }
-
-
+    private void init(Update update){
+        this.common.setUpdate(update);
+        this.message = update.getMessage();
+    }
     private Boolean isNewChatMembersNotNullAndIsNewChatMembersNotEmpty() {
         return this.message.getNewChatMembers() != null && this.message.getNewChatMembers().size() != 0;
     }
