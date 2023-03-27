@@ -15,8 +15,12 @@ public enum SpringyBotEnum {
     ADMINISTRATOR_SETTING("管理员设置"),
 
     // command job 
+    POST_RECRUITMENT("发布招聘"),
+    POST_JOBSEARCH("发布求职"),
+    JOB_MANAGEMENT("招聘和求职信息管理"),
 
-    COMMONS_MANAGE("What con this bot do?\nPlease tap on START"),
+    COMMEND_MANAGE("What con this bot do?\nPlease tap on START"),
+    COMMEND_JOB("job management"),
     BOT_NOT_ENOUGH_RIGHTS(" 群组的权限设定不足以让机器人有效地管理该群组。\n为了让机器人能够正常运作，请将其设定为该群组的管理员，以便它能够更好地管理该群组。");
 
     private String text;

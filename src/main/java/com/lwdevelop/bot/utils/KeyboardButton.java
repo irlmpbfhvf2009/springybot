@@ -9,6 +9,22 @@ import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKe
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.KeyboardRow;
 
 public class KeyboardButton {
+    public final ReplyKeyboardMarkup jobReplyKeyboardMarkup(){
+        ReplyKeyboardMarkup keyboardMarkup = new ReplyKeyboardMarkup();
+        List<KeyboardRow> keyboard = new ArrayList<>();
+        KeyboardRow row = new KeyboardRow();
+        row.add(SpringyBotEnum.POST_RECRUITMENT.getText());
+        keyboard.add(row);
+        row = new KeyboardRow();
+        row.add(SpringyBotEnum.POST_JOBSEARCH.getText());
+        keyboard.add(row);
+        row = new KeyboardRow();
+        row.add(SpringyBotEnum.JOB_MANAGEMENT.getText());
+        keyboard.add(row);
+        keyboardMarkup.setKeyboard(keyboard);
+        return keyboardMarkup;
+    }
+
     public final ReplyKeyboardMarkup manageReplyKeyboardMarkup() {
         ReplyKeyboardMarkup keyboardMarkup = new ReplyKeyboardMarkup();
         List<KeyboardRow> keyboard = new ArrayList<>();

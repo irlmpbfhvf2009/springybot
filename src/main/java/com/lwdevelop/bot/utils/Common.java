@@ -27,11 +27,14 @@ public class Common {
         this.username = username;
     }
 
+
+    // Message Setting
     public void privateMessageSettings(Message message) {
         String chatId = String.valueOf(message.getChatId());
         this.response = new SendMessage();
         this.response.setChatId(chatId);
         this.response.setDisableNotification(false);
+        this.response.setDisableWebPagePreview(false);
     }
 
     public void notEnoughRightsMessageSettings(Message message) {
@@ -43,18 +46,5 @@ public class Common {
         this.response.setText(title + SpringyBotEnum.BOT_NOT_ENOUGH_RIGHTS.getText());
     }
 
-    public boolean chatTypeIsChannel(String type) {
-        return type.equals(SpringyBotEnum.CHAT_TYPE_CHANNEL.getText()) ? true : false;
-    }
 
-    public String howToAddForText(String username, String url, String type) {
-        return "Tap on this link and then choose your " + type + ".\n" + url
-                + "\n\n\"Add admins\" permission is required.";
-    }
-
-    public String getUrl(String type, String username) {
-        return type == SpringyBotEnum.CHAT_TYPE_GROUP.getText()
-                ? "http://t.me/" + username + "?startgroup&admin=change_info"
-                : "http://t.me/" + username + "?startchannel&admin=change_info";
-    }
 }

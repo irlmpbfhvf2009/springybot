@@ -12,8 +12,9 @@ import com.lwdevelop.bot.handler.ChannelMessage;
 import com.lwdevelop.bot.handler.GroupMessage;
 import com.lwdevelop.bot.handler.JoinGroupEvent;
 import com.lwdevelop.bot.handler.LeaveGroupEvent;
-import com.lwdevelop.bot.handler.PrivateMessage;
+import com.lwdevelop.bot.handler.Commends;
 import com.lwdevelop.bot.utils.Common;
+import com.lwdevelop.bot.utils.SpringyBotEnum;
 import com.lwdevelop.dto.SpringyBotDTO;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
@@ -21,7 +22,7 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class Custom extends TelegramLongPollingBot {
 
-    private Common common;
+    public Common common;
     private SpringyBotDTO dto;
     private Message message;
 
@@ -59,8 +60,8 @@ public class Custom extends TelegramLongPollingBot {
 
                 // private
                 if (this.message.isUserMessage()) {
-                    new PrivateMessage().handler(this.common);
-                    this.sendTextMsg();
+                    new Commends().handler(this.common);
+                    sendMsg();
                 }
 
                 // group
@@ -74,7 +75,7 @@ public class Custom extends TelegramLongPollingBot {
         if (update.getChannelPost() != null) {
             if (update.getChannelPost().hasText()) {
                 String chatType = update.getChannelPost().getChat().getType();
-                if (this.common.chatTypeIsChannel(chatType)) {
+                if (chatTypeIsChannel(chatType)) {
                     new ChannelMessage().handler(this.common);
                 }
             }
@@ -108,9 +109,10 @@ public class Custom extends TelegramLongPollingBot {
 
     @SneakyThrows
     @Async
-    public void sendTextMsg() {
+    public void sendMsg() {
         executeAsync(this.common.getResponse());
     }
+
 
     private Boolean isNewChatMembersNotNullAndIsNewChatMembersNotEmpty() {
         return this.message.getNewChatMembers() != null && this.message.getNewChatMembers().size() != 0;
@@ -129,6 +131,10 @@ public class Custom extends TelegramLongPollingBot {
         return this.message.getLeftChatMember() != null;
     }
 
+    public boolean chatTypeIsChannel(String type) {
+        return type.equals(SpringyBotEnum.CHAT_TYPE_CHANNEL.getText()) ? true : false;
+    }
+    
     private void dealInviteLink() {
         try {
             String inviteLink = execute(new ExportChatInviteLink(String.valueOf(this.message.getChatId())));
@@ -136,7 +142,7 @@ public class Custom extends TelegramLongPollingBot {
         } catch (TelegramApiException e) {
             this.common.notEnoughRightsMessageSettings(this.message);
             this.common.setInviteLink("");
-            sendTextMsg();
+            sendMsg();
             log.error(e.toString());
         }
     }
