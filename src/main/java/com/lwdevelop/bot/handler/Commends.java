@@ -23,20 +23,7 @@ public class Commends {
             case "/job":
                 break;
             default:
-                switch (text) {
-                    case "/manage":
-                        System.out.println("/manage2");
-                        this.setResponse_manage();
-                        break;
-                    case "/job":
-                        this.setResponse_job();
-                        break;
-                    default:
-                        this.text = "";
-                        break;
-                }
-                setUserState(text);
-                break;
+                this.noState();
 
         }
 
@@ -49,6 +36,20 @@ public class Commends {
         this.text = message.getText();
         this.response = common.getResponse();
         this.chatId = common.getUpdate().getMessage().getChatId();
+    }
+    private void noState() {
+        switch (this.text) {
+            case "/manage":
+                this.setResponse_manage();
+                break;
+            case "/job":
+                this.setResponse_job();
+                break;
+            default:
+                this.text = "";
+                break;
+        }
+        this.setUserState(text);
     }
 
     private void setUserState(String text) {

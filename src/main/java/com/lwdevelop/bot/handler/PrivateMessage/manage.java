@@ -13,12 +13,10 @@ public class Manage{
     private String text;
     private SendMessage response;
     private String username;
-    // private Long chatId;
 
 
     public void handler(Common common) {
         this.init(common);
-        // this.chatId = common.getUpdate().getMessage().getChatId();
 
         switch (text) {
             case "管理面板":
