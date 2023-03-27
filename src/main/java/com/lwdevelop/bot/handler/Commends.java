@@ -2,12 +2,15 @@ package com.lwdevelop.bot.handler;
 
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Message;
+
+import com.lwdevelop.bot.handler.PrivateMessage.Job;
 import com.lwdevelop.bot.handler.PrivateMessage.Manage;
 import com.lwdevelop.bot.utils.Common;
 import com.lwdevelop.bot.utils.KeyboardButton;
 import com.lwdevelop.bot.utils.SpringyBotEnum;
 
 public class Commends {
+    
     private Common common;
     private Message message;
     private String text;
@@ -16,11 +19,12 @@ public class Commends {
 
     public void handler(Common common) {
         init(common);
-        switch (this.common.getUserState().getOrDefault(this.chatId, "")) {
+        switch (getUserState()) {
             case "/manage":
                 new Manage().handler(common);
                 break;
             case "/job":
+                new Job().handler(common);
                 break;
             default:
                 this.noState();
@@ -37,6 +41,11 @@ public class Commends {
         this.response = common.getResponse();
         this.chatId = common.getUpdate().getMessage().getChatId();
     }
+
+    private String getUserState(){
+        return this.common.getUserState().getOrDefault(this.chatId, "");
+    }
+
     private void noState() {
         switch (this.text) {
             case "/manage":
