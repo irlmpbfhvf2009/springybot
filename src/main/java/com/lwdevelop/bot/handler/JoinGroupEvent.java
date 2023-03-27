@@ -15,49 +15,25 @@ public class JoinGroupEvent {
     private SpringyBotServiceImpl springyBotServiceImpl = SpringUtils.getApplicationContext()
             .getBean(SpringyBotServiceImpl.class);
 
-    private Long inviteId;
-    private Long groupId;
-    private Long botId;
-    private String inviteFirstname;
-    private String inviteUsername;
-    private String groupTitle;
     private Common common;
+    private Message message = common.getUpdate().getMessage();
+    private Long botId = common.getBotId();
+    private Long inviteId = message.getFrom().getId();
+    private String inviteFirstname = message.getFrom().getFirstName();
+    private String inviteUsername = message.getFrom().getUserName();
+    private Long groupId = message.getChat().getId();
+    private String groupTitle = message.getChat().getTitle();
 
     public void isUserJoinGroup(Common common) {
-        Message message = common.getMessage();
         this.common = common;
-
-        // invite user
-        this.inviteId = message.getFrom().getId();
-        this.inviteFirstname = message.getFrom().getFirstName();
-        this.inviteUsername = message.getFrom().getUserName();
-
-        // group info
-        this.groupId = message.getChat().getId();
-        this.groupTitle = message.getChat().getTitle();
-
-        this.botId = common.getBotId();
 
     }
 
     public void isBotJoinGroup(Common common) {
-        // init
-        Message message = common.getMessage();
-        SpringyBot springyBot = springyBotServiceImpl.findById(common.getSpringyBotId()).get();
         this.common = common;
+        SpringyBot springyBot = springyBotServiceImpl.findById(common.getSpringyBotId()).get();
 
-        // invite user
-        this.inviteId = message.getFrom().getId();
-        this.inviteFirstname = message.getFrom().getFirstName();
-        this.inviteUsername = message.getFrom().getUserName();
-
-        // group info
-        this.groupId = message.getChat().getId();
-        this.groupTitle = message.getChat().getTitle();
-
-        this.botId = common.getBotId();
-
-        for (User member : message.getNewChatMembers()) {
+        for (User member : this.message.getNewChatMembers()) {
             // bot join group
             if (isBot(member)) {
                 springyBot.getRobotGroupManagement().stream()

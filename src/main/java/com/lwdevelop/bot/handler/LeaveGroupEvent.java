@@ -20,15 +20,15 @@ public class LeaveGroupEvent {
     private SpringyBotServiceImpl springyBotServiceImpl = SpringUtils.getApplicationContext()
             .getBean(SpringyBotServiceImpl.class);
 
-    private Long groupId;
-    private Long botId;
+    private Common common;
+    private Message message = common.getUpdate().getMessage();
+    private Long groupId = message.getChat().getId();
+    private Long botId = common.getBotId();
 
     public void isBotLeave(Common common) {
+        this.common = common;
 
-        Message message = common.getMessage();
         SpringyBot springyBot = springyBotServiceImpl.findById(common.getSpringyBotId()).get();
-        this.groupId = message.getChat().getId();
-        this.botId = common.getBotId();
         springyBot.getRobotGroupManagement().removeIf(rgm -> hasTarget(rgm));
         this.springyBotServiceImpl.save(springyBot);
         RobotGroupManagement robotGroupManagement = this.robotGroupManagementServiceImpl

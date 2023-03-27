@@ -1,19 +1,22 @@
 package com.lwdevelop.bot.handler;
 
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
+import org.telegram.telegrambots.meta.api.objects.Message;
+
 import com.lwdevelop.bot.utils.Common;
 import com.lwdevelop.bot.utils.KeyboardButton;
 import com.lwdevelop.bot.utils.SpringyBotEnum;
 
 public class PrivateMessage {
     private Common common;
-    private String text = common.getMessage().getText();
+    private Message message = common.getUpdate().getMessage();
+    private String text = message.getText();
     private SendMessage response = common.getResponse();
     private String username = common.getUsername();
 
     public void handler(Common common) {
         this.common = common;
-        common.privateMessageSettings(common.getMessage());
+        common.privateMessageSettings(this.message);
 
         switch (text) {
             case "管理面板":

@@ -2,6 +2,8 @@ package com.lwdevelop.bot.utils;
 
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Message;
+import org.telegram.telegrambots.meta.api.objects.Update;
+
 import lombok.Data;
 
 @Data
@@ -13,7 +15,9 @@ public class Common {
 
     private String username;
 
-    private Message message;
+    // private Message message;
+
+    private Update update;
 
     private String inviteLink;
 

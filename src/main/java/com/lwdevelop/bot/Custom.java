@@ -23,7 +23,7 @@ public class Custom extends TelegramLongPollingBot {
 
     private Common common;
     private SpringyBotDTO dto;
-    private Message message;
+    private Message message = common.getUpdate().getMessage();
 
     public Custom(SpringyBotDTO springyBotDTO) {
         super(new DefaultBotOptions());
@@ -50,8 +50,9 @@ public class Custom extends TelegramLongPollingBot {
     @Override
     public void onUpdateReceived(Update update) {
 
-        this.common.setMessage(update.getMessage());
-        this.message = update.getMessage();
+        // this.common.setMessage(update.getMessage());
+        this.common.setUpdate(update);
+        // this.message = update.getMessage();
 
         // deal message group or private chat
         if (update.hasMessage()) {
@@ -121,7 +122,8 @@ public class Custom extends TelegramLongPollingBot {
     }
 
     private Boolean isBot_leftChat() {
-        return this.message.getLeftChatMember().getIsBot() && this.message.getLeftChatMember().getUserName().equals(this.common.getUsername());
+        return this.message.getLeftChatMember().getIsBot()
+                && this.message.getLeftChatMember().getUserName().equals(this.common.getUsername());
     }
 
     private Boolean isLeftChatMemberNotNull() {
