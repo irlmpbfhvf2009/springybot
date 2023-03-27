@@ -6,15 +6,14 @@ import com.lwdevelop.bot.utils.KeyboardButton;
 import com.lwdevelop.bot.utils.SpringyBotEnum;
 
 public class PrivateMessage {
+    private Common common;
+    private String text = common.getMessage().getText();
+    private SendMessage response = common.getResponse();
+    private String username = common.getUsername();
 
     public void handler(Common common) {
-
+        this.common = common;
         common.privateMessageSettings(common.getMessage());
-        
-        String type;
-        String text = common.getMessage().getText();
-        SendMessage response = common.getResponse();
-        String username = common.getUsername();
 
         switch (text) {
             case "管理面板":
@@ -27,26 +26,35 @@ public class PrivateMessage {
                 break;
 
             case "/start":
-                response.setText(SpringyBotEnum.COMMONS_START.getText());
-                response.setReplyMarkup(new KeyboardButton().startReplyKeyboardMarkup());
+                break;
+
+            case "/manage":
+                setResponse_manage();
                 break;
 
             case "如何将我添加到您的群组":
-                type = SpringyBotEnum.CHAT_TYPE_GROUP.getText();
-                response.setText(common.howToAddForText(username, common.getUrl(type, username), type));
-                response.setReplyMarkup(new KeyboardButton().addToGroupOrChannelMarkupInline(common.getUrl(type, username), type));
+                setResponse_addToGroupOrChannel(SpringyBotEnum.CHAT_TYPE_GROUP.getText());
                 break;
 
             case "如何将我添加到您的频道":
-                type = SpringyBotEnum.CHAT_TYPE_CHANNEL.getText();
-                response.setText(common.howToAddForText(username, common.getUrl(type, username),type));
-                response.setReplyMarkup(new KeyboardButton().addToGroupOrChannelMarkupInline(common.getUrl(type, username), type));
+                setResponse_addToGroupOrChannel(SpringyBotEnum.CHAT_TYPE_CHANNEL.getText());
                 break;
             default:
                 response.setText("");
-
+                break;
         }
     }
 
+    private void setResponse_manage() {
+        this.response.setText(SpringyBotEnum.COMMONS_MANAGE.getText());
+        this.response.setReplyMarkup(new KeyboardButton().manageReplyKeyboardMarkup());
+    }
+
+    private void setResponse_addToGroupOrChannel(String type) {
+        this.response
+                .setText(this.common.howToAddForText(this.username, this.common.getUrl(type, this.username), type));
+        this.response.setReplyMarkup(
+                new KeyboardButton().addToGroupOrChannelMarkupInline(this.common.getUrl(type, this.username), type));
+    }
 
 }

@@ -17,7 +17,7 @@ import com.lwdevelop.utils.ResponseUtils;
 @Controller
 @RequestMapping("/admins")
 public class AdminPanelController {
-    
+
     @Autowired
     private AdminServiceImpl adminService;
 
@@ -46,7 +46,7 @@ public class AdminPanelController {
     public ResponseEntity<ResponseUtils.ResponseData> getInfoApi(
             @RequestParam("token") String token) throws Exception {
 
-        return adminService.getInfoProcess( token);
+        return adminService.getInfoProcess(token);
     }
 
     @PostMapping("/getAllAdmins")
@@ -86,6 +86,5 @@ public class AdminPanelController {
 
         return adminService.passwordChangeProcess(adminDTO);
     }
-
 
 }

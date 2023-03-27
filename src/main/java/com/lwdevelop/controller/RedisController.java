@@ -15,7 +15,7 @@ public class RedisController {
     private RedisTemplate<String, Object> redisTemplate;
 
     @GetMapping("/setRedisValue")
-    public String setRedisValue(@RequestParam(value="key") String key,@RequestParam(value="text") String text) {
+    public String setRedisValue(@RequestParam(value = "key") String key, @RequestParam(value = "text") String text) {
         try {
             redisTemplate.opsForValue().set(key, text);
             return "success";
@@ -25,7 +25,7 @@ public class RedisController {
     }
 
     @GetMapping("/getRedisValue")
-    public String getRedisValue(@RequestParam(value="key") String key) {
+    public String getRedisValue(@RequestParam(value = "key") String key) {
         try {
             return (String) redisTemplate.opsForValue().get(key);
         } catch (Exception e) {

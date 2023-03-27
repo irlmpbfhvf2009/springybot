@@ -20,18 +20,19 @@ public class Common {
     private SendMessage response;
 
     public Common(Long springyBotId, Long botId, String username) {
-        this.springyBotId=springyBotId;
+        this.springyBotId = springyBotId;
         this.botId = botId;
         this.username = username;
     }
-    public void privateMessageSettings(Message message){
+
+    public void privateMessageSettings(Message message) {
         String chatId = String.valueOf(message.getChatId());
         this.response = new SendMessage();
         this.response.setChatId(chatId);
         this.response.setDisableNotification(false);
     }
 
-    public void notEnoughRightsMessageSettings(Message message){
+    public void notEnoughRightsMessageSettings(Message message) {
         String chatId = String.valueOf(message.getFrom().getId());
         String title = message.getChat().getTitle();
         this.response = new SendMessage();

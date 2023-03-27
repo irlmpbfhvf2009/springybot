@@ -9,7 +9,7 @@ import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKe
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.KeyboardRow;
 
 public class KeyboardButton {
-    public final ReplyKeyboardMarkup startReplyKeyboardMarkup(){
+    public final ReplyKeyboardMarkup manageReplyKeyboardMarkup() {
         ReplyKeyboardMarkup keyboardMarkup = new ReplyKeyboardMarkup();
         List<KeyboardRow> keyboard = new ArrayList<>();
         KeyboardRow row = new KeyboardRow();
@@ -23,9 +23,10 @@ public class KeyboardButton {
         keyboardMarkup.setKeyboard(keyboard);
         return keyboardMarkup;
     }
-    public final InlineKeyboardMarkup addToGroupOrChannelMarkupInline(String url,String type){
-        InlineKeyboardButton dk1=new InlineKeyboardButton();
-        dk1.setText("Add to "+type);
+
+    public final InlineKeyboardMarkup addToGroupOrChannelMarkupInline(String url, String type) {
+        InlineKeyboardButton dk1 = new InlineKeyboardButton();
+        dk1.setText("Add to " + type);
         dk1.setUrl(url);
         InlineKeyboardMarkup markupInline = new InlineKeyboardMarkup();
         List<List<InlineKeyboardButton>> rowsInline = new ArrayList<>();

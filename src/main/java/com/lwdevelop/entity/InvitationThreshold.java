@@ -14,7 +14,7 @@ import lombok.Data;
 @Data
 @Entity
 public class InvitationThreshold {
-    
+
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
@@ -26,7 +26,7 @@ public class InvitationThreshold {
     private Long groupId;
 
     private String groupTitle;
-    
+
     @CreatedDate
     private Date createDate;
 }

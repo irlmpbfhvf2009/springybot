@@ -41,25 +41,25 @@ public class SecurityConfig {
     PasswordEncoder passwordEncoder() {
         return PasswordEncoderFactories.createDelegatingPasswordEncoder();
     }
-    
+
     private static final String[] ADMIN_AUTH_LIST = {
-        "/v3/api-docs",
-        "/configuration/ui",
-        "/swagger-resources/**",
-        "/configuration/security",
-        "/swagger-ui.html",
-        "/webjars/**"
-      };
+            "/v3/api-docs",
+            "/configuration/ui",
+            "/swagger-resources/**",
+            "/configuration/security",
+            "/swagger-ui.html",
+            "/webjars/**"
+    };
 
     private static final String[] ALL_AUTH_LIST = {
-        "/tmax/ws/**",
-        "/springybot/**",
-        "/admins/login",
-        "/admins/index",
-        "/admins/addAdmin",
-        "/api.telegram.org",
-        "/redis/**"
-      };
+            "/tmax/ws/**",
+            "/springybot/**",
+            "/admins/login",
+            "/admins/index",
+            "/admins/addAdmin",
+            "/api.telegram.org",
+            "/redis/**"
+    };
 
     @Bean
     SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
@@ -76,6 +76,5 @@ public class SecurityConfig {
                 .and()
                 .build();
     }
-
 
 }

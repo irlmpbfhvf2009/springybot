@@ -21,7 +21,6 @@ public class ListToJsonConverter implements AttributeConverter<List<String>, Str
         }
     }
 
-
     @Override
     public List<String> convertToEntityAttribute(String dbJson) {
         if (dbJson == null)

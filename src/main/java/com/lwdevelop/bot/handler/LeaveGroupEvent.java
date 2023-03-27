@@ -31,7 +31,8 @@ public class LeaveGroupEvent {
         this.botId = common.getBotId();
         springyBot.getRobotGroupManagement().removeIf(rgm -> hasTarget(rgm));
         this.springyBotServiceImpl.save(springyBot);
-        RobotGroupManagement robotGroupManagement = this.robotGroupManagementServiceImpl.findByBotIdAndGroupId(this.botId, this.groupId);
+        RobotGroupManagement robotGroupManagement = this.robotGroupManagementServiceImpl
+                .findByBotIdAndGroupId(this.botId, this.groupId);
         this.robotGroupManagementServiceImpl.deleteById(robotGroupManagement.getId());
 
     }

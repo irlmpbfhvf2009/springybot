@@ -1,4 +1,5 @@
 package com.lwdevelop;
+
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -40,13 +41,14 @@ public class SwaggerConfig {
                 .build()
                 .securityContexts(Arrays.asList(securityContext()));
     }
-    private SecurityContext securityContext(){
+
+    private SecurityContext securityContext() {
         return SecurityContext.builder().securityReferences(defaultAuth()).build();
     }
 
-    private List<SecurityReference> defaultAuth(){
-        AuthorizationScope authorizationScope = new AuthorizationScope("global","accessEverything");
-        AuthorizationScope[] authorizationScopes=new AuthorizationScope[1];
+    private List<SecurityReference> defaultAuth() {
+        AuthorizationScope authorizationScope = new AuthorizationScope("global", "accessEverything");
+        AuthorizationScope[] authorizationScopes = new AuthorizationScope[1];
         authorizationScopes[0] = authorizationScope;
         return Collections.singletonList(new SecurityReference("token", authorizationScopes));
     }
@@ -67,5 +69,5 @@ public class SwaggerConfig {
                 .contact(new Contact("超级小豆丁", "http://www.mydlq.club", "mynamedlq@163.com"))
                 .build();
     }
-    
+
 }

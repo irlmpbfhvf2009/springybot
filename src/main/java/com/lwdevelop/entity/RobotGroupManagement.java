@@ -28,5 +28,4 @@ public class RobotGroupManagement {
 
     private String link;
 
-
 }

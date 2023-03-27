@@ -4,13 +4,13 @@ import lombok.Data;
 
 @Data
 public class ConfigDTO {
-    
+
     private Boolean inviteFriendsSet;
-    
+
     private Boolean followChannelSet;
 
     private Boolean invitationBonusSet;
-    
+
     private int deleteSeconds;
 
     private int inviteFriendsAutoClearTime;

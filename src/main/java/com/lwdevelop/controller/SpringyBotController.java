@@ -20,10 +20,9 @@ public class SpringyBotController {
 
     @Resource
     private TelegramBotsApi telegramBotsApi;
-    
+
     @Autowired
     private SpringyBotServiceImpl springyBotService;
-
 
     @PostMapping("/start")
     private synchronized ResponseEntity<ResponseUtils.ResponseData> start(@RequestBody SpringyBotDTO springyBotDTO) {
@@ -34,6 +33,7 @@ public class SpringyBotController {
     private synchronized ResponseEntity<ResponseUtils.ResponseData> stop(@RequestBody SpringyBotDTO springyBotDTO) {
         return springyBotService.stop(springyBotDTO);
     }
+
     @PostMapping("/addBot")
     public ResponseEntity<ResponseUtils.ResponseData> addBot(
             @RequestBody SpringyBotDTO springyBotDTO) throws Exception {
@@ -48,12 +48,14 @@ public class SpringyBotController {
 
         return springyBotService.getAllBot(page, pageSize);
     }
+
     @PostMapping("/deleteBot")
     public ResponseEntity<ResponseUtils.ResponseData> deleteBot(
             @RequestBody Map<String, String> requestData) throws Exception {
 
         return springyBotService.deleteBot(requestData);
     }
+
     @PostMapping("/updateBot")
     public ResponseEntity<ResponseUtils.ResponseData> updateBot(
             @RequestBody SpringyBotDTO springyBotDTO) throws Exception {
@@ -63,8 +65,9 @@ public class SpringyBotController {
 
     // @GetMapping("/hello")
     // public String test(){
-    //     Custom c = new Custom("5855785269:AAH9bvPpYudd2wSAvMnBTiKakCeoB92_Z_8", "CCP_1121_BOT", new DefaultBotOptions());
-    //     c.sendTextMsg("null", "-1001700543954");
-    //     return "fuck";
+    // Custom c = new Custom("5855785269:AAH9bvPpYudd2wSAvMnBTiKakCeoB92_Z_8",
+    // "CCP_1121_BOT", new DefaultBotOptions());
+    // c.sendTextMsg("null", "-1001700543954");
+    // return "fuck";
     // }
 }

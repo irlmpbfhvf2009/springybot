@@ -31,7 +31,7 @@ public class RedisUtils {
 
     // 修改指定 key 的数据
     // public void updateRedisValue(String key, Object newValue) {
-    //     redisTemplate.opsForValue().set(key, newValue);
+    // redisTemplate.opsForValue().set(key, newValue);
     // }
 
 }

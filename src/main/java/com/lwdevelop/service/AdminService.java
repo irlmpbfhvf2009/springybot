@@ -15,21 +15,31 @@ import com.lwdevelop.utils.ResponseUtils;
 public interface AdminService {
     // DB CRUD
     Optional<Admin> findById(Long id);
+
     Admin findByUsername(String username);
+
     List<Admin> findAll(String username, int page, int pageSize);
+
     void saveAdmin(Admin admin);
+
     void deleteById(Long id);
 
     // Custom
-    ResponseEntity<ResponseUtils.ResponseData> loginProcess(HttpServletRequest request, String username, String password);
-    ResponseEntity<ResponseUtils.ResponseData> loginOutProcess(String token);
-    ResponseEntity<ResponseUtils.ResponseData> getInfoProcess(String token);
-    ResponseEntity<ResponseUtils.ResponseData> getAllAdminsProcess(int page,int pageSize,String input);
-    ResponseEntity<ResponseUtils.ResponseData> updateAdminProcess( AdminDTO adminDTO);
-    ResponseEntity<ResponseUtils.ResponseData> addAdminProcess(HttpServletRequest request, AdminDTO adminDTO);
-    ResponseEntity<ResponseUtils.ResponseData> deleteAdminProcess(Map<String, String> requestData);
-    ResponseEntity<ResponseUtils.ResponseData> passwordChangeProcess(AdminDTO adminDTO);
-    
+    ResponseEntity<ResponseUtils.ResponseData> loginProcess(HttpServletRequest request, String username,
+            String password);
 
+    ResponseEntity<ResponseUtils.ResponseData> loginOutProcess(String token);
+
+    ResponseEntity<ResponseUtils.ResponseData> getInfoProcess(String token);
+
+    ResponseEntity<ResponseUtils.ResponseData> getAllAdminsProcess(int page, int pageSize, String input);
+
+    ResponseEntity<ResponseUtils.ResponseData> updateAdminProcess(AdminDTO adminDTO);
+
+    ResponseEntity<ResponseUtils.ResponseData> addAdminProcess(HttpServletRequest request, AdminDTO adminDTO);
+
+    ResponseEntity<ResponseUtils.ResponseData> deleteAdminProcess(Map<String, String> requestData);
+
+    ResponseEntity<ResponseUtils.ResponseData> passwordChangeProcess(AdminDTO adminDTO);
 
 }

@@ -22,6 +22,7 @@ public class JoinGroupEvent {
     private String inviteUsername;
     private String groupTitle;
     private Common common;
+
     public void isUserJoinGroup(Common common) {
         Message message = common.getMessage();
         this.common = common;
@@ -43,7 +44,7 @@ public class JoinGroupEvent {
         // init
         Message message = common.getMessage();
         SpringyBot springyBot = springyBotServiceImpl.findById(common.getSpringyBotId()).get();
-        this.common=common;
+        this.common = common;
 
         // invite user
         this.inviteId = message.getFrom().getId();
@@ -55,7 +56,7 @@ public class JoinGroupEvent {
         this.groupTitle = message.getChat().getTitle();
 
         this.botId = common.getBotId();
-        
+
         for (User member : message.getNewChatMembers()) {
             // bot join group
             if (isBot(member)) {
@@ -72,7 +73,7 @@ public class JoinGroupEvent {
         }
     }
 
-    private Boolean isBot(User member){
+    private Boolean isBot(User member) {
         return this.common.getUsername().equals(member.getUserName()) && member.getIsBot();
     }
 

@@ -17,13 +17,13 @@ import lombok.Data;
 @Data
 @Entity
 public class SpringyBot {
-    
+
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
     private String token;
-    
+
     private String username;
 
     private Boolean state;
@@ -31,7 +31,7 @@ public class SpringyBot {
     @OneToOne(cascade = CascadeType.ALL)
     private Config config;
 
-    @OneToMany(fetch = FetchType.EAGER,cascade = CascadeType.ALL)
+    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JsonIgnore
     private Set<RobotGroupManagement> robotGroupManagement;
 

@@ -33,7 +33,6 @@ public class AdminServiceImpl implements AdminService, UserDetailsService {
 
     @Autowired
     private AdminRepository adminRepository;
-    
 
     @Override
     public void saveAdmin(Admin admin) {
@@ -181,7 +180,7 @@ public class AdminServiceImpl implements AdminService, UserDetailsService {
         admin.setLastLoginIP(CommUtils.getClientIP(request));
         saveAdmin(admin);
         log.info("AdminServiceImpl ==> addAdminProcess ... [ {} ] 新增成功", adminDTOUsername);
-        return ResponseUtils.response(RetEnum.RET_SUCCESS,  "新增成功");
+        return ResponseUtils.response(RetEnum.RET_SUCCESS, "新增成功");
     }
 
     @Override

@@ -61,9 +61,8 @@ public class Admin implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return roles.stream().map(s -> new SimpleGrantedAuthority(s)).collect(Collectors.toList()); 
+        return roles.stream().map(s -> new SimpleGrantedAuthority(s)).collect(Collectors.toList());
     }
-
 
     @Override
     public boolean isAccountNonExpired() {

@@ -36,7 +36,6 @@ public class SpringyBotServiceImpl implements SpringyBotService {
     @Autowired
     private SpringyBotRepository springyBotRepository;
 
-
     private static Map<Long, BotSession> springyBotMap = new HashMap<>();
 
     // SpringyBot CRUD
@@ -71,20 +70,19 @@ public class SpringyBotServiceImpl implements SpringyBotService {
         springyBotRepository.save(springyBot);
     }
 
-
     @Override
     public synchronized ResponseEntity<ResponseData> start(SpringyBotDTO springyBotDTO) {
         try {
             Long id = springyBotDTO.getId();
-            
+
             if (springyBotMap.containsKey(id)) {
                 return ResponseUtils.response(RetEnum.RET_START_EXIST);
             }
-            
+
             SpringyBot springyBot = findById(springyBotDTO.getId()).get();
             springyBot.setState(true);
             save(springyBot);
-            
+
             BotSession botSession = telegramBotsApi.registerBot(new Custom(springyBotDTO));
             springyBotMap.put(id, botSession);
 
@@ -92,12 +90,12 @@ public class SpringyBotServiceImpl implements SpringyBotService {
             return ResponseUtils.response(RetEnum.RET_SUCCESS, "启动成功");
         } catch (TelegramApiException e) {
             log.error("Catch TelegramApiException : {}", e.toString());
-            if(e.getMessage().equals("Bot token and username can't be empty")){
+            if (e.getMessage().equals("Bot token and username can't be empty")) {
                 return ResponseUtils.response(RetEnum.RET_TOKEN_EMPTY);
             }
             return ResponseUtils.response(RetEnum.RET_START_FAIL);
-        } catch (NoSuchElementException e){
-            log.error("Catch NoSuchElementException : {}",e.toString());
+        } catch (NoSuchElementException e) {
+            log.error("Catch NoSuchElementException : {}", e.toString());
             return ResponseUtils.response(RetEnum.RET_START_NOT_EXIST);
         }
     }
@@ -153,8 +151,10 @@ public class SpringyBotServiceImpl implements SpringyBotService {
             if (!springyBotMap.containsKey(springyBot.getId())) {
                 springyBot.setState(false);
                 save(springyBot);
-            };
-        };
+            }
+            ;
+        }
+        ;
         Object pager = CommUtils.Pager(page, pageSize, springyBotList.size());
         data.put("list", springyBotList);
         data.put("pager", pager);
@@ -201,7 +201,5 @@ public class SpringyBotServiceImpl implements SpringyBotService {
         }
         return ResponseUtils.response(RetEnum.RET_SUCCESS, "删除成功");
     }
-
-
 
 }

@@ -12,28 +12,25 @@ public class ResponseUtils {
 
     public static ResponseEntity<ResponseData> response(RetEnum retEnum) {
 
-
         ResponseData responseData = new ResponseData(retEnum.getCode());
-        if(retEnum.getCode() != 200) {
+        if (retEnum.getCode() != 200) {
             responseData.setMsg(retEnum.getMessage());
-        } 
+        }
         return new ResponseEntity<>(responseData, HttpStatus.OK);
     }
 
     public static ResponseEntity<ResponseData> response(RetEnum retEnum,
-                                                        HashMap<String, Object> data) {
-
+            HashMap<String, Object> data) {
 
         ResponseData responseData = new ResponseData(retEnum.getCode(), data);
-        if(retEnum.getCode() != 200) {
+        if (retEnum.getCode() != 200) {
             responseData.setMsg(retEnum.getMessage());
-        } 
+        }
         return new ResponseEntity<>(responseData, HttpStatus.OK);
     }
 
-
     public static ResponseEntity<ResponseData> response(RetEnum retEnum,
-                                                        String msg) {
+            String msg) {
 
         String message = retEnum.getCode() == 200 ? msg : retEnum.getMessage();
         ResponseData responseData = new ResponseData(retEnum.getCode(), message);
@@ -41,8 +38,8 @@ public class ResponseUtils {
     }
 
     public static ResponseEntity<ResponseData> response(RetEnum retEnum,
-                                                        HashMap<String, Object> data,
-                                                        String msg) {
+            HashMap<String, Object> data,
+            String msg) {
         String message = retEnum.getCode() == 200 ? msg : retEnum.getMessage();
         ResponseData responseData = new ResponseData(retEnum.getCode(), message, data);
         return new ResponseEntity<>(responseData, HttpStatus.OK);
@@ -54,7 +51,6 @@ public class ResponseUtils {
         private HashMap<String, Object> data;
         private String msg;
 
-
         public ResponseData(int code) {
             this.code = code;
         }
@@ -64,7 +60,7 @@ public class ResponseUtils {
             this.data = data;
         }
 
-        public ResponseData(int code,  String msg) {
+        public ResponseData(int code, String msg) {
             this.code = code;
             this.msg = msg;
         }
