@@ -18,7 +18,7 @@ public class Manage{
     public void handler(Common common) {
         this.init(common);
 
-        switch (text) {
+        switch (this.text) {
             case "管理面板":
                 break;
 
