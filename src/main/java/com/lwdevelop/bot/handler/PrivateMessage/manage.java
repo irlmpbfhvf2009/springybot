@@ -26,11 +26,11 @@ public class Manage{
                 break;
 
             case "如何将我添加到您的群组":
-                setResponse_addToGroupOrChannel(SpringyBotEnum.CHAT_TYPE_GROUP.getText());
+                this.setResponse_addToGroupOrChannel(SpringyBotEnum.CHAT_TYPE_GROUP.getText());
                 break;
 
             case "如何将我添加到您的频道":
-                setResponse_addToGroupOrChannel(SpringyBotEnum.CHAT_TYPE_CHANNEL.getText());
+                this.setResponse_addToGroupOrChannel(SpringyBotEnum.CHAT_TYPE_CHANNEL.getText());
                 break;
             default:
                 this.text="";

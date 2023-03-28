@@ -12,20 +12,19 @@ import com.lwdevelop.bot.utils.KeyboardButton;
 import com.lwdevelop.bot.utils.SpringyBotEnum;
 
 public class Commends {
-    
+
     private Common common;
     private Message message;
     private String text;
     private SendMessage response;
     private Long chatId;
     private String[] commands;
-    
 
     public void handler(Common common) {
 
         this.init(common);
 
-        if(this.isCommand()){
+        if (this.isCommand()) {
             switch (this.text) {
                 case "/manage":
                     this.setResponse_manage();
@@ -38,7 +37,7 @@ public class Commends {
                     break;
             }
             this.setUserState(this.text);
-        }else{
+        } else {
             switch (getUserState()) {
                 case "/manage":
                     new Manage().handler(common);
@@ -48,10 +47,11 @@ public class Commends {
                     break;
                 default:
                     this.setUserState("");
+                    break;
             }
         }
     }
-    
+
     private void init(Common common) {
         this.message = common.getUpdate().getMessage();
         this.common = common;
@@ -59,13 +59,14 @@ public class Commends {
         this.text = message.getText();
         this.response = common.getResponse();
         this.chatId = common.getUpdate().getMessage().getChatId();
-        this.commands = new String[]{"/job","/manage"};
+        this.commands = new String[] { "/job", "/manage" };
     }
-    private Boolean isCommand(){
+
+    private Boolean isCommand() {
         return Arrays.asList(this.commands).contains(this.text);
     }
 
-    private String getUserState(){
+    private String getUserState() {
         return this.common.getUserState().getOrDefault(this.chatId, "");
     }
 
