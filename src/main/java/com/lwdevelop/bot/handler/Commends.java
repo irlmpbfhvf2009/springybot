@@ -1,5 +1,7 @@
 package com.lwdevelop.bot.handler;
 
+import java.util.Arrays;
+
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Message;
 
@@ -16,23 +18,40 @@ public class Commends {
     private String text;
     private SendMessage response;
     private Long chatId;
+    private String[] commands;
+    
 
     public void handler(Common common) {
-        init(common);
-        switch (getUserState()) {
-            case "/manage":
-                new Manage().handler(common);
-                break;
-            case "/job":
-                new Job().handler(common);
-                break;
-            default:
-                this.noState();
 
+        this.init(common);
+
+        if(this.isCommand()){
+            switch (this.text) {
+                case "/manage":
+                    this.setResponse_manage();
+                    break;
+                case "/job":
+                    this.setResponse_job();
+                    break;
+                default:
+                    this.text = "";
+                    break;
+            }
+            this.setUserState(this.text);
+        }else{
+            switch (getUserState()) {
+                case "/manage":
+                    new Manage().handler(common);
+                    break;
+                case "/job":
+                    new Job().handler(common);
+                    break;
+                default:
+                    this.setUserState("");
+            }
         }
-
     }
-
+    
     private void init(Common common) {
         this.message = common.getUpdate().getMessage();
         this.common = common;
@@ -40,25 +59,14 @@ public class Commends {
         this.text = message.getText();
         this.response = common.getResponse();
         this.chatId = common.getUpdate().getMessage().getChatId();
+        this.commands = new String[]{"/job","/manage"};
+    }
+    private Boolean isCommand(){
+        return Arrays.asList(this.commands).contains(this.text);
     }
 
     private String getUserState(){
         return this.common.getUserState().getOrDefault(this.chatId, "");
-    }
-
-    private void noState() {
-        switch (this.text) {
-            case "/manage":
-                this.setResponse_manage();
-                break;
-            case "/job":
-                this.setResponse_job();
-                break;
-            default:
-                this.text = "";
-                break;
-        }
-        this.setUserState(text);
     }
 
     private void setUserState(String text) {

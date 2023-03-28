@@ -40,13 +40,4 @@ public class SpringyBot {
     @JsonIgnore
     private InvitationThreshold invitationThreshold;
 
-    // （求职人员）
-    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-    @JsonIgnore
-    private Set<JobSeeker> jobSeeker;
-
-    // （招聘信息）
-    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-    @JsonIgnore
-    private Set<JobPosting> jobPosting ;
 }

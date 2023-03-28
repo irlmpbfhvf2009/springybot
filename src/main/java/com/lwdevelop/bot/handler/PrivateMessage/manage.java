@@ -47,6 +47,7 @@ public class Manage{
     }
 
 
+
     private void setResponse_addToGroupOrChannel(String type) {
         this.response
                 .setText(howToAddForText(this.username, getUrl(type, this.username), type));

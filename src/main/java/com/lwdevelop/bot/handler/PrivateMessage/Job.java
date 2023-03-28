@@ -14,7 +14,7 @@ public class Job {
 
     public void handler(Common common){
         this.init(common);
-        
+
 
     }
 
@@ -27,4 +27,5 @@ public class Job {
         this.response = common.getResponse();
         this.username = common.getUsername();
     }
+
 }
