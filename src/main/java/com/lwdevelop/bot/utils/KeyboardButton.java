@@ -55,10 +55,18 @@ public class KeyboardButton {
         return keyboardMarkup;
     }
 
-    public final InlineKeyboardMarkup jobFormManagement(String userId,String firstname,String username,String lastname){
+    public final InlineKeyboardMarkup jobFormManagement(Common common){
         InlineKeyboardButton dk1 = new InlineKeyboardButton();
         InlineKeyboardButton dk2 = new InlineKeyboardButton();
-        dk1.setText("编辑");
+        InlineKeyboardMarkup markupInline = new InlineKeyboardMarkup();
+        List<List<InlineKeyboardButton>> rowsInline = new ArrayList<>();
+        List<InlineKeyboardButton> rowInline = new ArrayList<>();
+
+        String userId = String.valueOf(common.getUpdate().getMessage().getChatId());
+        String firstname = common.getUpdate().getMessage().getChat().getFirstName();
+        String username = common.getUpdate().getMessage().getChat().getUserName();
+        String lastname = common.getUpdate().getMessage().getChat().getLastName();
+
         if(firstname==null){
             firstname = "";
         }
@@ -68,14 +76,12 @@ public class KeyboardButton {
         if(lastname==null){
             lastname = "";
         }
-
+        
         String url = "http://192.168.0.67:3002/#/jobSeekerForm?userId="+userId+"&firstname="+firstname+"&username="+username+"&lastname="+lastname;
+        dk1.setText("编辑");
         dk1.setUrl(url);
         dk2.setText("清除");
         dk2.setUrl("https://yahoo.com.tw");
-        InlineKeyboardMarkup markupInline = new InlineKeyboardMarkup();
-        List<List<InlineKeyboardButton>> rowsInline = new ArrayList<>();
-        List<InlineKeyboardButton> rowInline = new ArrayList<>();
         rowInline.add(dk1);
         rowInline.add(dk2);
         rowsInline.add(rowInline);

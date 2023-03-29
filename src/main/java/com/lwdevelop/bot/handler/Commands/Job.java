@@ -1,4 +1,4 @@
-package com.lwdevelop.bot.handler.Commands;
+package com.lwdevelop.bot.handler.commands;
 
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Message;
@@ -18,11 +18,6 @@ public class Job {
 
     public void setResponse_jobSeeker_management(Common common) {
         this.jobMessageSetting(common.getUpdate().getMessage());
-
-        String userId = String.valueOf(common.getUpdate().getMessage().getChatId());
-        String firstname = common.getUpdate().getMessage().getChat().getFirstName();
-        String username = common.getUpdate().getMessage().getChat().getUserName();
-        String lastname = common.getUpdate().getMessage().getChat().getLastName();
         this.response.setText("求职人员\n" +
                 "姓名：\n" +
                 "男女：\n" +
@@ -37,17 +32,13 @@ public class Job {
                 "工作经历:(限50字以内)\n\n" +
                 "自我介绍:(限50字以内)");
         this.response
-                .setReplyMarkup(new KeyboardButton().jobFormManagement(userId, firstname, username, lastname));
+                .setReplyMarkup(new KeyboardButton().jobFormManagement(common));
         common.sendResponseAsync(this.response);
 
     }
 
     public void setResponse_jobPosting_management(Common common) {
         this.jobMessageSetting(common.getUpdate().getMessage());
-        String userId = String.valueOf(common.getUpdate().getMessage().getChatId());
-        String firstname = common.getUpdate().getMessage().getChat().getFirstName();
-        String username = common.getUpdate().getMessage().getChat().getUserName();
-        String lastname = common.getUpdate().getMessage().getChat().getLastName();
 
         this.response.setText("招聘人才\n" +
                 "公司：\n" +
@@ -58,7 +49,7 @@ public class Job {
                 "要求内容：（限50字以内）\n" +
                 "🐌 地址：\n" +
                 "✈️咨询飞机号");
-        this.response.setReplyMarkup(new KeyboardButton().jobFormManagement(userId, firstname, username, lastname));
+        this.response.setReplyMarkup(new KeyboardButton().jobFormManagement(common));
         common.sendResponseAsync(this.response);
     }
 

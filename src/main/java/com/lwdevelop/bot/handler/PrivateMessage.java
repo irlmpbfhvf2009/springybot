@@ -3,8 +3,9 @@ package com.lwdevelop.bot.handler;
 
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Message;
-import com.lwdevelop.bot.handler.Commands.Job;
-import com.lwdevelop.bot.handler.Commands.Manage;
+
+import com.lwdevelop.bot.handler.commands.Job;
+import com.lwdevelop.bot.handler.commands.Manage;
 import com.lwdevelop.bot.utils.Common;
 import com.lwdevelop.bot.utils.KeyboardButton;
 import com.lwdevelop.bot.utils.SpringyBotEnum;

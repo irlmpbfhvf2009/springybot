@@ -1,4 +1,4 @@
-package com.lwdevelop.bot.handler.Commands;
+package com.lwdevelop.bot.handler.commands;
 
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Message;
