@@ -15,6 +15,8 @@ public class JobPosting {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id; // 招聘信息ID
 
+    private String userId;
+
     private String company; // 公司名称
 
     private String position; // 职位名称

@@ -17,6 +17,8 @@ public class JobSeeker {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id; // 求职者ID
 
+    private String userId;
+
     private String name; // 姓名
 
     private String gender; // 性别
