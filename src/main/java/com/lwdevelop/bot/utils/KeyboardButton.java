@@ -99,8 +99,8 @@ public class KeyboardButton {
                     springyBotServiceImpl.save(springyBot);
                 });
         
-        
-        String url = "http://192.168.0.67:3002/#/"+path+"?userId="+userId;
+        String botId = String.valueOf(common.getSpringyBotId());
+        String url = "http://192.168.0.67:3002/#/"+path+"?userId="+userId + "&botId="+botId;
         dk1.setText("编辑");
         dk1.setUrl(url);
         dk2.setText("清除");

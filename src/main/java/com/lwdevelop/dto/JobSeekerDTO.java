@@ -9,6 +9,10 @@ public class JobSeekerDTO {
     
     private Long id; // 求职者ID
 
+    private String userId;
+
+    private String botId;
+
     private String name; // 姓名
 
     private String gender; // 性别

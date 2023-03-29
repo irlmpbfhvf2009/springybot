@@ -7,6 +7,10 @@ public class JobPostingDTO {
     
     private Long id; // 招聘信息ID
 
+    private String userId;
+
+    private String botId;
+
     private String company; // 公司名称
 
     private String position; // 职位名称

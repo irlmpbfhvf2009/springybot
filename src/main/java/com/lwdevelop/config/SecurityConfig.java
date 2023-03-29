@@ -58,7 +58,8 @@ public class SecurityConfig {
             "/admins/index",
             "/admins/addAdmin",
             "/api.telegram.org",
-            "/redis/**"
+            "/jobManagement/**",
+            "/redis/**",
     };
 
     @Bean
