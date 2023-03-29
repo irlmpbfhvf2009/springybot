@@ -11,6 +11,8 @@ import com.lwdevelop.entity.SpringyBot;
 import com.lwdevelop.repository.JobPostingRepository;
 import com.lwdevelop.repository.JobSeekerRepository;
 import com.lwdevelop.service.JobManagementService;
+import com.lwdevelop.utils.ResponseUtils;
+import com.lwdevelop.utils.RetEnum;
 import com.lwdevelop.utils.ResponseUtils.ResponseData;
 // import lombok.extern.slf4j.Slf4j;
 
@@ -40,7 +42,57 @@ public class JobManagementServiceImpl implements JobManagementService {
     @Override
     public ResponseEntity<ResponseData> addJobPosting(JobPostingDTO jobPostingDTO) {
         Long id = Long.valueOf(jobPostingDTO.getBotId());
-        JobPosting jobPosting = new JobPosting();
+        SpringyBot springyBot = springyBotServiceImpl.findById(id).get();
+        springyBot.getJobUser()
+                .stream()
+                .filter(jobUser -> jobUser.getUserId().equals(jobPostingDTO.getUserId()))
+                .findFirst()
+                .ifPresentOrElse(jobUser -> {
+                    jobUser.getJobPosting()
+                            .stream()
+                            .filter(jp -> jp.getUserId().equals(jobPostingDTO.getUserId()))
+                            .findFirst()
+                            .ifPresentOrElse(oldJobPosting -> {
+                                this.setJobPosting(oldJobPosting,jobPostingDTO);
+                            }, () -> {
+                                JobPosting jobPosting = new JobPosting();
+                                this.setJobPosting(jobPosting,jobPostingDTO);
+                                jobUser.getJobPosting().add(jobPosting);
+                            });
+                }, () -> {
+                });
+        springyBotServiceImpl.save(springyBot);
+        return ResponseUtils.response(RetEnum.RET_SUCCESS, "新增成功");
+    }
+
+    @Override
+    public ResponseEntity<ResponseData> addJobSeeker(JobSeekerDTO jobSeekerDTO) {
+        Long id = Long.valueOf(jobSeekerDTO.getBotId());
+        SpringyBot springyBot = springyBotServiceImpl.findById(id).get();
+        springyBot.getJobUser()
+                .stream()
+                .filter(jobUser -> jobUser.getUserId().equals(jobSeekerDTO.getUserId()))
+                .findFirst()
+                .ifPresentOrElse(jobUser -> {
+                    jobUser.getJobSeeker()
+                            .stream()
+                            .filter(js -> js.getUserId().equals(jobSeekerDTO.getUserId()))
+                            .findFirst()
+                            .ifPresentOrElse(oldJobSeeker -> {
+                                this.setJobSeeker(oldJobSeeker,jobSeekerDTO);
+                            }, () -> {
+                                JobSeeker jobSeeker = new JobSeeker();
+                                this.setJobSeeker(jobSeeker,jobSeekerDTO);
+                                jobUser.getJobSeeker().add(jobSeeker);
+                            });
+                }, () -> {
+                });
+        springyBotServiceImpl.save(springyBot);
+        return ResponseUtils.response(RetEnum.RET_SUCCESS, "新增成功");
+    }
+
+    private void setJobPosting(JobPosting jobPosting,JobPostingDTO jobPostingDTO){
+        jobPosting.setUserId(jobPostingDTO.getUserId());
         jobPosting.setBaseSalary(jobPostingDTO.getBaseSalary());
         jobPosting.setCommission(jobPostingDTO.getCommission());
         jobPosting.setCompany(jobPostingDTO.getCompany());
@@ -49,37 +101,22 @@ public class JobManagementServiceImpl implements JobManagementService {
         jobPosting.setPosition(jobPostingDTO.getPosition());
         jobPosting.setRequirements(jobPostingDTO.getRequirements());
         jobPosting.setWorkTime(jobPostingDTO.getWorkTime());
-
-        SpringyBot springyBot = springyBotServiceImpl.findById(id).get();
-        springyBot.getJobUser()
-                .stream()
-                .filter(jobUser -> jobUser.getUserId().equals(jobPostingDTO.getUserId()))
-                .findFirst()
-                .ifPresentOrElse(jobUser -> {
-                    jobUser.getJobPosting().stream().filter(jp -> jp.getUserId().equals(jobPostingDTO.getUserId()))
-                            .findFirst()
-                            .ifPresentOrElse(oldJobPosting -> {
-                                oldJobPosting.setBaseSalary(jobPostingDTO.getBaseSalary());
-                                oldJobPosting.setCommission(jobPostingDTO.getCommission());
-                                oldJobPosting.setCompany(jobPostingDTO.getCompany());
-                                oldJobPosting.setFlightNumber(jobPostingDTO.getFlightNumber());
-                                oldJobPosting.setLocation(jobPostingDTO.getLocation());
-                                oldJobPosting.setPosition(jobPostingDTO.getPosition());
-                                oldJobPosting.setRequirements(jobPostingDTO.getRequirements());
-                                oldJobPosting.setUserId(jobPostingDTO.getUserId());
-                                oldJobPosting.setWorkTime(jobPostingDTO.getWorkTime());
-                            }, () -> jobUser.getJobPosting().add(jobPosting));
-                }, () -> {
-                });
-        springyBotServiceImpl.save(springyBot);
-
-        System.out.println(jobPostingDTO);
-        return null;
     }
 
-    @Override
-    public ResponseEntity<ResponseData> addJobSeeker(JobSeekerDTO jobSeekerDTO) {
-        return null;
+    private void setJobSeeker(JobSeeker jobSeeker, JobSeekerDTO jobSeekerDTO) {
+        jobSeeker.setAge(jobSeekerDTO.getAge());
+        jobSeeker.setDateOfBirth(jobSeekerDTO.getDateOfBirth());
+        jobSeeker.setEducation(jobSeekerDTO.getEducation());
+        jobSeeker.setExpectedSalary(jobSeekerDTO.getExpectedSalary());
+        jobSeeker.setGender(jobSeekerDTO.getGender());
+        jobSeeker.setName(jobSeekerDTO.getName());
+        jobSeeker.setNationality(jobSeekerDTO.getNationality());
+        jobSeeker.setResources(jobSeekerDTO.getResources());
+        jobSeeker.setSelfIntroduction(jobSeekerDTO.getSelfIntroduction());
+        jobSeeker.setSkills(jobSeekerDTO.getSkills());
+        jobSeeker.setTargetPosition(jobSeekerDTO.getTargetPosition());
+        jobSeeker.setUserId(jobSeekerDTO.getUserId());
+        jobSeeker.setWorkExperience(jobSeekerDTO.getWorkExperience());
     }
 
 }
