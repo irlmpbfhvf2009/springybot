@@ -62,7 +62,7 @@ public class JobManagementServiceImpl implements JobManagementService {
                 }, () -> {
                 });
         springyBotServiceImpl.save(springyBot);
-        return ResponseUtils.response(RetEnum.RET_SUCCESS, "新增成功");
+        return ResponseUtils.response(RetEnum.RET_SUCCESS, "編輯成功");
     }
 
     @Override
@@ -88,7 +88,7 @@ public class JobManagementServiceImpl implements JobManagementService {
                 }, () -> {
                 });
         springyBotServiceImpl.save(springyBot);
-        return ResponseUtils.response(RetEnum.RET_SUCCESS, "新增成功");
+        return ResponseUtils.response(RetEnum.RET_SUCCESS, "編輯成功");
     }
 
     private void setJobPosting(JobPosting jobPosting,JobPostingDTO jobPostingDTO){
