@@ -40,4 +40,8 @@ public class SpringyBot {
     @JsonIgnore
     private InvitationThreshold invitationThreshold;
 
+    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @JsonIgnore
+    private  Set<JobUser> jobUser;
+
 }

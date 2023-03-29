@@ -2,12 +2,21 @@ package com.lwdevelop.bot.utils;
 
 import java.util.ArrayList;
 import java.util.List;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboardMarkup;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKeyboardButton;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.KeyboardRow;
+import com.lwdevelop.entity.JobUser;
+import com.lwdevelop.entity.SpringyBot;
+import com.lwdevelop.service.impl.SpringyBotServiceImpl;
+import com.lwdevelop.utils.SpringUtils;
 
 public class KeyboardButton {
+    
+    @Autowired
+    private SpringyBotServiceImpl springyBotServiceImpl = SpringUtils.getApplicationContext()
+            .getBean(SpringyBotServiceImpl.class);
 
     // manage keyboard
     public final ReplyKeyboardMarkup manageReplyKeyboardMarkup() {
@@ -55,7 +64,7 @@ public class KeyboardButton {
         return keyboardMarkup;
     }
 
-    public final InlineKeyboardMarkup jobFormManagement(Common common){
+    public final InlineKeyboardMarkup jobFormManagement(Common common,String path){
         InlineKeyboardButton dk1 = new InlineKeyboardButton();
         InlineKeyboardButton dk2 = new InlineKeyboardButton();
         InlineKeyboardMarkup markupInline = new InlineKeyboardMarkup();
@@ -76,8 +85,22 @@ public class KeyboardButton {
         if(lastname==null){
             lastname = "";
         }
+        SpringyBot springyBot = springyBotServiceImpl.findById(common.getSpringyBotId()).get();
+        JobUser jobUser = new JobUser();
+        jobUser.setFirstname(firstname);
+        jobUser.setLastname(lastname);
+        jobUser.setUserId(userId);
+        jobUser.setUsername(username);
+        springyBot.getJobUser().stream()
+                .filter(j -> j.getUserId().equals(userId))
+                .findFirst()
+                .ifPresentOrElse(j->{},() -> {
+                    springyBot.getJobUser().add(jobUser);
+                    springyBotServiceImpl.save(springyBot);
+                });
         
-        String url = "http://192.168.0.67:3002/#/jobSeekerForm?userId="+userId+"&firstname="+firstname+"&username="+username+"&lastname="+lastname;
+        
+        String url = "http://192.168.0.67:3002/#/"+path+"?userId="+userId;
         dk1.setText("编辑");
         dk1.setUrl(url);
         dk2.setText("清除");
@@ -88,6 +111,5 @@ public class KeyboardButton {
         markupInline.setKeyboard(rowsInline);
         return markupInline;
     }
-
 
 }

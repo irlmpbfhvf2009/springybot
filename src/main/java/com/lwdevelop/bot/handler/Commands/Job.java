@@ -32,7 +32,7 @@ public class Job {
                 "工作经历:(限50字以内)\n\n" +
                 "自我介绍:(限50字以内)");
         this.response
-                .setReplyMarkup(new KeyboardButton().jobFormManagement(common));
+                .setReplyMarkup(new KeyboardButton().jobFormManagement(common, "jobSeekerForm"));
         common.sendResponseAsync(this.response);
 
     }
@@ -49,7 +49,7 @@ public class Job {
                 "要求内容：（限50字以内）\n" +
                 "🐌 地址：\n" +
                 "✈️咨询飞机号");
-        this.response.setReplyMarkup(new KeyboardButton().jobFormManagement(common));
+        this.response.setReplyMarkup(new KeyboardButton().jobFormManagement(common, "jobPostingForm"));
         common.sendResponseAsync(this.response);
     }
 

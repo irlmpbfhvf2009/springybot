@@ -28,9 +28,9 @@ public class JobUser {
         private String userId;
 
         private String firstname;
-        
+
         private String username;
-        
+
         private String lastname;
 
         @CreatedDate
@@ -40,9 +40,9 @@ public class JobUser {
         @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
         @JsonIgnore
         private Set<JobSeeker> jobSeeker;
-    
+
         // （招聘信息）
         @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
         @JsonIgnore
-        private Set<JobPosting> jobPosting ;
+        private Set<JobPosting> jobPosting;
 }
