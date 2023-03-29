@@ -7,6 +7,7 @@ import com.lwdevelop.dto.JobPostingDTO;
 import com.lwdevelop.dto.JobSeekerDTO;
 import com.lwdevelop.entity.JobPosting;
 import com.lwdevelop.entity.JobSeeker;
+import com.lwdevelop.entity.JobUser;
 import com.lwdevelop.entity.SpringyBot;
 import com.lwdevelop.repository.JobPostingRepository;
 import com.lwdevelop.repository.JobSeekerRepository;
@@ -53,10 +54,10 @@ public class JobManagementServiceImpl implements JobManagementService {
                             .filter(jp -> jp.getUserId().equals(jobPostingDTO.getUserId()))
                             .findFirst()
                             .ifPresentOrElse(oldJobPosting -> {
-                                this.setJobPosting(oldJobPosting,jobPostingDTO);
+                                this.setJobPosting(oldJobPosting, jobPostingDTO);
                             }, () -> {
                                 JobPosting jobPosting = new JobPosting();
-                                this.setJobPosting(jobPosting,jobPostingDTO);
+                                this.setJobPosting(jobPosting, jobPostingDTO);
                                 jobUser.getJobPosting().add(jobPosting);
                             });
                 }, () -> {
@@ -71,18 +72,18 @@ public class JobManagementServiceImpl implements JobManagementService {
         SpringyBot springyBot = springyBotServiceImpl.findById(id).get();
         springyBot.getJobUser()
                 .stream()
-                .filter(jobUser -> jobUser.getUserId().equals(jobSeekerDTO.getUserId()))
+                .filter(jobUser -> existJobUser(jobUser, jobSeekerDTO))
                 .findFirst()
                 .ifPresentOrElse(jobUser -> {
                     jobUser.getJobSeeker()
                             .stream()
-                            .filter(js -> js.getUserId().equals(jobSeekerDTO.getUserId()))
+                            .filter(jobSeeker -> existJobSeeker(jobSeeker, jobSeekerDTO))
                             .findFirst()
                             .ifPresentOrElse(oldJobSeeker -> {
-                                this.setJobSeeker(oldJobSeeker,jobSeekerDTO);
+                                this.setJobSeeker(oldJobSeeker, jobSeekerDTO);
                             }, () -> {
                                 JobSeeker jobSeeker = new JobSeeker();
-                                this.setJobSeeker(jobSeeker,jobSeekerDTO);
+                                this.setJobSeeker(jobSeeker, jobSeekerDTO);
                                 jobUser.getJobSeeker().add(jobSeeker);
                             });
                 }, () -> {
@@ -91,7 +92,15 @@ public class JobManagementServiceImpl implements JobManagementService {
         return ResponseUtils.response(RetEnum.RET_SUCCESS, "編輯成功");
     }
 
-    private void setJobPosting(JobPosting jobPosting,JobPostingDTO jobPostingDTO){
+    private Boolean existJobUser(JobUser jobUser, JobSeekerDTO jobSeekerDTO) {
+        return jobUser.getUserId().equals(jobSeekerDTO.getUserId());
+    }
+
+    private Boolean existJobSeeker(JobSeeker jobSeeker, JobSeekerDTO jobSeekerDTO) {
+        return jobSeeker.getUserId().equals(jobSeekerDTO.getUserId());
+    }
+
+    private void setJobPosting(JobPosting jobPosting, JobPostingDTO jobPostingDTO) {
         jobPosting.setUserId(jobPostingDTO.getUserId());
         jobPosting.setBaseSalary(jobPostingDTO.getBaseSalary());
         jobPosting.setCommission(jobPostingDTO.getCommission());
