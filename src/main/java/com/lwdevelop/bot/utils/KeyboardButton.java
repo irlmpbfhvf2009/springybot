@@ -2,8 +2,6 @@ package com.lwdevelop.bot.utils;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import org.telegram.telegrambots.meta.api.objects.LoginUrl;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboardMarkup;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKeyboardButton;
@@ -57,14 +55,22 @@ public class KeyboardButton {
         return keyboardMarkup;
     }
 
-    public final InlineKeyboardMarkup jobManagement(Long userId,String username){
+    public final InlineKeyboardMarkup jobFormManagement(String userId,String firstname,String username,String lastname){
         InlineKeyboardButton dk1 = new InlineKeyboardButton();
         InlineKeyboardButton dk2 = new InlineKeyboardButton();
         dk1.setText("编辑");
-        String id = String.valueOf(userId);
-        System.out.println(username);
-        dk1.setUrl("http://192.168.0.67:3002/#/jobForm?userId="+id+"&username="+username);
-        // dk1.setUrl("https://ed0e-61-218-87-189.jp.ngrok.io/#/jobForm?userId="+id+"&username="+username);
+        if(firstname==null){
+            firstname = "";
+        }
+        if(username==null){
+            username = "";
+        }
+        if(lastname==null){
+            lastname = "";
+        }
+
+        String url = "http://192.168.0.67:3002/#/jobSeekerForm?userId="+userId+"&firstname="+firstname+"&username="+username+"&lastname="+lastname;
+        dk1.setUrl(url);
         dk2.setText("清除");
         dk2.setUrl("https://yahoo.com.tw");
         InlineKeyboardMarkup markupInline = new InlineKeyboardMarkup();
