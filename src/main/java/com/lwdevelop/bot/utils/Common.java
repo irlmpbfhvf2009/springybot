@@ -1,10 +1,11 @@
 package com.lwdevelop.bot.utils;
 
 import java.util.HashMap;
+import org.springframework.scheduling.annotation.Async;
+import org.telegram.telegrambots.bots.DefaultBotOptions;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Update;
-
 import lombok.Data;
 import lombok.SneakyThrows;
 
@@ -23,6 +24,8 @@ public class Common {
 
     private TelegramLongPollingBot bot;
 
+    private DefaultBotOptions defaultBotOptions;
+
     // 用来存储用户的状态(会话)
     private HashMap<Long, String> userState;
 
@@ -33,10 +36,10 @@ public class Common {
     }
 
 
-    // @Async
+    @Async
     @SneakyThrows
-    public void sendResponseAsync(SendMessage response) {
-        this.bot.executeAsync(response);
+    public Integer sendResponseAsync(SendMessage response) {
+        return this.bot.executeAsync(response).get().getMessageId();
     }
 
 

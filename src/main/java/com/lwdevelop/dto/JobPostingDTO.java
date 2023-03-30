@@ -7,17 +7,15 @@ public class JobPostingDTO {
     
     private Long id; // 招聘信息ID
 
-    private String userId;
-
-    private String botId;
+    private String ub; // userId and botId
 
     private String company; // 公司名称
 
     private String position; // 职位名称
 
-    private Integer baseSalary; // 底薪
+    private String baseSalary; // 底薪
 
-    private Integer commission; // 提成
+    private String commission; // 提成
 
     private String workTime; // 上班时间
 

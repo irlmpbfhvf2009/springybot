@@ -21,9 +21,9 @@ public class JobPosting {
 
     private String position; // 职位名称
 
-    private Integer baseSalary; // 底薪
+    private String baseSalary; // 底薪
 
-    private Integer commission; // 提成
+    private String commission; // 提成
 
     private String workTime; // 上班时间
 

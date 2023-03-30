@@ -1,5 +1,7 @@
 package com.lwdevelop.service.impl;
 
+import java.util.HashMap;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -7,11 +9,11 @@ import com.lwdevelop.dto.JobPostingDTO;
 import com.lwdevelop.dto.JobSeekerDTO;
 import com.lwdevelop.entity.JobPosting;
 import com.lwdevelop.entity.JobSeeker;
-import com.lwdevelop.entity.JobUser;
 import com.lwdevelop.entity.SpringyBot;
 import com.lwdevelop.repository.JobPostingRepository;
 import com.lwdevelop.repository.JobSeekerRepository;
 import com.lwdevelop.service.JobManagementService;
+import com.lwdevelop.utils.CryptoUtil;
 import com.lwdevelop.utils.ResponseUtils;
 import com.lwdevelop.utils.RetEnum;
 import com.lwdevelop.utils.ResponseUtils.ResponseData;
@@ -41,23 +43,45 @@ public class JobManagementServiceImpl implements JobManagementService {
     }
 
     @Override
+    public ResponseEntity<ResponseData> decryptedUbWithJobPosting(String ub) {
+        String decryptedUb = CryptoUtil.decrypt(ub);
+        HashMap<String, Object> data = new HashMap<>();
+        String[] ubArray = decryptedUb.split("&");
+        data.put("userId", ubArray[0].split("=")[1]);
+        data.put("botId", ubArray[1].split("=")[1]);
+        data.put("company", ubArray[2].split("=")[1]);
+        data.put("position", ubArray[3].split("=")[1]);
+        data.put("baseSalary", ubArray[4].split("=")[1]);
+        data.put("commission", ubArray[5].split("=")[1]);
+        data.put("workTime", ubArray[6].split("=")[1]);
+        data.put("requirements", ubArray[7].split("=")[1]);
+        data.put("location", ubArray[8].split("=")[1]);
+        data.put("flightNumber", ubArray[9].split("=")[1]);
+        return ResponseUtils.response(RetEnum.RET_SUCCESS,data);
+    }
+
+    @Override
     public ResponseEntity<ResponseData> addJobPosting(JobPostingDTO jobPostingDTO) {
-        Long id = Long.valueOf(jobPostingDTO.getBotId());
+        String decryptedUb = CryptoUtil.decrypt(jobPostingDTO.getUb());
+        String[] ubArray = decryptedUb.split("&");
+        String userId = ubArray[0].split("=")[1];
+        String botId = ubArray[1].split("=")[1];
+        Long id = Long.valueOf(botId);
         SpringyBot springyBot = springyBotServiceImpl.findById(id).get();
         springyBot.getJobUser()
                 .stream()
-                .filter(jobUser -> jobUser.getUserId().equals(jobPostingDTO.getUserId()))
+                .filter(jobUser -> jobUser.getUserId().equals(userId))
                 .findFirst()
                 .ifPresentOrElse(jobUser -> {
                     jobUser.getJobPosting()
                             .stream()
-                            .filter(jp -> jp.getUserId().equals(jobPostingDTO.getUserId()))
+                            .filter(jp -> jp.getUserId().equals(userId))
                             .findFirst()
                             .ifPresentOrElse(oldJobPosting -> {
-                                this.setJobPosting(oldJobPosting, jobPostingDTO);
+                                this.setJobPosting(oldJobPosting, jobPostingDTO, userId);
                             }, () -> {
                                 JobPosting jobPosting = new JobPosting();
-                                this.setJobPosting(jobPosting, jobPostingDTO);
+                                this.setJobPosting(jobPosting, jobPostingDTO, userId);
                                 jobUser.getJobPosting().add(jobPosting);
                             });
                 }, () -> {
@@ -68,22 +92,27 @@ public class JobManagementServiceImpl implements JobManagementService {
 
     @Override
     public ResponseEntity<ResponseData> addJobSeeker(JobSeekerDTO jobSeekerDTO) {
-        Long id = Long.valueOf(jobSeekerDTO.getBotId());
+        String decryptedUb = CryptoUtil.decrypt(jobSeekerDTO.getUb());
+        String[] ubArray = decryptedUb.split("&");
+        String userId = ubArray[0].split("=")[1];
+        String botId = ubArray[1].split("=")[1];
+        Long id = Long.valueOf(botId);
+
         SpringyBot springyBot = springyBotServiceImpl.findById(id).get();
         springyBot.getJobUser()
                 .stream()
-                .filter(jobUser -> existJobUser(jobUser, jobSeekerDTO))
+                .filter(jobUser -> jobUser.getUserId().equals(userId))
                 .findFirst()
                 .ifPresentOrElse(jobUser -> {
                     jobUser.getJobSeeker()
                             .stream()
-                            .filter(jobSeeker -> existJobSeeker(jobSeeker, jobSeekerDTO))
+                            .filter(jobSeeker -> jobSeeker.getUserId().equals(userId))
                             .findFirst()
                             .ifPresentOrElse(oldJobSeeker -> {
-                                this.setJobSeeker(oldJobSeeker, jobSeekerDTO);
+                                this.setJobSeeker(oldJobSeeker, jobSeekerDTO, userId);
                             }, () -> {
                                 JobSeeker jobSeeker = new JobSeeker();
-                                this.setJobSeeker(jobSeeker, jobSeekerDTO);
+                                this.setJobSeeker(jobSeeker, jobSeekerDTO, userId);
                                 jobUser.getJobSeeker().add(jobSeeker);
                             });
                 }, () -> {
@@ -92,16 +121,8 @@ public class JobManagementServiceImpl implements JobManagementService {
         return ResponseUtils.response(RetEnum.RET_SUCCESS, "編輯成功");
     }
 
-    private Boolean existJobUser(JobUser jobUser, JobSeekerDTO jobSeekerDTO) {
-        return jobUser.getUserId().equals(jobSeekerDTO.getUserId());
-    }
-
-    private Boolean existJobSeeker(JobSeeker jobSeeker, JobSeekerDTO jobSeekerDTO) {
-        return jobSeeker.getUserId().equals(jobSeekerDTO.getUserId());
-    }
-
-    private void setJobPosting(JobPosting jobPosting, JobPostingDTO jobPostingDTO) {
-        jobPosting.setUserId(jobPostingDTO.getUserId());
+    private void setJobPosting(JobPosting jobPosting, JobPostingDTO jobPostingDTO, String userId) {
+        jobPosting.setUserId(userId);
         jobPosting.setBaseSalary(jobPostingDTO.getBaseSalary());
         jobPosting.setCommission(jobPostingDTO.getCommission());
         jobPosting.setCompany(jobPostingDTO.getCompany());
@@ -112,7 +133,7 @@ public class JobManagementServiceImpl implements JobManagementService {
         jobPosting.setWorkTime(jobPostingDTO.getWorkTime());
     }
 
-    private void setJobSeeker(JobSeeker jobSeeker, JobSeekerDTO jobSeekerDTO) {
+    private void setJobSeeker(JobSeeker jobSeeker, JobSeekerDTO jobSeekerDTO, String userId) {
         jobSeeker.setAge(jobSeekerDTO.getAge());
         jobSeeker.setDateOfBirth(jobSeekerDTO.getDateOfBirth());
         jobSeeker.setEducation(jobSeekerDTO.getEducation());
@@ -124,7 +145,7 @@ public class JobManagementServiceImpl implements JobManagementService {
         jobSeeker.setSelfIntroduction(jobSeekerDTO.getSelfIntroduction());
         jobSeeker.setSkills(jobSeekerDTO.getSkills());
         jobSeeker.setTargetPosition(jobSeekerDTO.getTargetPosition());
-        jobSeeker.setUserId(jobSeekerDTO.getUserId());
+        jobSeeker.setUserId(userId);
         jobSeeker.setWorkExperience(jobSeekerDTO.getWorkExperience());
     }
 

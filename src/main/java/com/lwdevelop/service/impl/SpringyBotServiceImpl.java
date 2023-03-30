@@ -84,6 +84,7 @@ public class SpringyBotServiceImpl implements SpringyBotService {
             save(springyBot);
 
             BotSession botSession = telegramBotsApi.registerBot(new Custom(springyBotDTO));
+
             springyBotMap.put(id, botSession);
 
             log.info("Common Telegram bot started.");

@@ -5,6 +5,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.lwdevelop.dto.JobPostingDTO;
@@ -33,5 +34,13 @@ public class JobManagementController {
 
         return jobManagementServiceImpl.addJobSeeker(jobSeekerDTO);
     }
-    
+
+    // 解碼招聘信息
+    @PostMapping("/decryptedUbWithJobPosting")
+    public ResponseEntity<ResponseUtils.ResponseData> decryptedUbWithJobPosting(
+            @RequestParam String ub) throws Exception {
+
+        return jobManagementServiceImpl.decryptedUbWithJobPosting(ub);
+    }
+
 }
