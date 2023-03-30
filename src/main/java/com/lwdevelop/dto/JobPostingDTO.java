@@ -9,6 +9,10 @@ public class JobPostingDTO {
 
     private String ub; // userId and botId
 
+    private String userId;
+
+    private String botId;
+
     private String company; // 公司名称
 
     private String position; // 职位名称

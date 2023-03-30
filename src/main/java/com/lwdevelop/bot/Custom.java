@@ -1,10 +1,13 @@
 package com.lwdevelop.bot;
 
 import java.util.HashMap;
+
+import org.springframework.beans.factory.annotation.Autowired;
 import org.telegram.telegrambots.bots.DefaultBotOptions;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.meta.api.methods.groupadministration.ExportChatInviteLink;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
+import org.telegram.telegrambots.meta.api.objects.CallbackQuery;
 import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.api.objects.User;
@@ -17,10 +20,18 @@ import com.lwdevelop.bot.handler.PrivateMessage;
 import com.lwdevelop.bot.utils.Common;
 import com.lwdevelop.bot.utils.SpringyBotEnum;
 import com.lwdevelop.dto.SpringyBotDTO;
+import com.lwdevelop.service.impl.JobManagementServiceImpl;
+import com.lwdevelop.utils.SpringUtils;
+
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 public class Custom extends TelegramLongPollingBot {
+    
+    @Autowired
+    private JobManagementServiceImpl jobManagementServiceImpl = SpringUtils.getApplicationContext()
+            .getBean(JobManagementServiceImpl.class);
+
 
     public Common common;
     private SpringyBotDTO dto;
@@ -79,7 +90,7 @@ public class Custom extends TelegramLongPollingBot {
                 if (chatTypeIsChannel(chatType)) {
                     new ChannelMessage().handler(this.common);
                 }
-            }
+            }   
         }
 
         // join group event
@@ -104,6 +115,16 @@ public class Custom extends TelegramLongPollingBot {
                 }
             }
         } catch (NullPointerException e) {
+        }
+
+        if (update.hasCallbackQuery()) {
+            CallbackQuery callbackQuery = update.getCallbackQuery();
+            if (callbackQuery.getData().startsWith("clearJobPosting_")) {
+                // 获取 jobPosting ID
+                String userId = callbackQuery.getData().substring("clearJobPosting_".length());
+                // 在这里根据 userId 进行相应的清除操作
+
+            }
         }
 
     }

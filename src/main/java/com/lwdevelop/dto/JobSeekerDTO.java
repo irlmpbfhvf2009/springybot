@@ -9,7 +9,11 @@ public class JobSeekerDTO {
     
     private Long id; // 求职者ID
 
-    private String ub; // userId and botId
+    private String ub; // 
+
+    private String userId;
+
+    private String botId;
 
     private String name; // 姓名
 

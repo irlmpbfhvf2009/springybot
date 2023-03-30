@@ -1,7 +1,6 @@
 package com.lwdevelop.service.impl;
 
 import java.util.HashMap;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -43,11 +42,17 @@ public class JobManagementServiceImpl implements JobManagementService {
     }
 
     @Override
+    public void deleteByIdWithJobPosting(Long id) {
+        jobPostingRepository.deleteById(id);
+    }
+
+    @Override
     public ResponseEntity<ResponseData> decryptedUbWithJobPosting(JobPostingDTO jobPostingdDTO) {
-        String ub = jobPostingdDTO.getUb().replace(" ", "+");
+        String ub = jobPostingdDTO.getUb();
         String decryptedUb = CryptoUtil.decrypt(ub);
         HashMap<String, Object> data = new HashMap<>();
         String[] ubArray = decryptedUb.split("&");
+        
         data.put("userId", ubArray[0].split("=")[1]);
         data.put("botId", ubArray[1].split("=")[1]);
         data.put("company", ubArray[2].split("=")[1]);
@@ -63,10 +68,8 @@ public class JobManagementServiceImpl implements JobManagementService {
 
     @Override
     public ResponseEntity<ResponseData> addJobPosting(JobPostingDTO jobPostingDTO) {
-        String decryptedUb = CryptoUtil.decrypt(jobPostingDTO.getUb());
-        String[] ubArray = decryptedUb.split("&");
-        String userId = ubArray[0].split("=")[1];
-        String botId = ubArray[1].split("=")[1];
+        String userId = jobPostingDTO.getUserId();
+        String botId = jobPostingDTO.getBotId();
         Long id = Long.valueOf(botId);
         SpringyBot springyBot = springyBotServiceImpl.findById(id).get();
         springyBot.getJobUser()
@@ -149,5 +152,6 @@ public class JobManagementServiceImpl implements JobManagementService {
         jobSeeker.setUserId(userId);
         jobSeeker.setWorkExperience(jobSeekerDTO.getWorkExperience());
     }
+
 
 }

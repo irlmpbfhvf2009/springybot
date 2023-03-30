@@ -6,5 +6,7 @@ import com.lwdevelop.entity.JobPosting;
 
 public interface JobPostingRepository  extends JpaRepository<JobPosting, Long> {
     JobPosting findByUserId(String userId);
+
+    void deleteById(Long id);
     
 }

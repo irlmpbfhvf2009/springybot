@@ -1,7 +1,9 @@
 package com.lwdevelop.bot.utils;
 
 import java.net.InetAddress;
+import java.net.URLEncoder;
 import java.net.UnknownHostException;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,7 +11,6 @@ import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMa
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboardMarkup;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKeyboardButton;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.KeyboardRow;
-
 import com.lwdevelop.entity.JobPosting;
 import com.lwdevelop.entity.JobSeeker;
 import com.lwdevelop.entity.JobUser;
@@ -147,11 +148,13 @@ public class KeyboardButton {
                                 + "&flightNumber=" + flightNumber;
 
             String encryptedUb = CryptoUtil.encrypt(ub);
-            String url = "http://" + ip + ":3002/#/" + path + "?ub=" + encryptedUb;
+            String encodedStr = URLEncoder.encode(encryptedUb, StandardCharsets.UTF_8);
+            String url = "http://" + ip + ":3002/#/" + path + "?ub=" + encodedStr;
             dk1.setText("编辑");
             dk1.setUrl(url);
             dk2.setText("清除");
-            dk2.setUrl("https://yahoo.com.tw");
+            // dk2.setUrl("https://yahoo.com.tw");
+            dk2.setCallbackData("clearJobPosting_"+userId);
             rowInline.add(dk1);
             rowInline.add(dk2);
             rowsInline.add(rowInline);

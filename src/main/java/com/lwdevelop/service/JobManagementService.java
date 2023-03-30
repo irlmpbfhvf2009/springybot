@@ -14,6 +14,11 @@ public interface JobManagementService {
 
     JobPosting findByUserIdWithJobPosting(String userId);
 
+    void deleteByIdWithJobPosting(Long id);
+
+
+    //
+
     ResponseEntity<ResponseUtils.ResponseData> addJobPosting(JobPostingDTO jobPostingDTO);
 
     ResponseEntity<ResponseUtils.ResponseData> addJobSeeker(JobSeekerDTO jobSeekerDTO);
