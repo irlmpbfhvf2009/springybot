@@ -43,7 +43,8 @@ public class JobManagementServiceImpl implements JobManagementService {
     }
 
     @Override
-    public ResponseEntity<ResponseData> decryptedUbWithJobPosting(String ub) {
+    public ResponseEntity<ResponseData> decryptedUbWithJobPosting(JobPostingDTO jobPostingdDTO) {
+        String ub = jobPostingdDTO.getUb().replace(" ", "+");
         String decryptedUb = CryptoUtil.decrypt(ub);
         HashMap<String, Object> data = new HashMap<>();
         String[] ubArray = decryptedUb.split("&");

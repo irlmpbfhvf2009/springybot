@@ -145,7 +145,7 @@ public class KeyboardButton {
                                 + "&requirements=" + requirements 
                                 + "&location=" + location 
                                 + "&flightNumber=" + flightNumber;
-                                
+
             String encryptedUb = CryptoUtil.encrypt(ub);
             String url = "http://" + ip + ":3002/#/" + path + "?ub=" + encryptedUb;
             dk1.setText("编辑");
@@ -157,6 +157,19 @@ public class KeyboardButton {
             rowsInline.add(rowInline);
             markupInline.setKeyboard(rowsInline);
         }else if(path.equals("jobSeekerForm")){
+            String ub = "userId=" + userId 
+                                + "&botId=" + botId;
+
+            String encryptedUb = CryptoUtil.encrypt(ub);
+            String url = "http://" + ip + ":3002/#/" + path + "?ub=" + encryptedUb;
+            dk1.setText("编辑");
+            dk1.setUrl(url);
+            dk2.setText("清除");
+            dk2.setUrl("https://yahoo.com.tw");
+            rowInline.add(dk1);
+            rowInline.add(dk2);
+            rowsInline.add(rowInline);
+            markupInline.setKeyboard(rowsInline);
         }
         return markupInline;
     }
