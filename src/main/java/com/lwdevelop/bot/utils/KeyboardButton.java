@@ -153,7 +153,6 @@ public class KeyboardButton {
             dk1.setText("编辑");
             dk1.setUrl(url);
             dk2.setText("清除");
-            // dk2.setUrl("https://yahoo.com.tw");
             dk2.setCallbackData("clearJobPosting_"+userId);
             rowInline.add(dk1);
             rowInline.add(dk2);

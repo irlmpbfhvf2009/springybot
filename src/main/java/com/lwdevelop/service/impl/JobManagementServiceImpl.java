@@ -37,6 +37,11 @@ public class JobManagementServiceImpl implements JobManagementService {
     }
 
     @Override
+    public void saveJobPosting(JobPosting jobPosting) {
+        jobPostingRepository.save(jobPosting);
+    }
+
+    @Override
     public JobPosting findByUserIdWithJobPosting(String userId) {
         return jobPostingRepository.findByUserId(userId);
     }
@@ -47,23 +52,40 @@ public class JobManagementServiceImpl implements JobManagementService {
     }
 
     @Override
+    public void deleteByUserIdWithJobPosting(String userId) {
+        jobPostingRepository.deleteByUserId(userId);
+    }
+
+    @Override
     public ResponseEntity<ResponseData> decryptedUbWithJobPosting(JobPostingDTO jobPostingdDTO) {
         String ub = jobPostingdDTO.getUb();
         String decryptedUb = CryptoUtil.decrypt(ub);
         HashMap<String, Object> data = new HashMap<>();
         String[] ubArray = decryptedUb.split("&");
-        
-        data.put("userId", ubArray[0].split("=")[1]);
-        data.put("botId", ubArray[1].split("=")[1]);
-        data.put("company", ubArray[2].split("=")[1]);
-        data.put("position", ubArray[3].split("=")[1]);
-        data.put("baseSalary", ubArray[4].split("=")[1]);
-        data.put("commission", ubArray[5].split("=")[1]);
-        data.put("workTime", ubArray[6].split("=")[1]);
-        data.put("requirements", ubArray[7].split("=")[1]);
-        data.put("location", ubArray[8].split("=")[1]);
-        data.put("flightNumber", ubArray[9].split("=")[1]);
-        return ResponseUtils.response(RetEnum.RET_SUCCESS,data);
+        try {
+            data.put("userId", ubArray[0].split("=")[1]);
+            data.put("botId", ubArray[1].split("=")[1]);
+            data.put("company", ubArray[2].split("=")[1]);
+            data.put("position", ubArray[3].split("=")[1]);
+            data.put("baseSalary", ubArray[4].split("=")[1]);
+            data.put("commission", ubArray[5].split("=")[1]);
+            data.put("workTime", ubArray[6].split("=")[1]);
+            data.put("requirements", ubArray[7].split("=")[1]);
+            data.put("location", ubArray[8].split("=")[1]);
+            data.put("flightNumber", ubArray[9].split("=")[1]);
+        } catch (ArrayIndexOutOfBoundsException e) {
+            data.put("userId", ubArray[0].split("=")[1]);
+            data.put("botId", ubArray[1].split("=")[1]);
+            data.put("company", "");
+            data.put("position", "");
+            data.put("baseSalary", "");
+            data.put("commission", "");
+            data.put("workTime", "");
+            data.put("requirements", "");
+            data.put("location", "");
+            data.put("flightNumber", "");
+        }
+        return ResponseUtils.response(RetEnum.RET_SUCCESS, data);
     }
 
     @Override
@@ -152,6 +174,7 @@ public class JobManagementServiceImpl implements JobManagementService {
         jobSeeker.setUserId(userId);
         jobSeeker.setWorkExperience(jobSeekerDTO.getWorkExperience());
     }
+
 
 
 }
