@@ -3,8 +3,6 @@ package com.lwdevelop.bot.handler;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.CallbackQuery;
-import org.telegram.telegrambots.meta.api.objects.Message;
-
 import com.lwdevelop.bot.utils.Common;
 import com.lwdevelop.entity.JobPosting;
 import com.lwdevelop.service.impl.JobManagementServiceImpl;
