@@ -1,5 +1,6 @@
 package com.lwdevelop.service.impl;
 
+import java.util.Arrays;
 import java.util.HashMap;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -72,30 +73,20 @@ public class JobManagementServiceImpl implements JobManagementService {
         String ub = jobPostingdDTO.getUb();
         String decryptedUb = CryptoUtil.decrypt(ub);
         HashMap<String, Object> data = new HashMap<>();
+
         String[] ubArray = decryptedUb.split("&");
-        try {
-            data.put("userId", ubArray[0].split("=")[1]);
-            data.put("botId", ubArray[1].split("=")[1]);
-            data.put("company", ubArray[2].split("=")[1]);
-            data.put("position", ubArray[3].split("=")[1]);
-            data.put("baseSalary", ubArray[4].split("=")[1]);
-            data.put("commission", ubArray[5].split("=")[1]);
-            data.put("workTime", ubArray[6].split("=")[1]);
-            data.put("requirements", ubArray[7].split("=")[1]);
-            data.put("location", ubArray[8].split("=")[1]);
-            data.put("flightNumber", ubArray[9].split("=")[1]);
-        } catch (ArrayIndexOutOfBoundsException e) {
-            data.put("userId", ubArray[0].split("=")[1]);
-            data.put("botId", ubArray[1].split("=")[1]);
-            data.put("company", "");
-            data.put("position", "");
-            data.put("baseSalary", "");
-            data.put("commission", "");
-            data.put("workTime", "");
-            data.put("requirements", "");
-            data.put("location", "");
-            data.put("flightNumber", "");
+        for (String param : ubArray) {
+            String[] keyValue = param.split("=");
+            if (keyValue.length == 2) {
+                data.put(keyValue[0], keyValue[1]);
+            }
         }
+
+        for (String key : Arrays.asList("company", "position", "baseSalary", "commission", "workTime",
+                "requirements", "location", "flightNumber")) {
+            data.putIfAbsent(key, "");
+        }
+
         return ResponseUtils.response(RetEnum.RET_SUCCESS, data);
     }
 
@@ -104,38 +95,23 @@ public class JobManagementServiceImpl implements JobManagementService {
         String ub = jobSeekerDTO.getUb();
         String decryptedUb = CryptoUtil.decrypt(ub);
         HashMap<String, Object> data = new HashMap<>();
+
         String[] ubArray = decryptedUb.split("&");
-        try {
-            data.put("userId", ubArray[0].split("=")[1]);
-            data.put("botId", ubArray[1].split("=")[1]);
-            data.put("name", ubArray[2].split("=")[1]);
-            data.put("gender", ubArray[3].split("=")[1]);
-            data.put("dateOfBirth", ubArray[4].split("=")[1]);
-            data.put("age", ubArray[5].split("=")[1]);
-            data.put("nationality", ubArray[6].split("=")[1]);
-            data.put("education", ubArray[7].split("=")[1]);
-            data.put("skills", ubArray[8].split("=")[1]);
-            data.put("targetPosition", ubArray[9].split("=")[1]);
-            data.put("resources", ubArray[10].split("=")[1]);
-            data.put("expectedSalary", ubArray[11].split("=")[1]);
-            data.put("workExperience", ubArray[12].split("=")[1]);
-            data.put("selfIntroduction", ubArray[13].split("=")[1]);
-        } catch (ArrayIndexOutOfBoundsException e) {
-            data.put("userId", ubArray[0].split("=")[1]);
-            data.put("botId", ubArray[1].split("=")[1]);
-            data.put("name", "");
-            data.put("gender", "");
-            data.put("dateOfBirth", "");
-            data.put("age", "");
-            data.put("nationality", "");
-            data.put("education", "");
-            data.put("skills", "");
-            data.put("targetPosition", "");
-            data.put("resources", "");
-            data.put("expectedSalary", "");
-            data.put("workExperience", "");
-            data.put("selfIntroduction", "");
+        for (String param : ubArray) {
+            String[] keyValue = param.split("=");
+            if (keyValue.length == 2) {
+                data.put(keyValue[0], keyValue[1]);
+            }
         }
+
+        // If any of the expected keys are not found in the data, set their values to
+        // empty strings.
+        for (String key : Arrays.asList("name", "gender", "dateOfBirth", "age", "nationality",
+                "education", "skills", "targetPosition", "resources",
+                "expectedSalary", "workExperience", "selfIntroduction")) {
+            data.putIfAbsent(key, "");
+        }
+
         return ResponseUtils.response(RetEnum.RET_SUCCESS, data);
     }
 

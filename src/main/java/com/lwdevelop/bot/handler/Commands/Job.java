@@ -58,42 +58,64 @@ public class Job {
                 jobUser.setLastname(lastname);
                 jobUser.setUserId(userId);
                 jobUser.setUsername(username);
-                springyBot.getJobUser()
-                                .stream().filter(j -> j.getUserId().equals(userId)).findFirst()
+                springyBot.getJobUser().stream().filter(j -> j.getUserId().equals(userId)).findFirst()
                                 .ifPresentOrElse(j -> {
-                                        j.getJobSeeker().stream()
-                                                        .filter(ju -> ju.getUserId().equals(userId))
-                                                        .findFirst()
-                                                        .ifPresentOrElse(js -> {
+                                        j.getJobSeeker().stream().filter(ju -> ju.getUserId().equals(userId))
+                                                        .findFirst().ifPresentOrElse(js -> {
+                                                                String name = js.getName() == null ? "" : js.getName();
+                                                                String gender = js.getGender() == null ? ""
+                                                                                : js.getGender();
+                                                                String dateOfBirth = js.getDateOfBirth() == null ? ""
+                                                                                : js.getDateOfBirth();
+                                                                String age = js.getAge() == null ? "" : js.getAge();
+                                                                String nationality = js.getNationality() == null ? ""
+                                                                                : js.getNationality();
+                                                                String education = js.getEducation() == null ? ""
+                                                                                : js.getEducation();
+                                                                String skills = js.getSkills() == null ? ""
+                                                                                : js.getSkills();
+                                                                String targetPosition = js.getTargetPosition() == null
+                                                                                ? ""
+                                                                                : js.getTargetPosition();
+                                                                String resources = js.getResources() == null ? ""
+                                                                                : js.getResources();
+                                                                String expectedSalary = js.getExpectedSalary() == null
+                                                                                ? ""
+                                                                                : js.getExpectedSalary();
+                                                                String workExperience = js.getWorkExperience() == null
+                                                                                ? ""
+                                                                                : js.getWorkExperience();
+                                                                String selfIntroduction = js
+                                                                                .getSelfIntroduction() == null ? ""
+                                                                                                : js.getSelfIntroduction();
+
                                                                 this.response.setText("求职人员\n" +
-                                                                                "姓名：" + js.getName() + "\n" +
-                                                                                "男女：" + js.getGender() + "\n" +
-                                                                                "出生_年_月_日" + js.getDateOfBirth() + "\n"
+                                                                                "姓名：" + name + "\n" +
+                                                                                "男女：" + gender + "\n" +
+                                                                                "出生_年_月_日" + dateOfBirth + "\n"
                                                                                 +
-                                                                                "年龄：" + js.getAge() + "\n" +
-                                                                                "国籍：" + js.getNationality() + "\n" +
-                                                                                "学历：" + js.getEducation() + "\n" +
-                                                                                "技能：" + js.getSkills() + "\n" +
-                                                                                "目标职位： " + js.getTargetPosition() + "\n"
+                                                                                "年龄：" + age + "\n" +
+                                                                                "国籍：" + nationality + "\n" +
+                                                                                "学历：" + education + "\n" +
+                                                                                "技能：" + skills + "\n" +
+                                                                                "目标职位： " + targetPosition + "\n"
                                                                                 +
-                                                                                "手上有什么资源：\n" + js.getResources() + "\n"
+                                                                                "手上有什么资源：\n" + resources + "\n"
                                                                                 +
-                                                                                "期望薪资：" + js.getExpectedSalary() + "\n"
+                                                                                "期望薪资：" + expectedSalary + "\n"
                                                                                 +
-                                                                                "工作经历：" + js.getWorkExperience() + "\n"
+                                                                                "工作经历：" + workExperience + "\n"
                                                                                 +
-                                                                                "自我介绍：" + js.getSelfIntroduction());
+                                                                                "自我介绍：" + selfIntroduction);
 
                                                                 JobSeekerDTO jobSeekerDTO = new JobSeekerDTO(userId,
-                                                                                js.getName(),
-                                                                                js.getGender(), js.getDateOfBirth(),
-                                                                                js.getAge(), js.getNationality(),
-                                                                                js.getEducation(), js.getSkills(),
-                                                                                js.getTargetPosition(),
-                                                                                js.getResources(),
-                                                                                js.getExpectedSalary(),
-                                                                                js.getWorkExperience(),
-                                                                                js.getSelfIntroduction());
+                                                                                name, gender, dateOfBirth, age,
+                                                                                nationality, education, skills,
+                                                                                targetPosition,
+                                                                                resources,
+                                                                                expectedSalary,
+                                                                                workExperience,
+                                                                                selfIntroduction);
                                                                 this.response.setReplyMarkup(
                                                                                 new KeyboardButton().keyboard_jobSeeker(
                                                                                                 jobSeekerDTO));
@@ -170,22 +192,37 @@ public class Job {
                                         j.getJobPosting().stream().filter(ju -> ju.getUserId().equals(userId))
                                                         .findFirst()
                                                         .ifPresentOrElse(jp -> {
+                                                                String company = jp.getCompany() == null ? ""
+                                                                                : jp.getCompany();
+                                                                String position = jp.getPosition() == null ? ""
+                                                                                : jp.getPosition();
+                                                                String baseSalary = jp.getBaseSalary() == null ? ""
+                                                                                : jp.getBaseSalary();
+                                                                String commission = jp.getCommission() == null ? ""
+                                                                                : jp.getCommission();
+                                                                String workTime = jp.getWorkTime() == null ? ""
+                                                                                : jp.getWorkTime();
+                                                                String requirements = jp.getRequirements() == null ? ""
+                                                                                : jp.getRequirements();
+                                                                String location = jp.getLocation() == null ? ""
+                                                                                : jp.getLocation();
+                                                                String flightNumber = jp.getFlightNumber() == null ? ""
+                                                                                : jp.getFlightNumber();
+
                                                                 this.response.setText("招聘人才\n" +
-                                                                                "公司：" + jp.getCompany() + "\n" +
-                                                                                "职位：" + jp.getPosition() + "\n" +
-                                                                                "底薪：" + jp.getBaseSalary() + "\n" +
-                                                                                "提成：" + jp.getCommission() + "\n" +
-                                                                                "上班时间：" + jp.getWorkTime() + "\n" +
-                                                                                "要求内容：" + jp.getRequirements() + "\n" +
-                                                                                "🐌 地址：" + jp.getLocation() + "\n" +
-                                                                                "✈️咨询飞机号：" + jp.getFlightNumber());
+                                                                                "公司：" + company + "\n" +
+                                                                                "职位：" + position + "\n" +
+                                                                                "底薪：" + baseSalary + "\n" +
+                                                                                "提成：" + commission + "\n" +
+                                                                                "上班时间：" + workTime + "\n" +
+                                                                                "要求内容：" + requirements + "\n" +
+                                                                                "🐌 地址：" + location + "\n" +
+                                                                                "✈️咨询飞机号：" + flightNumber);
 
                                                                 JobPostingDTO jobPostingDTO = new JobPostingDTO(userId,
-                                                                                jp.getCompany(),
-                                                                                jp.getPosition(), jp.getBaseSalary(),
-                                                                                jp.getCommission(), jp.getWorkTime(),
-                                                                                jp.getRequirements(), jp.getLocation(),
-                                                                                jp.getFlightNumber());
+                                                                                company, position, baseSalary,
+                                                                                commission, workTime, requirements,
+                                                                                location, flightNumber);
                                                                 this.response.setReplyMarkup(
                                                                                 new KeyboardButton()
                                                                                                 .keyboard_jobPosting(

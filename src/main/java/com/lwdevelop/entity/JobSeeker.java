@@ -1,6 +1,5 @@
 package com.lwdevelop.entity;
 
-import java.time.LocalDate;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -27,9 +26,9 @@ public class JobSeeker {
 
     private String gender; // 性别
 
-    private LocalDate dateOfBirth; // 出生日期
+    private String dateOfBirth; // 出生日期
 
-    private Integer age; // 年龄
+    private String age; // 年龄
 
     private String nationality; // 国籍
 
@@ -41,7 +40,7 @@ public class JobSeeker {
 
     private String resources; // 手上资源
 
-    private Integer expectedSalary; // 期望薪资
+    private String expectedSalary; // 期望薪资
 
     private String workExperience; // 工作经历
 

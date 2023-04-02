@@ -1,6 +1,5 @@
 package com.lwdevelop.dto;
 
-import java.time.LocalDate;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -22,9 +21,9 @@ public class JobSeekerDTO {
 
     private String gender; // 性别
 
-    private LocalDate dateOfBirth; // 出生日期
+    private String dateOfBirth; // 出生日期
 
-    private Integer age; // 年龄
+    private String age; // 年龄
 
     private String nationality; // 国籍
 
@@ -36,7 +35,7 @@ public class JobSeekerDTO {
 
     private String resources; // 手上资源
 
-    private Integer expectedSalary; // 期望薪资
+    private String expectedSalary; // 期望薪资
 
     private String workExperience; // 工作经历
 
@@ -49,21 +48,21 @@ public class JobSeekerDTO {
         this.ub = null;
         this.name = "";
         this.gender = "";
-        this.dateOfBirth = null;
-        this.age = null;
+        this.dateOfBirth = "";
+        this.age = "";
         this.nationality = "";
         this.education = "";
         this.skills = "";
         this.targetPosition = "";
         this.resources = "";
-        this.expectedSalary = null;
+        this.expectedSalary = "";
         this.workExperience = "";
         this.selfIntroduction = "";
     }
 
-    public JobSeekerDTO(String userId, String name, String gender, LocalDate dateOfBirth, Integer age,
+    public JobSeekerDTO(String userId, String name, String gender, String dateOfBirth, String age,
             String nationality, String education, String skills, String targetPosition, String resources,
-            Integer expectedSalary, String workExperience, String selfIntroduction) {
+            String expectedSalary, String workExperience, String selfIntroduction) {
         this.userId = userId;
         this.id = null;
         this.ub = null;
