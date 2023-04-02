@@ -1,6 +1,5 @@
 package com.lwdevelop.bot.utils;
 
-import java.util.HashMap;
 import org.springframework.scheduling.annotation.Async;
 import org.telegram.telegrambots.bots.DefaultBotOptions;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
@@ -27,7 +26,7 @@ public class Common {
     private DefaultBotOptions defaultBotOptions;
 
     // 用来存储用户的状态(会话)
-    private HashMap<Long, String> userState;
+    // private HashMap<Long, String> userState;
 
     public Common(Long springyBotId, Long botId, String username) {
         this.springyBotId = springyBotId;

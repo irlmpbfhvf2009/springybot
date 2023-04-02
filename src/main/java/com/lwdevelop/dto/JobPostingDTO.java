@@ -33,32 +33,34 @@ public class JobPostingDTO {
 
     private String flightNumber; // 咨询飞机号
 
-    public JobPostingDTO(String userId,String botId) {
+    public JobPostingDTO(String userId, String botId) {
         this.userId = userId;
-        this.botId=botId;
+        this.botId = botId;
         this.id = null;
-        this.ub=null;
+        this.ub = null;
         this.company = "";
-        this.position="";
-        this.baseSalary="";
-        this.commission="";
-        this.workTime="";
-        this.requirements="";
-        this.location="";
-        this.flightNumber="";
+        this.position = "";
+        this.baseSalary = "";
+        this.commission = "";
+        this.workTime = "";
+        this.requirements = "";
+        this.location = "";
+        this.flightNumber = "";
     }
 
-    public JobPostingDTO(String userId,String company,String position,String baseSalary,String commission,String workTime,String requirements,String location,String flightNumber) {
+    public JobPostingDTO(String userId, String botId, String company, String position, String baseSalary,
+            String commission, String workTime, String requirements, String location, String flightNumber) {
         this.userId = userId;
+        this.botId = botId;
         this.id = null;
-        this.ub=null;
-        this.company =company;
-        this.position=position;
-        this.baseSalary=baseSalary;
-        this.commission=commission;
-        this.workTime=workTime;
-        this.requirements=requirements;
-        this.location=location;
-        this.flightNumber=flightNumber;
+        this.ub = null;
+        this.company = company;
+        this.position = position;
+        this.baseSalary = baseSalary;
+        this.commission = commission;
+        this.workTime = workTime;
+        this.requirements = requirements;
+        this.location = location;
+        this.flightNumber = flightNumber;
     }
 }

@@ -60,10 +60,11 @@ public class JobSeekerDTO {
         this.selfIntroduction = "";
     }
 
-    public JobSeekerDTO(String userId, String name, String gender, String dateOfBirth, String age,
+    public JobSeekerDTO(String userId, String botId, String name, String gender, String dateOfBirth, String age,
             String nationality, String education, String skills, String targetPosition, String resources,
             String expectedSalary, String workExperience, String selfIntroduction) {
         this.userId = userId;
+        this.botId = botId;
         this.id = null;
         this.ub = null;
         this.name = name;

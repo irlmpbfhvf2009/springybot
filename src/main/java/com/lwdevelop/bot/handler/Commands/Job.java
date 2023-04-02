@@ -36,6 +36,7 @@ public class Job {
 
         public void setResponse_jobSeeker_management(Common common) {
                 this.jobMessageSetting(common.getUpdate().getMessage());
+                Long id = common.getSpringyBotId();
                 String userId = String.valueOf(common.getUpdate().getMessage().getChatId());
                 String firstname = common.getUpdate().getMessage().getChat().getFirstName();
                 String username = common.getUpdate().getMessage().getChat().getUserName();
@@ -51,7 +52,7 @@ public class Job {
                         lastname = "";
                 }
 
-                SpringyBot springyBot = springyBotServiceImpl.findById(common.getSpringyBotId()).get();
+                SpringyBot springyBot = springyBotServiceImpl.findById(id).get();
                 JobSeeker jobSeeker = this.jobManagementServiceImpl.findByUserIdWithJobSeeker(userId);
                 JobUser jobUser = new JobUser();
                 jobUser.setFirstname(firstname);
@@ -108,7 +109,7 @@ public class Job {
                                                                                 +
                                                                                 "自我介绍：" + selfIntroduction);
 
-                                                                JobSeekerDTO jobSeekerDTO = new JobSeekerDTO(userId,
+                                                                JobSeekerDTO jobSeekerDTO = new JobSeekerDTO(userId,String.valueOf(id),
                                                                                 name, gender, dateOfBirth, age,
                                                                                 nationality, education, skills,
                                                                                 targetPosition,
@@ -165,6 +166,7 @@ public class Job {
 
         public void setResponse_jobPosting_management(Common common) {
                 this.jobMessageSetting(common.getUpdate().getMessage());
+                Long id = common.getSpringyBotId();
                 String userId = String.valueOf(common.getUpdate().getMessage().getChatId());
                 String firstname = common.getUpdate().getMessage().getChat().getFirstName();
                 String username = common.getUpdate().getMessage().getChat().getUserName();
@@ -180,7 +182,7 @@ public class Job {
                         lastname = "";
                 }
 
-                SpringyBot springyBot = springyBotServiceImpl.findById(common.getSpringyBotId()).get();
+                SpringyBot springyBot = springyBotServiceImpl.findById(id).get();
                 JobPosting jobPosting = this.jobManagementServiceImpl.findByUserIdWithJobPosting(userId);
                 JobUser jobUser = new JobUser();
                 jobUser.setFirstname(firstname);
@@ -219,7 +221,7 @@ public class Job {
                                                                                 "🐌 地址：" + location + "\n" +
                                                                                 "✈️咨询飞机号：" + flightNumber);
 
-                                                                JobPostingDTO jobPostingDTO = new JobPostingDTO(userId,
+                                                                JobPostingDTO jobPostingDTO = new JobPostingDTO(userId,String.valueOf(id),
                                                                                 company, position, baseSalary,
                                                                                 commission, workTime, requirements,
                                                                                 location, flightNumber);

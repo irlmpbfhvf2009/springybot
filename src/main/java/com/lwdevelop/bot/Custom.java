@@ -1,6 +1,5 @@
 package com.lwdevelop.bot;
 
-import java.util.HashMap;
 import org.telegram.telegrambots.bots.DefaultBotOptions;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.meta.api.methods.groupadministration.ExportChatInviteLink;
@@ -34,7 +33,6 @@ public class Custom extends TelegramLongPollingBot {
 
         try {
             this.common = new Common(dto.getId(), getMe().getId(), getMe().getUserName());
-            this.common.setUserState(new HashMap<>());
             this.common.setBot(this);
         } catch (TelegramApiException e) {
             e.printStackTrace();

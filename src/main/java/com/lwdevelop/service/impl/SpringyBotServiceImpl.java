@@ -71,7 +71,8 @@ public class SpringyBotServiceImpl implements SpringyBotService {
     }
 
     @Override
-    public synchronized ResponseEntity<ResponseData> start(SpringyBotDTO springyBotDTO) {
+    public ResponseEntity<ResponseData> start(SpringyBotDTO springyBotDTO) {
+    // public synchronized ResponseEntity<ResponseData> start(SpringyBotDTO springyBotDTO) {
         try {
             Long id = springyBotDTO.getId();
 
@@ -102,7 +103,8 @@ public class SpringyBotServiceImpl implements SpringyBotService {
     }
 
     @Override
-    public synchronized ResponseEntity<ResponseData> stop(SpringyBotDTO springyBotDTO) {
+    public ResponseEntity<ResponseData> stop(SpringyBotDTO springyBotDTO) {
+    // public synchronized ResponseEntity<ResponseData> stop(SpringyBotDTO springyBotDTO) {
         try {
             Long id = springyBotDTO.getId();
             if (springyBotMap.containsKey(id)) {

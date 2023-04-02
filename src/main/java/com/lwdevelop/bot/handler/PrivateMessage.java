@@ -1,6 +1,5 @@
 package com.lwdevelop.bot.handler;
 
-
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Message;
 
@@ -16,11 +15,9 @@ public class PrivateMessage {
     private Message message;
     private String text;
     private SendMessage response;
-    private Long chatId;
 
     public void handler(Common common) {
         this.init(common);
-
 
         switch (this.text) {
             case "/manage":
@@ -31,10 +28,10 @@ public class PrivateMessage {
             case "支援团队列表":
                 break;
             case "如何将我添加到您的群组":
-                new Manage().setResponse_addToGroupOrChannel(common,SpringyBotEnum.CHAT_TYPE_GROUP.getText());
+                new Manage().setResponse_addToGroupOrChannel(common, SpringyBotEnum.CHAT_TYPE_GROUP.getText());
                 break;
             case "如何将我添加到您的频道":
-                new Manage().setResponse_addToGroupOrChannel(common,SpringyBotEnum.CHAT_TYPE_CHANNEL.getText());
+                new Manage().setResponse_addToGroupOrChannel(common, SpringyBotEnum.CHAT_TYPE_CHANNEL.getText());
                 break;
 
             case "/job":
@@ -45,32 +42,24 @@ public class PrivateMessage {
             case "发布求职":
                 break;
             case "招聘和求职信息管理":
-                new Job().setResponse_jobSeeker_management(common);
-                new Job().setResponse_jobPosting_management(common);
+                Job job = new Job();
+                job.setResponse_jobSeeker_management(common);
+                job.setResponse_jobPosting_management(common);
                 break;
-            
+
             default:
                 this.text = "";
                 break;
         }
-        this.setUserState(this.text);
     }
 
     private void init(Common common) {
         this.message = common.getUpdate().getMessage();
         this.common = common;
         this.text = this.message.getText();
-        this.chatId = common.getUpdate().getMessage().getChatId();
         this.privateMessageSettings(this.message);
     }
 
-    // private String getUserState() {
-    //     return this.common.getUserState().getOrDefault(this.chatId, "");
-    // }
-
-    private void setUserState(String text) {
-        this.common.getUserState().put(this.chatId, text);
-    }
 
     private void setResponse_job() {
         this.response.setText(SpringyBotEnum.COMMEND_JOB.getText());
@@ -91,6 +80,5 @@ public class PrivateMessage {
         this.response.setDisableNotification(false);
         this.response.setDisableWebPagePreview(false);
     }
-
 
 }
