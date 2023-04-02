@@ -112,8 +112,8 @@ public class Job {
                                                                                 "技能：\n" +
                                                                                 "目标职位：\n" +
                                                                                 "手上有什么资源：\n" +
-                                                                                "期望薪资：" +
-                                                                                "工作经历：" +
+                                                                                "期望薪资：\n" +
+                                                                                "工作经历：\n" +
                                                                                 "自我介绍：");
                                                                 JobSeekerDTO jobSeekerDTO = new JobSeekerDTO(userId,
                                                                                 String.valueOf(common
