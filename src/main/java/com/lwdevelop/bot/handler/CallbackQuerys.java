@@ -4,12 +4,16 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.methods.updatingmessages.EditMessageText;
 import org.telegram.telegrambots.meta.api.objects.CallbackQuery;
+import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 
 import com.lwdevelop.bot.Custom;
 import com.lwdevelop.bot.utils.Common;
 import com.lwdevelop.bot.utils.KeyboardButton;
+import com.lwdevelop.dto.JobPostingDTO;
+import com.lwdevelop.dto.JobSeekerDTO;
 import com.lwdevelop.dto.SpringyBotDTO;
 import com.lwdevelop.entity.JobPosting;
+import com.lwdevelop.entity.JobSeeker;
 import com.lwdevelop.entity.SpringyBot;
 import com.lwdevelop.service.impl.JobManagementServiceImpl;
 import com.lwdevelop.service.impl.SpringyBotServiceImpl;
@@ -33,20 +37,17 @@ public class CallbackQuerys {
 
         if (callbackQuery.getData().startsWith("clearJobPosting_")) {
             String userId = callbackQuery.getData().substring("clearJobPosting_".length());
-
             // 在这里根据 springyBotId 和 userId 进行相应的清除操作
             JobPosting jobPosting = jobManagementServiceImpl.findByUserIdWithJobPosting(userId);
-            if (jobPosting != null) {
-                jobPosting.setBaseSalary("");
-                jobPosting.setCommission("");
-                jobPosting.setCompany("");
-                jobPosting.setFlightNumber("");
-                jobPosting.setLocation("");
-                jobPosting.setPosition("");
-                jobPosting.setRequirements("");
-                jobPosting.setWorkTime("");
-                jobManagementServiceImpl.saveJobPosting(jobPosting);
-            }
+            jobPosting.setBaseSalary("");
+            jobPosting.setCommission("");
+            jobPosting.setCompany("");
+            jobPosting.setFlightNumber("");
+            jobPosting.setLocation("");
+            jobPosting.setPosition("");
+            jobPosting.setRequirements("");
+            jobPosting.setWorkTime("");
+            jobManagementServiceImpl.saveJobPosting(jobPosting);
 
             // 清除訊息
             Long id = Long.valueOf(jobPosting.getBotId());
@@ -55,6 +56,11 @@ public class CallbackQuerys {
             springyBotDTO.setToken(springyBot.getToken());
             springyBotDTO.setUsername(springyBot.getUsername());
             Custom custom = new Custom(springyBotDTO);
+
+            JobPostingDTO jobPostingDTO = new JobPostingDTO(userId, jobPosting.getBotId(), jobPosting.getCompany(),
+                    jobPosting.getPosition(), jobPosting.getBaseSalary(), jobPosting.getCommission(),
+                    jobPosting.getWorkTime(), jobPosting.getRequirements(), jobPosting.getLocation(),
+                    jobPosting.getFlightNumber());
 
             Integer messageId = jobPosting.getLastMessageId();
             EditMessageText editMessageText = new EditMessageText();
@@ -71,6 +77,61 @@ public class CallbackQuerys {
                     "✈️咨询飞机号：");
 
             editMessageText.setReplyMarkup(new KeyboardButton().keyboard_jobPosting(jobPostingDTO));
+            try {
+                custom.executeAsync(editMessageText);
+            } catch (TelegramApiException e) {
+                e.printStackTrace();
+            }
+
+            this.response.setText("清除成功");
+            common.sendResponseAsync(this.response);
+        } else if (callbackQuery.getData().startsWith("clearJobSeeker_")) {
+            String userId = callbackQuery.getData().substring("clearJobSeeker_".length());
+            // 在这里根据 springyBotId 和 userId 进行相应的清除操作
+            JobSeeker jobSeeker = jobManagementServiceImpl.findByUserIdWithJobSeeker(userId);
+            jobSeeker.setName("");
+            jobSeeker.setGender("");
+            jobSeeker.setDateOfBirth("");
+            jobSeeker.setAge("");
+            jobSeeker.setNationality("");
+            jobSeeker.setEducation("");
+            jobSeeker.setSkills("");
+            jobSeeker.setTargetPosition("");
+            jobSeeker.setResources("");
+            jobSeeker.setExpectedSalary("");
+            jobSeeker.setWorkExperience("");
+            jobSeeker.setSelfIntroduction("");
+            jobManagementServiceImpl.saveJobSeeker(jobSeeker);
+
+            // 清除訊息
+            Long id = Long.valueOf(jobSeeker.getBotId());
+            SpringyBot springyBot = springyBotServiceImpl.findById(id).get();
+            SpringyBotDTO springyBotDTO = new SpringyBotDTO();
+            springyBotDTO.setToken(springyBot.getToken());
+            springyBotDTO.setUsername(springyBot.getUsername());
+            Custom custom = new Custom(springyBotDTO);
+
+            JobSeekerDTO jobSeekerDTO = new JobSeekerDTO(userId, jobSeeker.getBotId(), jobSeeker.getName(),
+                    jobSeeker.getGender(), jobSeeker.getDateOfBirth(), jobSeeker.getAge(), jobSeeker.getNationality(),
+                    jobSeeker.getEducation(), jobSeeker.getSkills(), jobSeeker.getTargetPosition(),
+                    jobSeeker.getResources(), jobSeeker.getExpectedSalary(), jobSeeker.getWorkExperience(),
+                    jobSeeker.getSelfIntroduction());
+
+            Integer messageId = jobSeeker.getLastMessageId();
+            EditMessageText editMessageText = new EditMessageText();
+            editMessageText.setChatId(userId);
+            editMessageText.setMessageId(messageId);
+            editMessageText.setText("招聘人才\n" +
+                    "公司：\n" +
+                    "职位：\n" +
+                    "底薪：\n" +
+                    "提成：\n" +
+                    "上班时间：\n" +
+                    "要求内容：\n" +
+                    "🐌 地址：\n" +
+                    "✈️咨询飞机号：");
+
+            editMessageText.setReplyMarkup(new KeyboardButton().keyboard_jobSeeker(jobSeekerDTO));
             try {
                 custom.executeAsync(editMessageText);
             } catch (TelegramApiException e) {
