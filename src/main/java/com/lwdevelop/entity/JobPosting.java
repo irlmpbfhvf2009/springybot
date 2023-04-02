@@ -32,4 +32,6 @@ public class JobPosting {
     private String location; // 地址
     
     private String flightNumber; // 咨询飞机号
+
+    private Integer lastMessageId;
 }

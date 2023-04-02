@@ -80,7 +80,8 @@ public class Job {
                 "🐌 地址：" + location + "\n" +
                 "✈️咨询飞机号： " + flightNumber);
         this.response.setReplyMarkup(new KeyboardButton().jobFormManagement(common, "jobPostingForm",jobPosting,new JobSeeker()));
-        common.sendResponseAsync(this.response);
+        Integer lastMessageId = common.sendResponseAsync(this.response);
+        jobPosting.setLastMessageId(lastMessageId);
 
     }
 
