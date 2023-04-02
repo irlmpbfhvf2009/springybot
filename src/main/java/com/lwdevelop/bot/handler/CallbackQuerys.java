@@ -2,10 +2,17 @@ package com.lwdevelop.bot.handler;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
+import org.telegram.telegrambots.meta.api.methods.updatingmessages.EditMessageText;
 import org.telegram.telegrambots.meta.api.objects.CallbackQuery;
+
+import com.lwdevelop.bot.Custom;
 import com.lwdevelop.bot.utils.Common;
+import com.lwdevelop.bot.utils.KeyboardButton;
+import com.lwdevelop.dto.SpringyBotDTO;
 import com.lwdevelop.entity.JobPosting;
+import com.lwdevelop.entity.SpringyBot;
 import com.lwdevelop.service.impl.JobManagementServiceImpl;
+import com.lwdevelop.service.impl.SpringyBotServiceImpl;
 import com.lwdevelop.utils.SpringUtils;
 
 public class CallbackQuerys {
@@ -13,12 +20,14 @@ public class CallbackQuerys {
     @Autowired
     private JobManagementServiceImpl jobManagementServiceImpl = SpringUtils.getApplicationContext()
             .getBean(JobManagementServiceImpl.class);
+    @Autowired
+    private SpringyBotServiceImpl springyBotServiceImpl = SpringUtils.getApplicationContext()
+            .getBean(SpringyBotServiceImpl.class);
 
     private SendMessage response;
 
     public void handler(Common common) {
         CallbackQuery callbackQuery = common.getUpdate().getCallbackQuery();
-    
 
         this.messageSetting(common);
 
@@ -38,15 +47,44 @@ public class CallbackQuerys {
                 jobPosting.setWorkTime("");
                 jobManagementServiceImpl.saveJobPosting(jobPosting);
             }
+
+            // 清除訊息
+            Long id = Long.valueOf(jobPosting.getBotId());
+            SpringyBot springyBot = springyBotServiceImpl.findById(id).get();
+            SpringyBotDTO springyBotDTO = new SpringyBotDTO();
+            springyBotDTO.setToken(springyBot.getToken());
+            springyBotDTO.setUsername(springyBot.getUsername());
+            Custom custom = new Custom(springyBotDTO);
+
+            Integer messageId = jobPosting.getLastMessageId();
+            EditMessageText editMessageText = new EditMessageText();
+            editMessageText.setChatId(userId);
+            editMessageText.setMessageId(messageId);
+            editMessageText.setText("招聘人才\n" +
+                    "公司：\n" +
+                    "职位：\n" +
+                    "底薪：\n" +
+                    "提成：\n" +
+                    "上班时间：\n" +
+                    "要求内容：\n" +
+                    "🐌 地址：\n" +
+                    "✈️咨询飞机号：");
+
+            editMessageText.setReplyMarkup(new KeyboardButton().keyboard_jobPosting(jobPostingDTO));
+            try {
+                custom.executeAsync(editMessageText);
+            } catch (TelegramApiException e) {
+                e.printStackTrace();
+            }
+
             this.response.setText("清除成功");
             common.sendResponseAsync(this.response);
         }
 
-
     }
 
     private void messageSetting(Common common) {
-        String chatId =  String.valueOf(common.getUpdate().getCallbackQuery().getFrom().getId());
+        String chatId = String.valueOf(common.getUpdate().getCallbackQuery().getFrom().getId());
         this.response = new SendMessage();
         this.response.setChatId(chatId);
         this.response.setDisableNotification(false);
