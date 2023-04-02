@@ -48,6 +48,11 @@ public class JobManagementServiceImpl implements JobManagementService {
     }
 
     @Override
+    public void saveJobSeeker(JobSeeker jobsSeeker) {
+        jobSeekerRepository.save(jobsSeeker);
+    }
+
+    @Override
     public JobPosting findByUserIdWithJobPosting(String userId) {
         return jobPostingRepository.findByUserId(userId);
     }

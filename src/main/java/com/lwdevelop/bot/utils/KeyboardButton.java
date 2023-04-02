@@ -6,25 +6,16 @@ import java.net.UnknownHostException;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboardMarkup;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKeyboardButton;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.KeyboardRow;
 import com.lwdevelop.dto.JobPostingDTO;
 import com.lwdevelop.dto.JobSeekerDTO;
-import com.lwdevelop.entity.JobSeeker;
-import com.lwdevelop.entity.JobUser;
-import com.lwdevelop.entity.SpringyBot;
-import com.lwdevelop.service.impl.SpringyBotServiceImpl;
 import com.lwdevelop.utils.CryptoUtil;
-import com.lwdevelop.utils.SpringUtils;
 
 public class KeyboardButton {
 
-    @Autowired
-    private SpringyBotServiceImpl springyBotServiceImpl = SpringUtils.getApplicationContext()
-            .getBean(SpringyBotServiceImpl.class);
 
     // manage keyboard
     public final ReplyKeyboardMarkup manageReplyKeyboardMarkup() {
@@ -127,24 +118,28 @@ public class KeyboardButton {
         } catch (UnknownHostException e) {
             e.printStackTrace();
         }
-        String ub = "userId=" + jobPostingDTO.getUserId()
-                + "&botId=" + jobPostingDTO.getBotId()
-                + "&company=" + jobPostingDTO.getCompany()
-                + "&position=" + jobPostingDTO.getPosition()
-                + "&baseSalary=" + jobPostingDTO.getBaseSalary()
-                + "&commission=" + jobPostingDTO.getCommission()
-                + "&workTime=" + jobPostingDTO.getWorkTime()
-                + "&requirements=" + jobPostingDTO.getRequirements()
-                + "&location=" + jobPostingDTO.getLocation()
-                + "&flightNumber=" + jobPostingDTO.getFlightNumber();
+        String ub = "userId=" + jobSeekerDTO.getUserId()
+                + "&botId=" + jobSeekerDTO.getBotId()
+                + "&name=" + jobSeekerDTO.getName()
+                + "&gender=" + jobSeekerDTO.getGender()
+                + "&dateOfBirth=" + jobSeekerDTO.getDateOfBirth()
+                + "&age=" + jobSeekerDTO.getAge()
+                + "&nationality=" + jobSeekerDTO.getNationality()
+                + "&education=" + jobSeekerDTO.getEducation()
+                + "&skills=" + jobSeekerDTO.getSkills()
+                + "&targetPosition=" + jobSeekerDTO.getTargetPosition()
+                + "&resources=" + jobSeekerDTO.getResources()
+                + "&expectedSalary=" + jobSeekerDTO.getExpectedSalary()
+                + "&workExperience=" + jobSeekerDTO.getWorkExperience()
+                + "&selfIntroduction=" + jobSeekerDTO.getSelfIntroduction();
 
         String encryptedUb = CryptoUtil.encrypt(ub);
         String encodedUb = URLEncoder.encode(encryptedUb, StandardCharsets.UTF_8);
-        String url = "http://" + ip + ":3002/#/jobPostingForm?ub=" + encodedUb;
+        String url = "http://" + ip + ":3002/#/jobSeekerForm?ub=" + encodedUb;
         dk1.setText("编辑");
         dk1.setUrl(url);
         dk2.setText("清除");
-        dk2.setCallbackData("clearJobPosting_" + jobPostingDTO.getUserId());
+        dk2.setCallbackData("clearJobSeeker_" + jobSeekerDTO.getUserId());
         rowInline.add(dk1);
         rowInline.add(dk2);
         rowsInline.add(rowInline);

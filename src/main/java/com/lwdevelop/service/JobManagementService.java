@@ -18,6 +18,7 @@ public interface JobManagementService {
     void deleteByUserIdWithJobPosting(String userId);
 
     void saveJobPosting(JobPosting jobPosting);
+    void saveJobSeeker(JobSeeker jobSeeker);
 
 
     //
