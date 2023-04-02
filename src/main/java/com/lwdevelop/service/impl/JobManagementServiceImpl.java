@@ -148,48 +148,57 @@ public class JobManagementServiceImpl implements JobManagementService {
 
     @Override
     public ResponseEntity<ResponseData> addJobSeeker(JobSeekerDTO jobSeekerDTO) {
-        String decryptedUb = CryptoUtil.decrypt(jobSeekerDTO.getUb());
-        String[] ubArray = decryptedUb.split("&");
-        String userId = ubArray[0].split("=")[1];
-        String botId = ubArray[1].split("=")[1];
-        Long id = Long.valueOf(botId);
-
-        SpringyBot springyBot = springyBotServiceImpl.findById(id).get();
-        springyBot.getJobUser()
-                .stream()
-                .filter(jobUser -> jobUser.getUserId().equals(userId))
-                .findFirst()
-                .ifPresentOrElse(jobUser -> {
-                    jobUser.getJobSeeker()
-                            .stream()
-                            .filter(jobSeeker -> jobSeeker.getUserId().equals(userId))
-                            .findFirst()
-                            .ifPresentOrElse(oldJobSeeker -> {
-                                this.setJobSeeker(oldJobSeeker, jobSeekerDTO, userId);
-                            }, () -> {
-                                JobSeeker jobSeeker = new JobSeeker();
-                                this.setJobSeeker(jobSeeker, jobSeekerDTO, userId);
-                                jobUser.getJobSeeker().add(jobSeeker);
-                            });
-                }, () -> {
-                });
-        springyBotServiceImpl.save(springyBot);
-        return ResponseUtils.response(RetEnum.RET_SUCCESS, "編輯成功");
-    }
-    private void setJobSeeker(JobSeeker jobSeeker, JobSeekerDTO jobSeekerDTO, String userId) {
-        jobSeeker.setAge(jobSeekerDTO.getAge());
-        jobSeeker.setDateOfBirth(jobSeekerDTO.getDateOfBirth());
-        jobSeeker.setEducation(jobSeekerDTO.getEducation());
-        jobSeeker.setExpectedSalary(jobSeekerDTO.getExpectedSalary());
-        jobSeeker.setGender(jobSeekerDTO.getGender());
+        String userId = jobSeekerDTO.getUserId();
+        JobSeeker jobSeeker = this.findByUserIdWithJobSeeker(userId);
+        jobSeeker.setBotId(jobSeekerDTO.getBotId());
         jobSeeker.setName(jobSeekerDTO.getName());
+        jobSeeker.setGender(jobSeekerDTO.getGender());
+        jobSeeker.setDateOfBirth(jobSeekerDTO.getDateOfBirth());
+        jobSeeker.setAge(jobSeekerDTO.getAge());
         jobSeeker.setNationality(jobSeekerDTO.getNationality());
-        jobSeeker.setResources(jobSeekerDTO.getResources());
-        jobSeeker.setSelfIntroduction(jobSeekerDTO.getSelfIntroduction());
+        jobSeeker.setEducation(jobSeekerDTO.getEducation());
         jobSeeker.setSkills(jobSeekerDTO.getSkills());
         jobSeeker.setTargetPosition(jobSeekerDTO.getTargetPosition());
-        jobSeeker.setUserId(userId);
+        jobSeeker.setResources(jobSeekerDTO.getResources());
+        jobSeeker.setExpectedSalary(jobSeekerDTO.getExpectedSalary());
         jobSeeker.setWorkExperience(jobSeekerDTO.getWorkExperience());
+        jobSeeker.setSelfIntroduction(jobSeekerDTO.getSelfIntroduction());
+        this.saveJobSeeker(jobSeeker);
+
+        // 修改訊息
+        Long id = Long.valueOf(jobSeekerDTO.getBotId());
+        SpringyBot springyBot = springyBotServiceImpl.findById(id).get();
+        SpringyBotDTO springyBotDTO = new SpringyBotDTO();
+        springyBotDTO.setToken(springyBot.getToken());
+        springyBotDTO.setUsername(springyBot.getUsername());
+        Custom custom = new Custom(springyBotDTO);
+
+        Integer messageId = jobSeeker.getLastMessageId();
+        EditMessageText editMessageText = new EditMessageText();
+        editMessageText.setChatId(userId);
+        editMessageText.setMessageId(messageId);
+        editMessageText.setText("求职人员\n" +
+                "姓名：" + jobSeekerDTO.getName() + "\n" +
+                "男女：" + jobSeekerDTO.getGender() + "\n" +
+                "出生_年_月_日" + jobSeekerDTO.getDateOfBirth() + "\n" +
+                "年龄：" + jobSeekerDTO.getAge() + "\n" +
+                "国籍：" + jobSeekerDTO.getNationality() + "\n" +
+                "学历：" + jobSeekerDTO.getEducation() + "\n" +
+                "技能：" + jobSeekerDTO.getSkills() + "\n" +
+                "目标职位： " + jobSeekerDTO.getTargetPosition() + "\n" +
+                "手上有什么资源：" + jobSeekerDTO.getResources() + "\n" +
+                "期望薪资：" + jobSeekerDTO.getExpectedSalary() + "\n" +
+                "工作经历：" + jobSeekerDTO.getWorkExperience() + "\n" +
+                "自我介绍：" + jobSeekerDTO.getSelfIntroduction());
+
+        editMessageText.setReplyMarkup(new KeyboardButton().keyboard_jobSeeker(jobSeekerDTO));
+        try {
+            custom.executeAsync(editMessageText);
+        } catch (TelegramApiException e) {
+            e.printStackTrace();
+        }
+
+        return ResponseUtils.response(RetEnum.RET_SUCCESS, "編輯成功");
     }
 
 }
