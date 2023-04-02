@@ -4,8 +4,14 @@ import java.util.HashMap;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.telegram.telegrambots.meta.api.methods.updatingmessages.EditMessageText;
+import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
+
+import com.lwdevelop.bot.Custom;
+import com.lwdevelop.bot.utils.KeyboardButton;
 import com.lwdevelop.dto.JobPostingDTO;
 import com.lwdevelop.dto.JobSeekerDTO;
+import com.lwdevelop.dto.SpringyBotDTO;
 import com.lwdevelop.entity.JobPosting;
 import com.lwdevelop.entity.JobSeeker;
 import com.lwdevelop.entity.SpringyBot;
@@ -91,28 +97,47 @@ public class JobManagementServiceImpl implements JobManagementService {
     @Override
     public ResponseEntity<ResponseData> addJobPosting(JobPostingDTO jobPostingDTO) {
         String userId = jobPostingDTO.getUserId();
-        String botId = jobPostingDTO.getBotId();
-        Long id = Long.valueOf(botId);
+        JobPosting jobPosting = this.findByUserIdWithJobPosting(userId);
+        jobPosting.setBotId(jobPostingDTO.getBotId());
+        jobPosting.setBaseSalary(jobPostingDTO.getBaseSalary());
+        jobPosting.setCommission(jobPostingDTO.getCommission());
+        jobPosting.setCompany(jobPostingDTO.getCompany());
+        jobPosting.setFlightNumber(jobPostingDTO.getFlightNumber());
+        jobPosting.setLocation(jobPostingDTO.getLocation());
+        jobPosting.setPosition(jobPostingDTO.getPosition());
+        jobPosting.setRequirements(jobPostingDTO.getRequirements());
+        jobPosting.setWorkTime(jobPostingDTO.getWorkTime());
+        this.saveJobPosting(jobPosting);
+
+        // 修改訊息
+        Long id = Long.valueOf(jobPostingDTO.getBotId());
         SpringyBot springyBot = springyBotServiceImpl.findById(id).get();
-        springyBot.getJobUser()
-                .stream()
-                .filter(jobUser -> jobUser.getUserId().equals(userId))
-                .findFirst()
-                .ifPresentOrElse(jobUser -> {
-                    jobUser.getJobPosting()
-                            .stream()
-                            .filter(jp -> jp.getUserId().equals(userId))
-                            .findFirst()
-                            .ifPresentOrElse(oldJobPosting -> {
-                                this.setJobPosting(oldJobPosting, jobPostingDTO, userId);
-                            }, () -> {
-                                JobPosting jobPosting = new JobPosting();
-                                this.setJobPosting(jobPosting, jobPostingDTO, userId);
-                                jobUser.getJobPosting().add(jobPosting);
-                            });
-                }, () -> {
-                });
-        springyBotServiceImpl.save(springyBot);
+        SpringyBotDTO springyBotDTO = new SpringyBotDTO();
+        springyBotDTO.setToken(springyBot.getToken());
+        springyBotDTO.setUsername(springyBot.getUsername());
+        Custom custom = new Custom(springyBotDTO);
+
+        Integer messageId = jobPosting.getLastMessageId();
+        EditMessageText editMessageText = new EditMessageText();
+        editMessageText.setChatId(userId);
+        editMessageText.setMessageId(messageId);
+        editMessageText.setText("招聘人才\n" +
+                "公司：" + jobPostingDTO.getCompany() + "\n" +
+                "职位：" + jobPostingDTO.getPosition() + "\n" +
+                "底薪：" + jobPostingDTO.getBaseSalary() + "\n" +
+                "提成：" + jobPostingDTO.getCommission() + "\n" +
+                "上班时间：" + jobPostingDTO.getWorkTime() + "\n" +
+                "要求内容：" + jobPostingDTO.getRequirements() + "\n" +
+                "🐌 地址：" + jobPostingDTO.getLocation() + "\n" +
+                "✈️咨询飞机号： " + jobPostingDTO.getFlightNumber());
+
+        editMessageText.setReplyMarkup(new KeyboardButton().keyboard_jobPosting(jobPostingDTO));
+        try {
+            custom.executeAsync(editMessageText);
+        } catch (TelegramApiException e) {
+            e.printStackTrace();
+        }
+
         return ResponseUtils.response(RetEnum.RET_SUCCESS, "編輯成功");
     }
 
@@ -146,19 +171,6 @@ public class JobManagementServiceImpl implements JobManagementService {
         springyBotServiceImpl.save(springyBot);
         return ResponseUtils.response(RetEnum.RET_SUCCESS, "編輯成功");
     }
-
-    private void setJobPosting(JobPosting jobPosting, JobPostingDTO jobPostingDTO, String userId) {
-        jobPosting.setUserId(userId);
-        jobPosting.setBaseSalary(jobPostingDTO.getBaseSalary());
-        jobPosting.setCommission(jobPostingDTO.getCommission());
-        jobPosting.setCompany(jobPostingDTO.getCompany());
-        jobPosting.setFlightNumber(jobPostingDTO.getFlightNumber());
-        jobPosting.setLocation(jobPostingDTO.getLocation());
-        jobPosting.setPosition(jobPostingDTO.getPosition());
-        jobPosting.setRequirements(jobPostingDTO.getRequirements());
-        jobPosting.setWorkTime(jobPostingDTO.getWorkTime());
-    }
-
     private void setJobSeeker(JobSeeker jobSeeker, JobSeekerDTO jobSeekerDTO, String userId) {
         jobSeeker.setAge(jobSeekerDTO.getAge());
         jobSeeker.setDateOfBirth(jobSeekerDTO.getDateOfBirth());
@@ -174,7 +186,5 @@ public class JobManagementServiceImpl implements JobManagementService {
         jobSeeker.setUserId(userId);
         jobSeeker.setWorkExperience(jobSeekerDTO.getWorkExperience());
     }
-
-
 
 }

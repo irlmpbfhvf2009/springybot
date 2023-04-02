@@ -11,7 +11,8 @@ import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMa
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboardMarkup;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKeyboardButton;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.KeyboardRow;
-import com.lwdevelop.entity.JobPosting;
+import com.lwdevelop.dto.JobPostingDTO;
+import com.lwdevelop.dto.JobSeekerDTO;
 import com.lwdevelop.entity.JobSeeker;
 import com.lwdevelop.entity.JobUser;
 import com.lwdevelop.entity.SpringyBot;
@@ -71,7 +72,8 @@ public class KeyboardButton {
         return keyboardMarkup;
     }
 
-    public final InlineKeyboardMarkup jobFormManagement(Common common, String path,JobPosting jobPosting,JobSeeker jobSeeker) {
+
+    public final InlineKeyboardMarkup keyboard_jobPosting(JobPostingDTO jobPostingDTO) {
 
         InlineKeyboardButton dk1 = new InlineKeyboardButton();
         InlineKeyboardButton dk2 = new InlineKeyboardButton();
@@ -79,100 +81,74 @@ public class KeyboardButton {
         List<List<InlineKeyboardButton>> rowsInline = new ArrayList<>();
         List<InlineKeyboardButton> rowInline = new ArrayList<>();
 
-        String userId = String.valueOf(common.getUpdate().getMessage().getChatId());
-        String firstname = common.getUpdate().getMessage().getChat().getFirstName();
-        String username = common.getUpdate().getMessage().getChat().getUserName();
-        String lastname = common.getUpdate().getMessage().getChat().getLastName();
-
-        if (firstname == null) {
-            firstname = "";
-        }
-        if (username == null) {
-            username = "";
-        }
-        if (lastname == null) {
-            lastname = "";
-        }
-        SpringyBot springyBot = springyBotServiceImpl.findById(common.getSpringyBotId()).get();
-        JobUser jobUser = new JobUser();
-        jobUser.setFirstname(firstname);
-        jobUser.setLastname(lastname);
-        jobUser.setUserId(userId);
-        jobUser.setUsername(username);
-        springyBot.getJobUser().stream()
-                .filter(j -> j.getUserId().equals(userId))
-                .findFirst()
-                .ifPresentOrElse(j -> {
-                }, () -> {
-                    springyBot.getJobUser().add(jobUser);
-                    springyBotServiceImpl.save(springyBot);
-                });
-
-        String botId = String.valueOf(common.getSpringyBotId());
         String ip = "";
         try {
             ip = InetAddress.getLocalHost().getHostAddress();
         } catch (UnknownHostException e) {
             e.printStackTrace();
         }
-        if(path.equals("jobPostingForm")){
-            String company = ""; // 公司名称
-            String position = ""; // 职位名称
-            String baseSalary = ""; // 底薪
-            String commission = ""; // 提成
-            String workTime = ""; // 上班时间
-            String requirements = ""; // 要求内容
-            String location = ""; // 地址
-            String flightNumber = ""; // 咨询飞机号
+        String ub = "userId=" + jobPostingDTO.getUserId()
+                + "&botId=" + jobPostingDTO.getBotId()
+                + "&company=" + jobPostingDTO.getCompany()
+                + "&position=" + jobPostingDTO.getPosition()
+                + "&baseSalary=" + jobPostingDTO.getBaseSalary()
+                + "&commission=" + jobPostingDTO.getCommission()
+                + "&workTime=" + jobPostingDTO.getWorkTime()
+                + "&requirements=" + jobPostingDTO.getRequirements()
+                + "&location=" + jobPostingDTO.getLocation()
+                + "&flightNumber=" + jobPostingDTO.getFlightNumber();
+
+        String encryptedUb = CryptoUtil.encrypt(ub);
+        String encodedUb = URLEncoder.encode(encryptedUb, StandardCharsets.UTF_8);
+        String url = "http://" + ip + ":3002/#/jobPostingForm?ub=" + encodedUb;
+        dk1.setText("编辑");
+        dk1.setUrl(url);
+        dk2.setText("清除");
+        dk2.setCallbackData("clearJobPosting_" + jobPostingDTO.getUserId());
+        rowInline.add(dk1);
+        rowInline.add(dk2);
+        rowsInline.add(rowInline);
+        markupInline.setKeyboard(rowsInline);
+        return markupInline;
+    }
+
     
-            if (jobPosting != null) {
-                company = jobPosting.getCompany();
-                position = jobPosting.getPosition();
-                baseSalary = jobPosting.getBaseSalary();
-                commission = jobPosting.getCommission();
-                workTime = jobPosting.getWorkTime();
-                requirements = jobPosting.getRequirements();
-                location = jobPosting.getLocation();
-                flightNumber = jobPosting.getFlightNumber();
-            }
+    public final InlineKeyboardMarkup keyboard_jobSeeker(JobSeekerDTO jobSeekerDTO) {
 
-            String ub = "userId=" + userId 
-                                + "&botId=" + botId 
-                                + "&company=" + company 
-                                + "&position=" + position 
-                                + "&baseSalary=" + baseSalary 
-                                + "&commission=" + commission 
-                                + "&workTime=" + workTime 
-                                + "&requirements=" + requirements 
-                                + "&location=" + location 
-                                + "&flightNumber=" + flightNumber;
+        InlineKeyboardButton dk1 = new InlineKeyboardButton();
+        InlineKeyboardButton dk2 = new InlineKeyboardButton();
+        InlineKeyboardMarkup markupInline = new InlineKeyboardMarkup();
+        List<List<InlineKeyboardButton>> rowsInline = new ArrayList<>();
+        List<InlineKeyboardButton> rowInline = new ArrayList<>();
 
-            String encryptedUb = CryptoUtil.encrypt(ub);
-            String encodedStr = URLEncoder.encode(encryptedUb, StandardCharsets.UTF_8);
-            String url = "http://" + ip + ":3002/#/" + path + "?ub=" + encodedStr;
-            dk1.setText("编辑");
-            dk1.setUrl(url);
-            dk2.setText("清除");
-            dk2.setCallbackData("clearJobPosting_"+userId);
-            rowInline.add(dk1);
-            rowInline.add(dk2);
-            rowsInline.add(rowInline);
-            markupInline.setKeyboard(rowsInline);
-        }else if(path.equals("jobSeekerForm")){
-            String ub = "userId=" + userId 
-                                + "&botId=" + botId;
-
-            String encryptedUb = CryptoUtil.encrypt(ub);
-            String url = "http://" + ip + ":3002/#/" + path + "?ub=" + encryptedUb;
-            dk1.setText("编辑");
-            dk1.setUrl(url);
-            dk2.setText("清除");
-            dk2.setUrl("https://yahoo.com.tw");
-            rowInline.add(dk1);
-            rowInline.add(dk2);
-            rowsInline.add(rowInline);
-            markupInline.setKeyboard(rowsInline);
+        String ip = "";
+        try {
+            ip = InetAddress.getLocalHost().getHostAddress();
+        } catch (UnknownHostException e) {
+            e.printStackTrace();
         }
+        String ub = "userId=" + jobPostingDTO.getUserId()
+                + "&botId=" + jobPostingDTO.getBotId()
+                + "&company=" + jobPostingDTO.getCompany()
+                + "&position=" + jobPostingDTO.getPosition()
+                + "&baseSalary=" + jobPostingDTO.getBaseSalary()
+                + "&commission=" + jobPostingDTO.getCommission()
+                + "&workTime=" + jobPostingDTO.getWorkTime()
+                + "&requirements=" + jobPostingDTO.getRequirements()
+                + "&location=" + jobPostingDTO.getLocation()
+                + "&flightNumber=" + jobPostingDTO.getFlightNumber();
+
+        String encryptedUb = CryptoUtil.encrypt(ub);
+        String encodedUb = URLEncoder.encode(encryptedUb, StandardCharsets.UTF_8);
+        String url = "http://" + ip + ":3002/#/jobPostingForm?ub=" + encodedUb;
+        dk1.setText("编辑");
+        dk1.setUrl(url);
+        dk2.setText("清除");
+        dk2.setCallbackData("clearJobPosting_" + jobPostingDTO.getUserId());
+        rowInline.add(dk1);
+        rowInline.add(dk2);
+        rowsInline.add(rowInline);
+        markupInline.setKeyboard(rowsInline);
         return markupInline;
     }
 

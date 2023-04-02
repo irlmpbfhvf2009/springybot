@@ -1,15 +1,18 @@
 package com.lwdevelop.dto;
 
 import java.time.LocalDate;
-
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class JobSeekerDTO {
-    
+
     private Long id; // 求职者ID
 
-    private String ub; // 
+    private String ub; //
 
     private String userId;
 
@@ -38,4 +41,44 @@ public class JobSeekerDTO {
     private String workExperience; // 工作经历
 
     private String selfIntroduction; // 自我介绍
+
+    public JobSeekerDTO(String userId, String botId) {
+        this.userId = userId;
+        this.botId = botId;
+        this.id = null;
+        this.ub = null;
+        this.name = "";
+        this.gender = "";
+        this.dateOfBirth = null;
+        this.age = null;
+        this.nationality = "";
+        this.education = "";
+        this.skills = "";
+        this.targetPosition = "";
+        this.resources = "";
+        this.expectedSalary = null;
+        this.workExperience = "";
+        this.selfIntroduction = "";
+    }
+
+    public JobSeekerDTO(String userId, String name, String gender, LocalDate dateOfBirth, Integer age,
+            String nationality, String education, String skills, String targetPosition, String resources,
+            Integer expectedSalary, String workExperience, String selfIntroduction) {
+        this.userId = userId;
+        this.id = null;
+        this.ub = null;
+        this.name = name;
+        this.gender = gender;
+        this.dateOfBirth = dateOfBirth;
+        this.age = age;
+        this.nationality = nationality;
+        this.education = education;
+        this.skills = skills;
+        this.targetPosition = targetPosition;
+        this.resources = resources;
+        this.expectedSalary = expectedSalary;
+        this.workExperience = workExperience;
+        this.selfIntroduction = selfIntroduction;
+    }
+
 }

@@ -1,16 +1,18 @@
 package com.lwdevelop.entity;
 
 import java.time.LocalDate;
-
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
 @Entity
+@NoArgsConstructor
+@AllArgsConstructor
 public class JobSeeker {
 
     @Id
@@ -18,6 +20,8 @@ public class JobSeeker {
     private Long id; // 求职者ID
 
     private String userId;
+
+    private String botId;
 
     private String name; // 姓名
 
@@ -42,4 +46,12 @@ public class JobSeeker {
     private String workExperience; // 工作经历
 
     private String selfIntroduction; // 自我介绍
+    
+    private Integer lastMessageId;
+
+    public JobSeeker(String userId, String botId, Integer lastMessageId) {
+        this.userId = userId;
+        this.botId = botId;
+        this.lastMessageId = lastMessageId;
+    }
 }

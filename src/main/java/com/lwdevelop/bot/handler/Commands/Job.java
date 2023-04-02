@@ -6,9 +6,13 @@ import org.telegram.telegrambots.meta.api.objects.Message;
 
 import com.lwdevelop.bot.utils.Common;
 import com.lwdevelop.bot.utils.KeyboardButton;
+import com.lwdevelop.dto.JobPostingDTO;
 import com.lwdevelop.entity.JobPosting;
 import com.lwdevelop.entity.JobSeeker;
+import com.lwdevelop.entity.JobUser;
+import com.lwdevelop.entity.SpringyBot;
 import com.lwdevelop.service.impl.JobManagementServiceImpl;
+import com.lwdevelop.service.impl.SpringyBotServiceImpl;
 import com.lwdevelop.utils.SpringUtils;
 
 public class Job {
@@ -17,6 +21,10 @@ public class Job {
     @Autowired
     private JobManagementServiceImpl jobManagementServiceImpl = SpringUtils.getApplicationContext()
             .getBean(JobManagementServiceImpl.class);
+
+    @Autowired
+    private SpringyBotServiceImpl springyBotServiceImpl = SpringUtils.getApplicationContext()
+            .getBean(SpringyBotServiceImpl.class);
 
     private void jobMessageSetting(Message message) {
         this.response = new SendMessage();
@@ -41,47 +49,82 @@ public class Job {
                 "工作经历:(限50字以内)\n\n" +
                 "自我介绍:(限50字以内)");
         this.response
-                .setReplyMarkup(new KeyboardButton().jobFormManagement(common, "jobSeekerForm",new JobPosting(),new JobSeeker()));
-        common.sendResponseAsync(this.response);
+                .setReplyMarkup(new KeyboardButton().keyboard_jobSeeker(common, new JobSeeker()));
+        // common.sendResponseAsync(this.response);
 
     }
 
     public void setResponse_jobPosting_management(Common common) {
         this.jobMessageSetting(common.getUpdate().getMessage());
         String userId = String.valueOf(common.getUpdate().getMessage().getChatId());
-        JobPosting jobPosting = this.jobManagementServiceImpl.findByUserIdWithJobPosting(userId);
+        String firstname = common.getUpdate().getMessage().getChat().getFirstName();
+        String username = common.getUpdate().getMessage().getChat().getUserName();
+        String lastname = common.getUpdate().getMessage().getChat().getLastName();
 
-        String company = ""; // 公司名称
-        String position = ""; // 职位名称
-        String baseSalary = ""; // 底薪
-        String commission = ""; // 提成
-        String workTime = ""; // 上班时间
-        String requirements = ""; // 要求内容
-        String location = ""; // 地址
-        String flightNumber = ""; // 咨询飞机号
-
-        if (jobPosting != null) {
-            company = jobPosting.getCompany();
-            position = jobPosting.getPosition();
-            baseSalary = jobPosting.getBaseSalary();
-            commission = jobPosting.getCommission();
-            workTime = jobPosting.getWorkTime();
-            requirements = jobPosting.getRequirements();
-            location = jobPosting.getLocation();
-            flightNumber = jobPosting.getFlightNumber();
+        if (firstname == null) {
+            firstname = "";
         }
-        this.response.setText("招聘人才\n" +
-                "公司：" + company + "\n" +
-                "职位：" + position + "\n" +
-                "底薪：" + baseSalary + "\n" +
-                "提成：" + commission + "\n" +
-                "上班时间：" + workTime + "\n" +
-                "要求内容：" + requirements + "\n" +
-                "🐌 地址：" + location + "\n" +
-                "✈️咨询飞机号： " + flightNumber);
-        this.response.setReplyMarkup(new KeyboardButton().jobFormManagement(common, "jobPostingForm",jobPosting,new JobSeeker()));
-        Integer lastMessageId = common.sendResponseAsync(this.response);
-        jobPosting.setLastMessageId(lastMessageId);
+        if (username == null) {
+            username = "";
+        }
+        if (lastname == null) {
+            lastname = "";
+        }
+
+        SpringyBot springyBot = springyBotServiceImpl.findById(common.getSpringyBotId()).get();
+        JobPosting jobPosting = this.jobManagementServiceImpl.findByUserIdWithJobPosting(userId);
+        JobUser jobUser = new JobUser();
+        jobUser.setFirstname(firstname);
+        jobUser.setLastname(lastname);
+        jobUser.setUserId(userId);
+        jobUser.setUsername(username);
+        springyBot.getJobUser().stream().filter(j -> j.getUserId().equals(userId))
+                .findFirst().ifPresentOrElse(j -> {
+                    j.getJobPosting().stream().filter(ju -> ju.getUserId().equals(userId)).findFirst()
+                            .ifPresentOrElse(jp -> {
+                                this.response.setText("招聘人才\n" +
+                                        "公司：" + jp.getCompany() + "\n" +
+                                        "职位：" + jp.getPosition() + "\n" +
+                                        "底薪：" + jp.getBaseSalary() + "\n" +
+                                        "提成：" + jp.getCommission() + "\n" +
+                                        "上班时间：" + jp.getWorkTime() + "\n" +
+                                        "要求内容：" + jp.getRequirements() + "\n" +
+                                        "🐌 地址：" + jp.getLocation() + "\n" +
+                                        "✈️咨询飞机号： " + jp.getFlightNumber());
+
+                                JobPostingDTO jobPostingDTO = new JobPostingDTO(userId, jp.getCompany(),
+                                        jp.getPosition(), jp.getBaseSalary(), jp.getCommission(), jp.getWorkTime(),
+                                        jp.getRequirements(), jp.getLocation(), jp.getFlightNumber());
+                                this.response.setReplyMarkup(
+                                        new KeyboardButton().keyboard_jobPosting(jobPostingDTO));
+                                Integer lastMessageId = common.sendResponseAsync(this.response);
+                                jobPosting.setLastMessageId(lastMessageId);
+                                this.jobManagementServiceImpl.saveJobPosting(jobPosting);
+                            }, () -> {
+                                this.response.setText("招聘人才\n" +
+                                        "公司：\n" +
+                                        "职位：\n" +
+                                        "底薪：\n" +
+                                        "提成：\n" +
+                                        "上班时间：\n" +
+                                        "要求内容：\n" +
+                                        "🐌 地址：\n" +
+                                        "✈️咨询飞机号： ");
+                                JobPostingDTO jobPostingDTO = new JobPostingDTO(userId,
+                                        String.valueOf(common.getSpringyBotId()));
+                                this.response.setReplyMarkup(
+                                        new KeyboardButton().keyboard_jobPosting(jobPostingDTO));
+                                Integer lastMessageId = common.sendResponseAsync(this.response);
+                                JobPosting jobPosting_ = new JobPosting(userId,
+                                        String.valueOf(common.getSpringyBotId()), lastMessageId);
+                                springyBot.getJobUser().stream().filter(ju -> ju.getUserId().equals(userId)).findFirst()
+                                        .ifPresent(ju -> ju.getJobPosting().add(jobPosting_));
+                                springyBotServiceImpl.save(springyBot);
+                            });
+                }, () -> {
+                    springyBot.getJobUser().add(jobUser);
+                    springyBotServiceImpl.save(springyBot);
+                });
 
     }
 
