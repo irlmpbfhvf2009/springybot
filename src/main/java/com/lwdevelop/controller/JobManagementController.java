@@ -41,4 +41,11 @@ public class JobManagementController {
         return jobManagementServiceImpl.decryptedUbWithJobPosting(jobPostingDTO);
     }
 
+    // 解碼求職信息
+    @PostMapping("/decryptedUbWithJobSeeker")
+    public ResponseEntity<ResponseUtils.ResponseData> decryptedUbWithJobSeeker(
+            @RequestBody JobSeekerDTO jobSeekerDTO) throws Exception {
+        return jobManagementServiceImpl.decryptedUbWithJobSeeker(jobSeekerDTO);
+    }
+
 }

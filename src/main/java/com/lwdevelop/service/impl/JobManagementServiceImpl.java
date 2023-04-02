@@ -100,6 +100,46 @@ public class JobManagementServiceImpl implements JobManagementService {
     }
 
     @Override
+    public ResponseEntity<ResponseData> decryptedUbWithJobSeeker(JobSeekerDTO jobSeekerDTO) {
+        String ub = jobSeekerDTO.getUb();
+        String decryptedUb = CryptoUtil.decrypt(ub);
+        HashMap<String, Object> data = new HashMap<>();
+        String[] ubArray = decryptedUb.split("&");
+        try {
+            data.put("userId", ubArray[0].split("=")[1]);
+            data.put("botId", ubArray[1].split("=")[1]);
+            data.put("name", ubArray[2].split("=")[1]);
+            data.put("gender", ubArray[3].split("=")[1]);
+            data.put("dateOfBirth", ubArray[4].split("=")[1]);
+            data.put("age", ubArray[5].split("=")[1]);
+            data.put("nationality", ubArray[6].split("=")[1]);
+            data.put("education", ubArray[7].split("=")[1]);
+            data.put("skills", ubArray[8].split("=")[1]);
+            data.put("targetPosition", ubArray[9].split("=")[1]);
+            data.put("resources", ubArray[10].split("=")[1]);
+            data.put("expectedSalary", ubArray[11].split("=")[1]);
+            data.put("workExperience", ubArray[12].split("=")[1]);
+            data.put("selfIntroduction", ubArray[13].split("=")[1]);
+        } catch (ArrayIndexOutOfBoundsException e) {
+            data.put("userId", ubArray[0].split("=")[1]);
+            data.put("botId", ubArray[1].split("=")[1]);
+            data.put("name", "");
+            data.put("gender", "");
+            data.put("dateOfBirth", "");
+            data.put("age", "");
+            data.put("nationality", "");
+            data.put("education", "");
+            data.put("skills", "");
+            data.put("targetPosition", "");
+            data.put("resources", "");
+            data.put("expectedSalary", "");
+            data.put("workExperience", "");
+            data.put("selfIntroduction", "");
+        }
+        return ResponseUtils.response(RetEnum.RET_SUCCESS, data);
+    }
+
+    @Override
     public ResponseEntity<ResponseData> addJobPosting(JobPostingDTO jobPostingDTO) {
         String userId = jobPostingDTO.getUserId();
         JobPosting jobPosting = this.findByUserIdWithJobPosting(userId);

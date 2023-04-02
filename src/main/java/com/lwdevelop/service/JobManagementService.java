@@ -28,4 +28,6 @@ public interface JobManagementService {
     ResponseEntity<ResponseUtils.ResponseData> addJobSeeker(JobSeekerDTO jobSeekerDTO);
     
     ResponseEntity<ResponseUtils.ResponseData> decryptedUbWithJobPosting(JobPostingDTO jobPostingDTO);
+
+    ResponseEntity<ResponseUtils.ResponseData> decryptedUbWithJobSeeker(JobSeekerDTO jobSeekerDTO);
 }
