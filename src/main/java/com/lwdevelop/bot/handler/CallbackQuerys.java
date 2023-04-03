@@ -121,15 +121,19 @@ public class CallbackQuerys {
             EditMessageText editMessageText = new EditMessageText();
             editMessageText.setChatId(userId);
             editMessageText.setMessageId(messageId);
-            editMessageText.setText("招聘人才\n" +
-                    "公司：\n" +
-                    "职位：\n" +
-                    "底薪：\n" +
-                    "提成：\n" +
-                    "上班时间：\n" +
-                    "要求内容：\n" +
-                    "🐌 地址：\n" +
-                    "✈️咨询飞机号：");
+            editMessageText.setText("求职人员\n" +
+                    "姓名：\n" +
+                    "男女：\n" +
+                    "出生_年_月_日：\n" +
+                    "年龄：\n" +
+                    "国籍：\n" +
+                    "学历：\n" +
+                    "技能：\n" +
+                    "目标职位：\n" +
+                    "手上有什么资源：\n" +
+                    "期望薪资：\n" +
+                    "工作经历：\n" +
+                    "自我介绍：");
 
             editMessageText.setReplyMarkup(new KeyboardButton().keyboard_jobSeeker(jobSeekerDTO));
             try {

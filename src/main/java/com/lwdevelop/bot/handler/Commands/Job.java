@@ -101,7 +101,7 @@ public class Job {
                                                                                 "技能：" + skills + "\n" +
                                                                                 "目标职位： " + targetPosition + "\n"
                                                                                 +
-                                                                                "手上有什么资源：\n" + resources + "\n"
+                                                                                "手上有什么资源：" + resources + "\n"
                                                                                 +
                                                                                 "期望薪资：" + expectedSalary + "\n"
                                                                                 +
