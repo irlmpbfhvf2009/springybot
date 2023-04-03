@@ -1,15 +1,15 @@
-package com.lwdevelop.bot.handler;
+package com.lwdevelop.bot.handler.messageEvent.private_;
 
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Message;
 
-import com.lwdevelop.bot.handler.commands.Job;
-import com.lwdevelop.bot.handler.commands.Manage;
+import com.lwdevelop.bot.handler.messageEvent.private_.commands.Job;
+import com.lwdevelop.bot.handler.messageEvent.private_.commands.Manage;
 import com.lwdevelop.bot.utils.Common;
 import com.lwdevelop.bot.utils.KeyboardButton;
 import com.lwdevelop.bot.utils.SpringyBotEnum;
 
-public class PrivateMessage {
+public class message {
 
     private Common common;
     private Message message;

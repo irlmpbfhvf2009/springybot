@@ -1,8 +1,8 @@
-package com.lwdevelop.bot.handler;
+package com.lwdevelop.bot.handler.messageEvent.group;
 
 import com.lwdevelop.bot.utils.Common;
 
-public class ChannelMessage {
+public class GroupMessage {
     public void handler(Common common) {
 
     }

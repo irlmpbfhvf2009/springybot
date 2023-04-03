@@ -1,4 +1,4 @@
-package com.lwdevelop.bot.handler;
+package com.lwdevelop.bot.handler.groupEvent;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.telegram.telegrambots.meta.api.objects.Message;
@@ -9,7 +9,7 @@ import com.lwdevelop.entity.SpringyBot;
 import com.lwdevelop.service.impl.SpringyBotServiceImpl;
 import com.lwdevelop.utils.SpringUtils;
 
-public class JoinGroupEvent {
+public class Join {
 
     @Autowired
     private SpringyBotServiceImpl springyBotServiceImpl = SpringUtils.getApplicationContext()

@@ -1,4 +1,4 @@
-package com.lwdevelop.bot.handler.commands;
+package com.lwdevelop.bot.handler.messageEvent.private_.commands;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
@@ -109,7 +109,8 @@ public class Job {
                                                                                 +
                                                                                 "自我介绍：" + selfIntroduction);
 
-                                                                JobSeekerDTO jobSeekerDTO = new JobSeekerDTO(userId,String.valueOf(id),
+                                                                JobSeekerDTO jobSeekerDTO = new JobSeekerDTO(userId,
+                                                                                String.valueOf(id),
                                                                                 name, gender, dateOfBirth, age,
                                                                                 nationality, education, skills,
                                                                                 targetPosition,
@@ -221,7 +222,8 @@ public class Job {
                                                                                 "🐌 地址：" + location + "\n" +
                                                                                 "✈️咨询飞机号：" + flightNumber);
 
-                                                                JobPostingDTO jobPostingDTO = new JobPostingDTO(userId,String.valueOf(id),
+                                                                JobPostingDTO jobPostingDTO = new JobPostingDTO(userId,
+                                                                                String.valueOf(id),
                                                                                 company, position, baseSalary,
                                                                                 commission, workTime, requirements,
                                                                                 location, flightNumber);

@@ -9,11 +9,11 @@ import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.api.objects.User;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 import com.lwdevelop.bot.handler.CallbackQuerys;
-import com.lwdevelop.bot.handler.ChannelMessage;
-import com.lwdevelop.bot.handler.GroupMessage;
-import com.lwdevelop.bot.handler.JoinGroupEvent;
-import com.lwdevelop.bot.handler.LeaveGroupEvent;
-import com.lwdevelop.bot.handler.PrivateMessage;
+import com.lwdevelop.bot.handler.groupEvent.Join;
+import com.lwdevelop.bot.handler.groupEvent.Leave;
+import com.lwdevelop.bot.handler.messageEvent.private_.*;
+import com.lwdevelop.bot.handler.messageEvent.channel.ChannelMessage;
+import com.lwdevelop.bot.handler.messageEvent.group.GroupMessage;
 import com.lwdevelop.bot.utils.Common;
 import com.lwdevelop.bot.utils.SpringyBotEnum;
 import com.lwdevelop.dto.SpringyBotDTO;
@@ -61,7 +61,7 @@ public class Custom extends TelegramLongPollingBot {
 
                 // private
                 if (this.message.isUserMessage()) {
-                    new PrivateMessage().handler(this.common);
+                    new message().handler(this.common);
                 }
 
                 // group
@@ -88,9 +88,9 @@ public class Custom extends TelegramLongPollingBot {
                 for (User member : this.message.getNewChatMembers()) {
                     if (isBot(member)) {
                         dealInviteLink();
-                        new JoinGroupEvent().isBotJoinGroup(this.common);
+                        new Join().isBotJoinGroup(this.common);
                     } else {
-                        new JoinGroupEvent().isUserJoinGroup(this.common);
+                        new Join().isUserJoinGroup(this.common);
                     }
                 }
             }
@@ -98,7 +98,7 @@ public class Custom extends TelegramLongPollingBot {
             // leave event
             if (isLeftChatMemberNotNull()) {
                 if (isBot_leftChat()) {
-                    new LeaveGroupEvent().isBotLeave(common);
+                    new Leave().isBotLeave(common);
 
                 }
             }
