@@ -2,7 +2,6 @@ package com.lwdevelop.entity;
 
 import java.util.Date;
 import java.util.Set;
-
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -45,4 +44,5 @@ public class JobUser {
         @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
         @JsonIgnore
         private Set<JobPosting> jobPosting;
+
 }

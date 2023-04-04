@@ -37,14 +37,15 @@ public class message {
             case "/job":
                 this.setResponse_job();
                 break;
-            case "发布招聘":
-                break;
             case "发布求职":
+                new Job().postAJobSearch(common);
+                break;
+            case "发布招聘":
+                new Job().postRecruitment(common);
                 break;
             case "招聘和求职信息管理":
-                Job job = new Job();
-                job.setResponse_jobSeeker_management(common);
-                job.setResponse_jobPosting_management(common);
+                new Job().setResponse_jobSeeker_management(common);
+                new Job().setResponse_jobPosting_management(common);
                 break;
 
             default:
@@ -59,7 +60,6 @@ public class message {
         this.text = this.message.getText();
         this.privateMessageSettings(this.message);
     }
-
 
     private void setResponse_job() {
         this.response.setText(SpringyBotEnum.COMMEND_JOB.getText());
