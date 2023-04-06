@@ -4,6 +4,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import lombok.Data;
 import java.util.HashMap;
+import java.util.List;
 
 public class ResponseUtils {
     private ResponseUtils() {
@@ -20,7 +21,17 @@ public class ResponseUtils {
     }
 
     public static ResponseEntity<ResponseData> response(RetEnum retEnum,
-            HashMap<String, Object> data) {
+            HashMap<Object, Object> data) {
+
+        ResponseData responseData = new ResponseData(retEnum.getCode(), data);
+        if (retEnum.getCode() != 200) {
+            responseData.setMsg(retEnum.getMessage());
+        }
+        return new ResponseEntity<>(responseData, HttpStatus.OK);
+    }
+
+    public static ResponseEntity<ResponseData> response(RetEnum retEnum,
+            Object data) {
 
         ResponseData responseData = new ResponseData(retEnum.getCode(), data);
         if (retEnum.getCode() != 200) {
@@ -38,7 +49,7 @@ public class ResponseUtils {
     }
 
     public static ResponseEntity<ResponseData> response(RetEnum retEnum,
-            HashMap<String, Object> data,
+            HashMap<Object, Object> data,
             String msg) {
         String message = retEnum.getCode() == 200 ? msg : retEnum.getMessage();
         ResponseData responseData = new ResponseData(retEnum.getCode(), message, data);
@@ -48,14 +59,14 @@ public class ResponseUtils {
     @Data
     public static class ResponseData {
         private int code;
-        private HashMap<String, Object> data;
+        private Object data;
         private String msg;
 
         public ResponseData(int code) {
             this.code = code;
         }
 
-        public ResponseData(int code, HashMap<String, Object> data) {
+        public ResponseData(int code, Object data) {
             this.code = code;
             this.data = data;
         }
@@ -65,7 +76,7 @@ public class ResponseUtils {
             this.msg = msg;
         }
 
-        public ResponseData(int code, String msg, HashMap<String, Object> data) {
+        public ResponseData(int code, String msg, Object data) {
             this.code = code;
             this.data = data;
             this.msg = msg;

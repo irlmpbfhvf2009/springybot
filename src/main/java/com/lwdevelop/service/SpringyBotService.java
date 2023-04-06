@@ -20,7 +20,9 @@ public interface SpringyBotService {
 
         void save(SpringyBot springyBot);
 
-        List<SpringyBot> findAll(int page, int pageSize);
+        List<SpringyBot> findAllByPage(int page, int pageSize);
+
+        List<SpringyBot> findAll();
 
         void deleteById(Long id);
 

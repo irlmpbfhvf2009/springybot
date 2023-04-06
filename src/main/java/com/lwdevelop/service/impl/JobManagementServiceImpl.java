@@ -1,17 +1,19 @@
 package com.lwdevelop.service.impl;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.telegram.telegrambots.meta.api.methods.updatingmessages.EditMessageText;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
-
 import com.lwdevelop.bot.Custom;
 import com.lwdevelop.bot.utils.KeyboardButton;
 import com.lwdevelop.dto.JobPostingDTO;
 import com.lwdevelop.dto.JobSeekerDTO;
+import com.lwdevelop.dto.JobTreeDTO;
 import com.lwdevelop.dto.SpringyBotDTO;
 import com.lwdevelop.entity.JobPosting;
 import com.lwdevelop.entity.JobSeeker;
@@ -72,7 +74,7 @@ public class JobManagementServiceImpl implements JobManagementService {
     public ResponseEntity<ResponseData> decryptedUbWithJobPosting(JobPostingDTO jobPostingdDTO) {
         String ub = jobPostingdDTO.getUb();
         String decryptedUb = CryptoUtil.decrypt(ub);
-        HashMap<String, Object> data = new HashMap<>();
+        HashMap<Object, Object> data = new HashMap<>();
 
         String[] ubArray = decryptedUb.split("&");
         for (String param : ubArray) {
@@ -94,7 +96,7 @@ public class JobManagementServiceImpl implements JobManagementService {
     public ResponseEntity<ResponseData> decryptedUbWithJobSeeker(JobSeekerDTO jobSeekerDTO) {
         String ub = jobSeekerDTO.getUb();
         String decryptedUb = CryptoUtil.decrypt(ub);
-        HashMap<String, Object> data = new HashMap<>();
+        HashMap<Object, Object> data = new HashMap<>();
 
         String[] ubArray = decryptedUb.split("&");
         for (String param : ubArray) {
@@ -216,5 +218,44 @@ public class JobManagementServiceImpl implements JobManagementService {
 
         return ResponseUtils.response(RetEnum.RET_SUCCESS, "編輯成功");
     }
+
+    @Override
+    public ResponseEntity<ResponseData> getJobTreeData() {
+        List<JobTreeDTO> data = new ArrayList<>();
+        List<SpringyBot> springyBots = springyBotServiceImpl.findAll();
+    
+        for (int i = 0; i < springyBots.size(); i++) {
+            JobTreeDTO posting = new JobTreeDTO();
+            posting.setLabel("招聘信息");
+            posting.setId(0L);
+            JobTreeDTO seeker = new JobTreeDTO();
+            seeker.setLabel("求職信息");
+            seeker.setId(1L);
+            for (int j = 0; j < springyBots.get(i).getJobUser().size(); j++) {
+                springyBots.get(i).getJobUser().stream().forEach(jobUser -> {
+                    JobTreeDTO user = new JobTreeDTO();
+                    List<JobTreeDTO> ff = new ArrayList<>();
+                    user.setId(jobUser.getId());
+                    user.setLabel(jobUser.getUsername());
+                    user.setChildren(null);
+                    ff.add(user);
+                    posting.setChildren(ff);
+                    seeker.setChildren(ff);
+                });
+            }
+    
+            JobTreeDTO jobTreeDTO = new JobTreeDTO();
+            List<JobTreeDTO> children = new ArrayList<>();
+            children.add(seeker);
+            children.add(posting);
+    
+            jobTreeDTO.setLabel(springyBots.get(i).getUsername());
+            jobTreeDTO.setId((long) i);
+            jobTreeDTO.setChildren(children);
+            data.add(jobTreeDTO);
+        }
+        return ResponseUtils.response(RetEnum.RET_SUCCESS, data);
+    }
+    
 
 }

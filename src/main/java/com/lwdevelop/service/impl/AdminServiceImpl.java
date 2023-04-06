@@ -78,7 +78,7 @@ public class AdminServiceImpl implements AdminService, UserDetailsService {
     @Override
     public ResponseEntity<ResponseData> loginProcess(HttpServletRequest request, String username, String password) {
         Admin admin = findByUsername(username);
-        HashMap<String, Object> data = new HashMap<>();
+        HashMap<Object, Object> data = new HashMap<>();
         if (admin == null) {
             return ResponseUtils.response(RetEnum.RET_USER_NOT_EXIST, data);
         }
@@ -117,7 +117,7 @@ public class AdminServiceImpl implements AdminService, UserDetailsService {
     public ResponseEntity<ResponseData> getInfoProcess(String token) {
         String username = new JwtUtils().verifyToken(token);
         Admin admin = findByUsername(username);
-        HashMap<String, Object> data = new HashMap<>();
+        HashMap<Object, Object> data = new HashMap<>();
         data.put("info", admin);
         return ResponseUtils.response(RetEnum.RET_SUCCESS, data);
     }
@@ -125,7 +125,7 @@ public class AdminServiceImpl implements AdminService, UserDetailsService {
     @Override
     public ResponseEntity<ResponseData> getAllAdminsProcess(int page, int pageSize,
             String input) {
-        HashMap<String, Object> data = new HashMap<>();
+        HashMap<Object, Object> data = new HashMap<>();
         List<Admin> adminList = findAll(input, page, pageSize);
         Object pager = CommUtils.Pager(page, pageSize, adminList.size());
         data.put("list", adminList);

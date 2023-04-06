@@ -48,4 +48,10 @@ public class JobManagementController {
         return jobManagementServiceImpl.decryptedUbWithJobSeeker(jobSeekerDTO);
     }
 
+    // 樹聯動
+    @PostMapping("/getJobTreeData")
+    public ResponseEntity<ResponseUtils.ResponseData> getJobTreeData() throws Exception {
+        return jobManagementServiceImpl.getJobTreeData();
+    }
+
 }

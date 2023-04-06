@@ -45,10 +45,17 @@ public class SpringyBotServiceImpl implements SpringyBotService {
     }
 
     @Override
-    public List<SpringyBot> findAll(int page, int pageSize) {
+    public List<SpringyBot> findAllByPage(int page, int pageSize) {
         Pageable pageable = PageRequest.of(page, pageSize);
         return springyBotRepository.findAll(pageable).getContent();
     }
+
+    @Override
+    public List<SpringyBot> findAll() {
+        return springyBotRepository.findAll();
+    }
+
+
 
     @Override
     public SpringyBot findByUsername(String username) {
@@ -148,8 +155,8 @@ public class SpringyBotServiceImpl implements SpringyBotService {
 
     @Override
     public ResponseEntity<ResponseData> getAllBot(int page, int pageSize) {
-        HashMap<String, Object> data = new HashMap<>();
-        List<SpringyBot> springyBotList = findAll(page, pageSize);
+        HashMap<Object, Object> data = new HashMap<>();
+        List<SpringyBot> springyBotList = findAllByPage(page, pageSize);
         for (SpringyBot springyBot : springyBotList) {
             if (!springyBotMap.containsKey(springyBot.getId())) {
                 springyBot.setState(false);
