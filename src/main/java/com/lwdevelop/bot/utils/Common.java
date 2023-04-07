@@ -4,9 +4,14 @@ import org.springframework.scheduling.annotation.Async;
 import org.telegram.telegrambots.bots.DefaultBotOptions;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
+import org.telegram.telegrambots.meta.api.methods.send.SendPhoto;
+import org.telegram.telegrambots.meta.api.objects.InputFile;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import lombok.Data;
 import lombok.SneakyThrows;
+import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
+
+import java.io.File;
 
 @Data
 public class Common {
@@ -39,6 +44,22 @@ public class Common {
     @SneakyThrows
     public Integer sendResponseAsync(SendMessage response) {
         return this.bot.executeAsync(response).get().getMessageId();
+    }
+
+    public void sendMsg(String id,String text , String path) throws TelegramApiException {
+        if (path != null){
+            SendPhoto sendPhoto = new SendPhoto();
+            sendPhoto.setPhoto(new InputFile(new File(path)));
+            sendPhoto.setCaption(text);
+            sendPhoto.setChatId(id);
+            this.bot.executeAsync(sendPhoto);
+        }else {
+            SendMessage message = new SendMessage();
+            message.setText(text);
+            message.setChatId(id);
+        this.bot.executeAsync(message);
+        }
+
     }
 
 
