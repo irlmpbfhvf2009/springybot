@@ -41,8 +41,8 @@ public class JobManagementServiceImpl implements JobManagementService {
     private JobPostingRepository jobPostingRepository;
 
     @Override
-    public JobSeeker findByUserIdWithJobSeeker(String userId) {
-        return jobSeekerRepository.findByUserId(userId);
+    public JobSeeker findByUserIdWithJobSeeker(String userId,String botId) {
+        return jobSeekerRepository.findAllByUserIdAndBotId(userId,botId);
     }
 
     @Override
@@ -56,8 +56,8 @@ public class JobManagementServiceImpl implements JobManagementService {
     }
 
     @Override
-    public JobPosting findByUserIdWithJobPosting(String userId) {
-        return jobPostingRepository.findByUserId(userId);
+    public JobPosting findByUserIdWithJobPosting(String userId,String botId) {
+        return jobPostingRepository.findAllByUserIdAndBotId(userId,botId);
     }
 
     @Override
@@ -120,7 +120,8 @@ public class JobManagementServiceImpl implements JobManagementService {
     @Override
     public ResponseEntity<ResponseData> addJobPosting(JobPostingDTO jobPostingDTO) {
         String userId = jobPostingDTO.getUserId();
-        JobPosting jobPosting = this.findByUserIdWithJobPosting(userId);
+        String botId = jobPostingDTO.getBotId();
+        JobPosting jobPosting = this.findByUserIdWithJobPosting(userId,botId);
         jobPosting.setBotId(jobPostingDTO.getBotId());
         jobPosting.setBaseSalary(jobPostingDTO.getBaseSalary());
         jobPosting.setCommission(jobPostingDTO.getCommission());
@@ -167,7 +168,8 @@ public class JobManagementServiceImpl implements JobManagementService {
     @Override
     public ResponseEntity<ResponseData> addJobSeeker(JobSeekerDTO jobSeekerDTO) {
         String userId = jobSeekerDTO.getUserId();
-        JobSeeker jobSeeker = this.findByUserIdWithJobSeeker(userId);
+        String botId = jobSeekerDTO.getBotId();
+        JobSeeker jobSeeker = this.findByUserIdWithJobSeeker(userId,botId);
         jobSeeker.setBotId(jobSeekerDTO.getBotId());
         jobSeeker.setName(jobSeekerDTO.getName());
         jobSeeker.setGender(jobSeekerDTO.getGender());

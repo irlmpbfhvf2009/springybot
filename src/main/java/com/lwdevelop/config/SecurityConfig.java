@@ -54,6 +54,7 @@ public class SecurityConfig {
     private static final String[] ALL_AUTH_LIST = {
             "/tmax/ws/**",
             "/springybot/**",
+            "/advertise/**",
             "/admins/login",
             "/admins/index",
             "/admins/addAdmin",

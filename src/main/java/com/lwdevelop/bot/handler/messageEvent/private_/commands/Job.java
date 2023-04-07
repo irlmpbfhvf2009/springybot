@@ -170,7 +170,7 @@ public class Job {
                 }
 
                 SpringyBot springyBot = springyBotServiceImpl.findById(id).get();
-                JobSeeker jobSeeker = this.jobManagementServiceImpl.findByUserIdWithJobSeeker(userId);
+                JobSeeker jobSeeker = this.jobManagementServiceImpl.findByUserIdWithJobSeeker(userId, String.valueOf(springyBot.getId()));
                 JobUser jobUser = new JobUser();
                 jobUser.setFirstname(firstname);
                 jobUser.setLastname(lastname);
@@ -301,7 +301,7 @@ public class Job {
                 }
 
                 SpringyBot springyBot = springyBotServiceImpl.findById(id).get();
-                JobPosting jobPosting = this.jobManagementServiceImpl.findByUserIdWithJobPosting(userId);
+                JobPosting jobPosting = this.jobManagementServiceImpl.findByUserIdWithJobPosting(userId, String.valueOf(springyBot.getId()));
                 JobUser jobUser = new JobUser();
                 jobUser.setFirstname(firstname);
                 jobUser.setLastname(lastname);

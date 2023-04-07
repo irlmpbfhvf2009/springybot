@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.annotation.Resource;
 
 @RestController
-@RequestMapping("/admins")
+@RequestMapping("/advertise")
 public class AdvertiseController {
 
     @Resource
@@ -32,7 +32,6 @@ public class AdvertiseController {
         advertiseDTO.setContact(contact);
         advertiseDTO.setDeilyTime(deliyTime);
         advertiseDTO.setPath(path);
-        System.out.println(advertiseDTO.getPath());
         return advertiseService.addAdvertise(advertiseDTO,groupId);
     }
 

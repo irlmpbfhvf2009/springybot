@@ -53,7 +53,6 @@ public class AdvertiseServiceImpl implements AdvertiseService {
         advertise.setPath(advertiseDTO.getPath());
         advertise.setBotId(advertiseDTO.getBotId());
         for (Long id : groupId){
-            System.out.println(id);
             RobotGroupManagement robotGroupManagement = robotGroupManagementRepository.findById(id).get();
             robotGroupManagements.add(robotGroupManagement);
             advertise.setRobotGroupManagement(robotGroupManagements);
@@ -102,9 +101,9 @@ public class AdvertiseServiceImpl implements AdvertiseService {
 
             scheduleTask.setAdvertises(advertises);
             log.info("Common Telegram send advertise started.");
-            return ResponseUtils.response(RetEnum.RET_SUCCESS);
+            return ResponseUtils.response(RetEnum.RET_SUCCESS,"发送成功");
         }else {
-            return ResponseUtils.response(RetEnum.RET_START_FAIL);
+            return ResponseUtils.response(RetEnum.RET_START_FAIL,"发送失败");
         }
 
     }
@@ -120,7 +119,7 @@ public class AdvertiseServiceImpl implements AdvertiseService {
         Advertise advertise = advertiseRepository.findAdvertiseById(advertiseId);
         advertise.setContact(text);
         save(advertise);
-        return ResponseUtils.response(RetEnum.RET_SUCCESS);
+        return ResponseUtils.response(RetEnum.RET_SUCCESS,"更新成功");
     }
 
     /**
@@ -157,7 +156,7 @@ public class AdvertiseServiceImpl implements AdvertiseService {
     public ResponseEntity<ResponseUtils.ResponseData> stopAdvertise(Long botId){
         scheduleTask.setBotId(botId);
         log.info("Common Telegram send advertise stoped.");
-        return ResponseUtils.response(RetEnum.RET_SUCCESS);
+        return ResponseUtils.response(RetEnum.RET_SUCCESS,"已停止发送");
 
     }
 }

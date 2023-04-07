@@ -55,10 +55,8 @@ public class ScheduleTask implements SchedulingConfigurer {
                         bots.add(springyBot);
                     }
                     //遍历bot
-                    System.out.println(bots);
                 for (SpringyBot springyBot : bots) {
                     stop();
-
                                 SpringyBotDTO springyBotDTO = new SpringyBotDTO();
                                 springyBotDTO.setToken(springyBot.getToken());
                                 springyBotDTO.setUsername(springyBot.getUsername());
@@ -67,7 +65,6 @@ public class ScheduleTask implements SchedulingConfigurer {
                                 //遍历广告
                                 for (Advertise advertise : advertises) {
                                     stop();
-
                                     //遍历群组
                                     for (Long groupId : groupIds) {
                                         try {
