@@ -38,10 +38,18 @@ public class message {
                 this.setResponse_job();
                 break;
             case "发布求职":
-                new Job().postAJobSearch(common);
+                if(hasUsername()){
+                    new Job().postAJobSearch(common);
+                }else{
+                    this.send_nullUsername();
+                }
                 break;
             case "发布招聘":
-                new Job().postRecruitment(common);
+                if(hasUsername()){
+                    new Job().postRecruitment(common);
+                }else{
+                    this.send_nullUsername();
+                }   
                 break;
             case "招聘和求职信息管理":
                 new Job().setResponse_jobSeeker_management(common);
@@ -79,6 +87,18 @@ public class message {
         this.response.setChatId(chatId);
         this.response.setDisableNotification(false);
         this.response.setDisableWebPagePreview(false);
+    }
+
+    private Boolean hasUsername(){
+        if(this.common.getUpdate().getMessage().getChat().getUserName()==null){
+            return false;
+        }
+        return true;
+    }
+
+    private void send_nullUsername(){
+        this.response.setText("请设置Telegram username");
+        this.common.sendResponseAsync(this.response);
     }
 
 }

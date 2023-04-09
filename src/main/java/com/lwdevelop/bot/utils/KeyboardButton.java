@@ -96,6 +96,9 @@ public class KeyboardButton {
         dk1.setUrl(url);
         dk2.setText("清除");
         dk2.setCallbackData("clearJobPosting_" + jobPostingDTO.getUserId());
+        
+        // System.out.println(common.getUpdate().getMessage().getChat().getUserName());
+
         rowInline.add(dk1);
         rowInline.add(dk2);
         rowsInline.add(rowInline);
