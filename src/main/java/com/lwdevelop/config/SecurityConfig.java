@@ -60,6 +60,7 @@ public class SecurityConfig {
             "/admins/addAdmin",
             "/dev-api/**",
             "/index",
+            "/version",
             "/static/favicon.ico",
             "/static/assets/**",
             "/jobManagement/**",
