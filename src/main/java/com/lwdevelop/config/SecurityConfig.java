@@ -49,7 +49,7 @@ public class SecurityConfig {
             "/configuration/security",
             "/swagger-ui.html",
             "/webjars/**",
-            "/jobManagement/**",
+            
     };
 
     private static final String[] ALL_AUTH_LIST = {
@@ -62,6 +62,7 @@ public class SecurityConfig {
             "/index",
             "/static/favicon.ico",
             "/static/assets/**",
+            "/jobManagement/**",
     };
 
     @Bean
