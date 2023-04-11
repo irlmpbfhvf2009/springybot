@@ -115,12 +115,12 @@ public class KeyboardButton {
         List<List<InlineKeyboardButton>> rowsInline = new ArrayList<>();
         List<InlineKeyboardButton> rowInline = new ArrayList<>();
 
-        String ip = "";
-        try {
-            ip = InetAddress.getLocalHost().getHostAddress();
-        } catch (UnknownHostException e) {
-            e.printStackTrace();
-        }
+        // String ip = "";
+        // try {
+        //     ip = InetAddress.getLocalHost().getHostAddress();
+        // } catch (UnknownHostException e) {
+        //     e.printStackTrace();
+        // }
         String ub = "userId=" + jobSeekerDTO.getUserId()
                 + "&botId=" + jobSeekerDTO.getBotId()
                 + "&name=" + jobSeekerDTO.getName()
@@ -138,7 +138,7 @@ public class KeyboardButton {
 
         String encryptedUb = CryptoUtil.encrypt(ub);
         String encodedUb = URLEncoder.encode(encryptedUb, StandardCharsets.UTF_8);
-        String url = "http://" + ip + ":3002/#/jobSeekerForm?ub=" + encodedUb;
+        String url = "http://rcc.ddb99.vip:18889/#/jobSeekerForm?ub=" + encodedUb;
         dk1.setText("编辑");
         dk1.setUrl(url);
         dk2.setText("清除");
