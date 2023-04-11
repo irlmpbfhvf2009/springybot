@@ -45,12 +45,11 @@ public class JobManagementServiceImpl implements JobManagementService {
         return jobSeekerRepository.findByUserId(userId);
     }
     @Override
-    public JobSeeker findByUserIdWithJobSeeker(String userId, String botId) {
+    public JobSeeker findByUserIdAndBotIdWithJobSeeker(String userId, String botId) {
         return jobSeekerRepository.findAllByUserIdAndBotId(userId, botId);
     }
-
     @Override
-    public JobPosting findByUserIdWithJobPosting(String userId, String botId) {
+    public JobPosting findByUserIdAndBotIdWithJobPosting(String userId, String botId) {
         return jobPostingRepository.findAllByUserIdAndBotId(userId, botId);
     }
     
