@@ -73,7 +73,7 @@ public class message {
     }
 
     private void setResponse_start() {
-        String text = "欢迎使用我们的机器人！\n我们的机器人可以帮助您快速找到合适的工作或人才。\n]n以下是一些您可以使用的指令：\n" +
+        String text = "欢迎使用我们的机器人！\n我们的机器人可以帮助您快速找到合适的工作或人才。\n\n以下是一些您可以使用的指令：\n" +
                 "/job - 查看最新的招聘和求职信息。\n" +
                 "/post - 发布您的招聘或求职信息。\n" +
                 "/help - 查看机器人的使用指南。\n\n" +
