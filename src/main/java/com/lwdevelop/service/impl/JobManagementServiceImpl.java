@@ -44,7 +44,16 @@ public class JobManagementServiceImpl implements JobManagementService {
     public JobSeeker findByUserIdWithJobSeeker(String userId) {
         return jobSeekerRepository.findByUserId(userId);
     }
+    @Override
+    public JobSeeker findByUserIdWithJobSeeker(String userId, String botId) {
+        return jobSeekerRepository.findAllByUserIdAndBotId(userId, botId);
+    }
 
+    @Override
+    public JobPosting findByUserIdWithJobPosting(String userId, String botId) {
+        return jobPostingRepository.findAllByUserIdAndBotId(userId, botId);
+    }
+    
     @Override
     public void saveJobPosting(JobPosting jobPosting) {
         jobPostingRepository.save(jobPosting);
@@ -256,6 +265,6 @@ public class JobManagementServiceImpl implements JobManagementService {
         }
         return ResponseUtils.response(RetEnum.RET_SUCCESS, data);
     }
-    
+
 
 }

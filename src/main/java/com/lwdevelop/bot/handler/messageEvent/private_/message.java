@@ -20,7 +20,7 @@ public class message {
         this.init(common);
 
         switch (this.text) {
-            case "/start":
+            case "/start2":
                 this.setResponse_start();
                 break;
             case "/manage":
@@ -37,7 +37,7 @@ public class message {
                 new Manage().setResponse_addToGroupOrChannel(common, SpringyBotEnum.CHAT_TYPE_CHANNEL.getText());
                 break;
 
-            case "/job":
+            case "/start":
                 this.setResponse_job();
                 break;
             case "发布求职":
