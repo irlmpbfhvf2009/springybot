@@ -20,6 +20,9 @@ public class message {
         this.init(common);
 
         switch (this.text) {
+            case "/start":
+                this.setResponse_start();
+                break;
             case "/manage":
                 this.setResponse_manage();
                 break;
@@ -38,18 +41,18 @@ public class message {
                 this.setResponse_job();
                 break;
             case "发布求职":
-                if(hasUsername()){
+                if (hasUsername()) {
                     new Job().postAJobSearch(common);
-                }else{
+                } else {
                     this.send_nullUsername();
                 }
                 break;
             case "发布招聘":
-                if(hasUsername()){
+                if (hasUsername()) {
                     new Job().postRecruitment(common);
-                }else{
+                } else {
                     this.send_nullUsername();
-                }   
+                }
                 break;
             case "招聘和求职信息管理":
                 new Job().setResponse_jobSeeker_management(common);
@@ -67,6 +70,16 @@ public class message {
         this.common = common;
         this.text = this.message.getText();
         this.privateMessageSettings(this.message);
+    }
+
+    private void setResponse_start() {
+        String text = "欢迎使用我们的招聘求职机器人！我们的机器人可以帮助您快速找到合适的工作或人才。以下是一些您可以使用的指令：" +
+                "/job - 查看最新的招聘和求职信息。" +
+                "/post - 发布您的招聘或求职信息。" +
+                "/help - 查看机器人的使用指南。" +
+                "我们希望这个机器人能为您提供帮助，如果您有任何问题或建议，请随时联系我们。谢谢！";
+        this.response.setText(text);
+        this.common.sendResponseAsync(this.response);
     }
 
     private void setResponse_job() {
@@ -89,14 +102,14 @@ public class message {
         this.response.setDisableWebPagePreview(false);
     }
 
-    private Boolean hasUsername(){
-        if(this.common.getUpdate().getMessage().getChat().getUserName()==null){
+    private Boolean hasUsername() {
+        if (this.common.getUpdate().getMessage().getChat().getUserName() == null) {
             return false;
         }
         return true;
     }
 
-    private void send_nullUsername(){
+    private void send_nullUsername() {
         this.response.setText("请设置Telegram username");
         this.common.sendResponseAsync(this.response);
     }
