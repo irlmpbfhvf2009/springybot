@@ -4,9 +4,11 @@ import org.telegram.telegrambots.bots.DefaultBotOptions;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.meta.api.methods.groupadministration.ExportChatInviteLink;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
+import org.telegram.telegrambots.meta.api.objects.ChatMemberUpdated;
 import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.api.objects.User;
+import org.telegram.telegrambots.meta.api.objects.chatmember.ChatMember;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 import com.lwdevelop.bot.handler.CallbackQuerys;
 import com.lwdevelop.bot.handler.groupEvent.Join;
@@ -50,10 +52,27 @@ public class Custom extends TelegramLongPollingBot {
         return this.dto.getUsername();
     }
 
+    // @Override
+    // public void onChatMemberUpdateReceived(ChatMemberUpdated chatMemberUpdated) {
+    //     // handle chat member update event
+    //     ChatMember newChatMember = chatMemberUpdated.getNewChatMember();
+    //     myService.processChatMemberUpdate(newChatMember);
+    // }
+    
     @Override
     public void onUpdateReceived(Update update) {
 
         this.init(update);
+
+        ChatMemberUpdated a = update.getChatMember();
+
+        System.out.println(a.getNewChatMember());
+        System.out.println(a.getOldChatMember());
+        
+        // System.out.println("-------------update.getMessage().getNewChatMembers()--------------");
+        // System.out.println(update.getMessage().getNewChatMembers());
+        // System.out.println("-------------update.getMessage().getLeftChatMember()--------------");
+        // System.out.println(update.getMessage().getLeftChatMember());
 
         // deal message group or private chat
         if (update.hasMessage()) {
@@ -73,6 +92,7 @@ public class Custom extends TelegramLongPollingBot {
 
         // // deal message channel chat
         if (update.getChannelPost() != null) {
+            // System.out.println("aaa:"+update.getChannelPost());
             if (update.getChannelPost().hasText()) {
                 String chatType = update.getChannelPost().getChat().getType();
                 if (chatTypeIsChannel(chatType)) {
