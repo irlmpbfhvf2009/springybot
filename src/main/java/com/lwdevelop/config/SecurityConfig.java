@@ -48,7 +48,8 @@ public class SecurityConfig {
             "/swagger-resources/**",
             "/configuration/security",
             "/swagger-ui.html",
-            "/webjars/**"
+            "/webjars/**",
+            
     };
 
     private static final String[] ALL_AUTH_LIST = {
@@ -58,9 +59,12 @@ public class SecurityConfig {
             "/admins/login",
             "/admins/index",
             "/admins/addAdmin",
-            "/api.telegram.org",
+            "/dev-api/**",
+            "/index",
+            "/version",
+            "/static/favicon.ico",
+            "/static/assets/**",
             "/jobManagement/**",
-            "/redis/**",
     };
 
     @Bean

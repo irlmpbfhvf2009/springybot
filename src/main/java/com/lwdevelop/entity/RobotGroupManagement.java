@@ -22,10 +22,14 @@ public class RobotGroupManagement {
 
     private String inviteFirstname;
 
+    private String inviteLastname;
+
     private Long groupId;
 
     private String groupTitle;
 
     private String link;
+
+    private Boolean status;
 
 }

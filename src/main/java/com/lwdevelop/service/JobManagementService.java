@@ -14,6 +14,10 @@ public interface JobManagementService {
 
     JobPosting findByUserIdWithJobPosting(String userId,String botId);
 
+    JobSeeker findByUserIdAndBotIdWithJobSeeker(String userId,String springyBotId);
+
+    JobPosting findByUserIdAndBotIdWithJobPosting(String userId,String springyBotId);
+
     void deleteByIdWithJobPosting(Long id);
     void deleteByUserIdWithJobPosting(String userId);
 

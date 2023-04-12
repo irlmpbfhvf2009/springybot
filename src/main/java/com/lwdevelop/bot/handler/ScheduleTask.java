@@ -67,14 +67,10 @@ public class ScheduleTask implements SchedulingConfigurer {
                                     stop();
                                     //遍历群组
                                     for (Long groupId : groupIds) {
-                                        try {
-                                            //停止判断
-                                                stop();
-                                            custom.common.sendMsg(groupId.toString(), advertise.getContact(), advertise.getPath());
+                                        //停止判断
+                                        stop();
+                                        custom.common.sendMsg(groupId.toString(), advertise.getContact(), advertise.getPath());
 
-                                        } catch (TelegramApiException e) {
-                                            throw new RuntimeException(e);
-                                        }
                                     }
                                     try {
                                         //广告间隔时间

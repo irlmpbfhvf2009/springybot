@@ -4,7 +4,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import lombok.Data;
 import java.util.HashMap;
-import java.util.List;
 
 public class ResponseUtils {
     private ResponseUtils() {

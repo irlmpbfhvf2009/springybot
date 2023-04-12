@@ -83,7 +83,7 @@
 			<artifactId>amqp-client</artifactId>
 			<version>5.16.0</version>
 		</dependency> -->
-		
+
 
 		<dependency>
 			<groupId>org.projectlombok</groupId>
@@ -102,15 +102,15 @@
 			<version>2.11.0</version>
 		</dependency>
 		<!-- Redis 配置 -->
-		<dependency>
+		<!-- <dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-data-redis</artifactId>
-		</dependency>
+		</dependency> -->
 		<!-- redis 依賴 commons-pool -->
-		<dependency>
+		<!-- <dependency>
 			<groupId>org.apache.commons</groupId>
 			<artifactId>commons-pool2</artifactId>
-		</dependency>
+		</dependency> -->
 
 		<dependency>
 			<groupId>junit</groupId>
@@ -132,6 +132,10 @@
 			<artifactId>springfox-boot-starter</artifactId>
 			<version>3.0.0</version>
 		</dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-log4j2</artifactId>
+		</dependency>
 
 		<!-- postgresql -->
 		<!-- <dependency>
@@ -139,7 +143,7 @@
 			<artifactId>postgresql</artifactId>
 			<scope>runtime</scope>
 		</dependency> -->
-		
+
 	</dependencies>
 
 

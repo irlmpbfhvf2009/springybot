@@ -40,11 +40,26 @@ public class JobManagementServiceImpl implements JobManagementService {
     @Autowired
     private JobPostingRepository jobPostingRepository;
 
+
     @Override
-    public JobSeeker findByUserIdWithJobSeeker(String userId,String botId) {
-        return jobSeekerRepository.findAllByUserIdAndBotId(userId,botId);
+    public JobSeeker findByUserIdWithJobSeeker(String userId, String botId) {
+        return null;
     }
 
+    @Override
+    public JobPosting findByUserIdWithJobPosting(String userId, String botId) {
+        return null;
+    }
+
+    @Override
+    public JobSeeker findByUserIdAndBotIdWithJobSeeker(String userId, String springyBotId) {
+        return jobSeekerRepository.findAllByUserIdAndBotId(userId, springyBotId);
+    }
+    @Override
+    public JobPosting findByUserIdAndBotIdWithJobPosting(String userId, String springyBotId) {
+        return jobPostingRepository.findAllByUserIdAndBotId(userId, springyBotId);
+    }
+    
     @Override
     public void saveJobPosting(JobPosting jobPosting) {
         jobPostingRepository.save(jobPosting);
@@ -55,10 +70,6 @@ public class JobManagementServiceImpl implements JobManagementService {
         jobSeekerRepository.save(jobsSeeker);
     }
 
-    @Override
-    public JobPosting findByUserIdWithJobPosting(String userId,String botId) {
-        return jobPostingRepository.findAllByUserIdAndBotId(userId,botId);
-    }
 
     @Override
     public void deleteByIdWithJobPosting(Long id) {
@@ -120,8 +131,8 @@ public class JobManagementServiceImpl implements JobManagementService {
     @Override
     public ResponseEntity<ResponseData> addJobPosting(JobPostingDTO jobPostingDTO) {
         String userId = jobPostingDTO.getUserId();
-        String botId = jobPostingDTO.getBotId();
-        JobPosting jobPosting = this.findByUserIdWithJobPosting(userId,botId);
+        JobPosting jobPosting = this.findByUserIdAndBotIdWithJobPosting(userId,jobPostingDTO.getBotId());
+        // JobPosting jobPosting = this.findByUserIdWithJobPosting(userId);
         jobPosting.setBotId(jobPostingDTO.getBotId());
         jobPosting.setBaseSalary(jobPostingDTO.getBaseSalary());
         jobPosting.setCommission(jobPostingDTO.getCommission());
@@ -168,8 +179,8 @@ public class JobManagementServiceImpl implements JobManagementService {
     @Override
     public ResponseEntity<ResponseData> addJobSeeker(JobSeekerDTO jobSeekerDTO) {
         String userId = jobSeekerDTO.getUserId();
-        String botId = jobSeekerDTO.getBotId();
-        JobSeeker jobSeeker = this.findByUserIdWithJobSeeker(userId,botId);
+        // JobSeeker jobSeeker = this.findByUserIdWithJobSeeker(userId);
+        JobSeeker jobSeeker = this.findByUserIdAndBotIdWithJobSeeker(userId,jobSeekerDTO.getBotId());
         jobSeeker.setBotId(jobSeekerDTO.getBotId());
         jobSeeker.setName(jobSeekerDTO.getName());
         jobSeeker.setGender(jobSeekerDTO.getGender());
@@ -258,6 +269,6 @@ public class JobManagementServiceImpl implements JobManagementService {
         }
         return ResponseUtils.response(RetEnum.RET_SUCCESS, data);
     }
-    
+
 
 }
