@@ -75,16 +75,16 @@ public class RobotGroupAndChannelManagementServiceImpl implements RobotGroupAndC
         //         });
         //     }
     
-            GroupAndChannelTreeDTO jobTreeDTO = new GroupAndChannelTreeDTO();
-            List<GroupAndChannelTreeDTO> children = new ArrayList<>();
-            children.add(seeker);
-            children.add(posting);
+            // GroupAndChannelTreeDTO jobTreeDTO = new GroupAndChannelTreeDTO();
+            // List<GroupAndChannelTreeDTO> children = new ArrayList<>();
+            // children.add(seeker);
+            // children.add(posting);
     
-            jobTreeDTO.setLabel(springyBots.get(i).getUsername());
-            jobTreeDTO.setId((long) i);
-            jobTreeDTO.setChildren(children);
-            data.add(jobTreeDTO);
-        }
+            // jobTreeDTO.setLabel(springyBots.get(i).getUsername());
+            // jobTreeDTO.setId((long) i);
+            // jobTreeDTO.setChildren(children);
+            // data.add(jobTreeDTO);
+        // }
         return ResponseUtils.response(RetEnum.RET_SUCCESS, data);
     }
 
