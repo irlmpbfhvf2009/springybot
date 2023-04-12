@@ -49,10 +49,12 @@ public class JoinGroup {
                 springyBot.getRobotGroupManagement().stream()
                         .filter(rgm -> hasTarget(rgm))
                         .findFirst()
-                        .ifPresentOrElse(null, () -> {
+                        .ifPresentOrElse(rgm -> {
+                            rgm.setStatus(true);
+                        }, () -> {
                             springyBot.getRobotGroupManagement().add(this.getRobotGroupManagement());
-                            springyBotServiceImpl.save(springyBot);
                         });
+                springyBotServiceImpl.save(springyBot);
                 // user invite other user
             } else if (isUserInviteEvent(member)) {
             }
@@ -81,6 +83,7 @@ public class JoinGroup {
         robotGroupManagement.setGroupId(this.groupId);
         robotGroupManagement.setGroupTitle(this.groupTitle);
         robotGroupManagement.setLink(this.common.getInviteLink());
+        robotGroupManagement.setStatus(true);
         return robotGroupManagement;
     }
 

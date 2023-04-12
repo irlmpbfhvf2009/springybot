@@ -33,17 +33,17 @@ public class JoinChannel {
         this.channelId = common.getChatMemberUpdated().getChat().getId();
         this.channelTitle = common.getChatMemberUpdated().getChat().getTitle();
 
-        System.out.println("入頻道事件");
-
 
         SpringyBot springyBot = springyBotServiceImpl.findById(common.getSpringyBotId()).get();
         springyBot.getRobotChannelManagement().stream()
             .filter(rcm -> hasTarget(rcm))
             .findFirst()
-            .ifPresentOrElse(null, () -> {
+            .ifPresentOrElse(rcm -> {
+                rcm.setStatus(true);
+            }, () -> {
                 springyBot.getRobotChannelManagement().add(getRobotChannelManagement());
-                springyBotServiceImpl.save(springyBot);
             });
+            springyBotServiceImpl.save(springyBot);
         
     }
 
@@ -61,6 +61,7 @@ public class JoinChannel {
         robotGroupManagement.setChannelId(this.channelId);
         robotGroupManagement.setChannelTitle(this.channelTitle);
         robotGroupManagement.setLink(this.common.getInviteLink());
+        robotGroupManagement.setStatus(true);
         return robotGroupManagement;
     }
 

@@ -30,4 +30,6 @@ public class RobotGroupManagement {
 
     private String link;
 
+    private Boolean status;
+
 }

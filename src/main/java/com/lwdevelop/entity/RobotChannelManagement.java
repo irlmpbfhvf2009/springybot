@@ -28,5 +28,7 @@ public class RobotChannelManagement {
     private String channelTitle;
 
     private String link;
+
+    private Boolean status;
     
 }
