@@ -1,8 +1,6 @@
 package com.lwdevelop.bot.handler.event;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.telegram.telegrambots.meta.api.objects.ChatMemberUpdated;
-
 import com.lwdevelop.bot.utils.Common;
 import com.lwdevelop.entity.RobotChannelManagement;
 import com.lwdevelop.entity.SpringyBot;
@@ -16,7 +14,6 @@ public class JoinChannel {
             .getBean(SpringyBotServiceImpl.class);
 
     private Common common;
-    private ChatMemberUpdated chatMemberUpdated;
     private Long botId;
     private Long inviteId;
     private String inviteFirstname;
@@ -27,18 +24,26 @@ public class JoinChannel {
 
     public void isBotJoin(Common common) {
 
+        this.common = common;
+        this.botId = common.getBotId();
+        this.inviteId = common.getChatMemberUpdated().getFrom().getId();
+        this.inviteFirstname = common.getChatMemberUpdated().getFrom().getFirstName();
+        this.inviteUsername = common.getChatMemberUpdated().getFrom().getUserName();
+        this.inviteLastname = common.getChatMemberUpdated().getFrom().getLastName();
+        this.channelId = common.getChatMemberUpdated().getChat().getId();
+        this.channelTitle = common.getChatMemberUpdated().getChat().getTitle();
+
         System.out.println("入頻道事件");
 
-        ChatMemberUpdated chatMemberUpdated = common.getChatMemberUpdated();
 
         SpringyBot springyBot = springyBotServiceImpl.findById(common.getSpringyBotId()).get();
         springyBot.getRobotChannelManagement().stream()
             .filter(rcm -> hasTarget(rcm))
             .findFirst()
-            .ifPresentOrElse(null, () ->
+            .ifPresentOrElse(null, () -> {
                 springyBot.getRobotChannelManagement().add(getRobotChannelManagement());
                 springyBotServiceImpl.save(springyBot);
-            );
+            });
         
     }
 

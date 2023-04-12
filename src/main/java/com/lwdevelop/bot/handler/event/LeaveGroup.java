@@ -20,12 +20,11 @@ public class LeaveGroup {
     private SpringyBotServiceImpl springyBotServiceImpl = SpringUtils.getApplicationContext()
             .getBean(SpringyBotServiceImpl.class);
 
-    private Message message;
     private Long groupId;
     private Long botId;
 
     public void isBotLeave(Common common) {
-        this.message =  common.getUpdate().getMessage();
+        Message message =  common.getUpdate().getMessage();
         this.groupId = message.getChat().getId();
         this.botId = common.getBotId();
 

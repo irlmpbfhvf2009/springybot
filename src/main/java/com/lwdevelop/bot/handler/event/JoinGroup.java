@@ -50,7 +50,7 @@ public class JoinGroup {
                         .filter(rgm -> hasTarget(rgm))
                         .findFirst()
                         .ifPresentOrElse(null, () -> {
-                            springyBot.getRobotGroupManagement().add(getRobotGroupManagement());
+                            springyBot.getRobotGroupManagement().add(this.getRobotGroupManagement());
                             springyBotServiceImpl.save(springyBot);
                         });
                 // user invite other user
