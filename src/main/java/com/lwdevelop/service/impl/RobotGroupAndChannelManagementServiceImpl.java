@@ -19,7 +19,7 @@ import com.lwdevelop.utils.RetEnum;
 import com.lwdevelop.utils.ResponseUtils.ResponseData;
 
 @Service
-public class RobotGroupAndChannelManagementServiceImpl implements RobotGroupAndChannelManagementService{
+public class RobotGroupAndChannelManagementServiceImpl implements RobotGroupAndChannelManagementService {
 
     @Autowired
     private SpringyBotServiceImpl springyBotServiceImpl;
@@ -29,7 +29,7 @@ public class RobotGroupAndChannelManagementServiceImpl implements RobotGroupAndC
 
     @Autowired
     private RobotChannelManagementRepository robotChannelManagementRepository;
-    
+
     @Override
     public void deleteByIdWithRobotChannelManagement(Long Id) {
         robotChannelManagementRepository.deleteById(Id);
@@ -50,13 +50,11 @@ public class RobotGroupAndChannelManagementServiceImpl implements RobotGroupAndC
         return robotGroupManagementRepository.findByBotIdAndGroupId(botId, groupId);
     }
 
-
-
     @Override
     public ResponseEntity<ResponseData> getGroupAndChannelTreeData() {
         List<GroupAndChannelTreeDTO> data = new ArrayList<>();
         List<SpringyBot> springyBots = springyBotServiceImpl.findAll();
-    
+
         for (int i = 0; i < springyBots.size(); i++) {
             GroupAndChannelTreeDTO group = new GroupAndChannelTreeDTO();
             group.setLabel("群组");
@@ -71,20 +69,22 @@ public class RobotGroupAndChannelManagementServiceImpl implements RobotGroupAndC
                     GroupAndChannelTreeDTO gact = new GroupAndChannelTreeDTO();
                     gact.setId(g.getGroupId());
                     gact.setLabel(g.getGroupTitle());
-                    RobotGroupManagementDTO robotGroupManagementDTO = new RobotGroupManagementDTO();
-                    robotGroupManagementDTO.setBotId(g.getBotId());
-                    robotGroupManagementDTO.setGroupId(g.getGroupId());
-                    robotGroupManagementDTO.setGroupTitle(g.getGroupTitle());
-                    robotGroupManagementDTO.setId(g.getId());
-                    robotGroupManagementDTO.setInviteFirstname(g.getInviteFirstname());
-                    robotGroupManagementDTO.setInviteId(g.getInviteId());
-                    robotGroupManagementDTO.setInviteLastname(g.getInviteLastname());
-                    robotGroupManagementDTO.setInviteUsername(g.getInviteUsername());
-                    robotGroupManagementDTO.setLink(g.getLink());
-                    robotGroupManagementDTO.setStatus(g.getStatus());
-                    List<RobotGroupManagementDTO> list = new ArrayList<>();
-                    list.add(robotGroupManagementDTO);
-                    gact.setRobotGroupManagementDTO(list);
+                    if (g.getStatus()) {
+                        RobotGroupManagementDTO robotGroupManagementDTO = new RobotGroupManagementDTO();
+                        robotGroupManagementDTO.setBotId(g.getBotId());
+                        robotGroupManagementDTO.setGroupId(g.getGroupId());
+                        robotGroupManagementDTO.setGroupTitle(g.getGroupTitle());
+                        robotGroupManagementDTO.setId(g.getId());
+                        robotGroupManagementDTO.setInviteFirstname(g.getInviteFirstname());
+                        robotGroupManagementDTO.setInviteId(g.getInviteId());
+                        robotGroupManagementDTO.setInviteLastname(g.getInviteLastname());
+                        robotGroupManagementDTO.setInviteUsername(g.getInviteUsername());
+                        robotGroupManagementDTO.setLink(g.getLink());
+                        robotGroupManagementDTO.setStatus(g.getStatus());
+                        List<RobotGroupManagementDTO> list = new ArrayList<>();
+                        list.add(robotGroupManagementDTO);
+                        gact.setRobotGroupManagementDTO(list);
+                    }
                     ff.add(gact);
                 });
                 group.setChildren(ff);
@@ -96,30 +96,32 @@ public class RobotGroupAndChannelManagementServiceImpl implements RobotGroupAndC
                     GroupAndChannelTreeDTO cact = new GroupAndChannelTreeDTO();
                     cact.setId(c.getChannelId());
                     cact.setLabel(c.getChannelTitle());
-                    RobotChannelManagementDTO robotChannelManagementDTO = new RobotChannelManagementDTO();
-                    robotChannelManagementDTO.setBotId(c.getBotId());
-                    robotChannelManagementDTO.setChannelId(c.getChannelId());
-                    robotChannelManagementDTO.setChannelTitle(c.getChannelTitle());
-                    robotChannelManagementDTO.setId(c.getId());
-                    robotChannelManagementDTO.setInviteFirstname(c.getInviteFirstname());
-                    robotChannelManagementDTO.setInviteId(c.getInviteId());
-                    robotChannelManagementDTO.setInviteLastname(c.getInviteLastname());
-                    robotChannelManagementDTO.setInviteUsername(c.getInviteUsername());
-                    robotChannelManagementDTO.setLink(c.getLink());
-                    robotChannelManagementDTO.setStatus(c.getStatus());
-                    List<RobotChannelManagementDTO> list = new ArrayList<>();
-                    list.add(robotChannelManagementDTO);
-                    cact.setRobotChannelManagementDTO(list);
+                    if (c.getStatus()) {
+                        RobotChannelManagementDTO robotChannelManagementDTO = new RobotChannelManagementDTO();
+                        robotChannelManagementDTO.setBotId(c.getBotId());
+                        robotChannelManagementDTO.setChannelId(c.getChannelId());
+                        robotChannelManagementDTO.setChannelTitle(c.getChannelTitle());
+                        robotChannelManagementDTO.setId(c.getId());
+                        robotChannelManagementDTO.setInviteFirstname(c.getInviteFirstname());
+                        robotChannelManagementDTO.setInviteId(c.getInviteId());
+                        robotChannelManagementDTO.setInviteLastname(c.getInviteLastname());
+                        robotChannelManagementDTO.setInviteUsername(c.getInviteUsername());
+                        robotChannelManagementDTO.setLink(c.getLink());
+                        robotChannelManagementDTO.setStatus(c.getStatus());
+                        List<RobotChannelManagementDTO> list = new ArrayList<>();
+                        list.add(robotChannelManagementDTO);
+                        cact.setRobotChannelManagementDTO(list);
+                    }
                     ff.add(cact);
                 });
                 channel.setChildren(ff);
             }
-    
+
             GroupAndChannelTreeDTO jobTreeDTO = new GroupAndChannelTreeDTO();
             List<GroupAndChannelTreeDTO> children = new ArrayList<>();
             children.add(group);
             children.add(channel);
-    
+
             jobTreeDTO.setLabel(springyBots.get(i).getUsername());
             jobTreeDTO.setId((long) i);
             jobTreeDTO.setChildren(children);
@@ -128,6 +130,4 @@ public class RobotGroupAndChannelManagementServiceImpl implements RobotGroupAndC
         return ResponseUtils.response(RetEnum.RET_SUCCESS, data);
     }
 
-
-    
 }
