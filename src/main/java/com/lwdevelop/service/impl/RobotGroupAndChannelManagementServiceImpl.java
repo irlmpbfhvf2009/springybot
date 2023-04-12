@@ -6,6 +6,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import com.lwdevelop.dto.GroupAndChannelTreeDTO;
+import com.lwdevelop.dto.RobotChannelManagementDTO;
+import com.lwdevelop.dto.RobotGroupManagementDTO;
 import com.lwdevelop.entity.RobotChannelManagement;
 import com.lwdevelop.entity.RobotGroupManagement;
 import com.lwdevelop.entity.SpringyBot;
@@ -51,40 +53,78 @@ public class RobotGroupAndChannelManagementServiceImpl implements RobotGroupAndC
 
 
     @Override
-    public ResponseEntity<ResponseData> getJobTreeData() {
+    public ResponseEntity<ResponseData> getGroupAndChannelTreeData() {
         List<GroupAndChannelTreeDTO> data = new ArrayList<>();
         List<SpringyBot> springyBots = springyBotServiceImpl.findAll();
     
-        // for (int i = 0; i < springyBots.size(); i++) {
-        //     GroupAndChannelTreeDTO posting = new GroupAndChannelTreeDTO();
-        //     posting.setLabel("招聘信息");
-        //     posting.setId(0L);
-        //     GroupAndChannelTreeDTO seeker = new GroupAndChannelTreeDTO();
-        //     seeker.setLabel("求職信息");
-        //     seeker.setId(1L);
-        //     for (int j = 0; j < springyBots.get(i).getRobotGroupManagement().size(); j++) {
-        //         springyBots.get(i).getRobotGroupManagement().stream().forEach(group -> {
-        //             GroupAndChannelTreeDTO gact = new GroupAndChannelTreeDTO();
-        //             List<GroupAndChannelTreeDTO> ff = new ArrayList<>();
-        //             gact.setId(jobUser.getId());
-        //             user.setLabel(jobUser.getUsername());
-        //             user.setChildren(null);
-        //             ff.add(user);
-        //             posting.setChildren(ff);
-        //             seeker.setChildren(ff);
-        //         });
-        //     }
+        for (int i = 0; i < springyBots.size(); i++) {
+            GroupAndChannelTreeDTO group = new GroupAndChannelTreeDTO();
+            group.setLabel("群组");
+            group.setId(0L);
+            GroupAndChannelTreeDTO channel = new GroupAndChannelTreeDTO();
+            channel.setLabel("频道");
+            channel.setId(1L);
+
+            for (int j = 0; j < springyBots.get(i).getRobotGroupManagement().size(); j++) {
+                List<GroupAndChannelTreeDTO> ff = new ArrayList<>();
+                springyBots.get(i).getRobotGroupManagement().stream().forEach(g -> {
+                    GroupAndChannelTreeDTO gact = new GroupAndChannelTreeDTO();
+                    gact.setId(g.getGroupId());
+                    gact.setLabel(g.getGroupTitle());
+                    RobotGroupManagementDTO robotGroupManagementDTO = new RobotGroupManagementDTO();
+                    robotGroupManagementDTO.setBotId(g.getBotId());
+                    robotGroupManagementDTO.setGroupId(g.getGroupId());
+                    robotGroupManagementDTO.setGroupTitle(g.getGroupTitle());
+                    robotGroupManagementDTO.setId(g.getId());
+                    robotGroupManagementDTO.setInviteFirstname(g.getInviteFirstname());
+                    robotGroupManagementDTO.setInviteId(g.getInviteId());
+                    robotGroupManagementDTO.setInviteLastname(g.getInviteLastname());
+                    robotGroupManagementDTO.setInviteUsername(g.getInviteUsername());
+                    robotGroupManagementDTO.setLink(g.getLink());
+                    robotGroupManagementDTO.setStatus(g.getStatus());
+                    List<RobotGroupManagementDTO> list = new ArrayList<>();
+                    list.add(robotGroupManagementDTO);
+                    gact.setRobotGroupManagementDTO(list);
+                    ff.add(gact);
+                });
+                group.setChildren(ff);
+            }
+
+            for (int j = 0; j < springyBots.get(i).getRobotChannelManagement().size(); j++) {
+                List<GroupAndChannelTreeDTO> ff = new ArrayList<>();
+                springyBots.get(i).getRobotChannelManagement().stream().forEach(c -> {
+                    GroupAndChannelTreeDTO cact = new GroupAndChannelTreeDTO();
+                    cact.setId(c.getChannelId());
+                    cact.setLabel(c.getChannelTitle());
+                    RobotChannelManagementDTO robotChannelManagementDTO = new RobotChannelManagementDTO();
+                    robotChannelManagementDTO.setBotId(c.getBotId());
+                    robotChannelManagementDTO.setChannelId(c.getChannelId());
+                    robotChannelManagementDTO.setChannelTitle(c.getChannelTitle());
+                    robotChannelManagementDTO.setId(c.getId());
+                    robotChannelManagementDTO.setInviteFirstname(c.getInviteFirstname());
+                    robotChannelManagementDTO.setInviteId(c.getInviteId());
+                    robotChannelManagementDTO.setInviteLastname(c.getInviteLastname());
+                    robotChannelManagementDTO.setInviteUsername(c.getInviteUsername());
+                    robotChannelManagementDTO.setLink(c.getLink());
+                    robotChannelManagementDTO.setStatus(c.getStatus());
+                    List<RobotChannelManagementDTO> list = new ArrayList<>();
+                    list.add(robotChannelManagementDTO);
+                    cact.setRobotChannelManagementDTO(list);
+                    ff.add(cact);
+                });
+                channel.setChildren(ff);
+            }
     
-            // GroupAndChannelTreeDTO jobTreeDTO = new GroupAndChannelTreeDTO();
-            // List<GroupAndChannelTreeDTO> children = new ArrayList<>();
-            // children.add(seeker);
-            // children.add(posting);
+            GroupAndChannelTreeDTO jobTreeDTO = new GroupAndChannelTreeDTO();
+            List<GroupAndChannelTreeDTO> children = new ArrayList<>();
+            children.add(group);
+            children.add(channel);
     
-            // jobTreeDTO.setLabel(springyBots.get(i).getUsername());
-            // jobTreeDTO.setId((long) i);
-            // jobTreeDTO.setChildren(children);
-            // data.add(jobTreeDTO);
-        // }
+            jobTreeDTO.setLabel(springyBots.get(i).getUsername());
+            jobTreeDTO.setId((long) i);
+            jobTreeDTO.setChildren(children);
+            data.add(jobTreeDTO);
+        }
         return ResponseUtils.response(RetEnum.RET_SUCCESS, data);
     }
 

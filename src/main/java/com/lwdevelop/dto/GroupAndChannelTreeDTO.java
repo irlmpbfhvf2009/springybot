@@ -8,4 +8,7 @@ public class GroupAndChannelTreeDTO {
     Long id;
     String label;
     List<GroupAndChannelTreeDTO> children;
+
+    List<RobotGroupManagementDTO> robotGroupManagementDTO;
+    List<RobotChannelManagementDTO> robotChannelManagementDTO;
 }

@@ -64,6 +64,7 @@ public class SecurityConfig {
             "/static/favicon.ico",
             "/static/assets/**",
             "/jobManagement/**",
+            "/groupAndChannelManagement/**",
     };
 
     @Bean

@@ -20,5 +20,5 @@ public interface RobotGroupAndChannelManagementService {
 
 
     
-    ResponseEntity<ResponseUtils.ResponseData> getJobTreeData();
+    ResponseEntity<ResponseUtils.ResponseData> getGroupAndChannelTreeData();
 }

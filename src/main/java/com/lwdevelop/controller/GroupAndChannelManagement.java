@@ -17,9 +17,9 @@ public class GroupAndChannelManagement {
     RobotGroupAndChannelManagementServiceImpl robotGroupAndChannelManagementServiceImpl;
 
     // 樹聯動
-    @PostMapping("/getJobTreeData")
-    public ResponseEntity<ResponseUtils.ResponseData> getJobTreeData() throws Exception {
-        return robotGroupAndChannelManagementServiceImpl.getJobTreeData();
+    @PostMapping("/getGroupAndChannelTreeData")
+    public ResponseEntity<ResponseUtils.ResponseData> getGroupAndChannelTreeData() throws Exception {
+        return robotGroupAndChannelManagementServiceImpl.getGroupAndChannelTreeData();
     }
 
 }

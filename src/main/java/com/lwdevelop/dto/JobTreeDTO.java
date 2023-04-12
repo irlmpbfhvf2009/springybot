@@ -5,7 +5,7 @@ import lombok.Data;
 
 @Data
 public class JobTreeDTO {
-    Long id;
-    String label;
-    List<JobTreeDTO> children;
+    private Long id;
+    private String label;
+    private List<JobTreeDTO> children;
 }
