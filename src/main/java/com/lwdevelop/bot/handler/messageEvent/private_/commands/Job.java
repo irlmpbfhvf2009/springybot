@@ -1,11 +1,9 @@
 package com.lwdevelop.bot.handler.messageEvent.private_.commands;
 
 import java.util.Iterator;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Message;
-
 import com.lwdevelop.bot.utils.Common;
 import com.lwdevelop.bot.utils.KeyboardButton;
 import com.lwdevelop.dto.JobPostingDTO;
@@ -13,7 +11,7 @@ import com.lwdevelop.dto.JobSeekerDTO;
 import com.lwdevelop.entity.JobPosting;
 import com.lwdevelop.entity.JobSeeker;
 import com.lwdevelop.entity.JobUser;
-import com.lwdevelop.entity.RobotGroupManagement;
+import com.lwdevelop.entity.RobotChannelManagement;
 import com.lwdevelop.entity.SpringyBot;
 import com.lwdevelop.service.impl.JobManagementServiceImpl;
 import com.lwdevelop.service.impl.SpringyBotServiceImpl;
@@ -38,8 +36,10 @@ public class Job {
         }
 
         public void postRecruitment(Common common) {
+
+                // send to channel
                 SpringyBot springyBot = springyBotServiceImpl.findById(common.getSpringyBotId()).get();
-                Iterator<RobotGroupManagement> iterator = springyBot.getRobotGroupManagement().iterator();
+                Iterator<RobotChannelManagement> iterator = springyBot.getRobotChannelManagement().iterator();
                 String userId = String.valueOf(common.getUpdate().getMessage().getChatId());
                 springyBot.getJobUser().stream().filter(ju -> ju.getUserId().equals(userId))
                                 .findFirst().ifPresent(j -> {
@@ -47,38 +47,70 @@ public class Job {
                                                         .findFirst().ifPresent(
                                                                         jpo -> {
                                                                                 while (iterator.hasNext()) {
-                                                                                        RobotGroupManagement robotGroupManagement = iterator
+                                                                                        RobotChannelManagement robotChannelManagement = iterator
                                                                                                         .next();
                                                                                         // 在此处使用RobotGroup对象进行操作
                                                                                         this.response = new SendMessage();
                                                                                         this.response.setChatId(String
-                                                                                                        .valueOf(robotGroupManagement
-                                                                                                                        .getGroupId()));
+                                                                                                        .valueOf(robotChannelManagement
+                                                                                                                        .getChannelId()));
+                                                                                        String company = jpo
+                                                                                                        .getCompany() == null
+                                                                                                                        ? ""
+                                                                                                                        : jpo.getCompany();
+                                                                                        String position = jpo
+                                                                                                        .getPosition() == null
+                                                                                                                        ? ""
+                                                                                                                        : jpo.getPosition();
+                                                                                        String baseSalary = jpo
+                                                                                                        .getBaseSalary() == null
+                                                                                                                        ? ""
+                                                                                                                        : jpo.getBaseSalary();
+                                                                                        String commission = jpo
+                                                                                                        .getCommission() == null
+                                                                                                                        ? ""
+                                                                                                                        : jpo.getCommission();
+                                                                                        String workTime = jpo
+                                                                                                        .getWorkTime() == null
+                                                                                                                        ? ""
+                                                                                                                        : jpo.getWorkTime();
+                                                                                        String requirements = jpo
+                                                                                                        .getRequirements() == null
+                                                                                                                        ? ""
+                                                                                                                        : jpo.getRequirements();
+                                                                                        String location = jpo
+                                                                                                        .getLocation() == null
+                                                                                                                        ? ""
+                                                                                                                        : jpo.getLocation();
+                                                                                        String flightNumber = jpo
+                                                                                                        .getFlightNumber() == null
+                                                                                                                        ? ""
+                                                                                                                        : jpo.getFlightNumber();
 
                                                                                         this.response.setText("招聘人才\n" +
                                                                                                         "公司："
-                                                                                                        + jpo.getCompany()
+                                                                                                        + company
                                                                                                         + "\n" +
                                                                                                         "职位："
-                                                                                                        + jpo.getPosition()
+                                                                                                        + position
                                                                                                         + "\n" +
                                                                                                         "底薪："
-                                                                                                        + jpo.getBaseSalary()
+                                                                                                        + baseSalary
                                                                                                         + "\n" +
                                                                                                         "提成："
-                                                                                                        + jpo.getCommission()
+                                                                                                        + commission
                                                                                                         + "\n" +
                                                                                                         "上班时间："
-                                                                                                        + jpo.getWorkTime()
+                                                                                                        + workTime
                                                                                                         + "\n" +
                                                                                                         "要求内容："
-                                                                                                        + jpo.getRequirements()
+                                                                                                        + requirements
                                                                                                         + "\n" +
                                                                                                         "🐌 地址："
-                                                                                                        + jpo.getLocation()
+                                                                                                        + location
                                                                                                         + "\n" +
                                                                                                         "✈️咨询飞机号："
-                                                                                                        + jpo.getFlightNumber());
+                                                                                                        + flightNumber);
 
                                                                                         common.sendResponseAsync(
                                                                                                         this.response);
@@ -86,62 +118,164 @@ public class Job {
                                                                         });
                                 });
                 ;
+
+                // send to group
+                // Iterator<RobotGroupManagement> iterator =
+                // springyBot.getRobotGroupManagement().iterator();
+                // String userId = String.valueOf(common.getUpdate().getMessage().getChatId());
+                // springyBot.getJobUser().stream().filter(ju -> ju.getUserId().equals(userId))
+                // .findFirst().ifPresent(j -> {
+                // j.getJobPosting().stream().filter(jp -> jp.getUserId().equals(userId))
+                // .findFirst().ifPresent(
+                // jpo -> {
+                // while (iterator.hasNext()) {
+                // RobotGroupManagement robotGroupManagement = iterator
+                // .next();
+                // // 在此处使用RobotGroup对象进行操作
+                // this.response = new SendMessage();
+                // this.response.setChatId(String
+                // .valueOf(robotGroupManagement
+                // .getGroupId()));
+
+                // this.response.setText("招聘人才\n" +
+                // "公司："
+                // + jpo.getCompany()
+                // + "\n" +
+                // "职位："
+                // + jpo.getPosition()
+                // + "\n" +
+                // "底薪："
+                // + jpo.getBaseSalary()
+                // + "\n" +
+                // "提成："
+                // + jpo.getCommission()
+                // + "\n" +
+                // "上班时间："
+                // + jpo.getWorkTime()
+                // + "\n" +
+                // "要求内容："
+                // + jpo.getRequirements()
+                // + "\n" +
+                // "🐌 地址："
+                // + jpo.getLocation()
+                // + "\n" +
+                // "✈️咨询飞机号："
+                // + jpo.getFlightNumber());
+
+                // common.sendResponseAsync(
+                // this.response);
+                // }
+                // });
+                // });
+                // ;
         }
 
         public void postAJobSearch(Common common) {
                 SpringyBot springyBot = springyBotServiceImpl.findById(common.getSpringyBotId()).get();
-                Iterator<RobotGroupManagement> iterator = springyBot.getRobotGroupManagement().iterator();
+
+                // send to channel
+                Iterator<RobotChannelManagement> iteratorRobotChannelManagement = springyBot.getRobotChannelManagement()
+                                .iterator();
                 String userId = String.valueOf(common.getUpdate().getMessage().getChatId());
                 springyBot.getJobUser().stream().filter(ju -> ju.getUserId().equals(userId))
                                 .findFirst().ifPresent(j -> {
                                         j.getJobSeeker().stream().filter(jp -> jp.getUserId().equals(userId))
                                                         .findFirst().ifPresent(
                                                                         jpo -> {
-                                                                                while (iterator.hasNext()) {
-                                                                                        RobotGroupManagement robotGroupManagement = iterator
+                                                                                while (iteratorRobotChannelManagement
+                                                                                                .hasNext()) {
+                                                                                        RobotChannelManagement robotChannelManagement = iteratorRobotChannelManagement
                                                                                                         .next();
                                                                                         // 在此处使用RobotGroup对象进行操作
                                                                                         this.response = new SendMessage();
                                                                                         this.response.setChatId(String
-                                                                                                        .valueOf(robotGroupManagement
-                                                                                                                        .getGroupId()));
+                                                                                                        .valueOf(robotChannelManagement
+                                                                                                                        .getChannelId()));
+                                                                                        String name = jpo
+                                                                                                        .getName() == null
+                                                                                                                        ? ""
+                                                                                                                        : jpo.getName();
+                                                                                        String gender = jpo
+                                                                                                        .getGender() == null
+                                                                                                                        ? ""
+                                                                                                                        : jpo.getGender();
+                                                                                        String dateOfBirth = jpo
+                                                                                                        .getDateOfBirth() == null
+                                                                                                                        ? ""
+                                                                                                                        : jpo.getDateOfBirth();
+                                                                                        String age = jpo.getAge() == null
+                                                                                                        ? ""
+                                                                                                        : jpo.getAge();
+                                                                                        String nationality = jpo
+                                                                                                        .getNationality() == null
+                                                                                                                        ? ""
+                                                                                                                        : jpo.getNationality();
+
+                                                                                        String education = jpo
+                                                                                                        .getEducation() == null
+                                                                                                                        ? ""
+                                                                                                                        : jpo.getEducation();
+                                                                                        String skills = jpo
+                                                                                                        .getSkills() == null
+                                                                                                                        ? ""
+                                                                                                                        : jpo.getSkills();
+                                                                                        String targetPostion = jpo
+                                                                                                        .getTargetPosition() == null
+                                                                                                                        ? ""
+                                                                                                                        : jpo.getTargetPosition();
+                                                                                        String resources = jpo
+                                                                                                        .getResources() == null
+                                                                                                                        ? ""
+                                                                                                                        : jpo.getResources();
+                                                                                        String expectedSalary = jpo
+                                                                                                        .getExpectedSalary() == null
+                                                                                                                        ? ""
+                                                                                                                        : jpo.getExpectedSalary();
+                                                                                        String workExperience = jpo
+                                                                                                        .getWorkExperience() == null
+                                                                                                                        ? ""
+                                                                                                                        : jpo.getWorkExperience();
+                                                                                        String selfIntroduction = jpo
+                                                                                                        .getSelfIntroduction() == null
+                                                                                                                        ? ""
+                                                                                                                        : jpo.getSelfIntroduction();
 
                                                                                         this.response.setText("求职人员\n" +
                                                                                                         "姓名："
-                                                                                                        + jpo.getName()
+                                                                                                        + name
                                                                                                         + "\n" +
                                                                                                         "男女："
-                                                                                                        + jpo.getGender()
+                                                                                                        + gender
                                                                                                         + "\n" +
                                                                                                         "出生_年_月_日"
-                                                                                                        + jpo.getDateOfBirth()
+                                                                                                        + dateOfBirth
                                                                                                         + "\n" +
                                                                                                         "年龄："
-                                                                                                        + jpo.getAge()
+                                                                                                        + age
                                                                                                         + "\n" +
                                                                                                         "国籍："
-                                                                                                        + jpo.getNationality()
+                                                                                                        + nationality
                                                                                                         + "\n" +
                                                                                                         "学历："
-                                                                                                        + jpo.getEducation()
+                                                                                                        + education
                                                                                                         + "\n" +
                                                                                                         "技能："
-                                                                                                        + jpo.getSkills()
+                                                                                                        + skills
                                                                                                         + "\n" +
                                                                                                         "目标职位："
-                                                                                                        + jpo.getTargetPosition()
+                                                                                                        + targetPostion
                                                                                                         + "\n" +
                                                                                                         "手上有什么资源："
-                                                                                                        + jpo.getResources()
+                                                                                                        + resources
                                                                                                         + "\n" +
                                                                                                         "期望薪资："
-                                                                                                        + jpo.getExpectedSalary()
+                                                                                                        + expectedSalary
                                                                                                         + "\n" +
                                                                                                         "工作经历："
-                                                                                                        + jpo.getWorkExperience()
+                                                                                                        + workExperience
                                                                                                         + "\n" +
                                                                                                         "自我介绍："
-                                                                                                        + jpo.getSelfIntroduction());
+                                                                                                        + selfIntroduction);
 
                                                                                         common.sendResponseAsync(
                                                                                                         this.response);
@@ -149,6 +283,68 @@ public class Job {
                                                                         });
                                 });
                 ;
+
+                // send to group
+                // Iterator<RobotGroupManagement> iteratorRobotGroupManagement =
+                // springyBot.getRobotGroupManagement().iterator();
+                // String userId = String.valueOf(common.getUpdate().getMessage().getChatId());
+                // springyBot.getJobUser().stream().filter(ju -> ju.getUserId().equals(userId))
+                // .findFirst().ifPresent(j -> {
+                // j.getJobSeeker().stream().filter(jp -> jp.getUserId().equals(userId))
+                // .findFirst().ifPresent(
+                // jpo -> {
+                // while (iteratorRobotGroupManagement.hasNext()) {
+                // RobotGroupManagement robotGroupManagement = iteratorRobotGroupManagement
+                // .next();
+                // // 在此处使用RobotGroup对象进行操作
+                // this.response = new SendMessage();
+                // this.response.setChatId(String
+                // .valueOf(robotGroupManagement
+                // .getGroupId()));
+
+                // this.response.setText("求职人员\n" +
+                // "姓名："
+                // + jpo.getName()
+                // + "\n" +
+                // "男女："
+                // + jpo.getGender()
+                // + "\n" +
+                // "出生_年_月_日"
+                // + jpo.getDateOfBirth()
+                // + "\n" +
+                // "年龄："
+                // + jpo.getAge()
+                // + "\n" +
+                // "国籍："
+                // + jpo.getNationality()
+                // + "\n" +
+                // "学历："
+                // + jpo.getEducation()
+                // + "\n" +
+                // "技能："
+                // + jpo.getSkills()
+                // + "\n" +
+                // "目标职位："
+                // + jpo.getTargetPosition()
+                // + "\n" +
+                // "手上有什么资源："
+                // + jpo.getResources()
+                // + "\n" +
+                // "期望薪资："
+                // + jpo.getExpectedSalary()
+                // + "\n" +
+                // "工作经历："
+                // + jpo.getWorkExperience()
+                // + "\n" +
+                // "自我介绍："
+                // + jpo.getSelfIntroduction());
+
+                // common.sendResponseAsync(
+                // this.response);
+                // }
+                // });
+                // });
+                // ;
         }
 
         public void setResponse_jobSeeker_management(Common common) {
@@ -170,8 +366,10 @@ public class Job {
                 }
 
                 SpringyBot springyBot = springyBotServiceImpl.findById(id).get();
-                // JobSeeker jobSeeker = this.jobManagementServiceImpl.findByUserIdWithJobSeeker(userId);
-                JobSeeker jobSeeker = this.jobManagementServiceImpl.findByUserIdAndBotIdWithJobSeeker(userId,String.valueOf(common.getSpringyBotId()));
+                // JobSeeker jobSeeker =
+                // this.jobManagementServiceImpl.findByUserIdWithJobSeeker(userId);
+                JobSeeker jobSeeker = this.jobManagementServiceImpl.findByUserIdAndBotIdWithJobSeeker(userId,
+                                String.valueOf(common.getSpringyBotId()));
                 JobUser jobUser = new JobUser();
                 jobUser.setFirstname(firstname);
                 jobUser.setLastname(lastname);
@@ -302,8 +500,10 @@ public class Job {
                 }
 
                 SpringyBot springyBot = springyBotServiceImpl.findById(id).get();
-                // JobPosting jobPosting = this.jobManagementServiceImpl.findByUserIdWithJobPosting(userId);
-                JobPosting jobPosting = this.jobManagementServiceImpl.findByUserIdAndBotIdWithJobPosting(userId,String.valueOf(common.getSpringyBotId()));
+                // JobPosting jobPosting =
+                // this.jobManagementServiceImpl.findByUserIdWithJobPosting(userId);
+                JobPosting jobPosting = this.jobManagementServiceImpl.findByUserIdAndBotIdWithJobPosting(userId,
+                                String.valueOf(common.getSpringyBotId()));
                 JobUser jobUser = new JobUser();
                 jobUser.setFirstname(firstname);
                 jobUser.setLastname(lastname);
