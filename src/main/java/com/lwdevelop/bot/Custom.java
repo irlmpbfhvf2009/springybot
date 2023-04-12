@@ -10,8 +10,8 @@ import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.api.objects.User;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 import com.lwdevelop.bot.handler.CallbackQuerys;
-import com.lwdevelop.bot.handler.groupEvent.Join;
-import com.lwdevelop.bot.handler.groupEvent.Leave;
+import com.lwdevelop.bot.handler.event.JoinGroup;
+import com.lwdevelop.bot.handler.event.LeaveGroup;
 import com.lwdevelop.bot.handler.messageEvent.private_.*;
 import com.lwdevelop.bot.handler.messageEvent.channel.ChannelMessage;
 import com.lwdevelop.bot.handler.messageEvent.group.GroupMessage;
@@ -53,25 +53,15 @@ public class Custom extends TelegramLongPollingBot {
 
     // @Override
     // public void onChatMemberUpdateReceived(ChatMemberUpdated chatMemberUpdated) {
-    //     // handle chat member update event
-    //     ChatMember newChatMember = chatMemberUpdated.getNewChatMember();
-    //     myService.processChatMemberUpdate(newChatMember);
+    // // handle chat member update event
+    // ChatMember newChatMember = chatMemberUpdated.getNewChatMember();
+    // myService.processChatMemberUpdate(newChatMember);
     // }
-    
+
     @Override
     public void onUpdateReceived(Update update) {
 
         this.init(update);
-
-        ChatMemberUpdated a = update.getChatMember();
-
-        System.out.println(a.getNewChatMember());
-        System.out.println(a.getOldChatMember());
-        
-        // System.out.println("-------------update.getMessage().getNewChatMembers()--------------");
-        // System.out.println(update.getMessage().getNewChatMembers());
-        // System.out.println("-------------update.getMessage().getLeftChatMember()--------------");
-        // System.out.println(update.getMessage().getLeftChatMember());
 
         // deal message group or private chat
         if (update.hasMessage()) {
@@ -91,13 +81,12 @@ public class Custom extends TelegramLongPollingBot {
 
         // // deal message channel chat
         if (update.getChannelPost() != null) {
-            // System.out.println("aaa:"+update.getChannelPost());
             if (update.getChannelPost().hasText()) {
                 String chatType = update.getChannelPost().getChat().getType();
                 if (chatTypeIsChannel(chatType)) {
                     new ChannelMessage().handler(this.common);
                 }
-            }   
+            }
         }
 
         // join group event
@@ -107,9 +96,9 @@ public class Custom extends TelegramLongPollingBot {
                 for (User member : this.message.getNewChatMembers()) {
                     if (isBot(member)) {
                         dealInviteLink();
-                        new Join().isBotJoinGroup(this.common);
+                        new JoinGroup().isBotJoinGroup(this.common);
                     } else {
-                        new Join().isUserJoinGroup(this.common);
+                        new JoinGroup().isUserJoinGroup(this.common);
                     }
                 }
             }
@@ -117,11 +106,27 @@ public class Custom extends TelegramLongPollingBot {
             // leave event
             if (isLeftChatMemberNotNull()) {
                 if (isBot_leftChat()) {
-                    new Leave().isBotLeave(common);
+                    new LeaveGroup().isBotLeave(common);
 
                 }
             }
-        } catch (NullPointerException e) {
+        } catch (Exception e) {
+        }
+
+        // join channel event
+        try {
+            ChatMemberUpdated chatMemberUpdated = update.getMyChatMember();
+            if (chatMemberUpdated != null) {
+                if (chatTypeIsChannel(chatMemberUpdated.getChat().getType())) {
+                    System.out.println("chatMemberUpdated=" + chatMemberUpdated);
+                    System.out.println("chatMemberUpdated.getFrom()="+chatMemberUpdated.getFrom());
+                    System.out.println("chatMemberUpdated.getInviteLink()="+chatMemberUpdated.getInviteLink());
+                    System.out.println("getUser = " + chatMemberUpdated.getNewChatMember().getUser());
+
+                }
+            }
+
+        } catch (Exception e) {
         }
 
         if (update.hasCallbackQuery()) {

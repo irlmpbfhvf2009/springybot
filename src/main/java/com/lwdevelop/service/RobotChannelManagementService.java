@@ -6,5 +6,5 @@ public interface RobotChannelManagementService {
 
     // DB CRUD For RobotChannelManagement
     void deleteById(Long Id);
-    RobotChannelManagement findByBotIdAndGroupId(Long botId,Long groupId);
+    RobotChannelManagement findByBotIdAndChannelId(Long botId,Long channelId);
 }

@@ -1,4 +1,4 @@
-package com.lwdevelop.bot.handler.groupEvent;
+package com.lwdevelop.bot.handler.event;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.telegram.telegrambots.meta.api.objects.Message;
@@ -10,7 +10,7 @@ import com.lwdevelop.service.impl.RobotGroupManagementServiceImpl;
 import com.lwdevelop.service.impl.SpringyBotServiceImpl;
 import com.lwdevelop.utils.SpringUtils;
 
-public class Leave {
+public class LeaveGroup {
 
     @Autowired
     private RobotGroupManagementServiceImpl robotGroupManagementServiceImpl = SpringUtils.getApplicationContext()

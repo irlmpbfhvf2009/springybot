@@ -19,8 +19,8 @@ public class RobotChannelManagementServiceImpl implements RobotChannelManagement
     }
 
     @Override
-    public RobotChannelManagement findByBotIdAndGroupId(Long botId, Long groupId) {
-        return robotChannelManagementRepository.findByBotIdAndGroupId(botId, groupId);
+    public RobotChannelManagement findByBotIdAndChannelId(Long botId, Long channelId) {
+        return robotChannelManagementRepository.findByBotIdAndChannelId(botId, channelId);
     }
     
 }

@@ -22,6 +22,8 @@ public class RobotGroupManagement {
 
     private String inviteFirstname;
 
+    private String inviteLastname;
+
     private Long groupId;
 
     private String groupTitle;

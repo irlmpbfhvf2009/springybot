@@ -21,9 +21,11 @@ public class RobotChannelManagement {
 
     private String inviteFirstname;
 
-    private Long groupId;
+    private String inviteLastname;
 
-    private String groupTitle;
+    private Long channelId;
+
+    private String channelTitle;
 
     private String link;
     

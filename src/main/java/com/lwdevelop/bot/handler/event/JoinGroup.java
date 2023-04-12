@@ -1,4 +1,4 @@
-package com.lwdevelop.bot.handler.groupEvent;
+package com.lwdevelop.bot.handler.event;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.telegram.telegrambots.meta.api.objects.Message;
@@ -9,7 +9,7 @@ import com.lwdevelop.entity.SpringyBot;
 import com.lwdevelop.service.impl.SpringyBotServiceImpl;
 import com.lwdevelop.utils.SpringUtils;
 
-public class Join {
+public class JoinGroup {
 
     @Autowired
     private SpringyBotServiceImpl springyBotServiceImpl = SpringUtils.getApplicationContext()
@@ -21,6 +21,7 @@ public class Join {
     private Long inviteId;
     private String inviteFirstname;
     private String inviteUsername;
+    private String inviteLastname;
     private Long groupId;
     private String groupTitle;
 
@@ -38,6 +39,7 @@ public class Join {
         this.inviteId = message.getFrom().getId();
         this.inviteFirstname = message.getFrom().getFirstName();
         this.inviteUsername = message.getFrom().getUserName();
+        this.inviteLastname = message.getFrom().getLastName();
         this.groupId = message.getChat().getId();
         this.groupTitle = message.getChat().getTitle();
 
@@ -75,6 +77,7 @@ public class Join {
         robotGroupManagement.setInviteId(this.inviteId);
         robotGroupManagement.setInviteFirstname(this.inviteFirstname);
         robotGroupManagement.setInviteUsername(this.inviteUsername);
+        robotGroupManagement.setInviteLastname(this.inviteLastname);
         robotGroupManagement.setGroupId(this.groupId);
         robotGroupManagement.setGroupTitle(this.groupTitle);
         robotGroupManagement.setLink(this.common.getInviteLink());

@@ -8,6 +8,6 @@ import com.lwdevelop.entity.RobotChannelManagement;
 public interface RobotChannelManagementRepository extends JpaRepository<RobotChannelManagement, Long> {
 
     void deleteById(Long id);
-    RobotChannelManagement findByBotIdAndGroupId(Long botId,Long groupId);
+    RobotChannelManagement findByBotIdAndChannelId(Long botId,Long channelId);
 
 }
