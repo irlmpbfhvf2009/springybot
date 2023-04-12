@@ -10,7 +10,9 @@ import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.api.objects.User;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 import com.lwdevelop.bot.handler.CallbackQuerys;
+import com.lwdevelop.bot.handler.event.JoinChannel;
 import com.lwdevelop.bot.handler.event.JoinGroup;
+import com.lwdevelop.bot.handler.event.LeaveChannel;
 import com.lwdevelop.bot.handler.event.LeaveGroup;
 import com.lwdevelop.bot.handler.messageEvent.private_.*;
 import com.lwdevelop.bot.handler.messageEvent.channel.ChannelMessage;
@@ -51,13 +53,6 @@ public class Custom extends TelegramLongPollingBot {
         return this.dto.getUsername();
     }
 
-    // @Override
-    // public void onChatMemberUpdateReceived(ChatMemberUpdated chatMemberUpdated) {
-    // // handle chat member update event
-    // ChatMember newChatMember = chatMemberUpdated.getNewChatMember();
-    // myService.processChatMemberUpdate(newChatMember);
-    // }
-
     @Override
     public void onUpdateReceived(Update update) {
 
@@ -95,7 +90,7 @@ public class Custom extends TelegramLongPollingBot {
                 // is robot join group
                 for (User member : this.message.getNewChatMembers()) {
                     if (isBot(member)) {
-                        dealInviteLink();
+                        dealInviteLink(this.message.getChatId());
                         new JoinGroup().isBotJoinGroup(this.common);
                     } else {
                         new JoinGroup().isUserJoinGroup(this.common);
@@ -115,14 +110,23 @@ public class Custom extends TelegramLongPollingBot {
 
         // join channel event
         try {
-            ChatMemberUpdated chatMemberUpdated = update.getMyChatMember();
-            if (chatMemberUpdated != null) {
-                if (chatTypeIsChannel(chatMemberUpdated.getChat().getType())) {
-                    System.out.println("chatMemberUpdated=" + chatMemberUpdated);
-                    System.out.println("chatMemberUpdated.getFrom()="+chatMemberUpdated.getFrom());
-                    System.out.println("chatMemberUpdated.getInviteLink()="+chatMemberUpdated.getInviteLink());
-                    System.out.println("getUser = " + chatMemberUpdated.getNewChatMember().getUser());
+            if (update.getMyChatMember() != null) {
 
+                ChatMemberUpdated chatMemberUpdated = update.getMyChatMember();
+                common.setChatMemberUpdated(chatMemberUpdated);
+
+                if (chatTypeIsChannel(chatMemberUpdated.getChat().getType())) {
+    
+                    // is robot join channel
+                    if (isBotJoinChannel(chatMemberUpdated)) {
+                        dealInviteLink(chatMemberUpdated.getChat().getId());
+                        new JoinChannel().isBotJoin(common);
+                    }
+
+                    // leave event
+                    if (isBotLeftChannel(chatMemberUpdated)) {
+                        new LeaveChannel().isBotLeave(common);
+                    }
                 }
             }
 
@@ -157,13 +161,33 @@ public class Custom extends TelegramLongPollingBot {
         return this.message.getLeftChatMember() != null;
     }
 
-    public boolean chatTypeIsChannel(String type) {
+    private Boolean chatTypeIsChannel(String type) {
         return type.equals(SpringyBotEnum.CHAT_TYPE_CHANNEL.getText()) ? true : false;
     }
 
-    private void dealInviteLink() {
+    private Boolean isBotJoinChannel(ChatMemberUpdated chatMemberUpdated) {
+        System.out.println(chatMemberUpdated.getNewChatMember().getStatus());
+        return chatMemberUpdated.getNewChatMember().getUser().getIsBot()
+                && chatMemberUpdated.getNewChatMember().getStatus().equals("administrator");
+    }
+
+    private Boolean isBotLeftChannel(ChatMemberUpdated chatMemberUpdated) {
+        return chatMemberUpdated.getNewChatMember().getUser().getIsBot()
+                && chatMemberUpdated.getNewChatMember().getStatus().equals("left");
+    }
+
+    private void notEnoughRightsMessageSettings(Message message) {
+        String chatId = String.valueOf(message.getFrom().getId());
+        String title = message.getChat().getTitle();
+        this.response = new SendMessage();
+        this.response.setChatId(chatId);
+        this.response.setDisableNotification(false);
+        this.response.setText(title + SpringyBotEnum.BOT_NOT_ENOUGH_RIGHTS.getText());
+    }
+    private void dealInviteLink(Long chatId){
         try {
-            String inviteLink = execute(new ExportChatInviteLink(String.valueOf(this.message.getChatId())));
+            String inviteLink = execute(
+                    new ExportChatInviteLink(String.valueOf(chatId)));
             this.common.setInviteLink(inviteLink);
         } catch (TelegramApiException e) {
             this.notEnoughRightsMessageSettings(this.message);
@@ -172,14 +196,4 @@ public class Custom extends TelegramLongPollingBot {
             log.error(e.toString());
         }
     }
-
-    public void notEnoughRightsMessageSettings(Message message) {
-        String chatId = String.valueOf(message.getFrom().getId());
-        String title = message.getChat().getTitle();
-        this.response = new SendMessage();
-        this.response.setChatId(chatId);
-        this.response.setDisableNotification(false);
-        this.response.setText(title + SpringyBotEnum.BOT_NOT_ENOUGH_RIGHTS.getText());
-    }
-
 }
