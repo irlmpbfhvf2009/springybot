@@ -166,7 +166,6 @@ public class Custom extends TelegramLongPollingBot {
     }
 
     private Boolean isBotJoinChannel(ChatMemberUpdated chatMemberUpdated) {
-        System.out.println(chatMemberUpdated.getNewChatMember().getStatus());
         return chatMemberUpdated.getNewChatMember().getUser().getIsBot()
                 && chatMemberUpdated.getNewChatMember().getStatus().equals("administrator");
     }
