@@ -49,13 +49,16 @@ public class KeyboardButton {
         ReplyKeyboardMarkup keyboardMarkup = new ReplyKeyboardMarkup();
         List<KeyboardRow> keyboard = new ArrayList<>();
         KeyboardRow row = new KeyboardRow();
-        row.add(SpringyBotEnum.POST_RECRUITMENT.getText());
-        keyboard.add(row);
-        row = new KeyboardRow();
-        row.add(SpringyBotEnum.POST_JOBSEARCH.getText());
+        row.add(SpringyBotEnum.EDIT_RECRUITMENT.getText());
+        // keyboard.add(row);
+        // row = new KeyboardRow();
+        row.add(SpringyBotEnum.EDIT_JOBSEARCH.getText());
         keyboard.add(row);
         row = new KeyboardRow();
         row.add(SpringyBotEnum.JOB_MANAGEMENT.getText());
+        keyboard.add(row);
+        row = new KeyboardRow();
+        row.add(SpringyBotEnum.POST_JOB.getText());
         keyboard.add(row);
         keyboardMarkup.setKeyboard(keyboard);
         return keyboardMarkup;
@@ -92,7 +95,7 @@ public class KeyboardButton {
         String url = "http://rc.ddb99.vip:18889/#/jobPostingForm?ub=" + encodedUb;
         dk1.setText("编辑");
         dk1.setUrl(url);
-        dk2.setText("清除");
+        dk2.setText("删除");
         dk2.setCallbackData("clearJobPosting_" + jobPostingDTO.getUserId());
 
         rowInline.add(dk1);
@@ -137,7 +140,7 @@ public class KeyboardButton {
         String url = "http://rc.ddb99.vip:18889/#/jobSeekerForm?ub=" + encodedUb;
         dk1.setText("编辑");
         dk1.setUrl(url);
-        dk2.setText("清除");
+        dk2.setText("删除");
         dk2.setCallbackData("clearJobSeeker_" + jobSeekerDTO.getUserId());
         rowInline.add(dk1);
         rowInline.add(dk2);

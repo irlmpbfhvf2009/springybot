@@ -2,6 +2,7 @@ package com.lwdevelop.bot.handler.messageEvent.private_;
 
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Message;
+import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 
 import com.lwdevelop.bot.handler.messageEvent.private_.commands.Job;
 import com.lwdevelop.bot.handler.messageEvent.private_.commands.Manage;
@@ -40,24 +41,33 @@ public class message {
             case "/start":
                 this.setResponse_job();
                 break;
-            case "发布求职":
-                if (hasUsername()) {
-                    new Job().postAJobSearch(common);
-                } else {
-                    this.send_nullUsername();
-                }
+            case "编辑求职信息":
+                // if (hasUsername()) {
+                // new Job().postAJobSearch(common);
+                // } else {
+                // this.send_nullUsername();
+                // }
+                new Job().setResponse_jobSeeker_management(common);
                 break;
-            case "发布招聘":
+            case "编辑招聘信息":
+                // if (hasUsername()) {
+                // new Job().postRecruitment(common);
+                // } else {
+                // this.send_nullUsername();
+                // }
+                new Job().setResponse_jobPosting_management(common);
+                break;
+            case "招聘和求职信息管理":
+                // new Job().setResponse_jobSeeker_management(common);
+                // new Job().setResponse_jobPosting_management(common);
+                break;
+
+            case "发布":
                 if (hasUsername()) {
                     new Job().postRecruitment(common);
                 } else {
                     this.send_nullUsername();
                 }
-                break;
-            case "招聘和求职信息管理":
-                new Job().setResponse_jobSeeker_management(common);
-                new Job().setResponse_jobPosting_management(common);
-                break;
 
             default:
                 this.text = "";
@@ -73,18 +83,32 @@ public class message {
     }
 
     private void setResponse_start() {
-        String text = "欢迎使用我们的机器人！\n我们的机器人可以帮助您快速找到合适的工作或人才。\n\n以下是一些您可以使用的指令：\n" +
-                "/start - 查看招聘和求职信息。\n" +
-                // "/job - 查看最新的招聘和求职信息。\n" +
-                // "/post - 发布您的招聘或求职信息。\n" +
-                "/help - 查看机器人的使用指南。\n\n" +
-                "我们希望这个机器人能为您提供帮助，如果您有任何问题或建议，请随时联系我们。谢谢！";
+        String text = "\n";
         this.response.setText(text);
         this.common.sendResponseAsync(this.response);
     }
 
     private void setResponse_job() {
-        this.response.setText(SpringyBotEnum.COMMEND_JOB.getText());
+        String firstName = this.message.getFrom().getFirstName() == null ? "" : this.message.getFrom().getFirstName();
+        String lastName = this.message.getFrom().getLastName() == null ? "" : this.message.getFrom().getLastName();
+        String name = firstName + lastName;
+        String botName;
+        try {
+            botName = "@" + this.common.getBot().getMe().getUserName();
+        } catch (TelegramApiException e) {
+            botName = "";
+            e.printStackTrace();
+        }
+        String text = "👋🏻 嗨 " + name + "！\n" +
+        // botName + " 能帮您便捷安全地管理群组, Telegram 上最完善的機器人!\n" +
+        // "👉🏻 添加我進入超級群組、频道並賦予我管理員以便我能夠操作!\n" +
+                "欢迎使用我们的机器人！\n" +
+                botName + " 可以帮助您快速找到合适的工作或人才。\n\n" +
+                "我们希望这个机器人能为您提供帮助，如果您有任何问题或建议，请随时联系我们。谢谢！";
+        // "❓ 指令是什么?\n" +
+        // "点击 /help 查看指令以及如何使用它們!";
+
+        this.response.setText(text);
         this.response.setReplyMarkup(new KeyboardButton().jobReplyKeyboardMarkup());
         this.common.sendResponseAsync(this.response);
     }
@@ -111,7 +135,7 @@ public class message {
     }
 
     private void send_nullUsername() {
-        this.response.setText("请设置Telegram username");
+        this.response.setText("请设置Telegram 用户名称");
         this.common.sendResponseAsync(this.response);
     }
 
