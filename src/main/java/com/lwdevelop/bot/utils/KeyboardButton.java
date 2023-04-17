@@ -149,4 +149,20 @@ public class KeyboardButton {
         return markupInline;
     }
 
+    public final InlineKeyboardMarkup keyboard_callme(String username) {
+
+        InlineKeyboardButton dk1 = new InlineKeyboardButton();
+        InlineKeyboardMarkup markupInline = new InlineKeyboardMarkup();
+        List<List<InlineKeyboardButton>> rowsInline = new ArrayList<>();
+        List<InlineKeyboardButton> rowInline = new ArrayList<>();
+
+        String url = "https://t.me/" + username;
+        dk1.setText("联系我");
+        dk1.setUrl(url);
+        rowInline.add(dk1);
+        rowsInline.add(rowInline);
+        markupInline.setKeyboard(rowsInline);
+        return markupInline;
+    }
+
 }

@@ -47,17 +47,11 @@ public class Job {
                                                         .findFirst().ifPresent(
                                                                         jobPosting -> {
                                                                                 while (iterator.hasNext()) {
-                                                                                        RobotChannelManagement robotChannelManagement = iterator
-                                                                                                        .next();
-                                                                                        // 在此处使用RobotGroup对象进行操作
-                                                                                        this.response = new SendMessage();
-                                                                                        this.response.setChatId(String
-                                                                                                        .valueOf(robotChannelManagement
-                                                                                                                        .getChannelId()));
                                                                                         sendTextWithJobPosting(
-                                                                                                        jobPosting);
-                                                                                        common.sendResponseAsync(
-                                                                                                        this.response);
+                                                                                                        jobPosting,
+                                                                                                        common,
+                                                                                                        iterator.next()
+                                                                                                        );
                                                                                 }
                                                                         });
                                 });
@@ -69,7 +63,7 @@ public class Job {
                 SpringyBot springyBot = springyBotServiceImpl.findById(common.getSpringyBotId()).get();
 
                 // send to channel
-                Iterator<RobotChannelManagement> iteratorRobotChannelManagement = springyBot.getRobotChannelManagement()
+                Iterator<RobotChannelManagement> iterator = springyBot.getRobotChannelManagement()
                                 .iterator();
                 String userId = String.valueOf(common.getUpdate().getMessage().getChatId());
                 springyBot.getJobUser().stream().filter(ju -> ju.getUserId().equals(userId)).findFirst()
@@ -81,19 +75,13 @@ public class Job {
                                                         .findFirst()
                                                         .ifPresent(
                                                                         jobSeeker -> {
-                                                                                while (iteratorRobotChannelManagement
+                                                                                while (iterator
                                                                                                 .hasNext()) {
-                                                                                        RobotChannelManagement robotChannelManagement = iteratorRobotChannelManagement
-                                                                                                        .next();
-                                                                                        // 在此处使用RobotGroup对象进行操作
-                                                                                        this.response = new SendMessage();
-                                                                                        this.response.setChatId(String
-                                                                                                        .valueOf(robotChannelManagement
-                                                                                                                        .getChannelId()));
                                                                                         this.sendTextWithJobSeeker(
-                                                                                                        jobSeeker);
-                                                                                        common.sendResponseAsync(
-                                                                                                        this.response);
+                                                                                                        jobSeeker,
+                                                                                                        common,
+                                                                                                        iterator
+                                                                                                        .next());
                                                                                 }
                                                                         });
                                 });
@@ -335,7 +323,8 @@ public class Job {
 
         }
 
-        private void sendTextWithJobSeeker(JobSeeker jobSeeker) {
+        private void sendTextWithJobSeeker(JobSeeker jobSeeker,Common common, RobotChannelManagement robotChannelManagement) {
+
                 StringBuilder sb = new StringBuilder();
                 appendIfNotEmpty(sb, "姓名：", jobSeeker.getName());
                 appendIfNotEmpty(sb, "男女：", jobSeeker.getGender());
@@ -350,10 +339,20 @@ public class Job {
                 appendIfNotEmpty(sb, "工作经历：", jobSeeker.getWorkExperience());
                 appendIfNotEmpty(sb, "自我介绍：", jobSeeker.getSelfIntroduction());
                 String result = sb.toString().trim(); // 去掉前后空格
-                this.response.setText(result.isEmpty() ? "" : "求职人员\n" + result);
+
+                if (!result.isEmpty()) {
+                        // 在此处使用RobotGroup对象进行操作
+                        SendMessage response = new SendMessage();
+                        String username = common.getUpdate().getMessage().getChat().getUserName();
+                        response.setChatId(String.valueOf(robotChannelManagement.getChannelId()));
+                        response.setText("求职人员\n\n" + result);
+                        response.setReplyMarkup(new KeyboardButton().keyboard_callme(username));
+                        common.sendResponseAsync(response);
+                }
+
         }
 
-        private void sendTextWithJobPosting(JobPosting jobPosting) {
+        private void sendTextWithJobPosting(JobPosting jobPosting,Common common,RobotChannelManagement robotChannelManagement) {
                 StringBuilder sb = new StringBuilder();
                 appendIfNotEmpty(sb, "公司：", jobPosting.getCompany());
                 appendIfNotEmpty(sb, "职位：", jobPosting.getPosition());
@@ -364,7 +363,15 @@ public class Job {
                 appendIfNotEmpty(sb, "🐌 地址：", jobPosting.getLocation());
                 appendIfNotEmpty(sb, "✈️咨询飞机号：", jobPosting.getFlightNumber());
                 String result = sb.toString().trim(); // 去掉前后空格
-                this.response.setText(result.isEmpty() ? "" : "招聘人才\n" + result);
+
+                if (!result.isEmpty()) {
+                        SendMessage response = new SendMessage();
+                        String username = common.getUpdate().getMessage().getChat().getUserName();
+                        response.setChatId(String.valueOf(robotChannelManagement.getChannelId()));
+                        response.setText("招聘人才\n\n" + result);
+                        response.setReplyMarkup(new KeyboardButton().keyboard_callme(username));
+                        common.sendResponseAsync(response);
+                }
         }
 
         private void appendIfNotEmpty(StringBuilder sb, String label, String value) {
