@@ -16,7 +16,10 @@ public enum SpringyBotEnum {
 
     // command job 
     EDIT_RECRUITMENT("编辑招聘信息"),
+    POST_RECRUITMENT("发布招聘"),
     EDIT_JOBSEARCH("编辑求职信息"),
+    POST_JOBSEARCH("发布求职"),
+
     JOB_MANAGEMENT("招聘和求职信息管理"),
     POST_JOB("发布"),
 
