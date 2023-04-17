@@ -83,7 +83,7 @@ public class CallbackQuerys {
                 e.printStackTrace();
             }
 
-            this.response.setText("清除成功");
+            this.response.setText("删除成功");
             common.sendResponseAsync(this.response);
         } else if (callbackQuery.getData().startsWith("clearJobSeeker_")) {
             String userId = callbackQuery.getData().substring("clearJobSeeker_".length());
@@ -142,7 +142,7 @@ public class CallbackQuerys {
                 e.printStackTrace();
             }
 
-            this.response.setText("清除成功");
+            this.response.setText("删除成功");
             common.sendResponseAsync(this.response);
         }
 

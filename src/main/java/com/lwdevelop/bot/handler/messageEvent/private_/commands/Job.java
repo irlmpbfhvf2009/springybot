@@ -1,6 +1,8 @@
 package com.lwdevelop.bot.handler.messageEvent.private_.commands;
 
 import java.util.Iterator;
+import java.util.Optional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Message;
@@ -222,107 +224,58 @@ public class Job {
 
         public void setResponse_jobPosting_management(Common common) {
                 this.jobMessageSetting(common.getUpdate().getMessage());
+            
                 Long id = common.getSpringyBotId();
                 String userId = String.valueOf(common.getUpdate().getMessage().getChatId());
-                String firstname = common.getUpdate().getMessage().getChat().getFirstName();
-                String username = common.getUpdate().getMessage().getChat().getUserName();
-                String lastname = common.getUpdate().getMessage().getChat().getLastName();
-
-                firstname = firstname == null ? "" : firstname;
-                username = username == null ? "" : username;
-                lastname = lastname == null ? "" : lastname;
-
-                SpringyBot springyBot = springyBotServiceImpl.findById(id).get();
-                JobPosting jobPosting = this.jobManagementServiceImpl.findByUserIdAndBotIdWithJobPosting(userId,
-                                String.valueOf(common.getSpringyBotId()));
-                JobUser jobUser = new JobUser();
+                String firstname = Optional.ofNullable(common.getUpdate().getMessage().getChat().getFirstName()).orElse("");
+                String username = Optional.ofNullable(common.getUpdate().getMessage().getChat().getUserName()).orElse("");
+                String lastname = Optional.ofNullable(common.getUpdate().getMessage().getChat().getLastName()).orElse("");
+            
+                SpringyBot springyBot = springyBotServiceImpl.findById(id).orElseThrow();
+                JobPosting jobPosting = jobManagementServiceImpl.findByUserIdAndBotIdWithJobPosting(userId, String.valueOf(id));
+            
+                JobUser jobUser = springyBot.getJobUser().stream().filter(j -> j.getUserId().equals(userId)).findFirst()
+                        .orElseGet(() -> {
+                            JobUser ju = new JobUser();
+                            ju.setUserId(userId);
+                            springyBot.getJobUser().add(ju);
+                            return ju;
+                        });
+            
                 jobUser.setFirstname(firstname);
                 jobUser.setLastname(lastname);
-                jobUser.setUserId(userId);
                 jobUser.setUsername(username);
-                springyBot.getJobUser().stream().filter(j -> j.getUserId().equals(userId))
-                                .findFirst().ifPresentOrElse(j -> {
-                                        j.getJobPosting().stream().filter(ju -> ju.getUserId().equals(userId))
-                                                        .findFirst()
-                                                        .ifPresentOrElse(jp -> {
-                                                                String company = jp.getCompany() == null ? ""
-                                                                                : jp.getCompany();
-                                                                String position = jp.getPosition() == null ? ""
-                                                                                : jp.getPosition();
-                                                                String baseSalary = jp.getBaseSalary() == null ? ""
-                                                                                : jp.getBaseSalary();
-                                                                String commission = jp.getCommission() == null ? ""
-                                                                                : jp.getCommission();
-                                                                String workTime = jp.getWorkTime() == null ? ""
-                                                                                : jp.getWorkTime();
-                                                                String requirements = jp.getRequirements() == null ? ""
-                                                                                : jp.getRequirements();
-                                                                String location = jp.getLocation() == null ? ""
-                                                                                : jp.getLocation();
-                                                                String flightNumber = jp.getFlightNumber() == null ? ""
-                                                                                : jp.getFlightNumber();
-
-                                                                this.response.setText("招聘人才\n" +
-                                                                                "公司：" + company + "\n" +
-                                                                                "职位：" + position + "\n" +
-                                                                                "底薪：" + baseSalary + "\n" +
-                                                                                "提成：" + commission + "\n" +
-                                                                                "上班时间：" + workTime + "\n" +
-                                                                                "要求内容：" + requirements + "\n" +
-                                                                                "🐌 地址：" + location + "\n" +
-                                                                                "✈️咨询飞机号：" + flightNumber);
-
-                                                                JobPostingDTO jobPostingDTO = new JobPostingDTO(userId,
-                                                                                String.valueOf(id),
-                                                                                company, position, baseSalary,
-                                                                                commission, workTime, requirements,
-                                                                                location, flightNumber);
-                                                                this.response.setReplyMarkup(
-                                                                                new KeyboardButton()
-                                                                                                .keyboard_jobPosting(
-                                                                                                                jobPostingDTO));
-                                                                Integer lastMessageId = common
-                                                                                .sendResponseAsync(this.response);
-                                                                jobPosting.setLastMessageId(lastMessageId);
-                                                                this.jobManagementServiceImpl
-                                                                                .saveJobPosting(jobPosting);
-                                                        }, () -> {
-                                                                this.response.setText("招聘人才\n" +
-                                                                                "公司：\n" +
-                                                                                "职位：\n" +
-                                                                                "底薪：\n" +
-                                                                                "提成：\n" +
-                                                                                "上班时间：\n" +
-                                                                                "要求内容：\n" +
-                                                                                "🐌 地址：\n" +
-                                                                                "✈️咨询飞机号： ");
-                                                                JobPostingDTO jobPostingDTO = new JobPostingDTO(userId,
-                                                                                String.valueOf(common
-                                                                                                .getSpringyBotId()));
-                                                                this.response.setReplyMarkup(
-                                                                                new KeyboardButton()
-                                                                                                .keyboard_jobPosting(
-                                                                                                                jobPostingDTO));
-                                                                Integer lastMessageId = common
-                                                                                .sendResponseAsync(this.response);
-                                                                JobPosting jobPosting_ = new JobPosting(userId,
-                                                                                String.valueOf(common
-                                                                                                .getSpringyBotId()),
-                                                                                lastMessageId);
-                                                                springyBot.getJobUser().stream().filter(
-                                                                                ju -> ju.getUserId().equals(userId))
-                                                                                .findFirst()
-                                                                                .ifPresent(ju -> ju.getJobPosting()
-                                                                                                .add(jobPosting_));
-                                                                springyBotServiceImpl.save(springyBot);
-                                                        });
-                                }, () -> {
-                                        springyBot.getJobUser().add(jobUser);
-                                        springyBotServiceImpl.save(springyBot);
-                                });
-
-        }
-
+            
+                JobPostingDTO jobPostingDTO = new JobPostingDTO(userId, String.valueOf(id));
+                String company = "", position = "", baseSalary = "", commission = "", workTime = "", requirements = "",
+                        location = "", flightNumber = "";
+            
+                if (jobPosting != null) {
+                    company = Optional.ofNullable(jobPosting.getCompany()).orElse("");
+                    position = Optional.ofNullable(jobPosting.getPosition()).orElse("");
+                    baseSalary = Optional.ofNullable(jobPosting.getBaseSalary()).orElse("");
+                    commission = Optional.ofNullable(jobPosting.getCommission()).orElse("");
+                    workTime = Optional.ofNullable(jobPosting.getWorkTime()).orElse("");
+                    requirements = Optional.ofNullable(jobPosting.getRequirements()).orElse("");
+                    location = Optional.ofNullable(jobPosting.getLocation()).orElse("");
+                    flightNumber = Optional.ofNullable(jobPosting.getFlightNumber()).orElse("");
+                    this.response.setText("招聘人才\n" + "公司：" + company + "\n" + "职位：" + position + "\n" + "底薪：" + baseSalary
+                            + "\n" + "提成：" + commission + "\n" + "上班时间：" + workTime + "\n" + "要求内容：" + requirements + "\n"
+                            + "🐌 地址：" + location + "\n" + "✈️咨询飞机号：" + flightNumber);
+                    this.response.setReplyMarkup(new KeyboardButton().keyboard_jobPosting(jobPostingDTO));
+                    jobPosting.setLastMessageId(common.sendResponseAsync(this.response));
+                    jobManagementServiceImpl.saveJobPosting(jobPosting);
+                } else {
+                    this.response.setText("招聘人才\n" + "公司：\n" + "职位：\n" + "底薪：\n" + "提成：\n" + "上班时间：\n" + "要求内容：\n"
+                            + "🐌 地址：\n" + "✈️咨询飞机号： ");
+                    this.response.setReplyMarkup(new KeyboardButton().keyboard_jobPosting(jobPostingDTO));
+                    JobPosting jp = new JobPosting(userId, String.valueOf(id), common.sendResponseAsync(this.response));
+                    jobUser.getJobPosting().add(jp);
+                    jobManagementServiceImpl.saveJobPosting(jp);
+                }
+                springyBotServiceImpl.save(springyBot);
+            }
+            
         private void sendTextWithJobSeeker(JobSeeker jobSeeker,Common common, RobotChannelManagement robotChannelManagement) {
 
                 StringBuilder sb = new StringBuilder();
