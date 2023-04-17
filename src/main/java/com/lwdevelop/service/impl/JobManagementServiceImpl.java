@@ -208,7 +208,7 @@ public class JobManagementServiceImpl implements JobManagementService {
         editMessageText.setText("求职人员\n" +
                 "姓名：" + jobSeekerDTO.getName() + "\n" +
                 "男女：" + jobSeekerDTO.getGender() + "\n" +
-                "出生_年_月_日" + jobSeekerDTO.getDateOfBirth() + "\n" +
+                "出生_年_月_日：" + jobSeekerDTO.getDateOfBirth() + "\n" +
                 "年龄：" + jobSeekerDTO.getAge() + "\n" +
                 "国籍：" + jobSeekerDTO.getNationality() + "\n" +
                 "学历：" + jobSeekerDTO.getEducation() + "\n" +
