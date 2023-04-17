@@ -21,8 +21,8 @@ public class message {
         this.init(common);
 
         switch (this.text) {
-            case "/start2":
-                this.setResponse_start();
+            case "/start":
+                this.setResponse_job();
                 break;
             case "/manage":
                 this.setResponse_manage();
@@ -38,23 +38,10 @@ public class message {
                 new Manage().setResponse_addToGroupOrChannel(common, SpringyBotEnum.CHAT_TYPE_CHANNEL.getText());
                 break;
 
-            case "/start":
-                this.setResponse_job();
-                break;
             case "编辑求职信息":
-                // if (hasUsername()) {
-                // new Job().postAJobSearch(common);
-                // } else {
-                // this.send_nullUsername();
-                // }
                 new Job().setResponse_jobSeeker_management(common);
                 break;
             case "编辑招聘信息":
-                // if (hasUsername()) {
-                // new Job().postRecruitment(common);
-                // } else {
-                // this.send_nullUsername();
-                // }
                 new Job().setResponse_jobPosting_management(common);
                 break;
             case "招聘和求职信息管理":
@@ -65,9 +52,11 @@ public class message {
             case "发布":
                 if (hasUsername()) {
                     new Job().postRecruitment(common);
+                    new Job().postAJobSearch(common);
                 } else {
                     this.send_nullUsername();
                 }
+                break;
 
             default:
                 this.text = "";
@@ -81,13 +70,6 @@ public class message {
         this.text = this.message.getText();
         this.privateMessageSettings(this.message);
     }
-
-    private void setResponse_start() {
-        String text = "\n";
-        this.response.setText(text);
-        this.common.sendResponseAsync(this.response);
-    }
-
     private void setResponse_job() {
         String firstName = this.message.getFrom().getFirstName() == null ? "" : this.message.getFrom().getFirstName();
         String lastName = this.message.getFrom().getLastName() == null ? "" : this.message.getFrom().getLastName();
