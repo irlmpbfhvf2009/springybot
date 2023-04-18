@@ -120,7 +120,7 @@ public class Job {
 
                 JobPosting jobPosting = jobManagementServiceImpl.findByUserIdAndBotIdWithJobPosting(userId,
                                 String.valueOf(id));
-                                
+
                 SpringyBot springyBot = springyBotServiceImpl.findById(id).orElseThrow();
                 JobUser jobUser = springyBot.getJobUser().stream().filter(j -> j.getUserId().equals(userId)).findFirst()
                                 .orElseGet(() -> {
@@ -129,7 +129,6 @@ public class Job {
                                         springyBot.getJobUser().add(ju);
                                         return ju;
                                 });
-
 
                 JobPostingDTO jobPostingDTO = new JobPostingDTO(userId, String.valueOf(id));
                 String company = "", position = "", baseSalary = "", commission = "", workTime = "", requirements = "",
@@ -153,7 +152,6 @@ public class Job {
                         Integer messageId = common.sendResponseAsync(response);
                         jobPosting.setLastMessageId(messageId);
                         jobUser.getJobPosting().add(jobPosting);
-                        System.out.println(messageId);
                         jobManagementServiceImpl.saveJobPosting(jobPosting);
                 } else {
                         response.setText("招聘人才\n\n" + "公司：\n" + "职位：\n" + "底薪：\n" + "提成：\n" + "上班时间：\n" + "要求内容：\n"
@@ -164,13 +162,14 @@ public class Job {
                                         common.sendResponseAsync(response));
                         jobUser.getJobPosting().add(jp);
                         jobManagementServiceImpl.saveJobPosting(jp);
-
+                        springyBotServiceImpl.save(springyBot);
                 }
-                springyBotServiceImpl.save(springyBot);
-
         }
 
         public void setResponse_jobSeeker_management(Common common) {
+
+                Long id = common.getSpringyBotId();
+                String userId = String.valueOf(common.getUpdate().getMessage().getChatId());
 
                 SendMessage response = new SendMessage();
                 response.setChatId(String.valueOf(common.getUpdate().getMessage().getChatId()));
@@ -179,18 +178,10 @@ public class Job {
                 response.setDisableWebPagePreview(false);
                 common.sendResponseAsync(response);
 
-                Long id = common.getSpringyBotId();
-                String userId = String.valueOf(common.getUpdate().getMessage().getChatId());
-                String firstname = Optional.ofNullable(common.getUpdate().getMessage().getChat().getFirstName())
-                                .orElse("");
-                String username = Optional.ofNullable(common.getUpdate().getMessage().getChat().getUserName())
-                                .orElse("");
-                String lastname = Optional.ofNullable(common.getUpdate().getMessage().getChat().getLastName())
-                                .orElse("");
-
-                SpringyBot springyBot = springyBotServiceImpl.findById(id).orElseThrow();
                 JobSeeker jobSeeker = jobManagementServiceImpl.findByUserIdAndBotIdWithJobSeeker(userId,
                                 String.valueOf(id));
+
+                SpringyBot springyBot = springyBotServiceImpl.findById(id).orElseThrow();
 
                 JobUser jobUser = springyBot.getJobUser().stream().filter(j -> j.getUserId().equals(userId)).findFirst()
                                 .orElseGet(() -> {
@@ -200,14 +191,11 @@ public class Job {
                                         return ju;
                                 });
 
-                jobUser.setFirstname(firstname);
-                jobUser.setLastname(lastname);
-                jobUser.setUsername(username);
-
                 JobSeekerDTO jobSeekerDTO = new JobSeekerDTO(userId, String.valueOf(id));
                 String name = "", gender = "", dateOfBirth = "", age = "", nationality = "", education = "",
                                 skills = "", targetPosition = "", resources = "", expectedSalary = "",
                                 workExperience = "", selfIntroduction = "", flightNumber = "";
+
                 if (jobSeeker != null) {
                         name = Optional.ofNullable(jobSeeker.getName()).orElse("");
                         gender = Optional.ofNullable(jobSeeker.getGender()).orElse("");
@@ -230,19 +218,20 @@ public class Job {
                                         + resources + "\n期望薪资：" + expectedSalary + "\n工作经历："
                                         + workExperience + "\n自我介绍：" + selfIntroduction + "\n✈️咨询飞机号：" + flightNumber);
                         response.setReplyMarkup(new KeyboardButton().keyboard_jobSeeker(jobSeekerDTO));
-                        jobSeeker.setLastMessageId(common.sendResponseAsync(response));
+                        Integer messageId = common.sendResponseAsync(response);
+                        jobSeeker.setLastMessageId(messageId);
+                        jobUser.getJobSeeker().add(jobSeeker);
                         jobManagementServiceImpl.saveJobSeeker(jobSeeker);
                 } else {
                         response.setText(
                                         "求职人员\n\n姓名：\n男女：\n出生_年_月_日：\n年龄：\n国籍：\n学历：\n技能：\n目标职位：\n手上有什么资源：\n期望薪资：\n工作经历：\n自我介绍：\n✈️咨询飞机号：");
                         response.setReplyMarkup(new KeyboardButton().keyboard_jobSeeker(jobSeekerDTO));
-
                         JobSeeker js = new JobSeeker(userId, String.valueOf(id),
                                         common.sendResponseAsync(response));
                         jobUser.getJobSeeker().add(js);
                         jobManagementServiceImpl.saveJobSeeker(js);
+                        springyBotServiceImpl.save(springyBot);
                 }
-                springyBotServiceImpl.save(springyBot);
         }
 
         private void sendTextWithJobSeeker(JobSeeker jobSeeker, Common common,
