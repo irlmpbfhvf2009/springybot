@@ -1,12 +1,17 @@
 package com.lwdevelop.entity;
 
-import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.Set;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -54,12 +59,16 @@ public class JobSeeker {
     private Integer lastMessageId;
 
 
-    // 发布后  channelId  [0]messageId 訊息ID  [1]postCount 發送次數
-    private HashMap<Long,ArrayList<Integer>> channelMessageIdPostCount;
+    // channelId  messageId 訊息ID  postCount 發送次數
+    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @JsonIgnore
+    private Set<ChannelMessageIdPostCounts> channelMessageIdPostCounts;
 
     public JobSeeker(String userId, String botId, Integer lastMessageId) {
         this.userId = userId;
         this.botId = botId;
         this.lastMessageId = lastMessageId;
     }
+
+
 }

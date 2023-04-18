@@ -18,10 +18,12 @@ import com.lwdevelop.dto.JobPostingDTO;
 import com.lwdevelop.dto.JobSeekerDTO;
 import com.lwdevelop.dto.JobTreeDTO;
 import com.lwdevelop.dto.SpringyBotDTO;
+import com.lwdevelop.entity.ChannelMessageIdPostCounts;
 import com.lwdevelop.entity.JobPosting;
 import com.lwdevelop.entity.JobSeeker;
 import com.lwdevelop.entity.RobotChannelManagement;
 import com.lwdevelop.entity.SpringyBot;
+import com.lwdevelop.repository.ChannelMessageIdPostCountsRepository;
 import com.lwdevelop.repository.JobPostingRepository;
 import com.lwdevelop.repository.JobSeekerRepository;
 import com.lwdevelop.service.JobManagementService;
@@ -43,9 +45,23 @@ public class JobManagementServiceImpl implements JobManagementService {
     @Autowired
     private JobPostingRepository jobPostingRepository;
 
+    @Autowired
+    private ChannelMessageIdPostCountsRepository channelMessageIdPostCountsRepository;
+
+    @Override
+    public ChannelMessageIdPostCounts findByChannelIdAndTypeWithChannelMessageIdPostCounts(Long channelId,
+            String type) {
+        return channelMessageIdPostCountsRepository.findByChannelIdAndType(channelId, type);
+    }
+
     @Override
     public JobSeeker findByUserIdWithJobSeeker(String userId) {
         return jobSeekerRepository.findByUserId(userId);
+    }
+
+    @Override
+    public void saveChannelMessageIdPostCounts(ChannelMessageIdPostCounts channelMessageIdPostCounts){
+        channelMessageIdPostCountsRepository.save(channelMessageIdPostCounts);
     }
 
     @Override
@@ -210,33 +226,36 @@ public class JobManagementServiceImpl implements JobManagementService {
         if (!result.isEmpty()) {
             response.setChatId(String.valueOf(robotChannelManagement.getChannelId()));
             response.setText("招聘人才\n\n" + result);
-            Integer channelMessageId = 0;
             try {
-                try {
-                    channelMessageId = custom.executeAsync(response).get().getMessageId();
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                } catch (ExecutionException e) {
-                    e.printStackTrace();
+                final Integer channelMessageId = custom.executeAsync(response).get().getMessageId();
+                if (jobPosting.getChannelMessageIdPostCounts() != null) {
+                    jobPosting.getChannelMessageIdPostCounts().stream()
+                            .filter(cmpc -> cmpc.getChannelId().equals(robotChannelManagement.getChannelId())).findFirst()
+                            .ifPresentOrElse(c -> {
+                                ChannelMessageIdPostCounts channelMessageIdPostCounts = this
+                                        .findByChannelIdAndTypeWithChannelMessageIdPostCounts(
+                                                robotChannelManagement.getChannelId(), "jobPosting");
+                                channelMessageIdPostCounts.setMessageId(channelMessageId);
+                                channelMessageIdPostCounts.setPostCount(channelMessageIdPostCounts.getPostCount()+1);
+                                this.saveChannelMessageIdPostCounts(channelMessageIdPostCounts);
+                            }, () -> {
+                                ChannelMessageIdPostCounts channelMessageIdPostCounts = new ChannelMessageIdPostCounts();
+                                channelMessageIdPostCounts.setChannelId(robotChannelManagement.getChannelId());
+                                channelMessageIdPostCounts.setMessageId(channelMessageId);
+                                channelMessageIdPostCounts.setPostCount(1);
+                                channelMessageIdPostCounts.setType("jobPosting");
+                                jobPosting.getChannelMessageIdPostCounts().add(channelMessageIdPostCounts);
+                                this.saveJobPosting(jobPosting);
+                            });
                 }
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            } catch (ExecutionException e) {
+                e.printStackTrace();
             } catch (TelegramApiException e) {
                 e.printStackTrace();
             }
-            HashMap<Long, ArrayList<Integer>> channelMessageIdPostCount = new HashMap<Long, ArrayList<Integer>>();
-            ArrayList<Integer> messageIdPostCount = new ArrayList<Integer>();
-            if (jobPosting.getChannelMessageIdPostCount() != null) {
-                messageIdPostCount = jobPosting.getChannelMessageIdPostCount()
-                        .get(robotChannelManagement.getChannelId());
-                messageIdPostCount.set(0, channelMessageId);
-                messageIdPostCount.set(1, messageIdPostCount.get(1) + 1);
 
-            } else {
-                messageIdPostCount.add(0, channelMessageId);
-                messageIdPostCount.add(1, 1);
-            }
-            channelMessageIdPostCount.put(robotChannelManagement.getChannelId(), messageIdPostCount);
-            jobPosting.setChannelMessageIdPostCount(channelMessageIdPostCount);
-            this.saveJobPosting(jobPosting);
         }
     }
 
@@ -361,30 +380,10 @@ public class JobManagementServiceImpl implements JobManagementService {
             } catch (TelegramApiException e) {
                 e.printStackTrace();
             }
-            HashMap<Long, ArrayList<Integer>> channelMessageIdPostCount = new HashMap<Long, ArrayList<Integer>>();
-            ArrayList<Integer> messageIdPostCount = new ArrayList<Integer>();
-            if (jobSeeker.getChannelMessageIdPostCount() != null) {
-                messageIdPostCount = jobSeeker.getChannelMessageIdPostCount()
-                        .get(robotChannelManagement.getChannelId());
-                messageIdPostCount.set(0, channelMessageId);
-                messageIdPostCount.set(1, messageIdPostCount.get(1) + 1);
-        
-            } else {
-                messageIdPostCount.add(0, channelMessageId);
-                messageIdPostCount.add(1, 1);
-            }
-            channelMessageIdPostCount.put(robotChannelManagement.getChannelId(), messageIdPostCount);
-            jobSeeker.setChannelMessageIdPostCount(channelMessageIdPostCount);
-            this.saveJobSeeker(jobSeeker);
 
         }
 
     }
-
-
-
-
-
 
     @Override
     public ResponseEntity<ResponseData> getJobTreeData() {

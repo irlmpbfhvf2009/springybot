@@ -120,6 +120,9 @@ public class Job {
                 jobUser.setLastname(lastname);
                 jobUser.setUsername(username);
 
+                springyBot.getJobUser().add(jobUser);
+                springyBotServiceImpl.save(springyBot);
+
                 JobPostingDTO jobPostingDTO = new JobPostingDTO(userId, String.valueOf(id));
                 String company = "", position = "", baseSalary = "", commission = "", workTime = "", requirements = "",
                                 location = "", flightNumber = "";
@@ -134,7 +137,8 @@ public class Job {
                         location = Optional.ofNullable(jobPosting.getLocation()).orElse("");
                         flightNumber = Optional.ofNullable(jobPosting.getFlightNumber()).orElse("");
                         this.response.setText(
-                                        "招聘人才\n\n" + "公司：" + company + "\n" + "职位：" + position + "\n" + "底薪：" + baseSalary
+                                        "招聘人才\n\n" + "公司：" + company + "\n" + "职位：" + position + "\n" + "底薪："
+                                                        + baseSalary
                                                         + "\n" + "提成：" + commission + "\n" + "上班时间：" + workTime + "\n"
                                                         + "要求内容：" + requirements + "\n"
                                                         + "🐌 地址：" + location + "\n" + "✈️咨询飞机号：" + flightNumber);
@@ -145,11 +149,12 @@ public class Job {
                         this.response.setText("招聘人才\n\n" + "公司：\n" + "职位：\n" + "底薪：\n" + "提成：\n" + "上班时间：\n" + "要求内容：\n"
                                         + "🐌 地址：\n" + "✈️咨询飞机号： ");
                         this.response.setReplyMarkup(new KeyboardButton().keyboard_jobPosting(jobPostingDTO));
-                        JobPosting jp = new JobPosting(userId, String.valueOf(id),
-                                        common.sendResponseAsync(this.response));
+
+                        JobPosting jp = new JobPosting(userId, String.valueOf(id),common.sendResponseAsync(this.response));
                         jobUser.getJobPosting().add(jp);
                         jobManagementServiceImpl.saveJobPosting(jp);
                 }
+
                 springyBotServiceImpl.save(springyBot);
         }
 
@@ -187,7 +192,7 @@ public class Job {
                 JobSeekerDTO jobSeekerDTO = new JobSeekerDTO(userId, String.valueOf(id));
                 String name = "", gender = "", dateOfBirth = "", age = "", nationality = "", education = "",
                                 skills = "", targetPosition = "", resources = "", expectedSalary = "",
-                                workExperience = "", selfIntroduction = "",flightNumber="";
+                                workExperience = "", selfIntroduction = "", flightNumber = "";
                 if (jobSeeker != null) {
                         name = Optional.ofNullable(jobSeeker.getName()).orElse("");
                         gender = Optional.ofNullable(jobSeeker.getGender()).orElse("");
@@ -208,7 +213,7 @@ public class Job {
                                         + "\n年龄：" + age + "\n国籍：" + nationality + "\n学历：" + education
                                         + "\n技能：" + skills + "\n目标职位：" + targetPosition + "\n手上有什么资源："
                                         + resources + "\n期望薪资：" + expectedSalary + "\n工作经历："
-                                        + workExperience + "\n自我介绍：" + selfIntroduction +"\n✈️咨询飞机号：" + flightNumber );
+                                        + workExperience + "\n自我介绍：" + selfIntroduction + "\n✈️咨询飞机号：" + flightNumber);
                         this.response.setReplyMarkup(new KeyboardButton().keyboard_jobSeeker(jobSeekerDTO));
                         jobSeeker.setLastMessageId(common.sendResponseAsync(this.response));
                         jobManagementServiceImpl.saveJobSeeker(jobSeeker);
@@ -250,11 +255,11 @@ public class Job {
                         response.setText("求职人员\n\n" + result);
                         response.setReplyMarkup(new KeyboardButton().keyboard_callme(username));
                         common.sendResponseAsync(response);
-                }else{
+                } else {
                         Long chatId = common.getUpdate().getMessage().getChatId();
                         response.setChatId(String.valueOf(chatId));
                         response.setText("尚未编辑招聘表单");
-                        common.sendResponseAsync(response);  
+                        common.sendResponseAsync(response);
                 }
 
         }
@@ -279,11 +284,11 @@ public class Job {
                         response.setText("招聘人才\n\n" + result);
                         response.setReplyMarkup(new KeyboardButton().keyboard_callme(username));
                         common.sendResponseAsync(response);
-                }else{
+                } else {
                         Long chatId = common.getUpdate().getMessage().getChatId();
                         response.setChatId(String.valueOf(chatId));
                         response.setText("尚未编辑招聘表单");
-                        common.sendResponseAsync(response);   
+                        common.sendResponseAsync(response);
                 }
         }
 
