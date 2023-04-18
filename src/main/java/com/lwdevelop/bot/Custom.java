@@ -15,6 +15,7 @@ import com.lwdevelop.bot.handler.event.JoinGroup;
 import com.lwdevelop.bot.handler.event.LeaveChannel;
 import com.lwdevelop.bot.handler.event.LeaveGroup;
 import com.lwdevelop.bot.handler.messageEvent.private_.*;
+import com.lwdevelop.bot.handler.messageEvent.private_.commands.Job;
 import com.lwdevelop.bot.handler.messageEvent.channel.ChannelMessage;
 import com.lwdevelop.bot.handler.messageEvent.group.GroupMessage;
 import com.lwdevelop.bot.utils.Common;
@@ -64,6 +65,7 @@ public class Custom extends TelegramLongPollingBot {
 
                 // private
                 if (this.message.isUserMessage()) {
+                    new Job().saveJobUser(common);
                     new message().handler(this.common);
                 }
 
