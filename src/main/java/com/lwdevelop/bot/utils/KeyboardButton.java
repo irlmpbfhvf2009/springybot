@@ -63,17 +63,11 @@ public class KeyboardButton {
     public final InlineKeyboardMarkup keyboard_jobPosting(JobPostingDTO jobPostingDTO) {
 
         InlineKeyboardButton dk1 = new InlineKeyboardButton();
-        InlineKeyboardButton dk2 = new InlineKeyboardButton();
+        // InlineKeyboardButton dk2 = new InlineKeyboardButton();
         InlineKeyboardMarkup markupInline = new InlineKeyboardMarkup();
         List<List<InlineKeyboardButton>> rowsInline = new ArrayList<>();
         List<InlineKeyboardButton> rowInline = new ArrayList<>();
 
-        // String ip = "";
-        // try {
-        //     ip = InetAddress.getLocalHost().getHostAddress();
-        // } catch (UnknownHostException e) {
-        //     e.printStackTrace();
-        // }
         String ub = "userId=" + jobPostingDTO.getUserId()
                 + "&botId=" + jobPostingDTO.getBotId()
                 + "&company=" + jobPostingDTO.getCompany()
@@ -88,13 +82,13 @@ public class KeyboardButton {
         String encryptedUb = CryptoUtil.encrypt(ub);
         String encodedUb = URLEncoder.encode(encryptedUb, StandardCharsets.UTF_8);
         String url = "http://rc.ddb99.vip:18889/#/jobPostingForm?ub=" + encodedUb;
-        dk1.setText("编辑");
+        dk1.setText("编辑发布");
         dk1.setUrl(url);
-        dk2.setText("删除");
-        dk2.setCallbackData("clearJobPosting_" + jobPostingDTO.getUserId());
+        // dk2.setText("删除");
+        // dk2.setCallbackData("clearJobPosting_" + jobPostingDTO.getUserId());
 
         rowInline.add(dk1);
-        rowInline.add(dk2);
+        // rowInline.add(dk2);
         rowsInline.add(rowInline);
         markupInline.setKeyboard(rowsInline);
         return markupInline;
@@ -104,17 +98,11 @@ public class KeyboardButton {
     public final InlineKeyboardMarkup keyboard_jobSeeker(JobSeekerDTO jobSeekerDTO) {
 
         InlineKeyboardButton dk1 = new InlineKeyboardButton();
-        InlineKeyboardButton dk2 = new InlineKeyboardButton();
+        // InlineKeyboardButton dk2 = new InlineKeyboardButton();
         InlineKeyboardMarkup markupInline = new InlineKeyboardMarkup();
         List<List<InlineKeyboardButton>> rowsInline = new ArrayList<>();
         List<InlineKeyboardButton> rowInline = new ArrayList<>();
 
-        // String ip = "";
-        // try {
-        //     ip = InetAddress.getLocalHost().getHostAddress();
-        // } catch (UnknownHostException e) {
-        //     e.printStackTrace();
-        // }
         String ub = "userId=" + jobSeekerDTO.getUserId()
                 + "&botId=" + jobSeekerDTO.getBotId()
                 + "&name=" + jobSeekerDTO.getName()
@@ -134,12 +122,12 @@ public class KeyboardButton {
         String encryptedUb = CryptoUtil.encrypt(ub);
         String encodedUb = URLEncoder.encode(encryptedUb, StandardCharsets.UTF_8);
         String url = "http://rc.ddb99.vip:18889/#/jobSeekerForm?ub=" + encodedUb;
-        dk1.setText("编辑");
+        dk1.setText("编辑发布");
         dk1.setUrl(url);
-        dk2.setText("删除");
-        dk2.setCallbackData("clearJobSeeker_" + jobSeekerDTO.getUserId());
+        // dk2.setText("删除");
+        // dk2.setCallbackData("clearJobSeeker_" + jobSeekerDTO.getUserId());
         rowInline.add(dk1);
-        rowInline.add(dk2);
+        // rowInline.add(dk2);
         rowsInline.add(rowInline);
         markupInline.setKeyboard(rowsInline);
         return markupInline;

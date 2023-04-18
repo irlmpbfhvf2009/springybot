@@ -37,25 +37,7 @@ public class message {
                     this.send_nullUsername();
                 }
                 break;
-            // case "发布招聘":
-            // if (hasUsername()) {
-            // new Job().postRecruitment(common);
-            // // new Job().postAJobSearch(common);
-            // } else {
-            // this.send_nullUsername();
-            // }
-            // break;
-            // case "发布求职":
-            // if (hasUsername()) {
-            // // new Job().postRecruitment(common);
-            // new Job().postAJobSearch(common);
-            // } else {
-            // this.send_nullUsername();
-            // }
-            // break;
             case "招聘和求职信息管理":
-                // new Job().setResponse_jobSeeker_management(common);
-                // new Job().setResponse_jobPosting_management(common);
                 break;
             // case "/manage":
             // this.setResponse_manage();

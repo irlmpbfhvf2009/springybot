@@ -92,6 +92,9 @@ public class Job {
         public void setResponse_jobPosting_management(Common common) {
                 this.jobMessageSetting(common.getUpdate().getMessage());
 
+                this.response.setText("提醒：用户只能发布一条讯息,招聘和求职信息管理帮助其他操作");
+                common.sendResponseAsync(this.response);
+
                 Long id = common.getSpringyBotId();
                 String userId = String.valueOf(common.getUpdate().getMessage().getChatId());
                 String firstname = Optional.ofNullable(common.getUpdate().getMessage().getChat().getFirstName())
@@ -153,6 +156,9 @@ public class Job {
         public void setResponse_jobSeeker_management(Common common) {
                 this.jobMessageSetting(common.getUpdate().getMessage());
 
+                this.response.setText("提醒：用户只能发布一条讯息,招聘和求职信息管理帮助其他操作");
+                common.sendResponseAsync(this.response);
+                
                 Long id = common.getSpringyBotId();
                 String userId = String.valueOf(common.getUpdate().getMessage().getChatId());
                 String firstname = Optional.ofNullable(common.getUpdate().getMessage().getChat().getFirstName())
