@@ -3,12 +3,9 @@ package com.lwdevelop.bot.handler.messageEvent.private_;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
-
 import com.lwdevelop.bot.handler.messageEvent.private_.commands.Job;
-import com.lwdevelop.bot.handler.messageEvent.private_.commands.Manage;
 import com.lwdevelop.bot.utils.Common;
 import com.lwdevelop.bot.utils.KeyboardButton;
-import com.lwdevelop.bot.utils.SpringyBotEnum;
 
 public class message {
 
@@ -20,22 +17,9 @@ public class message {
     public void handler(Common common) {
         this.init(common);
 
-        switch (this.text) {
+        switch (this.text.toLowerCase()) {
             case "/start":
                 this.setResponse_job();
-                break;
-            case "/manage":
-                this.setResponse_manage();
-                break;
-            case "管理面板":
-                break;
-            case "支援团队列表":
-                break;
-            case "如何将我添加到您的群组":
-                new Manage().setResponse_addToGroupOrChannel(common, SpringyBotEnum.CHAT_TYPE_GROUP.getText());
-                break;
-            case "如何将我添加到您的频道":
-                new Manage().setResponse_addToGroupOrChannel(common, SpringyBotEnum.CHAT_TYPE_CHANNEL.getText());
                 break;
 
             case "编辑求职信息":
@@ -44,19 +28,41 @@ public class message {
             case "编辑招聘信息":
                 new Job().setResponse_jobPosting_management(common);
                 break;
-            case "招聘和求职信息管理":
-                // new Job().setResponse_jobSeeker_management(common);
-                // new Job().setResponse_jobPosting_management(common);
-                break;
-
-            case "发布":
+            case "发布招聘":
                 if (hasUsername()) {
                     new Job().postRecruitment(common);
+                    // new Job().postAJobSearch(common);
+                } else {
+                    this.send_nullUsername();
+                }
+                break;
+            case "发布求职":
+                if (hasUsername()) {
+                    // new Job().postRecruitment(common);
                     new Job().postAJobSearch(common);
                 } else {
                     this.send_nullUsername();
                 }
                 break;
+            case "招聘和求职信息管理":
+                // new Job().setResponse_jobSeeker_management(common);
+                // new Job().setResponse_jobPosting_management(common);
+                break;
+            // case "/manage":
+            // this.setResponse_manage();
+            // break;
+            // case "管理面板":
+            // break;
+            // case "支援团队列表":
+            // break;
+            // case "如何将我添加到您的群组":
+            // new Manage().setResponse_addToGroupOrChannel(common,
+            // SpringyBotEnum.CHAT_TYPE_GROUP.getText());
+            // break;
+            // case "如何将我添加到您的频道":
+            // new Manage().setResponse_addToGroupOrChannel(common,
+            // SpringyBotEnum.CHAT_TYPE_CHANNEL.getText());
+            // break;
 
             default:
                 this.text = "";
@@ -70,6 +76,7 @@ public class message {
         this.text = this.message.getText();
         this.privateMessageSettings(this.message);
     }
+
     private void setResponse_job() {
         String firstName = this.message.getFrom().getFirstName() == null ? "" : this.message.getFrom().getFirstName();
         String lastName = this.message.getFrom().getLastName() == null ? "" : this.message.getFrom().getLastName();
@@ -95,11 +102,11 @@ public class message {
         this.common.sendResponseAsync(this.response);
     }
 
-    private void setResponse_manage() {
-        this.response.setText(SpringyBotEnum.COMMEND_MANAGE.getText());
-        this.response.setReplyMarkup(new KeyboardButton().manageReplyKeyboardMarkup());
-        this.common.sendResponseAsync(this.response);
-    }
+    // private void setResponse_manage() {
+    //     this.response.setText(SpringyBotEnum.COMMEND_MANAGE.getText());
+    //     this.response.setReplyMarkup(new KeyboardButton().manageReplyKeyboardMarkup());
+    //     this.common.sendResponseAsync(this.response);
+    // }
 
     public void privateMessageSettings(Message message) {
         String chatId = String.valueOf(message.getChatId());

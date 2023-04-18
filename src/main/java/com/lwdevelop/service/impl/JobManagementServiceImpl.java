@@ -191,6 +191,7 @@ public class JobManagementServiceImpl implements JobManagementService {
         jobSeeker.setExpectedSalary(jobSeekerDTO.getExpectedSalary());
         jobSeeker.setWorkExperience(jobSeekerDTO.getWorkExperience());
         jobSeeker.setSelfIntroduction(jobSeekerDTO.getSelfIntroduction());
+        jobSeeker.setFlightNumber(jobSeekerDTO.getFlightNumber());
         this.saveJobSeeker(jobSeeker);
 
         // 修改訊息
@@ -217,7 +218,8 @@ public class JobManagementServiceImpl implements JobManagementService {
                 "手上有什么资源：" + jobSeekerDTO.getResources() + "\n" +
                 "期望薪资：" + jobSeekerDTO.getExpectedSalary() + "\n" +
                 "工作经历：" + jobSeekerDTO.getWorkExperience() + "\n" +
-                "自我介绍：" + jobSeekerDTO.getSelfIntroduction());
+                "自我介绍：" + jobSeekerDTO.getSelfIntroduction()+ "\n" +
+                "咨询飞机号：" + jobSeekerDTO.getFlightNumber());
 
         editMessageText.setReplyMarkup(new KeyboardButton().keyboard_jobSeeker(jobSeekerDTO));
         try {

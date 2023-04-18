@@ -101,6 +101,7 @@ public class CallbackQuerys {
             jobSeeker.setExpectedSalary("");
             jobSeeker.setWorkExperience("");
             jobSeeker.setSelfIntroduction("");
+            jobSeeker.setFlightNumber("");
             jobManagementServiceImpl.saveJobSeeker(jobSeeker);
 
             // 清除訊息
@@ -115,7 +116,7 @@ public class CallbackQuerys {
                     jobSeeker.getGender(), jobSeeker.getDateOfBirth(), jobSeeker.getAge(), jobSeeker.getNationality(),
                     jobSeeker.getEducation(), jobSeeker.getSkills(), jobSeeker.getTargetPosition(),
                     jobSeeker.getResources(), jobSeeker.getExpectedSalary(), jobSeeker.getWorkExperience(),
-                    jobSeeker.getSelfIntroduction());
+                    jobSeeker.getSelfIntroduction(),jobSeeker.getFlightNumber());
 
             Integer messageId = jobSeeker.getLastMessageId();
             EditMessageText editMessageText = new EditMessageText();
@@ -133,7 +134,8 @@ public class CallbackQuerys {
                     "手上有什么资源：\n" +
                     "期望薪资：\n" +
                     "工作经历：\n" +
-                    "自我介绍：");
+                    "自我介绍：\n" +
+                    "咨询飞机号：");
 
             editMessageText.setReplyMarkup(new KeyboardButton().keyboard_jobSeeker(jobSeekerDTO));
             try {

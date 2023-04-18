@@ -181,7 +181,7 @@ public class Job {
                 JobSeekerDTO jobSeekerDTO = new JobSeekerDTO(userId, String.valueOf(id));
                 String name = "", gender = "", dateOfBirth = "", age = "", nationality = "", education = "",
                                 skills = "", targetPosition = "", resources = "", expectedSalary = "",
-                                workExperience = "", selfIntroduction = "";
+                                workExperience = "", selfIntroduction = "",flightNumber="";
                 if (jobSeeker != null) {
                         name = Optional.ofNullable(jobSeeker.getName()).orElse("");
                         gender = Optional.ofNullable(jobSeeker.getGender()).orElse("");
@@ -195,19 +195,20 @@ public class Job {
                         expectedSalary = Optional.ofNullable(jobSeeker.getExpectedSalary()).orElse("");
                         workExperience = Optional.ofNullable(jobSeeker.getWorkExperience()).orElse("");
                         selfIntroduction = Optional.ofNullable(jobSeeker.getSelfIntroduction()).orElse("");
+                        flightNumber = Optional.ofNullable(jobSeeker.getFlightNumber()).orElse("");
 
                         this.response.setText("求职人员\n\n姓名：" + name + "\n男女：" + gender + "\n出生_年_月_日："
                                         + dateOfBirth
                                         + "\n年龄：" + age + "\n国籍：" + nationality + "\n学历：" + education
                                         + "\n技能：" + skills + "\n目标职位：" + targetPosition + "\n手上有什么资源："
                                         + resources + "\n期望薪资：" + expectedSalary + "\n工作经历："
-                                        + workExperience + "\n自我介绍：" + selfIntroduction);
+                                        + workExperience + "\n自我介绍：" + selfIntroduction +"\n咨询飞机号：" + flightNumber );
                         this.response.setReplyMarkup(new KeyboardButton().keyboard_jobSeeker(jobSeekerDTO));
                         jobSeeker.setLastMessageId(common.sendResponseAsync(this.response));
                         jobManagementServiceImpl.saveJobSeeker(jobSeeker);
                 } else {
                         this.response.setText(
-                                        "求职人员\n姓名：\n男女：\n出生_年_月_日：\n年龄：\n国籍：\n学历：\n技能：\n目标职位：\n手上有什么资源：\n期望薪资：\n工作经历：\n自我介绍：");
+                                        "求职人员\n姓名：\n男女：\n出生_年_月_日：\n年龄：\n国籍：\n学历：\n技能：\n目标职位：\n手上有什么资源：\n期望薪资：\n工作经历：\n自我介绍：\n咨询飞机号：");
                         this.response.setReplyMarkup(new KeyboardButton().keyboard_jobSeeker(jobSeekerDTO));
                         JobSeeker js = new JobSeeker(userId, String.valueOf(id),
                                         common.sendResponseAsync(this.response));
@@ -233,16 +234,21 @@ public class Job {
                 appendIfNotEmpty(sb, "期望薪资：", jobSeeker.getExpectedSalary());
                 appendIfNotEmpty(sb, "工作经历：", jobSeeker.getWorkExperience());
                 appendIfNotEmpty(sb, "自我介绍：", jobSeeker.getSelfIntroduction());
+                appendIfNotEmpty(sb, "咨询飞机号：", jobSeeker.getFlightNumber());
                 String result = sb.toString().trim(); // 去掉前后空格
 
+                SendMessage response = new SendMessage();
                 if (!result.isEmpty()) {
-                        // 在此处使用RobotGroup对象进行操作
-                        SendMessage response = new SendMessage();
                         String username = common.getUpdate().getMessage().getChat().getUserName();
                         response.setChatId(String.valueOf(robotChannelManagement.getChannelId()));
                         response.setText("求职人员\n\n" + result);
                         response.setReplyMarkup(new KeyboardButton().keyboard_callme(username));
                         common.sendResponseAsync(response);
+                }else{
+                        Long chatId = common.getUpdate().getMessage().getChatId();
+                        response.setChatId(String.valueOf(chatId));
+                        response.setText("尚未编辑招聘表单");
+                        common.sendResponseAsync(response);  
                 }
 
         }
@@ -260,13 +266,18 @@ public class Job {
                 appendIfNotEmpty(sb, "✈️咨询飞机号：", jobPosting.getFlightNumber());
                 String result = sb.toString().trim(); // 去掉前后空格
 
+                SendMessage response = new SendMessage();
                 if (!result.isEmpty()) {
-                        SendMessage response = new SendMessage();
                         String username = common.getUpdate().getMessage().getChat().getUserName();
                         response.setChatId(String.valueOf(robotChannelManagement.getChannelId()));
                         response.setText("招聘人才\n\n" + result);
                         response.setReplyMarkup(new KeyboardButton().keyboard_callme(username));
                         common.sendResponseAsync(response);
+                }else{
+                        Long chatId = common.getUpdate().getMessage().getChatId();
+                        response.setChatId(String.valueOf(chatId));
+                        response.setText("尚未编辑招聘表单");
+                        common.sendResponseAsync(response);   
                 }
         }
 

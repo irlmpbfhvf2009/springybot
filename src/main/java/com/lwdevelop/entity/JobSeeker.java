@@ -45,6 +45,8 @@ public class JobSeeker {
     private String workExperience; // 工作经历
 
     private String selfIntroduction; // 自我介绍
+
+    private String flightNumber; // 咨询飞机号
     
     private Integer lastMessageId;
 

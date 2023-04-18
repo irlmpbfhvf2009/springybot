@@ -132,7 +132,8 @@ public class KeyboardButton {
                 + "&resources=" + jobSeekerDTO.getResources()
                 + "&expectedSalary=" + jobSeekerDTO.getExpectedSalary()
                 + "&workExperience=" + jobSeekerDTO.getWorkExperience()
-                + "&selfIntroduction=" + jobSeekerDTO.getSelfIntroduction();
+                + "&selfIntroduction=" + jobSeekerDTO.getSelfIntroduction()
+                + "&flightNumber=" + jobSeekerDTO.getFlightNumber();
 
         String encryptedUb = CryptoUtil.encrypt(ub);
         String encodedUb = URLEncoder.encode(encryptedUb, StandardCharsets.UTF_8);

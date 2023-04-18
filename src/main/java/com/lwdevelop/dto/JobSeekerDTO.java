@@ -41,6 +41,8 @@ public class JobSeekerDTO {
 
     private String selfIntroduction; // 自我介绍
 
+    private String flightNumber; // 咨询飞机号
+
     public JobSeekerDTO(String userId, String botId) {
         this.userId = userId;
         this.botId = botId;
@@ -58,11 +60,12 @@ public class JobSeekerDTO {
         this.expectedSalary = "";
         this.workExperience = "";
         this.selfIntroduction = "";
+        this.flightNumber ="";
     }
 
     public JobSeekerDTO(String userId, String botId, String name, String gender, String dateOfBirth, String age,
             String nationality, String education, String skills, String targetPosition, String resources,
-            String expectedSalary, String workExperience, String selfIntroduction) {
+            String expectedSalary, String workExperience, String selfIntroduction,String flightNumber) {
         this.userId = userId;
         this.botId = botId;
         this.id = null;
@@ -79,6 +82,7 @@ public class JobSeekerDTO {
         this.expectedSalary = expectedSalary;
         this.workExperience = workExperience;
         this.selfIntroduction = selfIntroduction;
+        this.flightNumber = flightNumber;
     }
 
 }
