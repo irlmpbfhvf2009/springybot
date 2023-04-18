@@ -66,7 +66,7 @@ public class CallbackQuerys {
             EditMessageText editMessageText = new EditMessageText();
             editMessageText.setChatId(userId);
             editMessageText.setMessageId(messageId);
-            editMessageText.setText("招聘人才\n" +
+            editMessageText.setText("招聘人才\n\n" +
                     "公司：\n" +
                     "职位：\n" +
                     "底薪：\n" +
@@ -83,7 +83,7 @@ public class CallbackQuerys {
                 e.printStackTrace();
             }
 
-            this.response.setText("清除成功");
+            this.response.setText("删除成功");
             common.sendResponseAsync(this.response);
         } else if (callbackQuery.getData().startsWith("clearJobSeeker_")) {
             String userId = callbackQuery.getData().substring("clearJobSeeker_".length());
@@ -101,6 +101,7 @@ public class CallbackQuerys {
             jobSeeker.setExpectedSalary("");
             jobSeeker.setWorkExperience("");
             jobSeeker.setSelfIntroduction("");
+            jobSeeker.setFlightNumber("");
             jobManagementServiceImpl.saveJobSeeker(jobSeeker);
 
             // 清除訊息
@@ -115,13 +116,13 @@ public class CallbackQuerys {
                     jobSeeker.getGender(), jobSeeker.getDateOfBirth(), jobSeeker.getAge(), jobSeeker.getNationality(),
                     jobSeeker.getEducation(), jobSeeker.getSkills(), jobSeeker.getTargetPosition(),
                     jobSeeker.getResources(), jobSeeker.getExpectedSalary(), jobSeeker.getWorkExperience(),
-                    jobSeeker.getSelfIntroduction());
+                    jobSeeker.getSelfIntroduction(),jobSeeker.getFlightNumber());
 
             Integer messageId = jobSeeker.getLastMessageId();
             EditMessageText editMessageText = new EditMessageText();
             editMessageText.setChatId(userId);
             editMessageText.setMessageId(messageId);
-            editMessageText.setText("求职人员\n" +
+            editMessageText.setText("求职人员\n\n" +
                     "姓名：\n" +
                     "男女：\n" +
                     "出生_年_月_日：\n" +
@@ -133,7 +134,8 @@ public class CallbackQuerys {
                     "手上有什么资源：\n" +
                     "期望薪资：\n" +
                     "工作经历：\n" +
-                    "自我介绍：");
+                    "自我介绍：\n" +
+                    "✈️咨询飞机号：");
 
             editMessageText.setReplyMarkup(new KeyboardButton().keyboard_jobSeeker(jobSeekerDTO));
             try {
@@ -142,7 +144,7 @@ public class CallbackQuerys {
                 e.printStackTrace();
             }
 
-            this.response.setText("清除成功");
+            this.response.setText("删除成功");
             common.sendResponseAsync(this.response);
         }
 

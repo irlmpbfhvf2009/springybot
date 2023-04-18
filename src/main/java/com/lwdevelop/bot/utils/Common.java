@@ -1,9 +1,9 @@
 package com.lwdevelop.bot.utils;
 
 import org.springframework.scheduling.annotation.Async;
-import org.telegram.telegrambots.bots.DefaultBotOptions;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
+import org.telegram.telegrambots.meta.api.objects.ChatMemberUpdated;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import lombok.Data;
 import lombok.SneakyThrows;
@@ -23,7 +23,7 @@ public class Common {
 
     private TelegramLongPollingBot bot;
 
-    private DefaultBotOptions defaultBotOptions;
+    private ChatMemberUpdated chatMemberUpdated;
 
     // 用来存储用户的状态(会话)
     // private HashMap<Long, String> userState;

@@ -43,27 +43,22 @@ public class SecurityConfig {
     }
 
     private static final String[] ADMIN_AUTH_LIST = {
-            "/v3/api-docs",
-            "/configuration/ui",
             "/swagger-resources/**",
-            "/configuration/security",
             "/swagger-ui.html",
-            "/webjars/**",
+            "/springybot/**",
             
     };
 
     private static final String[] ALL_AUTH_LIST = {
-            "/tmax/ws/**",
-            "/springybot/**",
-            "/admins/login",
-            "/admins/index",
-            "/admins/addAdmin",
-            "/dev-api/**",
-            "/index",
-            "/version",
             "/static/favicon.ico",
             "/static/assets/**",
+            "/admins/login",
+            // "/admins/addAdmin",
+            
+            "/index",
+            "/version",
             "/jobManagement/**",
+            "/groupAndChannelManagement/**",
     };
 
     @Bean
@@ -73,7 +68,7 @@ public class SecurityConfig {
                 // 基於 token，不需要 session
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
                 .addFilterBefore(JwtFilter(), UsernamePasswordAuthenticationFilter.class)
-                .authorizeRequests()
+                .authorizeHttpRequests()
                 .requestMatchers(CorsUtils::isPreFlightRequest).permitAll()
                 .antMatchers(ADMIN_AUTH_LIST).hasAuthority("ADMIN")
                 .antMatchers(ALL_AUTH_LIST).permitAll()

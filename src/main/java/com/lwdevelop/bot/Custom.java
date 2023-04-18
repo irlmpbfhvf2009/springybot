@@ -4,13 +4,16 @@ import org.telegram.telegrambots.bots.DefaultBotOptions;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.meta.api.methods.groupadministration.ExportChatInviteLink;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
+import org.telegram.telegrambots.meta.api.objects.ChatMemberUpdated;
 import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.api.objects.User;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 import com.lwdevelop.bot.handler.CallbackQuerys;
-import com.lwdevelop.bot.handler.groupEvent.Join;
-import com.lwdevelop.bot.handler.groupEvent.Leave;
+import com.lwdevelop.bot.handler.event.JoinChannel;
+import com.lwdevelop.bot.handler.event.JoinGroup;
+import com.lwdevelop.bot.handler.event.LeaveChannel;
+import com.lwdevelop.bot.handler.event.LeaveGroup;
 import com.lwdevelop.bot.handler.messageEvent.private_.*;
 import com.lwdevelop.bot.handler.messageEvent.channel.ChannelMessage;
 import com.lwdevelop.bot.handler.messageEvent.group.GroupMessage;
@@ -78,7 +81,7 @@ public class Custom extends TelegramLongPollingBot {
                 if (chatTypeIsChannel(chatType)) {
                     new ChannelMessage().handler(this.common);
                 }
-            }   
+            }
         }
 
         // join group event
@@ -87,10 +90,10 @@ public class Custom extends TelegramLongPollingBot {
                 // is robot join group
                 for (User member : this.message.getNewChatMembers()) {
                     if (isBot(member)) {
-                        dealInviteLink();
-                        new Join().isBotJoinGroup(this.common);
+                        dealInviteLink(this.message.getChatId());
+                        new JoinGroup().isBotJoinGroup(this.common);
                     } else {
-                        new Join().isUserJoinGroup(this.common);
+                        new JoinGroup().isUserJoinGroup(this.common);
                     }
                 }
             }
@@ -98,11 +101,36 @@ public class Custom extends TelegramLongPollingBot {
             // leave event
             if (isLeftChatMemberNotNull()) {
                 if (isBot_leftChat()) {
-                    new Leave().isBotLeave(common);
+                    new LeaveGroup().isBotLeave(common);
 
                 }
             }
-        } catch (NullPointerException e) {
+        } catch (Exception e) {
+        }
+
+        // join channel event
+        try {
+            if (update.getMyChatMember() != null) {
+
+                ChatMemberUpdated chatMemberUpdated = update.getMyChatMember();
+                common.setChatMemberUpdated(chatMemberUpdated);
+
+                if (chatTypeIsChannel(chatMemberUpdated.getChat().getType())) {
+    
+                    // is robot join channel
+                    if (isBotJoinChannel(chatMemberUpdated)) {
+                        dealInviteLink(chatMemberUpdated.getChat().getId());
+                        new JoinChannel().isBotJoin(common);
+                    }
+
+                    // leave event
+                    if (isBotLeftChannel(chatMemberUpdated)) {
+                        new LeaveChannel().isBotLeave(common);
+                    }
+                }
+            }
+
+        } catch (Exception e) {
         }
 
         if (update.hasCallbackQuery()) {
@@ -133,13 +161,32 @@ public class Custom extends TelegramLongPollingBot {
         return this.message.getLeftChatMember() != null;
     }
 
-    public boolean chatTypeIsChannel(String type) {
+    private Boolean chatTypeIsChannel(String type) {
         return type.equals(SpringyBotEnum.CHAT_TYPE_CHANNEL.getText()) ? true : false;
     }
 
-    private void dealInviteLink() {
+    private Boolean isBotJoinChannel(ChatMemberUpdated chatMemberUpdated) {
+        return chatMemberUpdated.getNewChatMember().getUser().getIsBot()
+                && chatMemberUpdated.getNewChatMember().getStatus().equals("administrator");
+    }
+
+    private Boolean isBotLeftChannel(ChatMemberUpdated chatMemberUpdated) {
+        return chatMemberUpdated.getNewChatMember().getUser().getIsBot()
+                && chatMemberUpdated.getNewChatMember().getStatus().equals("left");
+    }
+
+    private void notEnoughRightsMessageSettings(Message message) {
+        String chatId = String.valueOf(message.getFrom().getId());
+        String title = message.getChat().getTitle();
+        this.response = new SendMessage();
+        this.response.setChatId(chatId);
+        this.response.setDisableNotification(false);
+        this.response.setText(title + SpringyBotEnum.BOT_NOT_ENOUGH_RIGHTS.getText());
+    }
+    private void dealInviteLink(Long chatId){
         try {
-            String inviteLink = execute(new ExportChatInviteLink(String.valueOf(this.message.getChatId())));
+            String inviteLink = execute(
+                    new ExportChatInviteLink(String.valueOf(chatId)));
             this.common.setInviteLink(inviteLink);
         } catch (TelegramApiException e) {
             this.notEnoughRightsMessageSettings(this.message);
@@ -148,14 +195,4 @@ public class Custom extends TelegramLongPollingBot {
             log.error(e.toString());
         }
     }
-
-    public void notEnoughRightsMessageSettings(Message message) {
-        String chatId = String.valueOf(message.getFrom().getId());
-        String title = message.getChat().getTitle();
-        this.response = new SendMessage();
-        this.response.setChatId(chatId);
-        this.response.setDisableNotification(false);
-        this.response.setText(title + SpringyBotEnum.BOT_NOT_ENOUGH_RIGHTS.getText());
-    }
-
 }
