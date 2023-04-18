@@ -202,13 +202,13 @@ public class Job {
                                         + "\n年龄：" + age + "\n国籍：" + nationality + "\n学历：" + education
                                         + "\n技能：" + skills + "\n目标职位：" + targetPosition + "\n手上有什么资源："
                                         + resources + "\n期望薪资：" + expectedSalary + "\n工作经历："
-                                        + workExperience + "\n自我介绍：" + selfIntroduction +"\n咨询飞机号：" + flightNumber );
+                                        + workExperience + "\n自我介绍：" + selfIntroduction +"\n✈️咨询飞机号：" + flightNumber );
                         this.response.setReplyMarkup(new KeyboardButton().keyboard_jobSeeker(jobSeekerDTO));
                         jobSeeker.setLastMessageId(common.sendResponseAsync(this.response));
                         jobManagementServiceImpl.saveJobSeeker(jobSeeker);
                 } else {
                         this.response.setText(
-                                        "求职人员\n姓名：\n男女：\n出生_年_月_日：\n年龄：\n国籍：\n学历：\n技能：\n目标职位：\n手上有什么资源：\n期望薪资：\n工作经历：\n自我介绍：\n咨询飞机号：");
+                                        "求职人员\n姓名：\n男女：\n出生_年_月_日：\n年龄：\n国籍：\n学历：\n技能：\n目标职位：\n手上有什么资源：\n期望薪资：\n工作经历：\n自我介绍：\n✈️咨询飞机号：");
                         this.response.setReplyMarkup(new KeyboardButton().keyboard_jobSeeker(jobSeekerDTO));
                         JobSeeker js = new JobSeeker(userId, String.valueOf(id),
                                         common.sendResponseAsync(this.response));
@@ -234,7 +234,7 @@ public class Job {
                 appendIfNotEmpty(sb, "期望薪资：", jobSeeker.getExpectedSalary());
                 appendIfNotEmpty(sb, "工作经历：", jobSeeker.getWorkExperience());
                 appendIfNotEmpty(sb, "自我介绍：", jobSeeker.getSelfIntroduction());
-                appendIfNotEmpty(sb, "咨询飞机号：", jobSeeker.getFlightNumber());
+                appendIfNotEmpty(sb, "✈️咨询飞机号：", jobSeeker.getFlightNumber());
                 String result = sb.toString().trim(); // 去掉前后空格
 
                 SendMessage response = new SendMessage();

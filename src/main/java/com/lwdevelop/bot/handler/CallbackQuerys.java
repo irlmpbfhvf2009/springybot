@@ -135,7 +135,7 @@ public class CallbackQuerys {
                     "期望薪资：\n" +
                     "工作经历：\n" +
                     "自我介绍：\n" +
-                    "咨询飞机号：");
+                    "✈️咨询飞机号：");
 
             editMessageText.setReplyMarkup(new KeyboardButton().keyboard_jobSeeker(jobSeekerDTO));
             try {

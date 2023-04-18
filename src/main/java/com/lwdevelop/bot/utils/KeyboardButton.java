@@ -50,11 +50,7 @@ public class KeyboardButton {
         List<KeyboardRow> keyboard = new ArrayList<>();
         KeyboardRow row = new KeyboardRow();
         row.add(SpringyBotEnum.EDIT_RECRUITMENT.getText());
-        row.add(SpringyBotEnum.POST_RECRUITMENT.getText());
-        keyboard.add(row);
-        row = new KeyboardRow();
         row.add(SpringyBotEnum.EDIT_JOBSEARCH.getText());
-        row.add(SpringyBotEnum.POST_JOBSEARCH.getText());
         keyboard.add(row);
         row = new KeyboardRow();
         row.add(SpringyBotEnum.JOB_MANAGEMENT.getText());

@@ -22,28 +22,37 @@ public class message {
                 this.setResponse_job();
                 break;
 
-            case "编辑求职信息":
-                new Job().setResponse_jobSeeker_management(common);
-                break;
-            case "编辑招聘信息":
-                new Job().setResponse_jobPosting_management(common);
+            case "发布求职":
+                if (hasUsername()) {
+                    new Job().setResponse_jobSeeker_management(common);
+                } else {
+                    this.send_nullUsername();
+                }
+
                 break;
             case "发布招聘":
                 if (hasUsername()) {
-                    new Job().postRecruitment(common);
-                    // new Job().postAJobSearch(common);
+                    new Job().setResponse_jobPosting_management(common);
                 } else {
                     this.send_nullUsername();
                 }
                 break;
-            case "发布求职":
-                if (hasUsername()) {
-                    // new Job().postRecruitment(common);
-                    new Job().postAJobSearch(common);
-                } else {
-                    this.send_nullUsername();
-                }
-                break;
+            // case "发布招聘":
+            // if (hasUsername()) {
+            // new Job().postRecruitment(common);
+            // // new Job().postAJobSearch(common);
+            // } else {
+            // this.send_nullUsername();
+            // }
+            // break;
+            // case "发布求职":
+            // if (hasUsername()) {
+            // // new Job().postRecruitment(common);
+            // new Job().postAJobSearch(common);
+            // } else {
+            // this.send_nullUsername();
+            // }
+            // break;
             case "招聘和求职信息管理":
                 // new Job().setResponse_jobSeeker_management(common);
                 // new Job().setResponse_jobPosting_management(common);
@@ -103,9 +112,10 @@ public class message {
     }
 
     // private void setResponse_manage() {
-    //     this.response.setText(SpringyBotEnum.COMMEND_MANAGE.getText());
-    //     this.response.setReplyMarkup(new KeyboardButton().manageReplyKeyboardMarkup());
-    //     this.common.sendResponseAsync(this.response);
+    // this.response.setText(SpringyBotEnum.COMMEND_MANAGE.getText());
+    // this.response.setReplyMarkup(new
+    // KeyboardButton().manageReplyKeyboardMarkup());
+    // this.common.sendResponseAsync(this.response);
     // }
 
     public void privateMessageSettings(Message message) {

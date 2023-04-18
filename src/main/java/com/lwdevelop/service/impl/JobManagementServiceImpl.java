@@ -3,10 +3,12 @@ package com.lwdevelop.service.impl;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.methods.updatingmessages.EditMessageText;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 import com.lwdevelop.bot.Custom;
@@ -17,6 +19,7 @@ import com.lwdevelop.dto.JobTreeDTO;
 import com.lwdevelop.dto.SpringyBotDTO;
 import com.lwdevelop.entity.JobPosting;
 import com.lwdevelop.entity.JobSeeker;
+import com.lwdevelop.entity.RobotChannelManagement;
 import com.lwdevelop.entity.SpringyBot;
 import com.lwdevelop.repository.JobPostingRepository;
 import com.lwdevelop.repository.JobSeekerRepository;
@@ -44,15 +47,17 @@ public class JobManagementServiceImpl implements JobManagementService {
     public JobSeeker findByUserIdWithJobSeeker(String userId) {
         return jobSeekerRepository.findByUserId(userId);
     }
+
     @Override
     public JobSeeker findByUserIdAndBotIdWithJobSeeker(String userId, String springyBotId) {
         return jobSeekerRepository.findAllByUserIdAndBotId(userId, springyBotId);
     }
+
     @Override
     public JobPosting findByUserIdAndBotIdWithJobPosting(String userId, String springyBotId) {
         return jobPostingRepository.findAllByUserIdAndBotId(userId, springyBotId);
     }
-    
+
     @Override
     public void saveJobPosting(JobPosting jobPosting) {
         jobPostingRepository.save(jobPosting);
@@ -118,7 +123,7 @@ public class JobManagementServiceImpl implements JobManagementService {
         // empty strings.
         for (String key : Arrays.asList("name", "gender", "dateOfBirth", "age", "nationality",
                 "education", "skills", "targetPosition", "resources",
-                "expectedSalary", "workExperience", "selfIntroduction")) {
+                "expectedSalary", "workExperience", "selfIntroduction", "flightNumber")) {
             data.putIfAbsent(key, "");
         }
 
@@ -128,7 +133,7 @@ public class JobManagementServiceImpl implements JobManagementService {
     @Override
     public ResponseEntity<ResponseData> addJobPosting(JobPostingDTO jobPostingDTO) {
         String userId = jobPostingDTO.getUserId();
-        JobPosting jobPosting = this.findByUserIdAndBotIdWithJobPosting(userId,jobPostingDTO.getBotId());
+        JobPosting jobPosting = this.findByUserIdAndBotIdWithJobPosting(userId, jobPostingDTO.getBotId());
         // JobPosting jobPosting = this.findByUserIdWithJobPosting(userId);
         jobPosting.setBotId(jobPostingDTO.getBotId());
         jobPosting.setBaseSalary(jobPostingDTO.getBaseSalary());
@@ -153,7 +158,7 @@ public class JobManagementServiceImpl implements JobManagementService {
         EditMessageText editMessageText = new EditMessageText();
         editMessageText.setChatId(userId);
         editMessageText.setMessageId(messageId);
-        editMessageText.setText("招聘人才\n" +
+        editMessageText.setText("招聘人才\n\n" +
                 "公司：" + jobPostingDTO.getCompany() + "\n" +
                 "职位：" + jobPostingDTO.getPosition() + "\n" +
                 "底薪：" + jobPostingDTO.getBaseSalary() + "\n" +
@@ -170,14 +175,62 @@ public class JobManagementServiceImpl implements JobManagementService {
             e.printStackTrace();
         }
 
-        return ResponseUtils.response(RetEnum.RET_SUCCESS, "編輯成功");
+        // send to channel
+        Iterator<RobotChannelManagement> iterator = springyBot.getRobotChannelManagement().iterator();
+        springyBot.getJobUser().stream().filter(ju -> ju.getUserId().equals(userId))
+                .findFirst().ifPresent(j -> {
+                    j.getJobPosting().stream().filter(jp -> jp.getUserId().equals(userId))
+                            .findFirst().ifPresent(
+                                    jp -> {
+                                        while (iterator.hasNext()) {
+                                            sendTextWithJobPosting(
+                                                    jp,
+                                                    custom,
+                                                    iterator.next());
+                                        }
+                                    });
+                });
+        ;
+
+        return ResponseUtils.response(RetEnum.RET_SUCCESS, "发送成功");
+    }
+
+    private void sendTextWithJobPosting(JobPosting jobPosting,Custom custom,
+            RobotChannelManagement robotChannelManagement) {
+        StringBuilder sb = new StringBuilder();
+        appendIfNotEmpty(sb, "公司：", jobPosting.getCompany());
+        appendIfNotEmpty(sb, "职位：", jobPosting.getPosition());
+        appendIfNotEmpty(sb, "底薪：", jobPosting.getBaseSalary());
+        appendIfNotEmpty(sb, "提成：", jobPosting.getCommission());
+        appendIfNotEmpty(sb, "上班时间：", jobPosting.getWorkTime());
+        appendIfNotEmpty(sb, "要求内容：", jobPosting.getRequirements());
+        appendIfNotEmpty(sb, "🐌 地址：", jobPosting.getLocation());
+        appendIfNotEmpty(sb, "✈️咨询飞机号：", jobPosting.getFlightNumber());
+        String result = sb.toString().trim(); // 去掉前后空格
+
+        SendMessage response = new SendMessage();
+        if (!result.isEmpty()) {
+            response.setChatId(String.valueOf(robotChannelManagement.getChannelId()));
+            response.setText("招聘人才\n\n" + result);
+            try {
+                custom.executeAsync(response);
+            } catch (TelegramApiException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    private void appendIfNotEmpty(StringBuilder sb, String label, String value) {
+        if (value != null && !value.isEmpty()) {
+            sb.append(label).append(value).append("\n");
+        }
     }
 
     @Override
     public ResponseEntity<ResponseData> addJobSeeker(JobSeekerDTO jobSeekerDTO) {
         String userId = jobSeekerDTO.getUserId();
         // JobSeeker jobSeeker = this.findByUserIdWithJobSeeker(userId);
-        JobSeeker jobSeeker = this.findByUserIdAndBotIdWithJobSeeker(userId,jobSeekerDTO.getBotId());
+        JobSeeker jobSeeker = this.findByUserIdAndBotIdWithJobSeeker(userId, jobSeekerDTO.getBotId());
         jobSeeker.setBotId(jobSeekerDTO.getBotId());
         jobSeeker.setName(jobSeekerDTO.getName());
         jobSeeker.setGender(jobSeekerDTO.getGender());
@@ -218,8 +271,8 @@ public class JobManagementServiceImpl implements JobManagementService {
                 "手上有什么资源：" + jobSeekerDTO.getResources() + "\n" +
                 "期望薪资：" + jobSeekerDTO.getExpectedSalary() + "\n" +
                 "工作经历：" + jobSeekerDTO.getWorkExperience() + "\n" +
-                "自我介绍：" + jobSeekerDTO.getSelfIntroduction()+ "\n" +
-                "咨询飞机号：" + jobSeekerDTO.getFlightNumber());
+                "自我介绍：" + jobSeekerDTO.getSelfIntroduction() + "\n" +
+                "✈️咨询飞机号：" + jobSeekerDTO.getFlightNumber());
 
         editMessageText.setReplyMarkup(new KeyboardButton().keyboard_jobSeeker(jobSeekerDTO));
         try {
@@ -228,14 +281,14 @@ public class JobManagementServiceImpl implements JobManagementService {
             e.printStackTrace();
         }
 
-        return ResponseUtils.response(RetEnum.RET_SUCCESS, "編輯成功");
+        return ResponseUtils.response(RetEnum.RET_SUCCESS, "发送成功");
     }
 
     @Override
     public ResponseEntity<ResponseData> getJobTreeData() {
         List<JobTreeDTO> data = new ArrayList<>();
         List<SpringyBot> springyBots = springyBotServiceImpl.findAll();
-    
+
         for (int i = 0; i < springyBots.size(); i++) {
             JobTreeDTO posting = new JobTreeDTO();
             posting.setLabel("招聘信息");
@@ -255,12 +308,12 @@ public class JobManagementServiceImpl implements JobManagementService {
                     seeker.setChildren(ff);
                 });
             }
-    
+
             JobTreeDTO jobTreeDTO = new JobTreeDTO();
             List<JobTreeDTO> children = new ArrayList<>();
             children.add(seeker);
             children.add(posting);
-    
+
             jobTreeDTO.setLabel(springyBots.get(i).getUsername());
             jobTreeDTO.setId((long) i);
             jobTreeDTO.setChildren(children);
@@ -268,6 +321,5 @@ public class JobManagementServiceImpl implements JobManagementService {
         }
         return ResponseUtils.response(RetEnum.RET_SUCCESS, data);
     }
-
 
 }
