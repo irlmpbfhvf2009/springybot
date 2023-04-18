@@ -66,7 +66,7 @@ public class CallbackQuerys {
             EditMessageText editMessageText = new EditMessageText();
             editMessageText.setChatId(userId);
             editMessageText.setMessageId(messageId);
-            editMessageText.setText("招聘人才\n" +
+            editMessageText.setText("招聘人才\n\n" +
                     "公司：\n" +
                     "职位：\n" +
                     "底薪：\n" +
@@ -122,7 +122,7 @@ public class CallbackQuerys {
             EditMessageText editMessageText = new EditMessageText();
             editMessageText.setChatId(userId);
             editMessageText.setMessageId(messageId);
-            editMessageText.setText("求职人员\n" +
+            editMessageText.setText("求职人员\n\n" +
                     "姓名：\n" +
                     "男女：\n" +
                     "出生_年_月_日：\n" +

@@ -92,7 +92,7 @@ public class Job {
         public void setResponse_jobPosting_management(Common common) {
                 this.jobMessageSetting(common.getUpdate().getMessage());
 
-                this.response.setText("提醒：用户只能发布一条讯息,招聘和求职信息管理帮助其他操作");
+                this.response.setText("提醒：用户只能发布一条讯息,无填写的栏位则跳过,招聘和求职信息管理帮助其他操作");
                 common.sendResponseAsync(this.response);
 
                 Long id = common.getSpringyBotId();
@@ -134,7 +134,7 @@ public class Job {
                         location = Optional.ofNullable(jobPosting.getLocation()).orElse("");
                         flightNumber = Optional.ofNullable(jobPosting.getFlightNumber()).orElse("");
                         this.response.setText(
-                                        "招聘人才\n" + "公司：" + company + "\n" + "职位：" + position + "\n" + "底薪：" + baseSalary
+                                        "招聘人才\n\n" + "公司：" + company + "\n" + "职位：" + position + "\n" + "底薪：" + baseSalary
                                                         + "\n" + "提成：" + commission + "\n" + "上班时间：" + workTime + "\n"
                                                         + "要求内容：" + requirements + "\n"
                                                         + "🐌 地址：" + location + "\n" + "✈️咨询飞机号：" + flightNumber);
@@ -142,7 +142,7 @@ public class Job {
                         jobPosting.setLastMessageId(common.sendResponseAsync(this.response));
                         jobManagementServiceImpl.saveJobPosting(jobPosting);
                 } else {
-                        this.response.setText("招聘人才\n" + "公司：\n" + "职位：\n" + "底薪：\n" + "提成：\n" + "上班时间：\n" + "要求内容：\n"
+                        this.response.setText("招聘人才\n\n" + "公司：\n" + "职位：\n" + "底薪：\n" + "提成：\n" + "上班时间：\n" + "要求内容：\n"
                                         + "🐌 地址：\n" + "✈️咨询飞机号： ");
                         this.response.setReplyMarkup(new KeyboardButton().keyboard_jobPosting(jobPostingDTO));
                         JobPosting jp = new JobPosting(userId, String.valueOf(id),
@@ -156,9 +156,9 @@ public class Job {
         public void setResponse_jobSeeker_management(Common common) {
                 this.jobMessageSetting(common.getUpdate().getMessage());
 
-                this.response.setText("提醒：用户只能发布一条讯息,招聘和求职信息管理帮助其他操作");
+                this.response.setText("提醒：用户只能发布一条讯息,无填写的栏位则跳过,招聘和求职信息管理帮助其他操作");
                 common.sendResponseAsync(this.response);
-                
+
                 Long id = common.getSpringyBotId();
                 String userId = String.valueOf(common.getUpdate().getMessage().getChatId());
                 String firstname = Optional.ofNullable(common.getUpdate().getMessage().getChat().getFirstName())
@@ -214,7 +214,7 @@ public class Job {
                         jobManagementServiceImpl.saveJobSeeker(jobSeeker);
                 } else {
                         this.response.setText(
-                                        "求职人员\n姓名：\n男女：\n出生_年_月_日：\n年龄：\n国籍：\n学历：\n技能：\n目标职位：\n手上有什么资源：\n期望薪资：\n工作经历：\n自我介绍：\n✈️咨询飞机号：");
+                                        "求职人员\n\n姓名：\n男女：\n出生_年_月_日：\n年龄：\n国籍：\n学历：\n技能：\n目标职位：\n手上有什么资源：\n期望薪资：\n工作经历：\n自我介绍：\n✈️咨询飞机号：");
                         this.response.setReplyMarkup(new KeyboardButton().keyboard_jobSeeker(jobSeekerDTO));
                         JobSeeker js = new JobSeeker(userId, String.valueOf(id),
                                         common.sendResponseAsync(this.response));

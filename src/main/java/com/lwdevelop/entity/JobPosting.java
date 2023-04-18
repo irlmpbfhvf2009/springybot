@@ -1,5 +1,8 @@
 package com.lwdevelop.entity;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -39,6 +42,9 @@ public class JobPosting {
     private String flightNumber; // 咨询飞机号
 
     private Integer lastMessageId;
+    
+    // 发布后  channelId  [0]messageId 訊息ID  [1]postCount 發送次數
+    private HashMap<Long,ArrayList<Integer>> channelMessageIdPostCount;
 
     public JobPosting(String userId, String botId, Integer lastMessageId) {
         this.userId = userId;

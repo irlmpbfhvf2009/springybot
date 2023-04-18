@@ -1,5 +1,8 @@
 package com.lwdevelop.dto;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -42,6 +45,9 @@ public class JobSeekerDTO {
     private String selfIntroduction; // 自我介绍
 
     private String flightNumber; // 咨询飞机号
+
+    // 发布后  channelId  [0]messageId 訊息ID  [1]postCount 發送次數
+    private HashMap<Integer,ArrayList<Integer>> channelMessageIdPostCount;
 
     public JobSeekerDTO(String userId, String botId) {
         this.userId = userId;

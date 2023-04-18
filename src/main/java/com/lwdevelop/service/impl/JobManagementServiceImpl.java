@@ -5,6 +5,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.concurrent.ExecutionException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -28,7 +29,6 @@ import com.lwdevelop.utils.CryptoUtil;
 import com.lwdevelop.utils.ResponseUtils;
 import com.lwdevelop.utils.RetEnum;
 import com.lwdevelop.utils.ResponseUtils.ResponseData;
-// import lombok.extern.slf4j.Slf4j;
 
 // @Slf4j
 @Service
@@ -183,10 +183,8 @@ public class JobManagementServiceImpl implements JobManagementService {
                             .findFirst().ifPresent(
                                     jp -> {
                                         while (iterator.hasNext()) {
-                                            sendTextWithJobPosting(
-                                                    jp,
-                                                    custom,
-                                                    iterator.next());
+                                            sendTextWithJobPosting(jp, custom, iterator.next());
+
                                         }
                                     });
                 });
@@ -195,7 +193,7 @@ public class JobManagementServiceImpl implements JobManagementService {
         return ResponseUtils.response(RetEnum.RET_SUCCESS, "发送成功");
     }
 
-    private void sendTextWithJobPosting(JobPosting jobPosting,Custom custom,
+    private void sendTextWithJobPosting(JobPosting jobPosting, Custom custom,
             RobotChannelManagement robotChannelManagement) {
         StringBuilder sb = new StringBuilder();
         appendIfNotEmpty(sb, "公司：", jobPosting.getCompany());
@@ -212,11 +210,33 @@ public class JobManagementServiceImpl implements JobManagementService {
         if (!result.isEmpty()) {
             response.setChatId(String.valueOf(robotChannelManagement.getChannelId()));
             response.setText("招聘人才\n\n" + result);
+            Integer channelMessageId = 0;
             try {
-                custom.executeAsync(response);
+                try {
+                    channelMessageId = custom.executeAsync(response).get().getMessageId();
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                } catch (ExecutionException e) {
+                    e.printStackTrace();
+                }
             } catch (TelegramApiException e) {
                 e.printStackTrace();
             }
+            HashMap<Long, ArrayList<Integer>> channelMessageIdPostCount = new HashMap<Long, ArrayList<Integer>>();
+            ArrayList<Integer> messageIdPostCount = new ArrayList<Integer>();
+            if (jobPosting.getChannelMessageIdPostCount() != null) {
+                messageIdPostCount = jobPosting.getChannelMessageIdPostCount()
+                        .get(robotChannelManagement.getChannelId());
+                messageIdPostCount.set(0, channelMessageId);
+                messageIdPostCount.set(1, messageIdPostCount.get(1) + 1);
+
+            } else {
+                messageIdPostCount.add(0, channelMessageId);
+                messageIdPostCount.add(1, 1);
+            }
+            channelMessageIdPostCount.put(robotChannelManagement.getChannelId(), messageIdPostCount);
+            jobPosting.setChannelMessageIdPostCount(channelMessageIdPostCount);
+            this.saveJobPosting(jobPosting);
         }
     }
 
@@ -259,7 +279,7 @@ public class JobManagementServiceImpl implements JobManagementService {
         EditMessageText editMessageText = new EditMessageText();
         editMessageText.setChatId(userId);
         editMessageText.setMessageId(messageId);
-        editMessageText.setText("求职人员\n" +
+        editMessageText.setText("求职人员\n\n" +
                 "姓名：" + jobSeekerDTO.getName() + "\n" +
                 "男女：" + jobSeekerDTO.getGender() + "\n" +
                 "出生_年_月_日：" + jobSeekerDTO.getDateOfBirth() + "\n" +
@@ -281,8 +301,90 @@ public class JobManagementServiceImpl implements JobManagementService {
             e.printStackTrace();
         }
 
+        Iterator<RobotChannelManagement> iterator = springyBot.getRobotChannelManagement()
+                .iterator();
+        springyBot.getJobUser().stream().filter(ju -> ju.getUserId().equals(userId)).findFirst()
+                .ifPresent(j -> {
+                    j.getJobSeeker()
+                            .stream()
+                            .filter(
+                                    jp -> jp.getUserId().equals(userId))
+                            .findFirst()
+                            .ifPresent(
+                                    js -> {
+                                        while (iterator
+                                                .hasNext()) {
+                                            this.sendTextWithJobSeeker(
+                                                    js,
+                                                    custom,
+                                                    iterator
+                                                            .next());
+                                        }
+                                    });
+                });
+        ;
         return ResponseUtils.response(RetEnum.RET_SUCCESS, "发送成功");
     }
+
+    private void sendTextWithJobSeeker(JobSeeker jobSeeker, Custom custom,
+            RobotChannelManagement robotChannelManagement) {
+
+        StringBuilder sb = new StringBuilder();
+        appendIfNotEmpty(sb, "姓名：", jobSeeker.getName());
+        appendIfNotEmpty(sb, "男女：", jobSeeker.getGender());
+        appendIfNotEmpty(sb, "出生_年_月_日：", jobSeeker.getDateOfBirth());
+        appendIfNotEmpty(sb, "年龄：", jobSeeker.getAge());
+        appendIfNotEmpty(sb, "国籍：", jobSeeker.getNationality());
+        appendIfNotEmpty(sb, "学历：", jobSeeker.getEducation());
+        appendIfNotEmpty(sb, "技能：", jobSeeker.getSkills());
+        appendIfNotEmpty(sb, "目标职位：", jobSeeker.getTargetPosition());
+        appendIfNotEmpty(sb, "手上有什么资源：", jobSeeker.getResources());
+        appendIfNotEmpty(sb, "期望薪资：", jobSeeker.getExpectedSalary());
+        appendIfNotEmpty(sb, "工作经历：", jobSeeker.getWorkExperience());
+        appendIfNotEmpty(sb, "自我介绍：", jobSeeker.getSelfIntroduction());
+        appendIfNotEmpty(sb, "✈️咨询飞机号：", jobSeeker.getFlightNumber());
+        String result = sb.toString().trim(); // 去掉前后空格
+
+        SendMessage response = new SendMessage();
+        if (!result.isEmpty()) {
+            response.setChatId(String.valueOf(robotChannelManagement.getChannelId()));
+            response.setText("求职人员\n\n" + result);
+            Integer channelMessageId = 0;
+            try {
+                try {
+                    channelMessageId = custom.executeAsync(response).get().getMessageId();
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                } catch (ExecutionException e) {
+                    e.printStackTrace();
+                }
+            } catch (TelegramApiException e) {
+                e.printStackTrace();
+            }
+            HashMap<Long, ArrayList<Integer>> channelMessageIdPostCount = new HashMap<Long, ArrayList<Integer>>();
+            ArrayList<Integer> messageIdPostCount = new ArrayList<Integer>();
+            if (jobSeeker.getChannelMessageIdPostCount() != null) {
+                messageIdPostCount = jobSeeker.getChannelMessageIdPostCount()
+                        .get(robotChannelManagement.getChannelId());
+                messageIdPostCount.set(0, channelMessageId);
+                messageIdPostCount.set(1, messageIdPostCount.get(1) + 1);
+        
+            } else {
+                messageIdPostCount.add(0, channelMessageId);
+                messageIdPostCount.add(1, 1);
+            }
+            channelMessageIdPostCount.put(robotChannelManagement.getChannelId(), messageIdPostCount);
+            jobSeeker.setChannelMessageIdPostCount(channelMessageIdPostCount);
+            this.saveJobSeeker(jobSeeker);
+
+        }
+
+    }
+
+
+
+
+
 
     @Override
     public ResponseEntity<ResponseData> getJobTreeData() {
