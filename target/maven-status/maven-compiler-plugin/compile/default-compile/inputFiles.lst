@@ -1,3 +1,4 @@
+D:\酷寶\開發\tgbot\SpringyBot\src\main\java\com\lwdevelop\entity\ChannelMessageIdPostCounts.java
 D:\酷寶\開發\tgbot\SpringyBot\src\main\java\com\lwdevelop\utils\RetEnum.java
 D:\酷寶\開發\tgbot\SpringyBot\src\main\java\com\lwdevelop\dto\RobotGroupManagementDTO.java
 D:\酷寶\開發\tgbot\SpringyBot\src\main\java\com\lwdevelop\dto\GroupAndChannelTreeDTO.java
@@ -46,6 +47,7 @@ D:\酷寶\開發\tgbot\SpringyBot\src\main\java\com\lwdevelop\repository\AdminReposi
 D:\酷寶\開發\tgbot\SpringyBot\src\main\java\com\lwdevelop\bot\handler\messageEvent\group\GroupMessage.java
 D:\酷寶\開發\tgbot\SpringyBot\src\main\java\com\lwdevelop\service\RobotGroupAndChannelManagementService.java
 D:\酷寶\開發\tgbot\SpringyBot\src\main\java\com\lwdevelop\bot\handler\messageEvent\private_\commands\Manage.java
+D:\酷寶\開發\tgbot\SpringyBot\src\main\java\com\lwdevelop\repository\ChannelMessageIdPostCountsRepository.java
 D:\酷寶\開發\tgbot\SpringyBot\src\main\java\com\lwdevelop\utils\CommUtils.java
 D:\酷寶\開發\tgbot\SpringyBot\src\main\java\com\lwdevelop\utils\SpringUtils.java
 D:\酷寶\開發\tgbot\SpringyBot\src\main\java\com\lwdevelop\dto\JobPostingDTO.java

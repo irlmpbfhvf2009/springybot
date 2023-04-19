@@ -34,6 +34,7 @@ com\lwdevelop\utils\ResponseUtils.class
 com\lwdevelop\dto\GroupAndChannelTreeDTO.class
 com\lwdevelop\bot\Custom.class
 com\lwdevelop\dto\AdminDTO.class
+com\lwdevelop\repository\ChannelMessageIdPostCountsRepository.class
 com\lwdevelop\bot\utils\KeyboardButton.class
 com\lwdevelop\bot\handler\messageEvent\private_\commands\Manage.class
 com\lwdevelop\entity\Config.class
@@ -49,6 +50,7 @@ com\lwdevelop\dto\JobTreeDTO.class
 com\lwdevelop\repository\JobSeekerRepository.class
 com\lwdevelop\dto\JobSeekerDTO.class
 com\lwdevelop\converter\ListToJsonConverter.class
+com\lwdevelop\entity\ChannelMessageIdPostCounts.class
 com\lwdevelop\service\impl\SpringyBotServiceImpl.class
 com\lwdevelop\controller\SpringyBotController.class
 com\lwdevelop\repository\RobotChannelManagementRepository.class
