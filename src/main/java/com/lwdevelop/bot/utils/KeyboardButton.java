@@ -135,6 +135,80 @@ public class KeyboardButton {
         return markupInline;
     }
 
+    
+    public final InlineKeyboardMarkup keyboard_editJobPosting(JobPostingDTO jobPostingDTO) {
+
+        InlineKeyboardButton dk1 = new InlineKeyboardButton();
+        // InlineKeyboardButton dk2 = new InlineKeyboardButton();
+        InlineKeyboardMarkup markupInline = new InlineKeyboardMarkup();
+        List<List<InlineKeyboardButton>> rowsInline = new ArrayList<>();
+        List<InlineKeyboardButton> rowInline = new ArrayList<>();
+
+        String ub = "userId=" + jobPostingDTO.getUserId()
+                + "&botId=" + jobPostingDTO.getBotId()
+                + "&company=" + jobPostingDTO.getCompany()
+                + "&position=" + jobPostingDTO.getPosition()
+                + "&baseSalary=" + jobPostingDTO.getBaseSalary()
+                + "&commission=" + jobPostingDTO.getCommission()
+                + "&workTime=" + jobPostingDTO.getWorkTime()
+                + "&requirements=" + jobPostingDTO.getRequirements()
+                + "&location=" + jobPostingDTO.getLocation()
+                + "&flightNumber=" + jobPostingDTO.getFlightNumber();
+
+        String encryptedUb = CryptoUtil.encrypt(ub);
+        String encodedUb = URLEncoder.encode(encryptedUb, StandardCharsets.UTF_8);
+        String url = "http://192.168.0.67:3000/#/edit_jobPostingForm?ub=" + encodedUb;
+        // String url = "http://rc.ddb99.vip:18889/#/jobPostingForm?ub=" + encodedUb;
+        dk1.setText("编辑");
+        dk1.setUrl(url);
+        // dk2.setText("删除");
+        // dk2.setCallbackData("clearJobPosting_" + jobPostingDTO.getUserId());
+
+        rowInline.add(dk1);
+        // rowInline.add(dk2);
+        rowsInline.add(rowInline);
+        markupInline.setKeyboard(rowsInline);
+        return markupInline;
+    }
+
+    public final InlineKeyboardMarkup keyboard_editJobSeeker(JobSeekerDTO jobSeekerDTO) {
+
+        InlineKeyboardButton dk1 = new InlineKeyboardButton();
+        // InlineKeyboardButton dk2 = new InlineKeyboardButton();
+        InlineKeyboardMarkup markupInline = new InlineKeyboardMarkup();
+        List<List<InlineKeyboardButton>> rowsInline = new ArrayList<>();
+        List<InlineKeyboardButton> rowInline = new ArrayList<>();
+
+        String ub = "userId=" + jobSeekerDTO.getUserId()
+                + "&botId=" + jobSeekerDTO.getBotId()
+                + "&name=" + jobSeekerDTO.getName()
+                + "&gender=" + jobSeekerDTO.getGender()
+                + "&dateOfBirth=" + jobSeekerDTO.getDateOfBirth()
+                + "&age=" + jobSeekerDTO.getAge()
+                + "&nationality=" + jobSeekerDTO.getNationality()
+                + "&education=" + jobSeekerDTO.getEducation()
+                + "&skills=" + jobSeekerDTO.getSkills()
+                + "&targetPosition=" + jobSeekerDTO.getTargetPosition()
+                + "&resources=" + jobSeekerDTO.getResources()
+                + "&expectedSalary=" + jobSeekerDTO.getExpectedSalary()
+                + "&workExperience=" + jobSeekerDTO.getWorkExperience()
+                + "&selfIntroduction=" + jobSeekerDTO.getSelfIntroduction()
+                + "&flightNumber=" + jobSeekerDTO.getFlightNumber();
+
+        String encryptedUb = CryptoUtil.encrypt(ub);
+        String encodedUb = URLEncoder.encode(encryptedUb, StandardCharsets.UTF_8);
+        String url = "http://192.168.0.67:3000/#/edit_jobSeekerForm?ub=" + encodedUb;
+        // String url = "http://rc.ddb99.vip:18889/#/jobSeekerForm?ub=" + encodedUb;
+        dk1.setText("编辑");
+        dk1.setUrl(url);
+        // dk2.setText("删除");
+        // dk2.setCallbackData("clearJobSeeker_" + jobSeekerDTO.getUserId());
+        rowInline.add(dk1);
+        // rowInline.add(dk2);
+        rowsInline.add(rowInline);
+        markupInline.setKeyboard(rowsInline);
+        return markupInline;
+    }
     public final InlineKeyboardMarkup keyboard_callme(String username) {
 
         InlineKeyboardButton dk1 = new InlineKeyboardButton();
