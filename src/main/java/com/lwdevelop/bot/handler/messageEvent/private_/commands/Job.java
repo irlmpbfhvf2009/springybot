@@ -2,10 +2,8 @@ package com.lwdevelop.bot.handler.messageEvent.private_.commands;
 
 import java.util.Iterator;
 import java.util.Optional;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
-import org.telegram.telegrambots.meta.api.objects.Message;
 import com.lwdevelop.bot.utils.Common;
 import com.lwdevelop.bot.utils.KeyboardButton;
 import com.lwdevelop.dto.JobPostingDTO;
@@ -20,7 +18,6 @@ import com.lwdevelop.service.impl.SpringyBotServiceImpl;
 import com.lwdevelop.utils.SpringUtils;
 
 public class Job {
-        SendMessage response;
 
         @Autowired
         private JobManagementServiceImpl jobManagementServiceImpl = SpringUtils.getApplicationContext()
@@ -29,13 +26,6 @@ public class Job {
         @Autowired
         private SpringyBotServiceImpl springyBotServiceImpl = SpringUtils.getApplicationContext()
                         .getBean(SpringyBotServiceImpl.class);
-
-        private void jobMessageSetting(Message message) {
-                this.response = new SendMessage();
-                this.response.setChatId(String.valueOf(message.getChatId()));
-                this.response.setDisableNotification(false);
-                this.response.setDisableWebPagePreview(false);
-        }
 
         public void postRecruitment(Common common) {
 
@@ -89,12 +79,7 @@ public class Job {
                 ;
         }
 
-        public void setResponse_jobPosting_management(Common common) {
-                this.jobMessageSetting(common.getUpdate().getMessage());
-
-                this.response.setText("提醒：用户只能发布一条讯息,无填写的栏位则跳过,招聘和求职信息管理帮助其他操作");
-                common.sendResponseAsync(this.response);
-
+        public void saveJobUser(Common common) {
                 Long id = common.getSpringyBotId();
                 String userId = String.valueOf(common.getUpdate().getMessage().getChatId());
                 String firstname = Optional.ofNullable(common.getUpdate().getMessage().getChat().getFirstName())
@@ -105,9 +90,38 @@ public class Job {
                                 .orElse("");
 
                 SpringyBot springyBot = springyBotServiceImpl.findById(id).orElseThrow();
+
+                springyBot.getJobUser().stream().filter(j -> j.getUserId().equals(userId)).findFirst()
+                                .ifPresentOrElse(ju -> {
+                                        ju.setFirstname(firstname);
+                                        ju.setLastname(lastname);
+                                        ju.setUsername(username);
+                                }, () -> {
+                                        JobUser jobUser = new JobUser();
+                                        jobUser.setUserId(userId);
+                                        jobUser.setFirstname(firstname);
+                                        jobUser.setLastname(lastname);
+                                        jobUser.setUsername(username);
+                                        springyBot.getJobUser().add(jobUser);
+                                });
+                springyBotServiceImpl.save(springyBot);
+
+        }
+
+        public void setResponse_jobPosting_management(Common common) {
+
+                Long id = common.getSpringyBotId();
+                String userId = String.valueOf(common.getUpdate().getMessage().getChatId());
+
+                SendMessage response = new SendMessage();
+                response.setChatId(userId);
+                response.setText("提醒：用户只能发布一条讯息,无填写的栏位则跳过,招聘和求职信息管理帮助其他操作");
+                common.sendResponseAsync(response);
+
                 JobPosting jobPosting = jobManagementServiceImpl.findByUserIdAndBotIdWithJobPosting(userId,
                                 String.valueOf(id));
 
+                SpringyBot springyBot = springyBotServiceImpl.findById(id).orElseThrow();
                 JobUser jobUser = springyBot.getJobUser().stream().filter(j -> j.getUserId().equals(userId)).findFirst()
                                 .orElseGet(() -> {
                                         JobUser ju = new JobUser();
@@ -115,13 +129,6 @@ public class Job {
                                         springyBot.getJobUser().add(ju);
                                         return ju;
                                 });
-
-                jobUser.setFirstname(firstname);
-                jobUser.setLastname(lastname);
-                jobUser.setUsername(username);
-
-                springyBot.getJobUser().add(jobUser);
-                springyBotServiceImpl.save(springyBot);
 
                 JobPostingDTO jobPostingDTO = new JobPostingDTO(userId, String.valueOf(id));
                 String company = "", position = "", baseSalary = "", commission = "", workTime = "", requirements = "",
@@ -136,46 +143,45 @@ public class Job {
                         requirements = Optional.ofNullable(jobPosting.getRequirements()).orElse("");
                         location = Optional.ofNullable(jobPosting.getLocation()).orElse("");
                         flightNumber = Optional.ofNullable(jobPosting.getFlightNumber()).orElse("");
-                        this.response.setText(
+                        response.setText(
                                         "招聘人才\n\n" + "公司：" + company + "\n" + "职位：" + position + "\n" + "底薪："
-                                                        + baseSalary
-                                                        + "\n" + "提成：" + commission + "\n" + "上班时间：" + workTime + "\n"
-                                                        + "要求内容：" + requirements + "\n"
+                                                        + baseSalary + "\n" + "提成：" + commission + "\n" + "上班时间："
+                                                        + workTime + "\n" + "要求内容：" + requirements + "\n"
                                                         + "🐌 地址：" + location + "\n" + "✈️咨询飞机号：" + flightNumber);
-                        this.response.setReplyMarkup(new KeyboardButton().keyboard_jobPosting(jobPostingDTO));
-                        jobPosting.setLastMessageId(common.sendResponseAsync(this.response));
+                        response.setReplyMarkup(new KeyboardButton().keyboard_jobPosting(jobPostingDTO));
+                        Integer messageId = common.sendResponseAsync(response);
+                        jobPosting.setLastMessageId(messageId);
+                        jobUser.getJobPosting().add(jobPosting);
                         jobManagementServiceImpl.saveJobPosting(jobPosting);
                 } else {
-                        this.response.setText("招聘人才\n\n" + "公司：\n" + "职位：\n" + "底薪：\n" + "提成：\n" + "上班时间：\n" + "要求内容：\n"
-                                        + "🐌 地址：\n" + "✈️咨询飞机号： ");
-                        this.response.setReplyMarkup(new KeyboardButton().keyboard_jobPosting(jobPostingDTO));
+                        response.setText("招聘人才\n\n" + "公司：\n" + "职位：\n" + "底薪：\n" + "提成：\n" + "上班时间：\n" + "要求内容：\n"
+                                        + "🐌 地址：\n" + "✈️咨询飞机号：");
+                        response.setReplyMarkup(new KeyboardButton().keyboard_jobPosting(jobPostingDTO));
 
-                        JobPosting jp = new JobPosting(userId, String.valueOf(id),common.sendResponseAsync(this.response));
+                        JobPosting jp = new JobPosting(userId, String.valueOf(id),
+                                        common.sendResponseAsync(response));
                         jobUser.getJobPosting().add(jp);
                         jobManagementServiceImpl.saveJobPosting(jp);
+                        springyBotServiceImpl.save(springyBot);
                 }
-
-                springyBotServiceImpl.save(springyBot);
         }
 
         public void setResponse_jobSeeker_management(Common common) {
-                this.jobMessageSetting(common.getUpdate().getMessage());
-
-                this.response.setText("提醒：用户只能发布一条讯息,无填写的栏位则跳过,招聘和求职信息管理帮助其他操作");
-                common.sendResponseAsync(this.response);
 
                 Long id = common.getSpringyBotId();
                 String userId = String.valueOf(common.getUpdate().getMessage().getChatId());
-                String firstname = Optional.ofNullable(common.getUpdate().getMessage().getChat().getFirstName())
-                                .orElse("");
-                String username = Optional.ofNullable(common.getUpdate().getMessage().getChat().getUserName())
-                                .orElse("");
-                String lastname = Optional.ofNullable(common.getUpdate().getMessage().getChat().getLastName())
-                                .orElse("");
 
-                SpringyBot springyBot = springyBotServiceImpl.findById(id).orElseThrow();
+                SendMessage response = new SendMessage();
+                response.setChatId(String.valueOf(common.getUpdate().getMessage().getChatId()));
+                response.setText("提醒：用户只能发布一条讯息,无填写的栏位则跳过,招聘和求职信息管理帮助其他操作");
+                response.setDisableNotification(false);
+                response.setDisableWebPagePreview(false);
+                common.sendResponseAsync(response);
+
                 JobSeeker jobSeeker = jobManagementServiceImpl.findByUserIdAndBotIdWithJobSeeker(userId,
                                 String.valueOf(id));
+
+                SpringyBot springyBot = springyBotServiceImpl.findById(id).orElseThrow();
 
                 JobUser jobUser = springyBot.getJobUser().stream().filter(j -> j.getUserId().equals(userId)).findFirst()
                                 .orElseGet(() -> {
@@ -185,14 +191,11 @@ public class Job {
                                         return ju;
                                 });
 
-                jobUser.setFirstname(firstname);
-                jobUser.setLastname(lastname);
-                jobUser.setUsername(username);
-
                 JobSeekerDTO jobSeekerDTO = new JobSeekerDTO(userId, String.valueOf(id));
                 String name = "", gender = "", dateOfBirth = "", age = "", nationality = "", education = "",
                                 skills = "", targetPosition = "", resources = "", expectedSalary = "",
                                 workExperience = "", selfIntroduction = "", flightNumber = "";
+
                 if (jobSeeker != null) {
                         name = Optional.ofNullable(jobSeeker.getName()).orElse("");
                         gender = Optional.ofNullable(jobSeeker.getGender()).orElse("");
@@ -208,25 +211,27 @@ public class Job {
                         selfIntroduction = Optional.ofNullable(jobSeeker.getSelfIntroduction()).orElse("");
                         flightNumber = Optional.ofNullable(jobSeeker.getFlightNumber()).orElse("");
 
-                        this.response.setText("求职人员\n\n姓名：" + name + "\n男女：" + gender + "\n出生_年_月_日："
+                        response.setText("求职人员\n\n姓名：" + name + "\n男女：" + gender + "\n出生_年_月_日："
                                         + dateOfBirth
                                         + "\n年龄：" + age + "\n国籍：" + nationality + "\n学历：" + education
                                         + "\n技能：" + skills + "\n目标职位：" + targetPosition + "\n手上有什么资源："
                                         + resources + "\n期望薪资：" + expectedSalary + "\n工作经历："
                                         + workExperience + "\n自我介绍：" + selfIntroduction + "\n✈️咨询飞机号：" + flightNumber);
-                        this.response.setReplyMarkup(new KeyboardButton().keyboard_jobSeeker(jobSeekerDTO));
-                        jobSeeker.setLastMessageId(common.sendResponseAsync(this.response));
+                        response.setReplyMarkup(new KeyboardButton().keyboard_jobSeeker(jobSeekerDTO));
+                        Integer messageId = common.sendResponseAsync(response);
+                        jobSeeker.setLastMessageId(messageId);
+                        jobUser.getJobSeeker().add(jobSeeker);
                         jobManagementServiceImpl.saveJobSeeker(jobSeeker);
                 } else {
-                        this.response.setText(
+                        response.setText(
                                         "求职人员\n\n姓名：\n男女：\n出生_年_月_日：\n年龄：\n国籍：\n学历：\n技能：\n目标职位：\n手上有什么资源：\n期望薪资：\n工作经历：\n自我介绍：\n✈️咨询飞机号：");
-                        this.response.setReplyMarkup(new KeyboardButton().keyboard_jobSeeker(jobSeekerDTO));
+                        response.setReplyMarkup(new KeyboardButton().keyboard_jobSeeker(jobSeekerDTO));
                         JobSeeker js = new JobSeeker(userId, String.valueOf(id),
-                                        common.sendResponseAsync(this.response));
+                                        common.sendResponseAsync(response));
                         jobUser.getJobSeeker().add(js);
                         jobManagementServiceImpl.saveJobSeeker(js);
+                        springyBotServiceImpl.save(springyBot);
                 }
-                springyBotServiceImpl.save(springyBot);
         }
 
         private void sendTextWithJobSeeker(JobSeeker jobSeeker, Common common,
