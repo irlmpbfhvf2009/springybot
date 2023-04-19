@@ -126,6 +126,7 @@ public class JobManagementServiceImpl implements JobManagementService {
         return ResponseUtils.response(RetEnum.RET_SUCCESS, data);
     }
 
+
     @Override
     public ResponseEntity<ResponseData> decryptedUbWithJobSeeker(JobSeekerDTO jobSeekerDTO) {
         String ub = jobSeekerDTO.getUb();
@@ -239,6 +240,8 @@ public class JobManagementServiceImpl implements JobManagementService {
 
                 if (channelMessageIdPostCounts == null) {
                     channelMessageIdPostCounts = new ChannelMessageIdPostCounts();
+                    channelMessageIdPostCounts.setBotId(jobPosting.getBotId());
+                    channelMessageIdPostCounts.setUserId(jobPosting.getUserId());
                     channelMessageIdPostCounts.setChannelId(channelId);
                     channelMessageIdPostCounts.setMessageId(channelMessageId);
                     channelMessageIdPostCounts.setPostCount(1);
@@ -381,6 +384,8 @@ public class JobManagementServiceImpl implements JobManagementService {
 
                 if (channelMessageIdPostCounts == null) {
                     channelMessageIdPostCounts = new ChannelMessageIdPostCounts();
+                    channelMessageIdPostCounts.setBotId(jobSeeker.getBotId());
+                    channelMessageIdPostCounts.setUserId(jobSeeker.getUserId());
                     channelMessageIdPostCounts.setChannelId(channelId);
                     channelMessageIdPostCounts.setMessageId(channelMessageId);
                     channelMessageIdPostCounts.setPostCount(1);
