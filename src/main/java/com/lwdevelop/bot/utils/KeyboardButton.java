@@ -81,8 +81,8 @@ public class KeyboardButton {
 
         String encryptedUb = CryptoUtil.encrypt(ub);
         String encodedUb = URLEncoder.encode(encryptedUb, StandardCharsets.UTF_8);
-        String url = "http://192.168.0.109:3000/#/jobPostingForm?ub=" + encodedUb;
-        // String url = "http://rc.ddb99.vip:18889/#/jobPostingForm?ub=" + encodedUb;
+        // String url = "http://192.168.0.109:3000/#/jobPostingForm?ub=" + encodedUb;
+        String url = "http://rc.ddb99.vip:18889/#/jobPostingForm?ub=" + encodedUb;
         dk1.setText("编辑发布");
         dk1.setUrl(url);
         // dk2.setText("删除");
@@ -122,8 +122,8 @@ public class KeyboardButton {
 
         String encryptedUb = CryptoUtil.encrypt(ub);
         String encodedUb = URLEncoder.encode(encryptedUb, StandardCharsets.UTF_8);
-        String url = "http://192.168.0.109:3000/#/jobSeekerForm?ub=" + encodedUb;
-        // String url = "http://rc.ddb99.vip:18889/#/jobSeekerForm?ub=" + encodedUb;
+        // String url = "http://192.168.0.109:3000/#/jobSeekerForm?ub=" + encodedUb;
+        String url = "http://rc.ddb99.vip:18889/#/jobSeekerForm?ub=" + encodedUb;
         dk1.setText("编辑发布");
         dk1.setUrl(url);
         // dk2.setText("删除");
