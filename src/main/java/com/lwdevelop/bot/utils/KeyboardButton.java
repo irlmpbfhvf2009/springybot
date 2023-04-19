@@ -139,7 +139,7 @@ public class KeyboardButton {
     public final InlineKeyboardMarkup keyboard_editJobPosting(JobPostingDTO jobPostingDTO) {
 
         InlineKeyboardButton dk1 = new InlineKeyboardButton();
-        // InlineKeyboardButton dk2 = new InlineKeyboardButton();
+        InlineKeyboardButton dk2 = new InlineKeyboardButton();
         InlineKeyboardMarkup markupInline = new InlineKeyboardMarkup();
         List<List<InlineKeyboardButton>> rowsInline = new ArrayList<>();
         List<InlineKeyboardButton> rowInline = new ArrayList<>();
@@ -157,15 +157,18 @@ public class KeyboardButton {
 
         String encryptedUb = CryptoUtil.encrypt(ub);
         String encodedUb = URLEncoder.encode(encryptedUb, StandardCharsets.UTF_8);
-        String url = "http://192.168.0.67:3000/#/edit_jobPostingForm?ub=" + encodedUb;
+        String url = "http://192.168.0.109:3000/#/edit_jobPostingForm?ub=" + encodedUb;
         // String url = "http://rc.ddb99.vip:18889/#/jobPostingForm?ub=" + encodedUb;
+
+
+
         dk1.setText("编辑");
         dk1.setUrl(url);
-        // dk2.setText("删除");
-        // dk2.setCallbackData("clearJobPosting_" + jobPostingDTO.getUserId());
+        dk2.setText("删除");
+        dk2.setCallbackData("clearJobPosting_" + jobPostingDTO.getUserId());
 
         rowInline.add(dk1);
-        // rowInline.add(dk2);
+        rowInline.add(dk2);
         rowsInline.add(rowInline);
         markupInline.setKeyboard(rowsInline);
         return markupInline;
@@ -174,7 +177,7 @@ public class KeyboardButton {
     public final InlineKeyboardMarkup keyboard_editJobSeeker(JobSeekerDTO jobSeekerDTO) {
 
         InlineKeyboardButton dk1 = new InlineKeyboardButton();
-        // InlineKeyboardButton dk2 = new InlineKeyboardButton();
+        InlineKeyboardButton dk2 = new InlineKeyboardButton();
         InlineKeyboardMarkup markupInline = new InlineKeyboardMarkup();
         List<List<InlineKeyboardButton>> rowsInline = new ArrayList<>();
         List<InlineKeyboardButton> rowInline = new ArrayList<>();
@@ -197,14 +200,14 @@ public class KeyboardButton {
 
         String encryptedUb = CryptoUtil.encrypt(ub);
         String encodedUb = URLEncoder.encode(encryptedUb, StandardCharsets.UTF_8);
-        String url = "http://192.168.0.67:3000/#/edit_jobSeekerForm?ub=" + encodedUb;
+        String url = "http://192.168.0.109:3000/#/edit_jobSeekerForm?ub=" + encodedUb;
         // String url = "http://rc.ddb99.vip:18889/#/jobSeekerForm?ub=" + encodedUb;
         dk1.setText("编辑");
         dk1.setUrl(url);
-        // dk2.setText("删除");
-        // dk2.setCallbackData("clearJobSeeker_" + jobSeekerDTO.getUserId());
+        dk2.setText("删除");
+        dk2.setCallbackData("clearJobSeeker_" + jobSeekerDTO.getUserId());
         rowInline.add(dk1);
-        // rowInline.add(dk2);
+        rowInline.add(dk2);
         rowsInline.add(rowInline);
         markupInline.setKeyboard(rowsInline);
         return markupInline;

@@ -1,7 +1,10 @@
 package com.lwdevelop.bot.handler;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
+import org.telegram.telegrambots.meta.api.methods.updatingmessages.DeleteMessage;
 import org.telegram.telegrambots.meta.api.methods.updatingmessages.EditMessageText;
 import org.telegram.telegrambots.meta.api.objects.CallbackQuery;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
@@ -12,6 +15,7 @@ import com.lwdevelop.bot.utils.KeyboardButton;
 import com.lwdevelop.dto.JobPostingDTO;
 import com.lwdevelop.dto.JobSeekerDTO;
 import com.lwdevelop.dto.SpringyBotDTO;
+import com.lwdevelop.entity.ChannelMessageIdPostCounts;
 import com.lwdevelop.entity.JobPosting;
 import com.lwdevelop.entity.JobSeeker;
 import com.lwdevelop.entity.SpringyBot;
@@ -76,12 +80,29 @@ public class CallbackQuerys {
                     "🐌 地址：\n" +
                     "✈️咨询飞机号：");
 
-            editMessageText.setReplyMarkup(new KeyboardButton().keyboard_jobPosting(jobPostingDTO));
+            editMessageText.setReplyMarkup(new KeyboardButton().keyboard_editJobPosting(jobPostingDTO));
             try {
                 custom.executeAsync(editMessageText);
             } catch (TelegramApiException e) {
                 e.printStackTrace();
             }
+
+
+            List<ChannelMessageIdPostCounts> channelMessageIdPostCounts = jobManagementServiceImpl.findAllByBotIdAndUserIdAndTypeWithChannelMessageIdPostCounts(jobPosting.getBotId(), userId, "jobPosting");
+            channelMessageIdPostCounts.stream().forEach(cmp -> {
+                DeleteMessage dm = new DeleteMessage();
+                dm.setChatId(String.valueOf(cmp.getChannelId()));
+                dm.setMessageId(cmp.getMessageId());
+                try {
+                    custom.executeAsync(dm);
+                } catch (TelegramApiException e) {
+                    e.printStackTrace();
+                }
+                cmp.setMessageId(-1);
+                cmp.setPostCount(0);
+                jobManagementServiceImpl.saveChannelMessageIdPostCounts(cmp);
+            });
+
 
             this.response.setText("删除成功");
             common.sendResponseAsync(this.response);
@@ -137,12 +158,26 @@ public class CallbackQuerys {
                     "自我介绍：\n" +
                     "✈️咨询飞机号：");
 
-            editMessageText.setReplyMarkup(new KeyboardButton().keyboard_jobSeeker(jobSeekerDTO));
+            editMessageText.setReplyMarkup(new KeyboardButton().keyboard_editJobSeeker(jobSeekerDTO));
             try {
                 custom.executeAsync(editMessageText);
             } catch (TelegramApiException e) {
                 e.printStackTrace();
             }
+            List<ChannelMessageIdPostCounts> channelMessageIdPostCounts = jobManagementServiceImpl.findAllByBotIdAndUserIdAndTypeWithChannelMessageIdPostCounts(jobSeeker.getBotId(), userId, "jobSeeker");
+            DeleteMessage dm = new DeleteMessage();
+            channelMessageIdPostCounts.stream().forEach(cmp -> {
+                dm.setChatId(String.valueOf(cmp.getChannelId()));
+                dm.setMessageId(cmp.getMessageId());
+                try {
+                    custom.executeAsync(dm);
+                } catch (TelegramApiException e) {
+                    e.printStackTrace();
+                }
+                cmp.setMessageId(-1);
+                cmp.setPostCount(0);
+                jobManagementServiceImpl.saveChannelMessageIdPostCounts(cmp);
+            });
 
             this.response.setText("删除成功");
             common.sendResponseAsync(this.response);

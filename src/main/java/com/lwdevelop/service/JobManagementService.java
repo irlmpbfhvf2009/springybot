@@ -1,5 +1,7 @@
 package com.lwdevelop.service;
 
+import java.util.List;
+
 import org.springframework.http.ResponseEntity;
 
 import com.lwdevelop.dto.JobPostingDTO;
@@ -28,6 +30,7 @@ public interface JobManagementService {
     // ChannelMessageIdPostCounts
     ChannelMessageIdPostCounts findByChannelIdAndTypeWithChannelMessageIdPostCounts(Long channelId,String type);
     ChannelMessageIdPostCounts findByBotIdAndUserIdAndTypeWithChannelMessageIdPostCounts(String botId,String userId,String type);
+    List<ChannelMessageIdPostCounts> findAllByBotIdAndUserIdAndTypeWithChannelMessageIdPostCounts(String botId,String userId,String type);
     void saveChannelMessageIdPostCounts(ChannelMessageIdPostCounts channelMessageIdPostCounts);
 
 
