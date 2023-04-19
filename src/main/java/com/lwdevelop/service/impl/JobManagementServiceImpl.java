@@ -153,7 +153,7 @@ public class JobManagementServiceImpl implements JobManagementService {
     }
 
     @Override
-    public ResponseEntity<ResponseData> addJobPosting(JobPostingDTO jobPostingDTO) {
+    public ResponseEntity<ResponseData> editAndPost_JobPosting(JobPostingDTO jobPostingDTO) {
         String userId = jobPostingDTO.getUserId();
         JobPosting jobPosting = this.findByUserIdAndBotIdWithJobPosting(userId, jobPostingDTO.getBotId());
         // JobPosting jobPosting = this.findByUserIdWithJobPosting(userId);
@@ -275,7 +275,7 @@ public class JobManagementServiceImpl implements JobManagementService {
     }
 
     @Override
-    public ResponseEntity<ResponseData> addJobSeeker(JobSeekerDTO jobSeekerDTO) {
+    public ResponseEntity<ResponseData> editAndPost_JobSeeker(JobSeekerDTO jobSeekerDTO) {
         String userId = jobSeekerDTO.getUserId();
         // JobSeeker jobSeeker = this.findByUserIdWithJobSeeker(userId);
         JobSeeker jobSeeker = this.findByUserIdAndBotIdWithJobSeeker(userId, jobSeekerDTO.getBotId());

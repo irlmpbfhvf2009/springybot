@@ -19,19 +19,19 @@ public class JobManagementController {
     private JobManagementServiceImpl jobManagementServiceImpl;
     
     // 新增招聘信息
-    @PostMapping("/addJobPosting")
-    public ResponseEntity<ResponseUtils.ResponseData> addJobPosting(
+    @PostMapping("/editAndPost_JobPosting")
+    public ResponseEntity<ResponseUtils.ResponseData> editAndPost_JobPosting(
             @RequestBody JobPostingDTO jobPostingDTO) throws Exception {
 
-        return jobManagementServiceImpl.addJobPosting(jobPostingDTO);
+        return jobManagementServiceImpl.editAndPost_JobPosting(jobPostingDTO);
     }
 
     // 新增求職信息
-    @PostMapping("/addJobSeeker")
-    public ResponseEntity<ResponseUtils.ResponseData> addJobSeeker(
+    @PostMapping("/editAndPost_JobSeeker")
+    public ResponseEntity<ResponseUtils.ResponseData> editAndPost_JobSeeker(
             @RequestBody JobSeekerDTO jobSeekerDTO) throws Exception {
 
-        return jobManagementServiceImpl.addJobSeeker(jobSeekerDTO);
+        return jobManagementServiceImpl.editAndPost_JobSeeker(jobSeekerDTO);
     }
 
     // 解碼招聘信息
