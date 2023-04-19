@@ -55,6 +55,11 @@ public class JobManagementServiceImpl implements JobManagementService {
     }
 
     @Override
+    public ChannelMessageIdPostCounts findByBotIdAndUserIdAndTypeWithChannelMessageIdPostCounts(String botId,String userId,String type){
+        return channelMessageIdPostCountsRepository.findByBotIdAndUserIdAndType(botId,userId, type);
+    }
+
+    @Override
     public JobSeeker findByUserIdWithJobSeeker(String userId) {
         return jobSeekerRepository.findByUserId(userId);
     }
@@ -121,6 +126,7 @@ public class JobManagementServiceImpl implements JobManagementService {
         return ResponseUtils.response(RetEnum.RET_SUCCESS, data);
     }
 
+
     @Override
     public ResponseEntity<ResponseData> decryptedUbWithJobSeeker(JobSeekerDTO jobSeekerDTO) {
         String ub = jobSeekerDTO.getUb();
@@ -147,7 +153,7 @@ public class JobManagementServiceImpl implements JobManagementService {
     }
 
     @Override
-    public ResponseEntity<ResponseData> addJobPosting(JobPostingDTO jobPostingDTO) {
+    public ResponseEntity<ResponseData> editAndPost_JobPosting(JobPostingDTO jobPostingDTO) {
         String userId = jobPostingDTO.getUserId();
         JobPosting jobPosting = this.findByUserIdAndBotIdWithJobPosting(userId, jobPostingDTO.getBotId());
         // JobPosting jobPosting = this.findByUserIdWithJobPosting(userId);
@@ -224,6 +230,8 @@ public class JobManagementServiceImpl implements JobManagementService {
 
         SendMessage response = new SendMessage();
         Long channelId = robotChannelManagement.getChannelId();
+        String channelTitle = robotChannelManagement.getChannelTitle();
+
         if (!result.isEmpty()) {
             response.setChatId(String.valueOf(channelId));
             response.setText("招聘人才\n\n" + result);
@@ -234,7 +242,10 @@ public class JobManagementServiceImpl implements JobManagementService {
 
                 if (channelMessageIdPostCounts == null) {
                     channelMessageIdPostCounts = new ChannelMessageIdPostCounts();
+                    channelMessageIdPostCounts.setBotId(jobPosting.getBotId());
+                    channelMessageIdPostCounts.setUserId(jobPosting.getUserId());
                     channelMessageIdPostCounts.setChannelId(channelId);
+                    channelMessageIdPostCounts.setChannelTitle(channelTitle);
                     channelMessageIdPostCounts.setMessageId(channelMessageId);
                     channelMessageIdPostCounts.setPostCount(1);
                     channelMessageIdPostCounts.setType("jobPosting");
@@ -264,7 +275,7 @@ public class JobManagementServiceImpl implements JobManagementService {
     }
 
     @Override
-    public ResponseEntity<ResponseData> addJobSeeker(JobSeekerDTO jobSeekerDTO) {
+    public ResponseEntity<ResponseData> editAndPost_JobSeeker(JobSeekerDTO jobSeekerDTO) {
         String userId = jobSeekerDTO.getUserId();
         // JobSeeker jobSeeker = this.findByUserIdWithJobSeeker(userId);
         JobSeeker jobSeeker = this.findByUserIdAndBotIdWithJobSeeker(userId, jobSeekerDTO.getBotId());
@@ -342,6 +353,111 @@ public class JobManagementServiceImpl implements JobManagementService {
         ;
         return ResponseUtils.response(RetEnum.RET_SUCCESS, "发送成功");
     }
+    @Override
+    public ResponseEntity<ResponseData> edit_JobPosting(JobPostingDTO jobPostingDTO) {
+        String userId = jobPostingDTO.getUserId();
+        JobPosting jobPosting = this.findByUserIdAndBotIdWithJobPosting(userId, jobPostingDTO.getBotId());
+        // JobPosting jobPosting = this.findByUserIdWithJobPosting(userId);
+        jobPosting.setBotId(jobPostingDTO.getBotId());
+        jobPosting.setBaseSalary(jobPostingDTO.getBaseSalary());
+        jobPosting.setCommission(jobPostingDTO.getCommission());
+        jobPosting.setCompany(jobPostingDTO.getCompany());
+        jobPosting.setFlightNumber(jobPostingDTO.getFlightNumber());
+        jobPosting.setLocation(jobPostingDTO.getLocation());
+        jobPosting.setPosition(jobPostingDTO.getPosition());
+        jobPosting.setRequirements(jobPostingDTO.getRequirements());
+        jobPosting.setWorkTime(jobPostingDTO.getWorkTime());
+        this.saveJobPosting(jobPosting);
+
+        // 修改訊息
+        Long id = Long.valueOf(jobPostingDTO.getBotId());
+        SpringyBot springyBot = springyBotServiceImpl.findById(id).get();
+        SpringyBotDTO springyBotDTO = new SpringyBotDTO();
+        springyBotDTO.setToken(springyBot.getToken());
+        springyBotDTO.setUsername(springyBot.getUsername());
+        Custom custom = new Custom(springyBotDTO);
+
+        Integer messageId = jobPosting.getLastMessageId();
+        EditMessageText editMessageText = new EditMessageText();
+        editMessageText.setChatId(userId);
+        editMessageText.setMessageId(messageId);
+        editMessageText.setText("招聘人才\n\n" +
+                "公司：" + jobPostingDTO.getCompany() + "\n" +
+                "职位：" + jobPostingDTO.getPosition() + "\n" +
+                "底薪：" + jobPostingDTO.getBaseSalary() + "\n" +
+                "提成：" + jobPostingDTO.getCommission() + "\n" +
+                "上班时间：" + jobPostingDTO.getWorkTime() + "\n" +
+                "要求内容：" + jobPostingDTO.getRequirements() + "\n" +
+                "🐌 地址：" + jobPostingDTO.getLocation() + "\n" +
+                "✈️咨询飞机号： " + jobPostingDTO.getFlightNumber());
+
+        editMessageText.setReplyMarkup(new KeyboardButton().keyboard_editJobPosting(jobPostingDTO));
+        try {
+            custom.executeAsync(editMessageText);
+        } catch (TelegramApiException e) {
+            e.printStackTrace();
+        }
+
+        return ResponseUtils.response(RetEnum.RET_SUCCESS, "编辑成功");
+    }
+
+    @Override
+    public ResponseEntity<ResponseData> edit_JobSeeker(JobSeekerDTO jobSeekerDTO) {
+        String userId = jobSeekerDTO.getUserId();
+        // JobSeeker jobSeeker = this.findByUserIdWithJobSeeker(userId);
+        JobSeeker jobSeeker = this.findByUserIdAndBotIdWithJobSeeker(userId, jobSeekerDTO.getBotId());
+        jobSeeker.setBotId(jobSeekerDTO.getBotId());
+        jobSeeker.setName(jobSeekerDTO.getName());
+        jobSeeker.setGender(jobSeekerDTO.getGender());
+        jobSeeker.setDateOfBirth(jobSeekerDTO.getDateOfBirth());
+        jobSeeker.setAge(jobSeekerDTO.getAge());
+        jobSeeker.setNationality(jobSeekerDTO.getNationality());
+        jobSeeker.setEducation(jobSeekerDTO.getEducation());
+        jobSeeker.setSkills(jobSeekerDTO.getSkills());
+        jobSeeker.setTargetPosition(jobSeekerDTO.getTargetPosition());
+        jobSeeker.setResources(jobSeekerDTO.getResources());
+        jobSeeker.setExpectedSalary(jobSeekerDTO.getExpectedSalary());
+        jobSeeker.setWorkExperience(jobSeekerDTO.getWorkExperience());
+        jobSeeker.setSelfIntroduction(jobSeekerDTO.getSelfIntroduction());
+        jobSeeker.setFlightNumber(jobSeekerDTO.getFlightNumber());
+        this.saveJobSeeker(jobSeeker);
+
+        // 修改訊息
+        Long id = Long.valueOf(jobSeekerDTO.getBotId());
+        SpringyBot springyBot = springyBotServiceImpl.findById(id).get();
+        SpringyBotDTO springyBotDTO = new SpringyBotDTO();
+        springyBotDTO.setToken(springyBot.getToken());
+        springyBotDTO.setUsername(springyBot.getUsername());
+        Custom custom = new Custom(springyBotDTO);
+
+        Integer messageId = jobSeeker.getLastMessageId();
+        EditMessageText editMessageText = new EditMessageText();
+        editMessageText.setChatId(userId);
+        editMessageText.setMessageId(messageId);
+        editMessageText.setText("求职人员\n\n" +
+                "姓名：" + jobSeekerDTO.getName() + "\n" +
+                "男女：" + jobSeekerDTO.getGender() + "\n" +
+                "出生_年_月_日：" + jobSeekerDTO.getDateOfBirth() + "\n" +
+                "年龄：" + jobSeekerDTO.getAge() + "\n" +
+                "国籍：" + jobSeekerDTO.getNationality() + "\n" +
+                "学历：" + jobSeekerDTO.getEducation() + "\n" +
+                "技能：" + jobSeekerDTO.getSkills() + "\n" +
+                "目标职位： " + jobSeekerDTO.getTargetPosition() + "\n" +
+                "手上有什么资源：" + jobSeekerDTO.getResources() + "\n" +
+                "期望薪资：" + jobSeekerDTO.getExpectedSalary() + "\n" +
+                "工作经历：" + jobSeekerDTO.getWorkExperience() + "\n" +
+                "自我介绍：" + jobSeekerDTO.getSelfIntroduction() + "\n" +
+                "✈️咨询飞机号：" + jobSeekerDTO.getFlightNumber());
+
+        editMessageText.setReplyMarkup(new KeyboardButton().keyboard_editJobSeeker(jobSeekerDTO));
+        try {
+            custom.executeAsync(editMessageText);
+        } catch (TelegramApiException e) {
+            e.printStackTrace();
+        }
+
+        return ResponseUtils.response(RetEnum.RET_SUCCESS, "编辑成功");
+    }
 
     private void sendTextWithJobSeeker(JobSeeker jobSeeker, Custom custom,
             RobotChannelManagement robotChannelManagement) {
@@ -364,6 +480,7 @@ public class JobManagementServiceImpl implements JobManagementService {
 
         SendMessage response = new SendMessage();
         Long channelId = robotChannelManagement.getChannelId();
+        String channelTitle = robotChannelManagement.getChannelTitle();
 
         if (!result.isEmpty()) {
             response.setChatId(String.valueOf(channelId));
@@ -376,7 +493,10 @@ public class JobManagementServiceImpl implements JobManagementService {
 
                 if (channelMessageIdPostCounts == null) {
                     channelMessageIdPostCounts = new ChannelMessageIdPostCounts();
+                    channelMessageIdPostCounts.setBotId(jobSeeker.getBotId());
+                    channelMessageIdPostCounts.setUserId(jobSeeker.getUserId());
                     channelMessageIdPostCounts.setChannelId(channelId);
+                    channelMessageIdPostCounts.setChannelTitle(channelTitle);
                     channelMessageIdPostCounts.setMessageId(channelMessageId);
                     channelMessageIdPostCounts.setPostCount(1);
                     channelMessageIdPostCounts.setType("jobSeeker");
@@ -437,5 +557,6 @@ public class JobManagementServiceImpl implements JobManagementService {
         }
         return ResponseUtils.response(RetEnum.RET_SUCCESS, data);
     }
+
 
 }

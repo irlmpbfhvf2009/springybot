@@ -16,7 +16,13 @@ public class ChannelMessageIdPostCounts {
 
     private Long id;
 
+    private String botId;
+
+    private String userId;
+
     private Long channelId;
+
+    private String channelTitle;
 
     private Integer messageId;
 

@@ -27,13 +27,18 @@ public interface JobManagementService {
     
     // ChannelMessageIdPostCounts
     ChannelMessageIdPostCounts findByChannelIdAndTypeWithChannelMessageIdPostCounts(Long channelId,String type);
+    ChannelMessageIdPostCounts findByBotIdAndUserIdAndTypeWithChannelMessageIdPostCounts(String botId,String userId,String type);
     void saveChannelMessageIdPostCounts(ChannelMessageIdPostCounts channelMessageIdPostCounts);
 
 
     //
-    ResponseEntity<ResponseUtils.ResponseData> addJobPosting(JobPostingDTO jobPostingDTO);
+    ResponseEntity<ResponseUtils.ResponseData> editAndPost_JobPosting(JobPostingDTO jobPostingDTO);
 
-    ResponseEntity<ResponseUtils.ResponseData> addJobSeeker(JobSeekerDTO jobSeekerDTO);
+    ResponseEntity<ResponseUtils.ResponseData> editAndPost_JobSeeker(JobSeekerDTO jobSeekerDTO);
+
+    ResponseEntity<ResponseUtils.ResponseData> edit_JobPosting(JobPostingDTO jobPostingDTO);
+
+    ResponseEntity<ResponseUtils.ResponseData> edit_JobSeeker(JobSeekerDTO jobSeekerDTO);
     
     ResponseEntity<ResponseUtils.ResponseData> decryptedUbWithJobPosting(JobPostingDTO jobPostingDTO);
 
