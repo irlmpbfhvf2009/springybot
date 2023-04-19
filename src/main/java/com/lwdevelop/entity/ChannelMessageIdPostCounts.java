@@ -22,6 +22,8 @@ public class ChannelMessageIdPostCounts {
 
     private Long channelId;
 
+    private String channelTitle;
+
     private Integer messageId;
 
     private Integer postCount;
