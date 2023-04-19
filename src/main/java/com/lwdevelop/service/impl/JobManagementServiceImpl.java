@@ -60,7 +60,7 @@ public class JobManagementServiceImpl implements JobManagementService {
     }
 
     @Override
-    public void saveChannelMessageIdPostCounts(ChannelMessageIdPostCounts channelMessageIdPostCounts){
+    public void saveChannelMessageIdPostCounts(ChannelMessageIdPostCounts channelMessageIdPostCounts) {
         channelMessageIdPostCountsRepository.save(channelMessageIdPostCounts);
     }
 
@@ -223,31 +223,29 @@ public class JobManagementServiceImpl implements JobManagementService {
         String result = sb.toString().trim(); // 去掉前后空格
 
         SendMessage response = new SendMessage();
+        Long channelId = robotChannelManagement.getChannelId();
         if (!result.isEmpty()) {
-            response.setChatId(String.valueOf(robotChannelManagement.getChannelId()));
+            response.setChatId(String.valueOf(channelId));
             response.setText("招聘人才\n\n" + result);
             try {
                 final Integer channelMessageId = custom.executeAsync(response).get().getMessageId();
-                if (jobPosting.getChannelMessageIdPostCounts() != null) {
-                    jobPosting.getChannelMessageIdPostCounts().stream()
-                            .filter(cmpc -> cmpc.getChannelId().equals(robotChannelManagement.getChannelId())).findFirst()
-                            .ifPresentOrElse(c -> {
-                                ChannelMessageIdPostCounts channelMessageIdPostCounts = this
-                                        .findByChannelIdAndTypeWithChannelMessageIdPostCounts(
-                                                robotChannelManagement.getChannelId(), "jobPosting");
-                                channelMessageIdPostCounts.setMessageId(channelMessageId);
-                                channelMessageIdPostCounts.setPostCount(channelMessageIdPostCounts.getPostCount()+1);
-                                this.saveChannelMessageIdPostCounts(channelMessageIdPostCounts);
-                            }, () -> {
-                                ChannelMessageIdPostCounts channelMessageIdPostCounts = new ChannelMessageIdPostCounts();
-                                channelMessageIdPostCounts.setChannelId(robotChannelManagement.getChannelId());
-                                channelMessageIdPostCounts.setMessageId(channelMessageId);
-                                channelMessageIdPostCounts.setPostCount(1);
-                                channelMessageIdPostCounts.setType("jobPosting");
-                                jobPosting.getChannelMessageIdPostCounts().add(channelMessageIdPostCounts);
-                                this.saveJobPosting(jobPosting);
-                            });
+                ChannelMessageIdPostCounts channelMessageIdPostCounts = findByChannelIdAndTypeWithChannelMessageIdPostCounts(
+                        channelId, "jobPosting");
+
+                if (channelMessageIdPostCounts == null) {
+                    channelMessageIdPostCounts = new ChannelMessageIdPostCounts();
+                    channelMessageIdPostCounts.setChannelId(channelId);
+                    channelMessageIdPostCounts.setMessageId(channelMessageId);
+                    channelMessageIdPostCounts.setPostCount(1);
+                    channelMessageIdPostCounts.setType("jobPosting");
+                    jobPosting.getChannelMessageIdPostCounts().add(channelMessageIdPostCounts);
+                    this.saveJobPosting(jobPosting);
+                } else {
+                    channelMessageIdPostCounts.setMessageId(channelMessageId);
+                    channelMessageIdPostCounts.setPostCount(channelMessageIdPostCounts.getPostCount() + 1);
+                    this.saveChannelMessageIdPostCounts(channelMessageIdPostCounts);
                 }
+
             } catch (InterruptedException e) {
                 e.printStackTrace();
             } catch (ExecutionException e) {
@@ -365,18 +363,35 @@ public class JobManagementServiceImpl implements JobManagementService {
         String result = sb.toString().trim(); // 去掉前后空格
 
         SendMessage response = new SendMessage();
+        Long channelId = robotChannelManagement.getChannelId();
+
         if (!result.isEmpty()) {
-            response.setChatId(String.valueOf(robotChannelManagement.getChannelId()));
+            response.setChatId(String.valueOf(channelId));
             response.setText("求职人员\n\n" + result);
-            Integer channelMessageId = 0;
             try {
-                try {
-                    channelMessageId = custom.executeAsync(response).get().getMessageId();
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                } catch (ExecutionException e) {
-                    e.printStackTrace();
+                final Integer channelMessageId = custom.executeAsync(response).get().getMessageId();
+
+                ChannelMessageIdPostCounts channelMessageIdPostCounts = findByChannelIdAndTypeWithChannelMessageIdPostCounts(
+                        channelId, "jobSeeker");
+
+                if (channelMessageIdPostCounts == null) {
+                    channelMessageIdPostCounts = new ChannelMessageIdPostCounts();
+                    channelMessageIdPostCounts.setChannelId(channelId);
+                    channelMessageIdPostCounts.setMessageId(channelMessageId);
+                    channelMessageIdPostCounts.setPostCount(1);
+                    channelMessageIdPostCounts.setType("jobSeeker");
+                    jobSeeker.getChannelMessageIdPostCounts().add(channelMessageIdPostCounts);
+                    this.saveJobSeeker(jobSeeker);
+                } else {
+                    channelMessageIdPostCounts.setMessageId(channelMessageId);
+                    channelMessageIdPostCounts.setPostCount(channelMessageIdPostCounts.getPostCount() + 1);
+                    this.saveChannelMessageIdPostCounts(channelMessageIdPostCounts);
                 }
+
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            } catch (ExecutionException e) {
+                e.printStackTrace();
             } catch (TelegramApiException e) {
                 e.printStackTrace();
             }
