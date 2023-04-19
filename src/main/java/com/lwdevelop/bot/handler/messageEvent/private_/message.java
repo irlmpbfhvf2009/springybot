@@ -38,6 +38,8 @@ public class message {
 
                 break;
             case "招聘和求职信息管理":
+
+            
                 break;
 
             default:
