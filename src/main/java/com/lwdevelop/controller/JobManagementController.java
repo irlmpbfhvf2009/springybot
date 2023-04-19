@@ -18,7 +18,7 @@ public class JobManagementController {
     @Autowired
     private JobManagementServiceImpl jobManagementServiceImpl;
     
-    // 新增招聘信息
+    // 编辑发布招聘信息
     @PostMapping("/editAndPost_JobPosting")
     public ResponseEntity<ResponseUtils.ResponseData> editAndPost_JobPosting(
             @RequestBody JobPostingDTO jobPostingDTO) throws Exception {
@@ -26,12 +26,27 @@ public class JobManagementController {
         return jobManagementServiceImpl.editAndPost_JobPosting(jobPostingDTO);
     }
 
-    // 新增求職信息
+    // 编辑发布求職信息
     @PostMapping("/editAndPost_JobSeeker")
     public ResponseEntity<ResponseUtils.ResponseData> editAndPost_JobSeeker(
             @RequestBody JobSeekerDTO jobSeekerDTO) throws Exception {
 
         return jobManagementServiceImpl.editAndPost_JobSeeker(jobSeekerDTO);
+    }
+    // 编辑招聘信息
+    @PostMapping("/edit_JobPosting")
+    public ResponseEntity<ResponseUtils.ResponseData> edit_JobPosting(
+            @RequestBody JobPostingDTO jobPostingDTO) throws Exception {
+
+        return jobManagementServiceImpl.edit_JobPosting(jobPostingDTO);
+    }
+
+    // 编辑求職信息
+    @PostMapping("/edit_JobSeeker")
+    public ResponseEntity<ResponseUtils.ResponseData> edit_JobSeeker(
+            @RequestBody JobSeekerDTO jobSeekerDTO) throws Exception {
+
+        return jobManagementServiceImpl.edit_JobSeeker(jobSeekerDTO);
     }
 
     // 解碼招聘信息

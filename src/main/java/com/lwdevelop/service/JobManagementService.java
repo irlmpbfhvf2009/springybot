@@ -35,6 +35,10 @@ public interface JobManagementService {
     ResponseEntity<ResponseUtils.ResponseData> editAndPost_JobPosting(JobPostingDTO jobPostingDTO);
 
     ResponseEntity<ResponseUtils.ResponseData> editAndPost_JobSeeker(JobSeekerDTO jobSeekerDTO);
+
+    ResponseEntity<ResponseUtils.ResponseData> edit_JobPosting(JobPostingDTO jobPostingDTO);
+
+    ResponseEntity<ResponseUtils.ResponseData> edit_JobSeeker(JobSeekerDTO jobSeekerDTO);
     
     ResponseEntity<ResponseUtils.ResponseData> decryptedUbWithJobPosting(JobPostingDTO jobPostingDTO);
 
