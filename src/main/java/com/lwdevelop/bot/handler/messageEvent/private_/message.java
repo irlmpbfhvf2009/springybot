@@ -1,11 +1,17 @@
 package com.lwdevelop.bot.handler.messageEvent.private_;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 import com.lwdevelop.bot.handler.messageEvent.private_.commands.Job;
+import com.lwdevelop.bot.handler.messageEvent.private_.commands.Job_II;
 import com.lwdevelop.bot.utils.Common;
 import com.lwdevelop.bot.utils.KeyboardButton;
+import com.lwdevelop.entity.JobPosting;
+import com.lwdevelop.repository.JobPostingRepository;
+import com.lwdevelop.service.impl.JobManagementServiceImpl;
+import com.lwdevelop.utils.SpringUtils;
 
 public class message {
 
@@ -14,8 +20,116 @@ public class message {
     private String text;
     private SendMessage response;
 
+    @Autowired
+    private JobManagementServiceImpl jobManagementServiceImpl = SpringUtils.getApplicationContext()
+            .getBean(JobManagementServiceImpl.class);
+
+    // @Autowired
+    // private SpringyBotServiceImpl springyBotServiceImpl =
+    // SpringUtils.getApplicationContext()
+    // .getBean(SpringyBotServiceImpl.class);
+
     public void handler(Common common) {
         this.init(common);
+
+        System.out.println("------------------------------");
+        System.out.println(text);
+        System.out.println("------------------------------");
+
+        // 将文本内容按行分割成字符串数组
+        String[] lines = text.split("\\r?\\n");
+
+        JobPosting jobPosting = jobManagementServiceImpl.findByUserIdAndBotIdWithJobPosting(
+                String.valueOf(message.getChatId()), String.valueOf(common.getSpringyBotId()));
+        // 创建一个新的 JobPosting 实例
+        if (jobPosting != null) {
+            for (String line : lines) {
+                String[] parts = line.split("：");
+                if (parts.length == 2) {
+                    String key = parts[0].trim();
+                    String value = parts[1].trim();
+
+                    switch (key) {
+                        case "公司":
+                            jobPosting.setCompany(value);
+                            break;
+                        case "职位":
+                            jobPosting.setPosition(value);
+                            break;
+                        case "底薪":
+                            jobPosting.setBaseSalary(value);
+                            break;
+                        case "提成":
+                            jobPosting.setCommission(value);
+                            break;
+                        case "上班时间":
+                            jobPosting.setWorkTime(value);
+                            break;
+                        case "要求内容":
+                            jobPosting.setRequirements(value);
+                            break;
+                        case "地址":
+                            jobPosting.setLocation(value);
+                            break;
+                        case "咨询飞机号":
+                            jobPosting.setFlightNumber(value);
+                            break;
+                        default:
+                            // 未知键值对，可以忽略或抛出异常
+                            break;
+                    }
+                }
+            }
+        } else {
+
+            jobPosting = new JobPosting();
+
+            jobPosting.setBotId(String.valueOf(common.getSpringyBotId()));
+            jobPosting.setUserId(String.valueOf(message.getChatId()));
+            jobPosting.setLastMessageId(message.getMessageId());
+
+            // 遍历字符串数组，将冒号后面的值设置到实体对应的字段中
+            for (String line : lines) {
+                String[] parts = line.split("：");
+                if (parts.length == 2) {
+                    String key = parts[0].trim();
+                    String value = parts[1].trim();
+
+                    switch (key) {
+                        case "公司":
+                            jobPosting.setCompany(value);
+                            break;
+                        case "职位":
+                            jobPosting.setPosition(value);
+                            break;
+                        case "底薪":
+                            jobPosting.setBaseSalary(value);
+                            break;
+                        case "提成":
+                            jobPosting.setCommission(value);
+                            break;
+                        case "上班时间":
+                            jobPosting.setWorkTime(value);
+                            break;
+                        case "要求内容":
+                            jobPosting.setRequirements(value);
+                            break;
+                        case "地址":
+                            jobPosting.setLocation(value);
+                            break;
+                        case "咨询飞机号":
+                            jobPosting.setFlightNumber(value);
+                            break;
+                        default:
+                            // 未知键值对，可以忽略或抛出异常
+                            break;
+                    }
+                }
+            }
+        }
+        System.out.println(jobPosting);
+
+        jobManagementServiceImpl.saveJobPosting(jobPosting);
 
         switch (this.text.toLowerCase()) {
             case "/start":
@@ -23,24 +137,28 @@ public class message {
                 break;
 
             case "发布招聘":
-                if (hasUsername()) {
-                    new Job().setResponse_jobPosting_management(common);
-                } else {
-                    this.send_nullUsername();
-                }
+                new Job_II().setResponse_jobPosting_management(common);
                 break;
-            case "发布求职":
-                if (hasUsername()) {
-                    new Job().setResponse_jobSeeker_management(common);
-                } else {
-                    this.send_nullUsername();
-                }
 
-                break;
-            case "招聘和求职信息管理":
-                new Job().setResponse_edit_jobSeeker_management(common);
-                new Job().setResponse_edit_jobPosting_management(common);
-                break;
+            // case "发布招聘":
+            // if (hasUsername()) {
+            // new Job().setResponse_jobPosting_management(common);
+            // } else {
+            // this.send_nullUsername();
+            // }
+            // break;
+            // case "发布求职":
+            // if (hasUsername()) {
+            // new Job().setResponse_jobSeeker_management(common);
+            // } else {
+            // this.send_nullUsername();
+            // }
+
+            // break;
+            // case "招聘和求职信息管理":
+            // new Job().setResponse_edit_jobSeeker_management(common);
+            // new Job().setResponse_edit_jobPosting_management(common);
+            // break;
 
             default:
                 this.text = "";
