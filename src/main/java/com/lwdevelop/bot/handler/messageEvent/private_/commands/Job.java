@@ -1,6 +1,5 @@
 package com.lwdevelop.bot.handler.messageEvent.private_.commands;
 
-
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -149,17 +148,21 @@ public class Job {
                         location = Optional.ofNullable(jobPosting.getLocation()).orElse("");
                         flightNumber = Optional.ofNullable(jobPosting.getFlightNumber()).orElse("");
 
-                        jobPostingDTO= new JobPostingDTO(userId, String.valueOf(id),company,position,baseSalary,commission,workTime,requirements,location,flightNumber);
+                        jobPostingDTO = new JobPostingDTO(userId, String.valueOf(id), company, position, baseSalary,
+                                        commission, workTime, requirements, location, flightNumber);
 
-                        // public JobPostingDTO(String userId, String botId, String company, String position, String baseSalary,
-                        // String commission, String workTime, String requirements, String location, String flightNumber) {
+                        // public JobPostingDTO(String userId, String botId, String company, String
+                        // position, String baseSalary,
+                        // String commission, String workTime, String requirements, String location,
+                        // String flightNumber) {
 
                         response.setText(
                                         "招聘人才\n\n" + "公司：" + company + "\n" + "职位：" + position + "\n" + "底薪："
                                                         + baseSalary + "\n" + "提成：" + commission + "\n" + "上班时间："
                                                         + workTime + "\n" + "要求内容：" + requirements + "\n"
                                                         + "🐌 地址：" + location + "\n" + "✈️咨询飞机号：" + flightNumber);
-                        response.setReplyMarkup(new KeyboardButton().keyboard_jobPosting(jobPostingDTO));
+                        response.setReplyMarkup(new KeyboardButton().keyboard_jobPosting(jobPostingDTO,false));
+                        // response.setReplyMarkup(new KeyboardButton().keyboard_jobPosting(jobPostingDTO));
                         Integer messageId = common.sendResponseAsync(response);
                         jobPosting.setLastMessageId(messageId);
                         jobUser.getJobPosting().add(jobPosting);
@@ -167,7 +170,8 @@ public class Job {
                 } else {
                         response.setText("招聘人才\n\n" + "公司：\n" + "职位：\n" + "底薪：\n" + "提成：\n" + "上班时间：\n" + "要求内容：\n"
                                         + "🐌 地址：\n" + "✈️咨询飞机号：");
-                        response.setReplyMarkup(new KeyboardButton().keyboard_jobPosting(jobPostingDTO));
+                        response.setReplyMarkup(new KeyboardButton().keyboard_jobPosting(jobPostingDTO,false));
+                        // response.setReplyMarkup(new KeyboardButton().keyboard_jobPosting(jobPostingDTO));
 
                         JobPosting jp = new JobPosting(userId, String.valueOf(id),
                                         common.sendResponseAsync(response));
@@ -222,7 +226,9 @@ public class Job {
                         selfIntroduction = Optional.ofNullable(jobSeeker.getSelfIntroduction()).orElse("");
                         flightNumber = Optional.ofNullable(jobSeeker.getFlightNumber()).orElse("");
 
-                        jobSeekerDTO = new JobSeekerDTO(userId, String.valueOf(id),name,gender,dateOfBirth,age,nationality,education,skills,targetPosition,resources,expectedSalary,workExperience,selfIntroduction,flightNumber);
+                        jobSeekerDTO = new JobSeekerDTO(userId, String.valueOf(id), name, gender, dateOfBirth, age,
+                                        nationality, education, skills, targetPosition, resources, expectedSalary,
+                                        workExperience, selfIntroduction, flightNumber);
 
                         response.setText("求职人员\n\n姓名：" + name + "\n男女：" + gender + "\n出生_年_月_日："
                                         + dateOfBirth
@@ -230,7 +236,8 @@ public class Job {
                                         + "\n技能：" + skills + "\n目标职位：" + targetPosition + "\n手上有什么资源："
                                         + resources + "\n期望薪资：" + expectedSalary + "\n工作经历："
                                         + workExperience + "\n自我介绍：" + selfIntroduction + "\n✈️咨询飞机号：" + flightNumber);
-                        response.setReplyMarkup(new KeyboardButton().keyboard_jobSeeker(jobSeekerDTO));
+                        response.setReplyMarkup(new KeyboardButton().keyboard_jobSeeker(jobSeekerDTO,false));
+                        // response.setReplyMarkup(new KeyboardButton().keyboard_jobSeeker(jobSeekerDTO));
                         Integer messageId = common.sendResponseAsync(response);
                         jobSeeker.setLastMessageId(messageId);
                         jobUser.getJobSeeker().add(jobSeeker);
@@ -238,7 +245,8 @@ public class Job {
                 } else {
                         response.setText(
                                         "求职人员\n\n姓名：\n男女：\n出生_年_月_日：\n年龄：\n国籍：\n学历：\n技能：\n目标职位：\n手上有什么资源：\n期望薪资：\n工作经历：\n自我介绍：\n✈️咨询飞机号：");
-                        response.setReplyMarkup(new KeyboardButton().keyboard_jobSeeker(jobSeekerDTO));
+                        response.setReplyMarkup(new KeyboardButton().keyboard_jobSeeker(jobSeekerDTO,false));
+                        // response.setReplyMarkup(new KeyboardButton().keyboard_jobSeeker(jobSeekerDTO));
                         JobSeeker js = new JobSeeker(userId, String.valueOf(id),
                                         common.sendResponseAsync(response));
                         jobUser.getJobSeeker().add(js);
@@ -255,7 +263,6 @@ public class Job {
                 SendMessage response = new SendMessage();
                 response.setChatId(userId);
 
-
                 List<ChannelMessageIdPostCounts> channelMessageIdPostCounts = jobManagementServiceImpl
                                 .findAllByBotIdAndUserIdAndTypeWithChannelMessageIdPostCounts(String.valueOf(id),
                                                 userId, "jobPosting");
@@ -264,13 +271,11 @@ public class Job {
                                                 ChannelMessageIdPostCounts::getChannelTitle,
                                                 ChannelMessageIdPostCounts::getPostCount));
 
-                // String alert = channelInfo.entrySet().stream()
-                //                 .map(entry -> entry.getKey() + " 发布了" + entry.getValue() + "则 [招聘人才] 信息\n")
-                //                 .collect(Collectors.joining());
-
                 String alert = channelInfo.entrySet().stream()
-                .map(entry -> entry.getValue() != 0 ? entry.getKey() + " 发布了" + entry.getValue() + "则 [招聘人才] 信息\n" : "")
-                .collect(Collectors.joining());
+                                .map(entry -> entry.getValue() != 0
+                                                ? entry.getKey() + " 发布了" + entry.getValue() + "则 [招聘人才] 信息\n"
+                                                : "")
+                                .collect(Collectors.joining());
                 if (!alert.isEmpty()) {
                         response.setText("提醒：您已经在:\n" + alert);
                         response.setDisableNotification(true);
@@ -307,7 +312,10 @@ public class Job {
                                                         + baseSalary + "\n" + "提成：" + commission + "\n" + "上班时间："
                                                         + workTime + "\n" + "要求内容：" + requirements + "\n"
                                                         + "🐌 地址：" + location + "\n" + "✈️咨询飞机号：" + flightNumber);
-                        response.setReplyMarkup(new KeyboardButton().keyboard_editJobPosting(jobPostingDTO));
+                        jobPostingDTO = new JobPostingDTO(userId, String.valueOf(id), company, position, baseSalary,
+                                        commission, workTime, requirements, location, flightNumber);
+                        response.setReplyMarkup(new KeyboardButton().keyboard_jobPosting(jobPostingDTO,true));
+                        // response.setReplyMarkup(new KeyboardButton().keyboard_editJobPosting(jobPostingDTO));
                         Integer messageId = common.sendResponseAsync(response);
                         jobPosting.setLastMessageId(messageId);
                         jobUser.getJobPosting().add(jobPosting);
@@ -315,7 +323,8 @@ public class Job {
                 } else {
                         response.setText("招聘人才\n\n" + "公司：\n" + "职位：\n" + "底薪：\n" + "提成：\n" + "上班时间：\n" + "要求内容：\n"
                                         + "🐌 地址：\n" + "✈️咨询飞机号：");
-                        response.setReplyMarkup(new KeyboardButton().keyboard_jobPosting(jobPostingDTO));
+                        response.setReplyMarkup(new KeyboardButton().keyboard_jobPosting(jobPostingDTO,false));
+                        // response.setReplyMarkup(new KeyboardButton().keyboard_jobPosting(jobPostingDTO));
 
                         JobPosting jp = new JobPosting(userId, String.valueOf(id),
                                         common.sendResponseAsync(response));
@@ -342,12 +351,14 @@ public class Job {
                                                 ChannelMessageIdPostCounts::getPostCount));
 
                 // String alert = channelInfo.entrySet().stream()
-                //                 .map(entry -> entry.getKey() + " 发布了" + entry.getValue() + "则 [求职人员] 信息\n")
-                //                 .collect(Collectors.joining());
+                // .map(entry -> entry.getKey() + " 发布了" + entry.getValue() + "则 [求职人员] 信息\n")
+                // .collect(Collectors.joining());
 
                 String alert = channelInfo.entrySet().stream()
-                .map(entry -> entry.getValue() != 0 ? entry.getKey() + " 发布了" + entry.getValue() + "则 [求职人员] 信息\n" : "")
-                .collect(Collectors.joining()); 
+                                .map(entry -> entry.getValue() != 0
+                                                ? entry.getKey() + " 发布了" + entry.getValue() + "则 [求职人员] 信息\n"
+                                                : "")
+                                .collect(Collectors.joining());
                 if (!alert.isEmpty()) {
                         response.setText("提醒：您已经在:\n" + alert);
                         response.setDisableNotification(false);
@@ -387,13 +398,18 @@ public class Job {
                         selfIntroduction = Optional.ofNullable(jobSeeker.getSelfIntroduction()).orElse("");
                         flightNumber = Optional.ofNullable(jobSeeker.getFlightNumber()).orElse("");
 
+                        jobSeekerDTO = new JobSeekerDTO(userId, String.valueOf(id), name, gender, dateOfBirth, age,
+                                        nationality, education, skills, targetPosition, resources, expectedSalary,
+                                        workExperience, selfIntroduction, flightNumber);
+
                         response.setText("求职人员\n\n姓名：" + name + "\n男女：" + gender + "\n出生_年_月_日："
                                         + dateOfBirth
                                         + "\n年龄：" + age + "\n国籍：" + nationality + "\n学历：" + education
                                         + "\n技能：" + skills + "\n目标职位：" + targetPosition + "\n手上有什么资源："
                                         + resources + "\n期望薪资：" + expectedSalary + "\n工作经历："
                                         + workExperience + "\n自我介绍：" + selfIntroduction + "\n✈️咨询飞机号：" + flightNumber);
-                        response.setReplyMarkup(new KeyboardButton().keyboard_editJobSeeker(jobSeekerDTO));
+                        response.setReplyMarkup(new KeyboardButton().keyboard_jobSeeker(jobSeekerDTO,true));
+                        // response.setReplyMarkup(new KeyboardButton().keyboard_editJobSeeker(jobSeekerDTO));
                         Integer messageId = common.sendResponseAsync(response);
                         jobSeeker.setLastMessageId(messageId);
                         jobUser.getJobSeeker().add(jobSeeker);
@@ -401,7 +417,8 @@ public class Job {
                 } else {
                         response.setText(
                                         "求职人员\n\n姓名：\n男女：\n出生_年_月_日：\n年龄：\n国籍：\n学历：\n技能：\n目标职位：\n手上有什么资源：\n期望薪资：\n工作经历：\n自我介绍：\n✈️咨询飞机号：");
-                        response.setReplyMarkup(new KeyboardButton().keyboard_jobSeeker(jobSeekerDTO));
+                        response.setReplyMarkup(new KeyboardButton().keyboard_jobSeeker(jobSeekerDTO,true));
+                        // response.setReplyMarkup(new KeyboardButton().keyboard_jobSeeker(jobSeekerDTO));
                         JobSeeker js = new JobSeeker(userId, String.valueOf(id),
                                         common.sendResponseAsync(response));
                         jobUser.getJobSeeker().add(js);

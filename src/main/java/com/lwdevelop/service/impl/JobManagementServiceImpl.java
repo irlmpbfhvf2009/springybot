@@ -194,7 +194,8 @@ public class JobManagementServiceImpl implements JobManagementService {
                 "🐌 地址：" + jobPostingDTO.getLocation() + "\n" +
                 "✈️咨询飞机号： " + jobPostingDTO.getFlightNumber());
 
-        editMessageText.setReplyMarkup(new KeyboardButton().keyboard_jobPosting(jobPostingDTO));
+        editMessageText.setReplyMarkup(new KeyboardButton().keyboard_jobPosting(jobPostingDTO,false));
+        // editMessageText.setReplyMarkup(new KeyboardButton().keyboard_jobPosting(jobPostingDTO));
         try {
             custom.executeAsync(editMessageText);
         } catch (TelegramApiException e) {
@@ -335,7 +336,8 @@ public class JobManagementServiceImpl implements JobManagementService {
                 "自我介绍：" + jobSeekerDTO.getSelfIntroduction() + "\n" +
                 "✈️咨询飞机号：" + jobSeekerDTO.getFlightNumber());
 
-        editMessageText.setReplyMarkup(new KeyboardButton().keyboard_jobSeeker(jobSeekerDTO));
+        editMessageText.setReplyMarkup(new KeyboardButton().keyboard_jobSeeker(jobSeekerDTO,false));
+        // editMessageText.setReplyMarkup(new KeyboardButton().keyboard_jobSeeker(jobSeekerDTO));
         try {
             custom.executeAsync(editMessageText);
         } catch (TelegramApiException e) {
@@ -404,7 +406,8 @@ public class JobManagementServiceImpl implements JobManagementService {
                 "🐌 地址：" + jobPostingDTO.getLocation() + "\n" +
                 "✈️咨询飞机号： " + jobPostingDTO.getFlightNumber());
 
-        editMessageText.setReplyMarkup(new KeyboardButton().keyboard_editJobPosting(jobPostingDTO));
+        editMessageText.setReplyMarkup(new KeyboardButton().keyboard_jobPosting(jobPostingDTO,true));
+        // editMessageText.setReplyMarkup(new KeyboardButton().keyboard_editJobPosting(jobPostingDTO));
         try {
             custom.executeAsync(editMessageText);
         } catch (TelegramApiException e) {
@@ -494,7 +497,8 @@ public class JobManagementServiceImpl implements JobManagementService {
                 "自我介绍：" + jobSeekerDTO.getSelfIntroduction() + "\n" +
                 "✈️咨询飞机号：" + jobSeekerDTO.getFlightNumber());
 
-        editMessageText.setReplyMarkup(new KeyboardButton().keyboard_editJobSeeker(jobSeekerDTO));
+        editMessageText.setReplyMarkup(new KeyboardButton().keyboard_jobSeeker(jobSeekerDTO,true));
+        // editMessageText.setReplyMarkup(new KeyboardButton().keyboard_editJobSeeker(jobSeekerDTO));
         try {
             custom.executeAsync(editMessageText);
         } catch (TelegramApiException e) {

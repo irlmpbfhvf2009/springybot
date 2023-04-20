@@ -80,7 +80,8 @@ public class CallbackQuerys {
                     "🐌 地址：\n" +
                     "✈️咨询飞机号：");
 
-            editMessageText.setReplyMarkup(new KeyboardButton().keyboard_editJobPosting(jobPostingDTO));
+            editMessageText.setReplyMarkup(new KeyboardButton().keyboard_jobPosting(jobPostingDTO,true));
+            // editMessageText.setReplyMarkup(new KeyboardButton().keyboard_editJobPosting(jobPostingDTO));
             try {
                 custom.executeAsync(editMessageText);
             } catch (TelegramApiException e) {
@@ -158,7 +159,8 @@ public class CallbackQuerys {
                     "自我介绍：\n" +
                     "✈️咨询飞机号：");
 
-            editMessageText.setReplyMarkup(new KeyboardButton().keyboard_editJobSeeker(jobSeekerDTO));
+            editMessageText.setReplyMarkup(new KeyboardButton().keyboard_jobSeeker(jobSeekerDTO,false));
+            // editMessageText.setReplyMarkup(new KeyboardButton().keyboard_JobSeeker(jobSeekerDTO));
             try {
                 custom.executeAsync(editMessageText);
             } catch (TelegramApiException e) {
