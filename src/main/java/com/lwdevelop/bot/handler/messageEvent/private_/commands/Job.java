@@ -148,6 +148,12 @@ public class Job {
                         requirements = Optional.ofNullable(jobPosting.getRequirements()).orElse("");
                         location = Optional.ofNullable(jobPosting.getLocation()).orElse("");
                         flightNumber = Optional.ofNullable(jobPosting.getFlightNumber()).orElse("");
+
+                        jobPostingDTO= new JobPostingDTO(userId, String.valueOf(id),company,position,baseSalary,commission,workTime,requirements,location,flightNumber);
+
+                        // public JobPostingDTO(String userId, String botId, String company, String position, String baseSalary,
+                        // String commission, String workTime, String requirements, String location, String flightNumber) {
+
                         response.setText(
                                         "招聘人才\n\n" + "公司：" + company + "\n" + "职位：" + position + "\n" + "底薪："
                                                         + baseSalary + "\n" + "提成：" + commission + "\n" + "上班时间："
@@ -215,6 +221,8 @@ public class Job {
                         workExperience = Optional.ofNullable(jobSeeker.getWorkExperience()).orElse("");
                         selfIntroduction = Optional.ofNullable(jobSeeker.getSelfIntroduction()).orElse("");
                         flightNumber = Optional.ofNullable(jobSeeker.getFlightNumber()).orElse("");
+
+                        jobSeekerDTO = new JobSeekerDTO(userId, String.valueOf(id),name,gender,dateOfBirth,age,nationality,education,skills,targetPosition,resources,expectedSalary,workExperience,selfIntroduction,flightNumber);
 
                         response.setText("求职人员\n\n姓名：" + name + "\n男女：" + gender + "\n出生_年_月_日："
                                         + dateOfBirth

@@ -33,6 +33,7 @@ com\lwdevelop\converter\ListToJsonConverter$1.class
 com\lwdevelop\utils\ResponseUtils.class
 com\lwdevelop\dto\GroupAndChannelTreeDTO.class
 com\lwdevelop\bot\Custom.class
+com\lwdevelop\config\AdminDataLoader.class
 com\lwdevelop\dto\AdminDTO.class
 com\lwdevelop\repository\ChannelMessageIdPostCountsRepository.class
 com\lwdevelop\bot\utils\KeyboardButton.class
