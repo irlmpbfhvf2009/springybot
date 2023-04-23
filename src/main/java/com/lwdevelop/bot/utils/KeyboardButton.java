@@ -85,14 +85,14 @@ public class KeyboardButton {
         String url;
     
         if (isEdit) {
-            // url = "http://192.168.0.27:3000/#/edit_jobPostingForm?ub=" + encodedUb;
-            url = "http://rc.ddb99.vip:18889/#/jobPostingForm?ub=" + encodedUb;
+            url = "http://192.168.0.27:3000/#/edit_jobPostingForm?ub=" + encodedUb;
+            // url = "http://rc.ddb99.vip:18889/#/jobPostingForm?ub=" + encodedUb;
             dk1.setText("编辑");
             dk2.setText("删除");
             dk2.setCallbackData("clearJobPosting_" + jobPostingDTO.getUserId());
         } else {
-            // url = "http://192.168.0.27:3000/#/jobPostingForm?ub=" + encodedUb;
-            url = "http://rc.ddb99.vip:18889/#/jobPostingForm?ub=" + encodedUb;
+            url = "http://192.168.0.27:3000/#/jobPostingForm?ub=" + encodedUb;
+            // url = "http://rc.ddb99.vip:18889/#/jobPostingForm?ub=" + encodedUb;
             dk1.setText("编辑发布");
         }
     
@@ -138,14 +138,14 @@ public class KeyboardButton {
         String url;
     
         if (isEdit) {
-            // url = "http://192.168.0.27:3000/#/edit_jobSeekerForm?ub=" + encodedUb;
-            url = "http://rc.ddb99.vip:18889/#/jobSeekerForm?ub=" + encodedUb;
+            url = "http://192.168.0.27:3000/#/edit_jobSeekerForm?ub=" + encodedUb;
+            // url = "http://rc.ddb99.vip:18889/#/jobSeekerForm?ub=" + encodedUb;
             dk1.setText("编辑");
             dk2.setText("删除");
             dk2.setCallbackData("clearJobSeeker_" + jobSeekerDTO.getUserId());
         } else {
-            // url = "http://192.168.0.27:3000/#/jobSeekerForm?ub=" + encodedUb;
-            url = "http://rc.ddb99.vip:18889/#/jobSeekerForm?ub=" + encodedUb;
+            url = "http://192.168.0.27:3000/#/jobSeekerForm?ub=" + encodedUb;
+            // url = "http://rc.ddb99.vip:18889/#/jobSeekerForm?ub=" + encodedUb;
             dk1.setText("编辑发布");
         }
     
