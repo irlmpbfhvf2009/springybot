@@ -160,7 +160,7 @@ public class Job {
                                         "招聘人才\n\n" + "公司：" + company + "\n" + "职位：" + position + "\n" + "底薪："
                                                         + baseSalary + "\n" + "提成：" + commission + "\n" + "上班时间："
                                                         + workTime + "\n" + "要求内容：" + requirements + "\n"
-                                                        + "🐌 地址：" + location + "\n" + "✈️咨询飞机号：" + flightNumber);
+                                                        + "🐌地址：" + location + "\n" + "✈️咨询飞机号：" + flightNumber);
                         response.setReplyMarkup(new KeyboardButton().keyboard_jobPosting(jobPostingDTO,false));
                         // response.setReplyMarkup(new KeyboardButton().keyboard_jobPosting(jobPostingDTO));
                         Integer messageId = common.sendResponseAsync(response);
@@ -169,7 +169,7 @@ public class Job {
                         jobManagementServiceImpl.saveJobPosting(jobPosting);
                 } else {
                         response.setText("招聘人才\n\n" + "公司：\n" + "职位：\n" + "底薪：\n" + "提成：\n" + "上班时间：\n" + "要求内容：\n"
-                                        + "🐌 地址：\n" + "✈️咨询飞机号：");
+                                        + "🐌地址：\n" + "✈️咨询飞机号：");
                         response.setReplyMarkup(new KeyboardButton().keyboard_jobPosting(jobPostingDTO,false));
                         // response.setReplyMarkup(new KeyboardButton().keyboard_jobPosting(jobPostingDTO));
 
@@ -311,7 +311,7 @@ public class Job {
                                         "招聘人才\n\n" + "公司：" + company + "\n" + "职位：" + position + "\n" + "底薪："
                                                         + baseSalary + "\n" + "提成：" + commission + "\n" + "上班时间："
                                                         + workTime + "\n" + "要求内容：" + requirements + "\n"
-                                                        + "🐌 地址：" + location + "\n" + "✈️咨询飞机号：" + flightNumber);
+                                                        + "🐌地址：" + location + "\n" + "✈️咨询飞机号：" + flightNumber);
                         jobPostingDTO = new JobPostingDTO(userId, String.valueOf(id), company, position, baseSalary,
                                         commission, workTime, requirements, location, flightNumber);
                         response.setReplyMarkup(new KeyboardButton().keyboard_jobPosting(jobPostingDTO,true));
@@ -322,7 +322,7 @@ public class Job {
                         jobManagementServiceImpl.saveJobPosting(jobPosting);
                 } else {
                         response.setText("招聘人才\n\n" + "公司：\n" + "职位：\n" + "底薪：\n" + "提成：\n" + "上班时间：\n" + "要求内容：\n"
-                                        + "🐌 地址：\n" + "✈️咨询飞机号：");
+                                        + "🐌地址：\n" + "✈️咨询飞机号：");
                         response.setReplyMarkup(new KeyboardButton().keyboard_jobPosting(jobPostingDTO,false));
                         // response.setReplyMarkup(new KeyboardButton().keyboard_jobPosting(jobPostingDTO));
 
@@ -471,7 +471,7 @@ public class Job {
                 appendIfNotEmpty(sb, "提成：", jobPosting.getCommission());
                 appendIfNotEmpty(sb, "上班时间：", jobPosting.getWorkTime());
                 appendIfNotEmpty(sb, "要求内容：", jobPosting.getRequirements());
-                appendIfNotEmpty(sb, "🐌 地址：", jobPosting.getLocation());
+                appendIfNotEmpty(sb, "🐌地址：", jobPosting.getLocation());
                 appendIfNotEmpty(sb, "✈️咨询飞机号：", jobPosting.getFlightNumber());
                 String result = sb.toString().trim(); // 去掉前后空格
 

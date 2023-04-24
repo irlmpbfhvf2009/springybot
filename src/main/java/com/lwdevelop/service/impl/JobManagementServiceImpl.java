@@ -371,7 +371,8 @@ public class JobManagementServiceImpl implements JobManagementService {
     }
 
     @Override
-    public ResponseEntity<ResponseData> editAndPost_JobPosting(JobPostingDTO jobPostingDTO) {
+    public ResponseEntity<ResponseData> editAndPost_JobPosting(
+              JobPostingDTO jobPostingDTO) {
         String userId = jobPostingDTO.getUserId();
         JobPosting jobPosting = this.findByUserIdAndBotIdWithJobPosting(userId, jobPostingDTO.getBotId());
         // JobPosting jobPosting = this.findByUserIdWithJobPosting(userId);
@@ -405,7 +406,7 @@ public class JobManagementServiceImpl implements JobManagementService {
                 "提成：" + jobPostingDTO.getCommission() + "\n" +
                 "上班时间：" + jobPostingDTO.getWorkTime() + "\n" +
                 "要求内容：" + jobPostingDTO.getRequirements() + "\n" +
-                "🐌 地址：" + jobPostingDTO.getLocation() + "\n" +
+                "🐌地址：" + jobPostingDTO.getLocation() + "\n" +
                 "✈️咨询飞机号： " + jobPostingDTO.getFlightNumber());
 
         editMessageText.setReplyMarkup(new KeyboardButton().keyboard_jobPosting(jobPostingDTO, false));
@@ -517,7 +518,7 @@ public class JobManagementServiceImpl implements JobManagementService {
         return ResponseUtils.response(RetEnum.RET_SUCCESS, "发送成功");
     }
 
-    private void sendTextWithJobPosting(JobPosting jobPosting, Custom custom,
+    public void sendTextWithJobPosting(JobPosting jobPosting, Custom custom,
             RobotChannelManagement robotChannelManagement) {
         StringBuilder sb = new StringBuilder();
         appendIfNotEmpty(sb, "公司：", jobPosting.getCompany());
@@ -526,7 +527,7 @@ public class JobManagementServiceImpl implements JobManagementService {
         appendIfNotEmpty(sb, "提成：", jobPosting.getCommission());
         appendIfNotEmpty(sb, "上班时间：", jobPosting.getWorkTime());
         appendIfNotEmpty(sb, "要求内容：", jobPosting.getRequirements());
-        appendIfNotEmpty(sb, "🐌 地址：", jobPosting.getLocation());
+        appendIfNotEmpty(sb, "🐌地址：", jobPosting.getLocation());
         appendIfNotEmpty(sb, "✈️咨询飞机号：", jobPosting.getFlightNumber());
         String result = sb.toString().trim(); // 去掉前后空格
 
