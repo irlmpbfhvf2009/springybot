@@ -59,8 +59,10 @@ public class message {
                 break;
 
             case "招聘和求职信息管理":
-                new Job().setResponse_edit_jobPosting_management(common);
-                new Job().setResponse_edit_jobSeeker_management(common);
+                new Job_II().setResponse_edit_jobPosting_management(common);
+                new Job_II().setResponse_edit_jobSeeker_management(common);
+//                new Job().setResponse_edit_jobPosting_management(common);
+//                new Job().setResponse_edit_jobSeeker_management(common);
                 break;
 
                 // case "发布招聘":
