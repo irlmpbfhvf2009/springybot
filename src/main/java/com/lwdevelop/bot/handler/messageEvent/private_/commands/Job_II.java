@@ -146,83 +146,11 @@ public class Job_II {
             // 清除舊資料
             jobPosting = this.initJobPosting(jobPosting);
 
-            for (String line : lines) {
-                String[] parts = line.split("：");
-                if (parts.length == 2) {
-                    String key = parts[0].trim();
-                    String value = parts[1].trim();
-
-                    switch (key) {
-                        case "公司":
-                            jobPosting.setCompany(value);
-                            break;
-                        case "职位":
-                            jobPosting.setPosition(value);
-                            break;
-                        case "底薪":
-                            jobPosting.setBaseSalary(value);
-                            break;
-                        case "提成":
-                            jobPosting.setCommission(value);
-                            break;
-                        case "上班时间":
-                            jobPosting.setWorkTime(value);
-                            break;
-                        case "要求内容":
-                            jobPosting.setRequirements(value);
-                            break;
-                        case "🐌地址":
-                            jobPosting.setLocation(value);
-                            break;
-                        case "✈️咨询飞机号":
-                            jobPosting.setFlightNumber(value);
-                            break;
-                        default:
-                            // 未知键值对，可以忽略或抛出异常
-                            break;
-                    }
-                }
-            }
+            fillJobPostingInfo(jobPosting,lines);
         } else {
             jobPosting = new JobPosting();
             // 遍历字符串数组，将冒号后面的值设置到实体对应的字段中
-            for (String line : lines) {
-                String[] parts = line.split("：");
-                if (parts.length == 2) {
-                    String key = parts[0].trim();
-                    String value = parts[1].trim();
-
-                    switch (key) {
-                        case "公司":
-                            jobPosting.setCompany(value);
-                            break;
-                        case "职位":
-                            jobPosting.setPosition(value);
-                            break;
-                        case "底薪":
-                            jobPosting.setBaseSalary(value);
-                            break;
-                        case "提成":
-                            jobPosting.setCommission(value);
-                            break;
-                        case "上班时间":
-                            jobPosting.setWorkTime(value);
-                            break;
-                        case "要求内容":
-                            jobPosting.setRequirements(value);
-                            break;
-                        case "🐌地址":
-                            jobPosting.setLocation(value);
-                            break;
-                        case "✈️咨询飞机号":
-                            jobPosting.setFlightNumber(value);
-                            break;
-                        default:
-                            // 未知键值对，可以忽略或抛出异常
-                            break;
-                    }
-                }
-            }
+            fillJobPostingInfo(jobPosting,lines);
         }
         jobPosting.setBotId(String.valueOf(common.getSpringyBotId()));
         jobPosting.setUserId(String.valueOf(message.getChatId()));
@@ -266,7 +194,7 @@ public class Job_II {
                 response.setText("求职人员\n\n" + result);
                 ChannelMessageIdPostCounts channelMessageIdPostCounts = jobManagementServiceImpl
                         .findByChannelIdAndTypeWithChannelMessageIdPostCounts(
-                            robotChannelManagement.getChannelId(), "jobPosting");
+                                robotChannelManagement.getChannelId(), "jobPosting");
 
                 if (channelMessageIdPostCounts == null) {
                     final Integer channelMessageId = common.sendResponseAsync(response);
@@ -297,8 +225,8 @@ public class Job_II {
             }
         }
 
-
     }
+
 
     public void generateTextJobSeeker(Common common) {
         Message message = common.getUpdate().getMessage();
@@ -312,115 +240,11 @@ public class Job_II {
         if (jobSeeker != null) {
             // 清除舊資料
             jobSeeker = this.initJobSeeker(jobSeeker);
-
-            for (String line : lines) {
-                String[] parts = line.split("：");
-                if (parts.length == 2) {
-                    String key = parts[0].trim();
-                    String value = parts[1].trim();
-
-                    switch (key) {
-                        case "姓名":
-                            jobSeeker.setName(value);
-                            break;
-                        case "男女":
-                            jobSeeker.setGender(value);
-                            break;
-                        case "出生_年_月_日":
-                            jobSeeker.setDateOfBirth(value);
-                            break;
-                        case "年龄":
-                            jobSeeker.setAge(value);
-                            break;
-                        case "国籍":
-                            jobSeeker.setNationality(value);
-                            break;
-                        case "学历":
-                            jobSeeker.setEducation(value);
-                            break;
-                        case "技能":
-                            jobSeeker.setSkills(value);
-                            break;
-                        case "目标职位":
-                            jobSeeker.setTargetPosition(value);
-                            break;
-                        case "手上有什么资源":
-                            jobSeeker.setResources(value);
-                            break;
-                        case "期望薪资":
-                            jobSeeker.setExpectedSalary(value);
-                            break;
-                        case "工作经历":
-                            jobSeeker.setWorkExperience(value);
-                            break;
-                        case "自我介绍":
-                            jobSeeker.setSelfIntroduction(value);
-                            break;
-                        case "✈️咨询飞机号":
-                            jobSeeker.setFlightNumber(value);
-                            break;
-                        default:
-                            // 未知键值对，可以忽略或抛出异常
-                            break;
-                    }
-                }
-            }
+            fillJobSeekerInfo(jobSeeker, lines);
         } else {
             jobSeeker = new JobSeeker();
-
             // 遍历字符串数组，将冒号后面的值设置到实体对应的字段中
-            for (String line : lines) {
-                String[] parts = line.split("：");
-                if (parts.length == 2) {
-                    String key = parts[0].trim();
-                    String value = parts[1].trim();
-
-                    switch (key) {
-                        case "姓名":
-                            jobSeeker.setName(value);
-                            break;
-                        case "男女":
-                            jobSeeker.setGender(value);
-                            break;
-                        case "出生_年_月_日":
-                            jobSeeker.setDateOfBirth(value);
-                            break;
-                        case "年龄":
-                            jobSeeker.setAge(value);
-                            break;
-                        case "国籍":
-                            jobSeeker.setNationality(value);
-                            break;
-                        case "学历":
-                            jobSeeker.setEducation(value);
-                            break;
-                        case "技能":
-                            jobSeeker.setSkills(value);
-                            break;
-                        case "目标职位":
-                            jobSeeker.setTargetPosition(value);
-                            break;
-                        case "手上有什么资源":
-                            jobSeeker.setResources(value);
-                            break;
-                        case "期望薪资":
-                            jobSeeker.setExpectedSalary(value);
-                            break;
-                        case "工作经历":
-                            jobSeeker.setWorkExperience(value);
-                            break;
-                        case "自我介绍":
-                            jobSeeker.setSelfIntroduction(value);
-                            break;
-                        case "✈️咨询飞机号":
-                            jobSeeker.setFlightNumber(value);
-                            break;
-                        default:
-                            // 未知键值对，可以忽略或抛出异常
-                            break;
-                    }
-                }
-            }
+            fillJobSeekerInfo(jobSeeker, lines);
         }
 
         jobSeeker.setBotId(String.valueOf(common.getSpringyBotId()));
@@ -705,6 +529,99 @@ public class Job_II {
             jobUser.getJobSeeker().add(js);
             jobManagementServiceImpl.saveJobSeeker(js);
             springyBotServiceImpl.save(springyBot);
+        }
+    }
+    private void fillJobSeekerInfo(JobSeeker jobSeeker, String[] lines) {
+        for (String line : lines) {
+            String[] parts = line.split("：");
+            if (parts.length == 2) {
+                String key = parts[0].trim();
+                String value = parts[1].trim();
+
+                switch (key) {
+                    case "姓名":
+                        jobSeeker.setName(value);
+                        break;
+                    case "男女":
+                        jobSeeker.setGender(value);
+                        break;
+                    case "出生_年_月_日":
+                        jobSeeker.setDateOfBirth(value);
+                        break;
+                    case "年龄":
+                        jobSeeker.setAge(value);
+                        break;
+                    case "国籍":
+                        jobSeeker.setNationality(value);
+                        break;
+                    case "学历":
+                        jobSeeker.setEducation(value);
+                        break;
+                    case "技能":
+                        jobSeeker.setSkills(value);
+                        break;
+                    case "目标职位":
+                        jobSeeker.setTargetPosition(value);
+                        break;
+                    case "手上有什么资源":
+                        jobSeeker.setResources(value);
+                        break;
+                    case "期望薪资":
+                        jobSeeker.setExpectedSalary(value);
+                        break;
+                    case "工作经历":
+                        jobSeeker.setWorkExperience(value);
+                        break;
+                    case "自我介绍":
+                        jobSeeker.setSelfIntroduction(value);
+                        break;
+                    case "✈️咨询飞机号":
+                        jobSeeker.setFlightNumber(value);
+                        break;
+                    default:
+                        // 未知键值对，可以忽略或抛出异常
+                        break;
+                }
+            }
+        }
+    }
+    private void fillJobPostingInfo(JobPosting jobPosting, String[] lines) {
+        for (String line : lines) {
+            String[] parts = line.split("：");
+            if (parts.length == 2) {
+                String key = parts[0].trim();
+                String value = parts[1].trim();
+
+                switch (key) {
+                    case "公司":
+                        jobPosting.setCompany(value);
+                        break;
+                    case "职位":
+                        jobPosting.setPosition(value);
+                        break;
+                    case "底薪":
+                        jobPosting.setBaseSalary(value);
+                        break;
+                    case "提成":
+                        jobPosting.setCommission(value);
+                        break;
+                    case "上班时间":
+                        jobPosting.setWorkTime(value);
+                        break;
+                    case "要求内容":
+                        jobPosting.setRequirements(value);
+                        break;
+                    case "🐌地址":
+                        jobPosting.setLocation(value);
+                        break;
+                    case "✈️咨询飞机号":
+                        jobPosting.setFlightNumber(value);
+                        break;
+                    default:
+                        // 未知键值对，可以忽略或抛出异常
+                        break;
+                }
+            }
         }
     }
 }
