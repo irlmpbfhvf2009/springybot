@@ -44,7 +44,7 @@ public class Job_II {
                 String.valueOf(id));
 
         SpringyBot springyBot = springyBotServiceImpl.findById(id).orElseThrow();
-        JobUser jobUser = springyBot.getJobUser().stream().filter(j -> j.getUserId().equals(userId)).findFirst()
+        springyBot.getJobUser().stream().filter(j -> j.getUserId().equals(userId)).findFirst()
                 .orElseGet(() -> {
                     JobUser ju = new JobUser();
                     ju.setUserId(userId);
@@ -53,10 +53,10 @@ public class Job_II {
                 });
         String company = "", position = "", baseSalary = "", commission = "", workTime = "", requirements = "",
                 location = "", flightNumber = "";
-        if (jobPosting == null){
+        if (jobPosting == null) {
             response.setText("招聘人才\n\n" + "公司：\n" + "职位：\n" + "底薪：\n" + "提成：\n" + "上班时间：\n" + "要求内容：\n"
                     + "🐌地址：\n" + "✈️咨询飞机号：");
-        }else {
+        } else {
             company = Optional.ofNullable(jobPosting.getCompany()).orElse("");
             position = Optional.ofNullable(jobPosting.getPosition()).orElse("");
             baseSalary = Optional.ofNullable(jobPosting.getBaseSalary()).orElse("");
@@ -74,42 +74,66 @@ public class Job_II {
 
         common.sendResponseAsync(response);
 
-        response.setText("提醒：\n"+"請複製上列信息到輸入框並進行編輯，編輯完畢請按發送");
+        response.setText("提醒：\n" + "請複製上列信息到輸入框並進行編輯，編輯完畢請按發送");
         common.sendResponseAsync(response);
 
     }
 
     public void setResponse_jobSeeker_management(Common common) {
-
         Long id = common.getSpringyBotId();
         String userId = String.valueOf(common.getUpdate().getMessage().getChatId());
 
         SendMessage response = new SendMessage();
         response.setChatId(userId);
 
-
-        JobPosting jobPosting = jobManagementServiceImpl.findByUserIdAndBotIdWithJobPosting(userId,
+        JobSeeker jobSeeker = jobManagementServiceImpl.findByUserIdAndBotIdWithJobSeeker(userId,
                 String.valueOf(id));
 
         SpringyBot springyBot = springyBotServiceImpl.findById(id).orElseThrow();
-        JobUser jobUser = springyBot.getJobUser().stream().filter(j -> j.getUserId().equals(userId)).findFirst()
+        springyBot.getJobUser().stream().filter(j -> j.getUserId().equals(userId)).findFirst()
                 .orElseGet(() -> {
                     JobUser ju = new JobUser();
                     ju.setUserId(userId);
                     springyBot.getJobUser().add(ju);
                     return ju;
                 });
+        String name = "", gender = "", dateOfBirth = "", age = "", nationality = "", education = "",
+                skills = "", targetPosition = "", resources = "", expectedSalary = "",
+                workExperience = "", selfIntroduction = "", flightNumber = "";
+        if (jobSeeker == null) {
+            response.setText(
+                    "求职人员\n\n姓名：\n男女：\n出生_年_月_日：\n年龄：\n国籍：\n学历：\n技能：\n目标职位：\n手上有什么资源：\n期望薪资：\n工作经历：\n自我介绍：\n✈️咨询飞机号：");
+        } else {
+            name = Optional.ofNullable(jobSeeker.getName()).orElse("");
+            gender = Optional.ofNullable(jobSeeker.getGender()).orElse("");
+            dateOfBirth = Optional.ofNullable(jobSeeker.getDateOfBirth()).orElse("");
+            age = Optional.ofNullable(jobSeeker.getAge()).orElse("");
+            nationality = Optional.ofNullable(jobSeeker.getNationality()).orElse("");
+            education = Optional.ofNullable(jobSeeker.getEducation()).orElse("");
+            skills = Optional.ofNullable(jobSeeker.getSkills()).orElse("");
+            targetPosition = Optional.ofNullable(jobSeeker.getTargetPosition()).orElse("");
+            resources = Optional.ofNullable(jobSeeker.getResources()).orElse("");
+            expectedSalary = Optional.ofNullable(jobSeeker.getExpectedSalary()).orElse("");
+            workExperience = Optional.ofNullable(jobSeeker.getWorkExperience()).orElse("");
+            selfIntroduction = Optional.ofNullable(jobSeeker.getSelfIntroduction()).orElse("");
+            flightNumber = Optional.ofNullable(jobSeeker.getFlightNumber()).orElse("");
 
-        response.setText(
-                "求职人员\n\n姓名：\n男女：\n出生_年_月_日：\n年龄：\n国籍：\n学历：\n技能：\n目标职位：\n手上有什么资源：\n期望薪资：\n工作经历：\n自我介绍：\n✈️咨询飞机号：");
+            response.setText("求职人员\n\n姓名：" + name + "\n男女：" + gender + "\n出生_年_月_日："
+                    + dateOfBirth
+                    + "\n年龄：" + age + "\n国籍：" + nationality + "\n学历：" + education
+                    + "\n技能：" + skills + "\n目标职位：" + targetPosition + "\n手上有什么资源："
+                    + resources + "\n期望薪资：" + expectedSalary + "\n工作经历："
+                    + workExperience + "\n自我介绍：" + selfIntroduction + "\n✈️咨询飞机号：" + flightNumber);
+        }
+
         common.sendResponseAsync(response);
 
-        response.setText("提醒：\n"+"請複製上列信息到輸入框並進行編輯，編輯完畢請按發送");
+        response.setText("提醒：\n" + "請複製上列信息到輸入框並進行編輯，編輯完畢請按發送");
         common.sendResponseAsync(response);
 
     }
 
-    public void generateTextJobPosting(Common common){
+    public void generateTextJobPosting(Common common) {
         Message message = common.getUpdate().getMessage();
         String text = message.getText();
         // 将文本内容按行分割成字符串数组
@@ -119,7 +143,7 @@ public class Job_II {
                 String.valueOf(message.getChatId()), String.valueOf(common.getSpringyBotId()));
         // 创建一个新的 JobPosting 实例
         if (jobPosting != null) {
-            //  清除舊資料
+            // 清除舊資料
             jobPosting = this.initJobPosting(jobPosting);
 
             for (String line : lines) {
@@ -203,7 +227,7 @@ public class Job_II {
         jobPosting.setBotId(String.valueOf(common.getSpringyBotId()));
         jobPosting.setUserId(String.valueOf(message.getChatId()));
         jobPosting.setLastMessageId(message.getMessageId());
-        //  處理資料表
+        // 處理資料表
         Long id = common.getSpringyBotId();
         String userId = String.valueOf(common.getUpdate().getMessage().getChatId());
         SpringyBot springyBot = springyBotServiceImpl.findById(id).orElseThrow();
@@ -219,29 +243,62 @@ public class Job_II {
         jobUser.getJobPosting().add(jobPosting);
         jobManagementServiceImpl.saveJobPosting(jobPosting);
 
+        StringBuilder sb = new StringBuilder();
+        appendIfNotEmpty(sb, "公司：", jobPosting.getCompany());
+        appendIfNotEmpty(sb, "职位：", jobPosting.getPosition());
+        appendIfNotEmpty(sb, "底薪：", jobPosting.getBaseSalary());
+        appendIfNotEmpty(sb, "提成：", jobPosting.getCommission());
+        appendIfNotEmpty(sb, "上班时间：", jobPosting.getWorkTime());
+        appendIfNotEmpty(sb, "要求内容：", jobPosting.getRequirements());
+        appendIfNotEmpty(sb, "🐌地址：", jobPosting.getLocation());
+        appendIfNotEmpty(sb, "✈️咨询飞机号：", jobPosting.getFlightNumber());
+        String result = sb.toString().trim();
+
         Iterator<RobotChannelManagement> iterator = springyBot.getRobotChannelManagement().iterator();
+
         while (iterator.hasNext()) {
-            SendMessage response = new SendMessage();
-            String chatId = String.valueOf(iterator.next().getChannelId());
-            response.setChatId(chatId);
-            StringBuilder sb = new StringBuilder();
+            RobotChannelManagement robotChannelManagement = iterator.next();
+            if (!result.isEmpty()) {
+                SendMessage response = new SendMessage();
+                Long channelId = robotChannelManagement.getChannelId();
+                String channelTitle = robotChannelManagement.getChannelTitle();
+                response.setChatId(String.valueOf(channelId));
+                response.setText("求职人员\n\n" + result);
+                ChannelMessageIdPostCounts channelMessageIdPostCounts = jobManagementServiceImpl
+                        .findByChannelIdAndTypeWithChannelMessageIdPostCounts(
+                            robotChannelManagement.getChannelId(), "jobPosting");
 
-            appendIfNotEmpty(sb, "公司：", jobPosting.getCompany());
-            appendIfNotEmpty(sb, "职位：", jobPosting.getPosition());
-            appendIfNotEmpty(sb, "底薪：", jobPosting.getBaseSalary());
-            appendIfNotEmpty(sb, "提成：", jobPosting.getCommission());
-            appendIfNotEmpty(sb, "上班时间：", jobPosting.getWorkTime());
-            appendIfNotEmpty(sb, "要求内容：", jobPosting.getRequirements());
-            appendIfNotEmpty(sb, "🐌地址：", jobPosting.getLocation());
-            appendIfNotEmpty(sb, "✈️咨询飞机号：", jobPosting.getFlightNumber());
-            String result = sb.toString().trim();
+                if (channelMessageIdPostCounts == null) {
+                    final Integer channelMessageId = common.sendResponseAsync(response);
+                    channelMessageIdPostCounts = new ChannelMessageIdPostCounts();
+                    channelMessageIdPostCounts.setBotId(jobPosting.getBotId());
+                    channelMessageIdPostCounts.setUserId(jobPosting.getUserId());
+                    channelMessageIdPostCounts.setChannelId(channelId);
+                    channelMessageIdPostCounts.setChannelTitle(channelTitle);
+                    channelMessageIdPostCounts.setMessageId(channelMessageId);
+                    channelMessageIdPostCounts.setPostCount(1);
+                    channelMessageIdPostCounts.setType("jobPosting");
+                    jobPosting.getChannelMessageIdPostCounts().add(channelMessageIdPostCounts);
+                    jobManagementServiceImpl.saveJobPosting(jobPosting);
+                } else {
+                    if (channelMessageIdPostCounts.getPostCount() == 0) {
+                        final Integer channelMessageId = common.sendResponseAsync(response);
+                        channelMessageIdPostCounts.setMessageId(channelMessageId);
+                        channelMessageIdPostCounts.setPostCount(channelMessageIdPostCounts.getPostCount() + 1);
+                        jobManagementServiceImpl.saveChannelMessageIdPostCounts(channelMessageIdPostCounts);
+                    } else {
+                        response = new SendMessage();
+                        response.setChatId(jobPosting.getUserId());
+                        response.setText("用户只能发布一条[招聘人才]信息");
+                        common.sendResponseAsync(response);
+                    }
+                }
 
-            response.setText(result);
-            common.sendResponseAsync(response);
+            }
         }
 
-    }
 
+    }
 
     public void generateTextJobSeeker(Common common) {
         Message message = common.getUpdate().getMessage();
@@ -253,7 +310,7 @@ public class Job_II {
                 String.valueOf(message.getChatId()), String.valueOf(common.getSpringyBotId()));
 
         if (jobSeeker != null) {
-            //  清除舊資料
+            // 清除舊資料
             jobSeeker = this.initJobSeeker(jobSeeker);
 
             for (String line : lines) {
@@ -370,7 +427,7 @@ public class Job_II {
         jobSeeker.setUserId(String.valueOf(message.getChatId()));
         jobSeeker.setLastMessageId(message.getMessageId());
 
-        //  處理資料表
+        // 處理資料表
         Long id = common.getSpringyBotId();
         String userId = String.valueOf(common.getUpdate().getMessage().getChatId());
         SpringyBot springyBot = springyBotServiceImpl.findById(id).orElseThrow();
@@ -384,69 +441,73 @@ public class Job_II {
         jobUser.getJobSeeker().add(jobSeeker);
         jobManagementServiceImpl.saveJobSeeker(jobSeeker);
 
+        StringBuilder sb = new StringBuilder();
+        appendIfNotEmpty(sb, "姓名：", jobSeeker.getName());
+        appendIfNotEmpty(sb, "男女：", jobSeeker.getGender());
+        appendIfNotEmpty(sb, "出生_年_月_日：", jobSeeker.getDateOfBirth());
+        appendIfNotEmpty(sb, "年龄：", jobSeeker.getAge());
+        appendIfNotEmpty(sb, "国籍：", jobSeeker.getNationality());
+        appendIfNotEmpty(sb, "学历：", jobSeeker.getEducation());
+        appendIfNotEmpty(sb, "技能：", jobSeeker.getSkills());
+        appendIfNotEmpty(sb, "目标职位：", jobSeeker.getTargetPosition());
+        appendIfNotEmpty(sb, "手上有什么资源：", jobSeeker.getResources());
+        appendIfNotEmpty(sb, "期望薪资：", jobSeeker.getExpectedSalary());
+        appendIfNotEmpty(sb, "工作经历：", jobSeeker.getWorkExperience());
+        appendIfNotEmpty(sb, "自我介绍：", jobSeeker.getSelfIntroduction());
+        appendIfNotEmpty(sb, "✈️咨询飞机号：", jobSeeker.getFlightNumber());
+        String result = sb.toString().trim();
+
         Iterator<RobotChannelManagement> iterator = springyBot.getRobotChannelManagement().iterator();
+
         while (iterator.hasNext()) {
-            SendMessage response = new SendMessage();
-            String chatId = String.valueOf(iterator.next().getChannelId());
-            response.setChatId(chatId);
-            StringBuilder sb = new StringBuilder();
-            appendIfNotEmpty(sb, "姓名：", jobSeeker.getName());
-            appendIfNotEmpty(sb, "男女：", jobSeeker.getGender());
-            appendIfNotEmpty(sb, "出生_年_月_日：", jobSeeker.getDateOfBirth());
-            appendIfNotEmpty(sb, "年龄：", jobSeeker.getAge());
-            appendIfNotEmpty(sb, "国籍：", jobSeeker.getNationality());
-            appendIfNotEmpty(sb, "学历：", jobSeeker.getEducation());
-            appendIfNotEmpty(sb, "技能：", jobSeeker.getSkills());
-            appendIfNotEmpty(sb, "目标职位：", jobSeeker.getTargetPosition());
-            appendIfNotEmpty(sb, "手上有什么资源：", jobSeeker.getResources());
-            appendIfNotEmpty(sb, "期望薪资：", jobSeeker.getExpectedSalary());
-            appendIfNotEmpty(sb, "工作经历：", jobSeeker.getWorkExperience());
-            appendIfNotEmpty(sb, "自我介绍：", jobSeeker.getSelfIntroduction());
-            appendIfNotEmpty(sb, "✈️咨询飞机号：", jobSeeker.getFlightNumber());
-            String result = sb.toString().trim();
+            RobotChannelManagement robotChannelManagement = iterator.next();
+            if (!result.isEmpty()) {
+                SendMessage response = new SendMessage();
+                Long channelId = robotChannelManagement.getChannelId();
+                String channelTitle = robotChannelManagement.getChannelTitle();
+                response.setChatId(String.valueOf(channelId));
+                response.setText("求职人员\n\n" + result);
+                ChannelMessageIdPostCounts channelMessageIdPostCounts = jobManagementServiceImpl
+                        .findByChannelIdAndTypeWithChannelMessageIdPostCounts(
+                                robotChannelManagement.getChannelId(), "jobSeeker");
 
-            response.setText(result);
-
-            Integer messageId = common.sendResponseAsync(response);
-
-            ChannelMessageIdPostCounts channelMessageIdPostCounts = jobManagementServiceImpl
-                .findByBotIdAndUserIdAndTypeWithChannelMessageIdPostCounts(String.valueOf(id),
-                        userId, "jobSeeker");
-
-            if (channelMessageIdPostCounts == null){
-                channelMessageIdPostCounts = new ChannelMessageIdPostCounts();
-                channelMessageIdPostCounts.setChannelId(iterator.next().getChannelId());
-                channelMessageIdPostCounts.setChannelTitle(iterator.next().getChannelTitle());
-                channelMessageIdPostCounts.setPostCount(1);
-                channelMessageIdPostCounts.setMessageId(messageId);
-                channelMessageIdPostCounts.setBotId(String.valueOf(id));
-                channelMessageIdPostCounts.setType("jobSeeker");
-                channelMessageIdPostCounts.setUserId(userId);
-
-            }else{
-                channelMessageIdPostCounts.setChannelId(iterator.next().getChannelId());
-                channelMessageIdPostCounts.setChannelTitle(iterator.next().getChannelTitle());
-                channelMessageIdPostCounts.setPostCount(1);
-                channelMessageIdPostCounts.setMessageId(messageId);
-                channelMessageIdPostCounts.setBotId(String.valueOf(id));
-                channelMessageIdPostCounts.setType("jobSeeker");
-                channelMessageIdPostCounts.setUserId(userId);
+                if (channelMessageIdPostCounts == null) {
+                    final Integer channelMessageId = common.sendResponseAsync(response);
+                    channelMessageIdPostCounts = new ChannelMessageIdPostCounts();
+                    channelMessageIdPostCounts.setBotId(jobSeeker.getBotId());
+                    channelMessageIdPostCounts.setUserId(jobSeeker.getUserId());
+                    channelMessageIdPostCounts.setChannelId(channelId);
+                    channelMessageIdPostCounts.setChannelTitle(channelTitle);
+                    channelMessageIdPostCounts.setMessageId(channelMessageId);
+                    channelMessageIdPostCounts.setPostCount(1);
+                    channelMessageIdPostCounts.setType("jobSeeker");
+                    jobSeeker.getChannelMessageIdPostCounts().add(channelMessageIdPostCounts);
+                    jobManagementServiceImpl.saveJobSeeker(jobSeeker);
+                } else {
+                    if (channelMessageIdPostCounts.getPostCount() == 0) {
+                        final Integer channelMessageId = common.sendResponseAsync(response);
+                        channelMessageIdPostCounts.setMessageId(channelMessageId);
+                        channelMessageIdPostCounts.setPostCount(channelMessageIdPostCounts.getPostCount() + 1);
+                        jobManagementServiceImpl.saveChannelMessageIdPostCounts(channelMessageIdPostCounts);
+                    } else {
+                        response = new SendMessage();
+                        response.setChatId(jobSeeker.getUserId());
+                        response.setText("用户只能发布一条[求职人员]信息");
+                        common.sendResponseAsync(response);
+                    }
+                }
 
             }
-
-            jobManagementServiceImpl.saveChannelMessageIdPostCounts(channelMessageIdPostCounts);
-            jobSeeker.getChannelMessageIdPostCounts().add(channelMessageIdPostCounts);
-            jobManagementServiceImpl.saveJobSeeker(jobSeeker);
         }
-
     }
+
     private void appendIfNotEmpty(StringBuilder sb, String label, String value) {
         if (value != null && !value.isEmpty()) {
             sb.append(label).append(value).append("\n");
         }
     }
 
-    private JobPosting initJobPosting(JobPosting jobPosting){
+    private JobPosting initJobPosting(JobPosting jobPosting) {
         jobPosting.setCompany("");
         jobPosting.setPosition("");
         jobPosting.setBaseSalary("");
@@ -458,7 +519,7 @@ public class Job_II {
         return jobPosting;
     }
 
-    private JobSeeker initJobSeeker(JobSeeker jobSeeker){
+    private JobSeeker initJobSeeker(JobSeeker jobSeeker) {
         jobSeeker.setName("");
         jobSeeker.setGender("");
         jobSeeker.setDateOfBirth("");
@@ -534,8 +595,9 @@ public class Job_II {
                             + "🐌地址：" + location + "\n" + "✈️咨询飞机号：" + flightNumber);
             jobPostingDTO = new JobPostingDTO(userId, String.valueOf(id), company, position, baseSalary,
                     commission, workTime, requirements, location, flightNumber);
-            response.setReplyMarkup(new KeyboardButton().keyboard_jobPosting(jobPostingDTO,true));
-            // response.setReplyMarkup(new KeyboardButton().keyboard_editJobPosting(jobPostingDTO));
+            response.setReplyMarkup(new KeyboardButton().keyboard_jobPosting(jobPostingDTO, true));
+            // response.setReplyMarkup(new
+            // KeyboardButton().keyboard_editJobPosting(jobPostingDTO));
             Integer messageId = common.sendResponseAsync(response);
             jobPosting.setLastMessageId(messageId);
             jobUser.getJobPosting().add(jobPosting);
@@ -543,8 +605,9 @@ public class Job_II {
         } else {
             response.setText("招聘人才\n\n" + "公司：\n" + "职位：\n" + "底薪：\n" + "提成：\n" + "上班时间：\n" + "要求内容：\n"
                     + "🐌地址：\n" + "✈️咨询飞机号：");
-            response.setReplyMarkup(new KeyboardButton().keyboard_jobPosting(jobPostingDTO,false));
-            // response.setReplyMarkup(new KeyboardButton().keyboard_jobPosting(jobPostingDTO));
+            response.setReplyMarkup(new KeyboardButton().keyboard_jobPosting(jobPostingDTO, false));
+            // response.setReplyMarkup(new
+            // KeyboardButton().keyboard_jobPosting(jobPostingDTO));
 
             JobPosting jp = new JobPosting(userId, String.valueOf(id),
                     common.sendResponseAsync(response));
@@ -569,10 +632,6 @@ public class Job_II {
                 .collect(Collectors.toMap(
                         ChannelMessageIdPostCounts::getChannelTitle,
                         ChannelMessageIdPostCounts::getPostCount));
-
-        // String alert = channelInfo.entrySet().stream()
-        // .map(entry -> entry.getKey() + " 发布了" + entry.getValue() + "则 [求职人员] 信息\n")
-        // .collect(Collectors.joining());
 
         String alert = channelInfo.entrySet().stream()
                 .map(entry -> entry.getValue() != 0
@@ -628,8 +687,9 @@ public class Job_II {
                     + "\n技能：" + skills + "\n目标职位：" + targetPosition + "\n手上有什么资源："
                     + resources + "\n期望薪资：" + expectedSalary + "\n工作经历："
                     + workExperience + "\n自我介绍：" + selfIntroduction + "\n✈️咨询飞机号：" + flightNumber);
-            response.setReplyMarkup(new KeyboardButton().keyboard_jobSeeker(jobSeekerDTO,true));
-            // response.setReplyMarkup(new KeyboardButton().keyboard_editJobSeeker(jobSeekerDTO));
+            response.setReplyMarkup(new KeyboardButton().keyboard_jobSeeker(jobSeekerDTO, true));
+            // response.setReplyMarkup(new
+            // KeyboardButton().keyboard_editJobSeeker(jobSeekerDTO));
             Integer messageId = common.sendResponseAsync(response);
             jobSeeker.setLastMessageId(messageId);
             jobUser.getJobSeeker().add(jobSeeker);
@@ -637,8 +697,9 @@ public class Job_II {
         } else {
             response.setText(
                     "求职人员\n\n姓名：\n男女：\n出生_年_月_日：\n年龄：\n国籍：\n学历：\n技能：\n目标职位：\n手上有什么资源：\n期望薪资：\n工作经历：\n自我介绍：\n✈️咨询飞机号：");
-            response.setReplyMarkup(new KeyboardButton().keyboard_jobSeeker(jobSeekerDTO,true));
-            // response.setReplyMarkup(new KeyboardButton().keyboard_jobSeeker(jobSeekerDTO));
+            response.setReplyMarkup(new KeyboardButton().keyboard_jobSeeker(jobSeekerDTO, true));
+            // response.setReplyMarkup(new
+            // KeyboardButton().keyboard_jobSeeker(jobSeekerDTO));
             JobSeeker js = new JobSeeker(userId, String.valueOf(id),
                     common.sendResponseAsync(response));
             jobUser.getJobSeeker().add(js);

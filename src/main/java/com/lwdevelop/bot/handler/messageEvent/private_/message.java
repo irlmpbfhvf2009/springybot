@@ -1,24 +1,11 @@
 package com.lwdevelop.bot.handler.messageEvent.private_;
 
-import com.lwdevelop.bot.Custom;
-import com.lwdevelop.dto.JobPostingDTO;
-import com.lwdevelop.dto.JobSeekerDTO;
-import com.lwdevelop.dto.SpringyBotDTO;
-import com.lwdevelop.entity.*;
-import com.lwdevelop.service.impl.SpringyBotServiceImpl;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
-import com.lwdevelop.bot.handler.messageEvent.private_.commands.Job;
 import com.lwdevelop.bot.handler.messageEvent.private_.commands.Job_II;
 import com.lwdevelop.bot.utils.Common;
 import com.lwdevelop.bot.utils.KeyboardButton;
-import com.lwdevelop.repository.JobPostingRepository;
-import com.lwdevelop.service.impl.JobManagementServiceImpl;
-import com.lwdevelop.utils.SpringUtils;
-
-import java.util.Iterator;
 
 public class message {
 
@@ -30,16 +17,16 @@ public class message {
     public void handler(Common common) {
         this.init(common);
 
-        //  判斷事件
+        // 判斷事件
         String post = text.substring(0, 4);
 
-        //  發布招聘
+        // 發布招聘
         if (post.equals("招聘人才")) {
             new Job_II().generateTextJobPosting(common);
         }
 
         // 發布求職
-        else if (post.equals("求职人员")){
+        else if (post.equals("求职人员")) {
 
             new Job_II().generateTextJobSeeker(common);
 
@@ -51,21 +38,28 @@ public class message {
                 break;
 
             case "发布招聘":
-                new Job_II().setResponse_jobPosting_management(common);
+                if (hasUsername()) {
+                    new Job_II().setResponse_jobPosting_management(common);
+                } else {
+                    this.send_nullUsername();
+                }
                 break;
 
             case "发布求职":
-                new Job_II().setResponse_jobSeeker_management(common);
+                if (hasUsername()) {
+                    new Job_II().setResponse_jobSeeker_management(common);
+                } else {
+                    this.send_nullUsername();
+                }
                 break;
 
             case "招聘和求职信息管理":
                 new Job_II().setResponse_edit_jobPosting_management(common);
                 new Job_II().setResponse_edit_jobSeeker_management(common);
-//                new Job().setResponse_edit_jobPosting_management(common);
-//                new Job().setResponse_edit_jobSeeker_management(common);
                 break;
 
-                // case "发布招聘":
+            // web 端
+            // case "发布招聘":
             // if (hasUsername()) {
             // new Job().setResponse_jobPosting_management(common);
             // } else {
@@ -74,13 +68,15 @@ public class message {
             // break;
             // case "发布求职":
             // if (hasUsername()) {
-//             new Job().setResponse_jobSeeker_management(common);
+            // new Job().setResponse_jobSeeker_management(common);
             // } else {
             // this.send_nullUsername();
             // }
             // break;
-
-
+            // case "招聘和求职信息管理":
+            // new Job().setResponse_edit_jobPosting_management(common);
+            // new Job().setResponse_edit_jobSeeker_management(common);
+            // break;
 
             default:
                 this.text = "";
