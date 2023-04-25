@@ -57,6 +57,7 @@ com\lwdevelop\controller\SpringyBotController.class
 com\lwdevelop\repository\RobotChannelManagementRepository.class
 com\lwdevelop\utils\CommUtils$Pager.class
 com\lwdevelop\utils\CryptoUtil.class
+com\lwdevelop\bot\handler\messageEvent\private_\commands\Job_II.class
 com\lwdevelop\controller\GroupAndChannelManagement.class
 com\lwdevelop\controller\IndexController.class
 com\lwdevelop\bot\utils\SpringyBotEnum.class

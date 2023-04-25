@@ -183,6 +183,15 @@ public class CallbackQuerys {
 
             this.response.setText("删除成功");
             common.sendResponseAsync(this.response);
+        }else if (callbackQuery.getData().equals("editJobPosting_")){
+            response.setText("提醒：\n" +
+                    "請複製上列信息到輸入框並進行編輯，編輯完畢請按發送");
+
+            common.sendResponseAsync(this.response);
+        } else if (callbackQuery.getData().equals("editJobSeeker")) {
+            response.setText("提醒：\n" +
+                    "請複製上列信息到輸入框並進行編輯，編輯完畢請按發送");
+            common.sendResponseAsync(this.response);
         }
 
     }

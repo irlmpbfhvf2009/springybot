@@ -3,6 +3,7 @@ package com.lwdevelop.bot.utils;
 import org.springframework.scheduling.annotation.Async;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
+import org.telegram.telegrambots.meta.api.methods.updatingmessages.EditMessageText;
 import org.telegram.telegrambots.meta.api.objects.ChatMemberUpdated;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import lombok.Data;
@@ -39,6 +40,11 @@ public class Common {
     @SneakyThrows
     public Integer sendResponseAsync(SendMessage response) {
         return this.bot.executeAsync(response).get().getMessageId();
+    }
+    @Async
+    @SneakyThrows
+    public void editResponseAsync(EditMessageText response) {
+        this.bot.executeAsync(response);
     }
 
 

@@ -20,6 +20,7 @@ import com.lwdevelop.entity.SpringyBot;
 import com.lwdevelop.service.impl.JobManagementServiceImpl;
 import com.lwdevelop.service.impl.SpringyBotServiceImpl;
 import com.lwdevelop.utils.SpringUtils;
+import org.telegram.telegrambots.meta.api.methods.updatingmessages.EditMessageText;
 import org.telegram.telegrambots.meta.api.objects.Message;
 
 public class Job_II {
@@ -133,7 +134,7 @@ public class Job_II {
 
     }
 
-    public void generateTextJobPosting(Common common) {
+    public void generateTextJobPosting(Common common, Boolean isEdit) {
         Message message = common.getUpdate().getMessage();
         String text = message.getText();
         // 将文本内容按行分割成字符串数组
@@ -146,12 +147,11 @@ public class Job_II {
             // 清除舊資料
             jobPosting = this.initJobPosting(jobPosting);
 
-            fillJobPostingInfo(jobPosting,lines);
         } else {
             jobPosting = new JobPosting();
-            // 遍历字符串数组，将冒号后面的值设置到实体对应的字段中
-            fillJobPostingInfo(jobPosting,lines);
+            // 遍历字符串数组，将冒号后面的值设置到实体对应的字段中;
         }
+        fillJobPostingInfo(jobPosting,lines);
         jobPosting.setBotId(String.valueOf(common.getSpringyBotId()));
         jobPosting.setUserId(String.valueOf(message.getChatId()));
         jobPosting.setLastMessageId(message.getMessageId());
@@ -191,10 +191,18 @@ public class Job_II {
                 Long channelId = robotChannelManagement.getChannelId();
                 String channelTitle = robotChannelManagement.getChannelTitle();
                 response.setChatId(String.valueOf(channelId));
-                response.setText("求职人员\n\n" + result);
+                response.setText("招聘人才\n\n" + result);
                 ChannelMessageIdPostCounts channelMessageIdPostCounts = jobManagementServiceImpl
                         .findByChannelIdAndTypeWithChannelMessageIdPostCounts(
-                                robotChannelManagement.getChannelId(), "jobPosting");
+                                channelId,"jobPosting");
+
+                if(isEdit){
+                    EditMessageText a = new EditMessageText();
+                    a.setChatId(String.valueOf(channelId));
+                    a.setText("招聘人才\n\n" + result);
+                    a.setMessageId(channelMessageIdPostCounts.getMessageId());
+                    common.editResponseAsync(a);
+                }else{
 
                 if (channelMessageIdPostCounts == null) {
                     final Integer channelMessageId = common.sendResponseAsync(response);
@@ -222,13 +230,16 @@ public class Job_II {
                     }
                 }
 
+                }
+
             }
         }
+
 
     }
 
 
-    public void generateTextJobSeeker(Common common) {
+    public void generateTextJobSeeker(Common common, Boolean isEdit) {
         Message message = common.getUpdate().getMessage();
         String text = message.getText();
 
@@ -293,34 +304,41 @@ public class Job_II {
                 response.setText("求职人员\n\n" + result);
                 ChannelMessageIdPostCounts channelMessageIdPostCounts = jobManagementServiceImpl
                         .findByChannelIdAndTypeWithChannelMessageIdPostCounts(
-                                robotChannelManagement.getChannelId(), "jobSeeker");
+                                channelId, "jobSeeker");
 
-                if (channelMessageIdPostCounts == null) {
-                    final Integer channelMessageId = common.sendResponseAsync(response);
-                    channelMessageIdPostCounts = new ChannelMessageIdPostCounts();
-                    channelMessageIdPostCounts.setBotId(jobSeeker.getBotId());
-                    channelMessageIdPostCounts.setUserId(jobSeeker.getUserId());
-                    channelMessageIdPostCounts.setChannelId(channelId);
-                    channelMessageIdPostCounts.setChannelTitle(channelTitle);
-                    channelMessageIdPostCounts.setMessageId(channelMessageId);
-                    channelMessageIdPostCounts.setPostCount(1);
-                    channelMessageIdPostCounts.setType("jobSeeker");
-                    jobSeeker.getChannelMessageIdPostCounts().add(channelMessageIdPostCounts);
-                    jobManagementServiceImpl.saveJobSeeker(jobSeeker);
-                } else {
-                    if (channelMessageIdPostCounts.getPostCount() == 0) {
+                if(isEdit){
+                    EditMessageText a = new EditMessageText();
+                    a.setChatId(String.valueOf(channelId));
+                    a.setText("求职人员\n\n" + result);
+                    a.setMessageId(channelMessageIdPostCounts.getMessageId());
+                    common.editResponseAsync(a);
+                }else {
+                    if (channelMessageIdPostCounts == null) {
                         final Integer channelMessageId = common.sendResponseAsync(response);
+                        channelMessageIdPostCounts = new ChannelMessageIdPostCounts();
+                        channelMessageIdPostCounts.setBotId(jobSeeker.getBotId());
+                        channelMessageIdPostCounts.setUserId(jobSeeker.getUserId());
+                        channelMessageIdPostCounts.setChannelId(channelId);
+                        channelMessageIdPostCounts.setChannelTitle(channelTitle);
                         channelMessageIdPostCounts.setMessageId(channelMessageId);
-                        channelMessageIdPostCounts.setPostCount(channelMessageIdPostCounts.getPostCount() + 1);
-                        jobManagementServiceImpl.saveChannelMessageIdPostCounts(channelMessageIdPostCounts);
+                        channelMessageIdPostCounts.setPostCount(1);
+                        channelMessageIdPostCounts.setType("jobSeeker");
+                        jobSeeker.getChannelMessageIdPostCounts().add(channelMessageIdPostCounts);
+                        jobManagementServiceImpl.saveJobSeeker(jobSeeker);
                     } else {
-                        response = new SendMessage();
-                        response.setChatId(jobSeeker.getUserId());
-                        response.setText("用户只能发布一条[求职人员]信息");
-                        common.sendResponseAsync(response);
+                        if (channelMessageIdPostCounts.getPostCount() == 0) {
+                            final Integer channelMessageId = common.sendResponseAsync(response);
+                            channelMessageIdPostCounts.setMessageId(channelMessageId);
+                            channelMessageIdPostCounts.setPostCount(channelMessageIdPostCounts.getPostCount() + 1);
+                            jobManagementServiceImpl.saveChannelMessageIdPostCounts(channelMessageIdPostCounts);
+                        } else {
+                            response = new SendMessage();
+                            response.setChatId(jobSeeker.getUserId());
+                            response.setText("用户只能发布一条[求职人员]信息");
+                            common.sendResponseAsync(response);
+                        }
                     }
                 }
-
             }
         }
     }
@@ -413,7 +431,7 @@ public class Job_II {
             location = Optional.ofNullable(jobPosting.getLocation()).orElse("");
             flightNumber = Optional.ofNullable(jobPosting.getFlightNumber()).orElse("");
             response.setText(
-                    "招聘人才\n\n" + "公司：" + company + "\n" + "职位：" + position + "\n" + "底薪："
+                    "编辑招聘\n\n" + "公司：" + company + "\n" + "职位：" + position + "\n" + "底薪："
                             + baseSalary + "\n" + "提成：" + commission + "\n" + "上班时间："
                             + workTime + "\n" + "要求内容：" + requirements + "\n"
                             + "🐌地址：" + location + "\n" + "✈️咨询飞机号：" + flightNumber);
@@ -421,13 +439,13 @@ public class Job_II {
                     commission, workTime, requirements, location, flightNumber);
             response.setReplyMarkup(new KeyboardButton().keyboard_jobPosting(jobPostingDTO, true));
             // response.setReplyMarkup(new
-            // KeyboardButton().keyboard_editJobPosting(jobPostingDTO));
+//             KeyboardButton().keyboard_editJobPosting(jobPostingDTO));
             Integer messageId = common.sendResponseAsync(response);
             jobPosting.setLastMessageId(messageId);
             jobUser.getJobPosting().add(jobPosting);
             jobManagementServiceImpl.saveJobPosting(jobPosting);
         } else {
-            response.setText("招聘人才\n\n" + "公司：\n" + "职位：\n" + "底薪：\n" + "提成：\n" + "上班时间：\n" + "要求内容：\n"
+            response.setText("编辑招聘\n\n" + "公司：\n" + "职位：\n" + "底薪：\n" + "提成：\n" + "上班时间：\n" + "要求内容：\n"
                     + "🐌地址：\n" + "✈️咨询飞机号：");
             response.setReplyMarkup(new KeyboardButton().keyboard_jobPosting(jobPostingDTO, false));
             // response.setReplyMarkup(new
@@ -505,7 +523,7 @@ public class Job_II {
                     nationality, education, skills, targetPosition, resources, expectedSalary,
                     workExperience, selfIntroduction, flightNumber);
 
-            response.setText("求职人员\n\n姓名：" + name + "\n男女：" + gender + "\n出生_年_月_日："
+            response.setText("编辑求职\n\n姓名：" + name + "\n男女：" + gender + "\n出生_年_月_日："
                     + dateOfBirth
                     + "\n年龄：" + age + "\n国籍：" + nationality + "\n学历：" + education
                     + "\n技能：" + skills + "\n目标职位：" + targetPosition + "\n手上有什么资源："
@@ -520,7 +538,7 @@ public class Job_II {
             jobManagementServiceImpl.saveJobSeeker(jobSeeker);
         } else {
             response.setText(
-                    "求职人员\n\n姓名：\n男女：\n出生_年_月_日：\n年龄：\n国籍：\n学历：\n技能：\n目标职位：\n手上有什么资源：\n期望薪资：\n工作经历：\n自我介绍：\n✈️咨询飞机号：");
+                    "编辑求职\n\n姓名：\n男女：\n出生_年_月_日：\n年龄：\n国籍：\n学历：\n技能：\n目标职位：\n手上有什么资源：\n期望薪资：\n工作经历：\n自我介绍：\n✈️咨询飞机号：");
             response.setReplyMarkup(new KeyboardButton().keyboard_jobSeeker(jobSeekerDTO, true));
             // response.setReplyMarkup(new
             // KeyboardButton().keyboard_jobSeeker(jobSeekerDTO));
