@@ -159,7 +159,7 @@ public class CallbackQuerys {
                     "自我介绍：\n" +
                     "✈️咨询飞机号：");
 
-            editMessageText.setReplyMarkup(new KeyboardButton().keyboard_jobSeeker(jobSeekerDTO,false));
+            editMessageText.setReplyMarkup(new KeyboardButton().keyboard_jobSeeker(jobSeekerDTO,true));
             // editMessageText.setReplyMarkup(new KeyboardButton().keyboard_JobSeeker(jobSeekerDTO));
             try {
                 custom.executeAsync(editMessageText);
@@ -184,13 +184,11 @@ public class CallbackQuerys {
             this.response.setText("删除成功");
             common.sendResponseAsync(this.response);
         }else if (callbackQuery.getData().equals("editJobPosting_")){
-            response.setText("提醒：\n" +
-                    "請複製上列信息到輸入框並進行編輯，編輯完畢請按發送");
+            response.setText("提醒：请复制上列信息到输入框并进行编辑，编辑完毕发送");
 
             common.sendResponseAsync(this.response);
-        } else if (callbackQuery.getData().equals("editJobSeeker")) {
-            response.setText("提醒：\n" +
-                    "請複製上列信息到輸入框並進行編輯，編輯完畢請按發送");
+        } else if (callbackQuery.getData().equals("editJobSeeker_")) {
+            response.setText("提醒：请复制上列信息到输入框并进行编辑，编辑完毕发送");
             common.sendResponseAsync(this.response);
         }
 

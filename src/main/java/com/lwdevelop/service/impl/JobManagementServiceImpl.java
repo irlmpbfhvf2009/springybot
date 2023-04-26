@@ -534,7 +534,8 @@ public class JobManagementServiceImpl implements JobManagementService {
         SendMessage response = new SendMessage();
         Long channelId = robotChannelManagement.getChannelId();
         String channelTitle = robotChannelManagement.getChannelTitle();
-
+        String channelLink = robotChannelManagement.getLink();
+        
         if (!result.isEmpty()) {
             response.setChatId(String.valueOf(channelId));
             response.setText("招聘人才\n\n" + result);
@@ -549,6 +550,7 @@ public class JobManagementServiceImpl implements JobManagementService {
                     channelMessageIdPostCounts.setUserId(jobPosting.getUserId());
                     channelMessageIdPostCounts.setChannelId(channelId);
                     channelMessageIdPostCounts.setChannelTitle(channelTitle);
+                    channelMessageIdPostCounts.setChannelLink(channelLink);
                     channelMessageIdPostCounts.setMessageId(channelMessageId);
                     channelMessageIdPostCounts.setPostCount(1);
                     channelMessageIdPostCounts.setType("jobPosting");
@@ -601,6 +603,7 @@ public class JobManagementServiceImpl implements JobManagementService {
         SendMessage response = new SendMessage();
         Long channelId = robotChannelManagement.getChannelId();
         String channelTitle = robotChannelManagement.getChannelTitle();
+        String channelLink = robotChannelManagement.getLink();
 
         if (!result.isEmpty()) {
             response.setChatId(String.valueOf(channelId));
@@ -617,6 +620,7 @@ public class JobManagementServiceImpl implements JobManagementService {
                     channelMessageIdPostCounts.setUserId(jobSeeker.getUserId());
                     channelMessageIdPostCounts.setChannelId(channelId);
                     channelMessageIdPostCounts.setChannelTitle(channelTitle);
+                    channelMessageIdPostCounts.setChannelLink(channelLink);
                     channelMessageIdPostCounts.setMessageId(channelMessageId);
                     channelMessageIdPostCounts.setPostCount(1);
                     channelMessageIdPostCounts.setType("jobSeeker");
