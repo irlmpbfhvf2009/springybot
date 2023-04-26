@@ -23,5 +23,7 @@ public class SpringyBotDTO {
 
     private Boolean state;
 
+    private String botType;
+    
     private ConfigDTO config;
 }

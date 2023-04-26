@@ -63,11 +63,4 @@ public class SpringyBotController {
         return springyBotService.updateBot(springyBotDTO);
     }
 
-    // @GetMapping("/hello")
-    // public String test(){
-    // Custom c = new Custom("5855785269:AAH9bvPpYudd2wSAvMnBTiKakCeoB92_Z_8",
-    // "CCP_1121_BOT", new DefaultBotOptions());
-    // c.sendTextMsg("null", "-1001700543954");
-    // return "fuck";
-    // }
 }

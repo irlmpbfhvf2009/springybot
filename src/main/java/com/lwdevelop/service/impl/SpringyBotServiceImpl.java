@@ -13,9 +13,8 @@ import org.springframework.stereotype.Service;
 import org.telegram.telegrambots.meta.TelegramBotsApi;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 import org.telegram.telegrambots.meta.generics.BotSession;
-import com.lwdevelop.bot.Custom;
+import com.lwdevelop.bot.talentBot.Custom;
 import com.lwdevelop.dto.SpringyBotDTO;
-import com.lwdevelop.entity.Config;
 import com.lwdevelop.entity.SpringyBot;
 import com.lwdevelop.repository.SpringyBotRepository;
 import com.lwdevelop.service.SpringyBotService;
@@ -55,8 +54,6 @@ public class SpringyBotServiceImpl implements SpringyBotService {
         return springyBotRepository.findAll();
     }
 
-
-
     @Override
     public SpringyBot findByUsername(String username) {
         return springyBotRepository.findByUsername(username);
@@ -79,7 +76,8 @@ public class SpringyBotServiceImpl implements SpringyBotService {
 
     @Override
     public ResponseEntity<ResponseData> start(SpringyBotDTO springyBotDTO) {
-    // public synchronized ResponseEntity<ResponseData> start(SpringyBotDTO springyBotDTO) {
+        // public synchronized ResponseEntity<ResponseData> start(SpringyBotDTO
+        // springyBotDTO) {
         try {
             Long id = springyBotDTO.getId();
 
@@ -91,9 +89,20 @@ public class SpringyBotServiceImpl implements SpringyBotService {
             springyBot.setState(true);
             save(springyBot);
 
-            BotSession botSession = telegramBotsApi.registerBot(new Custom(springyBotDTO));
+            BotSession botSession = null;
+            ;
+            String botType = springyBot.getBotType();
 
-            springyBotMap.put(id, botSession);
+            switch (botType) {
+                case "talentBot":
+                    botSession = telegramBotsApi.registerBot(new Custom(springyBotDTO));
+                    break;
+                default:
+                    break;
+            }
+            if (botSession != null) {
+                springyBotMap.put(id, botSession);
+            }
 
             log.info("Common Telegram bot started.");
             return ResponseUtils.response(RetEnum.RET_SUCCESS, "启动成功");
@@ -111,7 +120,8 @@ public class SpringyBotServiceImpl implements SpringyBotService {
 
     @Override
     public ResponseEntity<ResponseData> stop(SpringyBotDTO springyBotDTO) {
-    // public synchronized ResponseEntity<ResponseData> stop(SpringyBotDTO springyBotDTO) {
+        // public synchronized ResponseEntity<ResponseData> stop(SpringyBotDTO
+        // springyBotDTO) {
         try {
             Long id = springyBotDTO.getId();
             if (springyBotMap.containsKey(id)) {
@@ -134,20 +144,29 @@ public class SpringyBotServiceImpl implements SpringyBotService {
     @Override
     public ResponseEntity<ResponseData> addBot(SpringyBotDTO springyBotDTO) {
         SpringyBot springyBot = new SpringyBot();
-        Config config = new Config();
         springyBot.setToken(springyBotDTO.getToken());
         springyBot.setUsername(springyBotDTO.getUsername());
+        springyBot.setBotType(springyBotDTO.getBotType());
         springyBot.setState(springyBotDTO.getState());
-        config.setInviteFriendsAutoClearTime(springyBotDTO.getConfig().getInviteFriendsAutoClearTime());
-        config.setInviteFriendsSet(springyBotDTO.getConfig().getInviteFriendsSet());
-        config.setFollowChannelSet(springyBotDTO.getConfig().getFollowChannelSet());
-        config.setInviteFriendsQuantity(springyBotDTO.getConfig().getInviteFriendsQuantity());
-        config.setDeleteSeconds(springyBotDTO.getConfig().getDeleteSeconds());
-        config.setInvitationBonusSet(springyBotDTO.getConfig().getInvitationBonusSet());
-        config.setInviteMembers(springyBotDTO.getConfig().getInviteMembers());
-        config.setInviteEarnedOutstand(springyBotDTO.getConfig().getInviteEarnedOutstand());
-        config.setContactPerson(springyBotDTO.getConfig().getContactPerson());
-        springyBot.setConfig(config);
+
+        String botType = springyBotDTO.getBotType();
+        switch (botType) {
+            case "talentBot":
+                break;
+            default:
+                break;
+        }
+        // Config config = new Config();
+        // config.setInviteFriendsAutoClearTime(springyBotDTO.getConfig().getInviteFriendsAutoClearTime());
+        // config.setInviteFriendsSet(springyBotDTO.getConfig().getInviteFriendsSet());
+        // config.setFollowChannelSet(springyBotDTO.getConfig().getFollowChannelSet());
+        // config.setInviteFriendsQuantity(springyBotDTO.getConfig().getInviteFriendsQuantity());
+        // config.setDeleteSeconds(springyBotDTO.getConfig().getDeleteSeconds());
+        // config.setInvitationBonusSet(springyBotDTO.getConfig().getInvitationBonusSet());
+        // config.setInviteMembers(springyBotDTO.getConfig().getInviteMembers());
+        // config.setInviteEarnedOutstand(springyBotDTO.getConfig().getInviteEarnedOutstand());
+        // config.setContactPerson(springyBotDTO.getConfig().getContactPerson());
+        // springyBot.setConfig(config);
         save(springyBot);
         log.info("SpringyBotServiceImpl ==> addBot ... [ {} ] 新增成功", springyBotDTO.getUsername());
         return ResponseUtils.response(RetEnum.RET_SUCCESS, "新增成功");

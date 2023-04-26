@@ -28,6 +28,8 @@ public class SpringyBot {
 
     private Boolean state;
 
+    private String botType;
+
     @OneToOne(cascade = CascadeType.ALL)
     private Config config;
 
