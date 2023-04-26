@@ -1,7 +1,5 @@
 package com.lwdevelop.bot.utils;
 
-import java.net.URLEncoder;
-import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
@@ -10,7 +8,6 @@ import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKe
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.KeyboardRow;
 import com.lwdevelop.dto.JobPostingDTO;
 import com.lwdevelop.dto.JobSeekerDTO;
-import com.lwdevelop.utils.CryptoUtil;
 
 public class KeyboardButton {
 
@@ -69,16 +66,16 @@ public class KeyboardButton {
         List<List<InlineKeyboardButton>> rowsInline = new ArrayList<>();
         List<InlineKeyboardButton> rowInline = new ArrayList<>();
     
-        String ub = "userId=" + jobPostingDTO.getUserId()
-                + "&botId=" + jobPostingDTO.getBotId()
-                + "&company=" + jobPostingDTO.getCompany()
-                + "&position=" + jobPostingDTO.getPosition()
-                + "&baseSalary=" + jobPostingDTO.getBaseSalary()
-                + "&commission=" + jobPostingDTO.getCommission()
-                + "&workTime=" + jobPostingDTO.getWorkTime()
-                + "&requirements=" + jobPostingDTO.getRequirements()
-                + "&location=" + jobPostingDTO.getLocation()
-                + "&flightNumber=" + jobPostingDTO.getFlightNumber();
+        // String ub = "userId=" + jobPostingDTO.getUserId()
+        //         + "&botId=" + jobPostingDTO.getBotId()
+        //         + "&company=" + jobPostingDTO.getCompany()
+        //         + "&position=" + jobPostingDTO.getPosition()
+        //         + "&baseSalary=" + jobPostingDTO.getBaseSalary()
+        //         + "&commission=" + jobPostingDTO.getCommission()
+        //         + "&workTime=" + jobPostingDTO.getWorkTime()
+        //         + "&requirements=" + jobPostingDTO.getRequirements()
+        //         + "&location=" + jobPostingDTO.getLocation()
+        //         + "&flightNumber=" + jobPostingDTO.getFlightNumber();
     
 //        String encryptedUb = CryptoUtil.encrypt(ub);
 //        String encodedUb = URLEncoder.encode(encryptedUb, StandardCharsets.UTF_8);
@@ -118,21 +115,21 @@ public class KeyboardButton {
         List<InlineKeyboardButton> rowInline = new ArrayList<>();
     
 
-        String ub = "userId=" + jobSeekerDTO.getUserId()
-                + "&botId=" + jobSeekerDTO.getBotId()
-                + "&name=" + jobSeekerDTO.getName()
-                + "&gender=" + jobSeekerDTO.getGender()
-                + "&dateOfBirth=" + jobSeekerDTO.getDateOfBirth()
-                + "&age=" + jobSeekerDTO.getAge()
-                + "&nationality=" + jobSeekerDTO.getNationality()
-                + "&education=" + jobSeekerDTO.getEducation()
-                + "&skills=" + jobSeekerDTO.getSkills()
-                + "&targetPosition=" + jobSeekerDTO.getTargetPosition()
-                + "&resources=" + jobSeekerDTO.getResources()
-                + "&expectedSalary=" + jobSeekerDTO.getExpectedSalary()
-                + "&workExperience=" + jobSeekerDTO.getWorkExperience()
-                + "&selfIntroduction=" + jobSeekerDTO.getSelfIntroduction()
-                + "&flightNumber=" + jobSeekerDTO.getFlightNumber();
+        // String ub = "userId=" + jobSeekerDTO.getUserId()
+        //         + "&botId=" + jobSeekerDTO.getBotId()
+        //         + "&name=" + jobSeekerDTO.getName()
+        //         + "&gender=" + jobSeekerDTO.getGender()
+        //         + "&dateOfBirth=" + jobSeekerDTO.getDateOfBirth()
+        //         + "&age=" + jobSeekerDTO.getAge()
+        //         + "&nationality=" + jobSeekerDTO.getNationality()
+        //         + "&education=" + jobSeekerDTO.getEducation()
+        //         + "&skills=" + jobSeekerDTO.getSkills()
+        //         + "&targetPosition=" + jobSeekerDTO.getTargetPosition()
+        //         + "&resources=" + jobSeekerDTO.getResources()
+        //         + "&expectedSalary=" + jobSeekerDTO.getExpectedSalary()
+        //         + "&workExperience=" + jobSeekerDTO.getWorkExperience()
+        //         + "&selfIntroduction=" + jobSeekerDTO.getSelfIntroduction()
+        //         + "&flightNumber=" + jobSeekerDTO.getFlightNumber();
 
     
 //        String encryptedUb = CryptoUtil.encrypt(ub);

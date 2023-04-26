@@ -54,6 +54,7 @@ D:\酷寶\開發\tgbot\SpringyBot\src\main\java\com\lwdevelop\dto\JobPostingDTO.java
 D:\酷寶\開發\tgbot\SpringyBot\src\main\java\com\lwdevelop\dto\AdminDTO.java
 D:\酷寶\開發\tgbot\SpringyBot\src\main\java\com\lwdevelop\bot\Custom.java
 D:\酷寶\開發\tgbot\SpringyBot\src\main\java\com\lwdevelop\bot\handler\event\LeaveGroup.java
+D:\酷寶\開發\tgbot\SpringyBot\src\main\java\com\lwdevelop\bot\handler\messageEvent\private_\commands\Job_II.java
 D:\酷寶\開發\tgbot\SpringyBot\src\main\java\com\lwdevelop\bot\handler\messageEvent\private_\message.java
 D:\酷寶\開發\tgbot\SpringyBot\src\main\java\com\lwdevelop\entity\RobotGroupManagement.java
 D:\酷寶\開發\tgbot\SpringyBot\src\main\java\com\lwdevelop\entity\JobUser.java
