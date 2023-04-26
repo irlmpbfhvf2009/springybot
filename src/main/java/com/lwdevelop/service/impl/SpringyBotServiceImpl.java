@@ -201,15 +201,16 @@ public class SpringyBotServiceImpl implements SpringyBotService {
         }
         springyBot.setUsername(springyBotDTO.getUsername());
         springyBot.setToken(springyBotDTO.getToken());
-        springyBot.getConfig().setContactPerson(springyBotDTO.getConfig().getContactPerson());
-        springyBot.getConfig().setDeleteSeconds(springyBotDTO.getConfig().getDeleteSeconds());
-        springyBot.getConfig().setFollowChannelSet(springyBotDTO.getConfig().getFollowChannelSet());
-        springyBot.getConfig().setInvitationBonusSet(springyBotDTO.getConfig().getInvitationBonusSet());
-        springyBot.getConfig().setInviteEarnedOutstand(springyBotDTO.getConfig().getInviteEarnedOutstand());
-        springyBot.getConfig().setInviteFriendsAutoClearTime(springyBotDTO.getConfig().getInviteFriendsAutoClearTime());
-        springyBot.getConfig().setInviteFriendsQuantity(springyBotDTO.getConfig().getInviteFriendsQuantity());
-        springyBot.getConfig().setInviteFriendsSet(springyBotDTO.getConfig().getInviteFriendsSet());
-        springyBot.getConfig().setInviteMembers(springyBotDTO.getConfig().getInviteMembers());
+        springyBot.setBotType(springyBotDTO.getBotType());
+        // springyBot.getConfig().setContactPerson(springyBotDTO.getConfig().getContactPerson());
+        // springyBot.getConfig().setDeleteSeconds(springyBotDTO.getConfig().getDeleteSeconds());
+        // springyBot.getConfig().setFollowChannelSet(springyBotDTO.getConfig().getFollowChannelSet());
+        // springyBot.getConfig().setInvitationBonusSet(springyBotDTO.getConfig().getInvitationBonusSet());
+        // springyBot.getConfig().setInviteEarnedOutstand(springyBotDTO.getConfig().getInviteEarnedOutstand());
+        // springyBot.getConfig().setInviteFriendsAutoClearTime(springyBotDTO.getConfig().getInviteFriendsAutoClearTime());
+        // springyBot.getConfig().setInviteFriendsQuantity(springyBotDTO.getConfig().getInviteFriendsQuantity());
+        // springyBot.getConfig().setInviteFriendsSet(springyBotDTO.getConfig().getInviteFriendsSet());
+        // springyBot.getConfig().setInviteMembers(springyBotDTO.getConfig().getInviteMembers());
         save(springyBot);
         log.info("SpringyBotServiceImpl ==> updateBot ... [ {} ] 修改成功", springyBotDTO.getUsername());
         return ResponseUtils.response(RetEnum.RET_SUCCESS, "修改成功");
