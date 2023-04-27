@@ -23,8 +23,6 @@ import org.telegram.telegrambots.meta.api.methods.updatingmessages.EditMessageTe
 import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 
-import javax.persistence.EntityManager;
-
 public class Job_II {
 
     @Autowired
@@ -144,15 +142,7 @@ public class Job_II {
 
         JobPosting jobPosting = jobManagementServiceImpl.findByUserIdAndBotIdWithJobPosting(
                 String.valueOf(message.getChatId()), String.valueOf(common.getSpringyBotId()));
-        // 创建一个新的 JobPosting 实例
-//        if (jobPosting != null) {
-//            // 清除舊資料
-//            jobPosting = this.initJobPosting(jobPosting);
-//
-//        } else {
-//            jobPosting = new JobPosting();
-//            // 遍历字符串数组，将冒号后面的值设置到实体对应的字段中;
-//        }
+
         if (jobPosting == null) {
             jobPosting = new JobPosting();
         }
@@ -174,13 +164,13 @@ public class Job_II {
                     springyBotServiceImpl.save(springyBot);
                     return ju;
                 });
-        jobUser.getJobPosting().add(jobPosting);
-        springyBot.getJobUser().add(jobUser);
-        jobManagementServiceImpl.saveJobPosting(jobPosting);
-        try {
+
+        final Long jobPostingId = jobPosting.getId();
+        if (!jobUser.getJobPosting().stream().anyMatch(p -> p.getId().equals(jobPostingId))) {
+            jobUser.getJobPosting().add(jobPosting);
+            springyBot.getJobUser().add(jobUser);
+            jobManagementServiceImpl.saveJobPosting(jobPosting);
             springyBotServiceImpl.save(springyBot);
-        }catch (IllegalStateException e){
-            System.out.println(e.toString());
         }
 
 
@@ -268,13 +258,10 @@ public class Job_II {
         JobSeeker jobSeeker = jobManagementServiceImpl.findByUserIdAndBotIdWithJobSeeker(
                 String.valueOf(message.getChatId()), String.valueOf(common.getSpringyBotId()));
 
-        if (jobSeeker != null) {
+        if (jobSeeker == null) {
             // 清除舊資料
-            jobSeeker = this.initJobSeeker(jobSeeker);
-
-        } else {
             jobSeeker = new JobSeeker();
-            // 遍历字符串数组，将冒号后面的值设置到实体对应的字段中
+
         }
         String isSuccess = fillJobSeekerInfo(jobSeeker, lines);
         if (!StringUtils.hasText(isSuccess)) {
@@ -296,10 +283,17 @@ public class Job_II {
                     springyBotServiceImpl.save(springyBot);
                     return ju;
                 });
-        jobUser.getJobSeeker().add(jobSeeker);
-        springyBot.getJobUser().add(jobUser);
-        jobManagementServiceImpl.saveJobSeeker(jobSeeker);
-        springyBotServiceImpl.save(springyBot);
+
+        final Long jobSeekerId = jobSeeker.getId();
+        if (!jobUser.getJobSeeker().stream().anyMatch(p -> p.getId().equals(jobSeekerId))) {
+            jobUser.getJobSeeker().add(jobSeeker);
+            springyBot.getJobUser().add(jobUser);
+            jobManagementServiceImpl.saveJobSeeker(jobSeeker);
+            springyBotServiceImpl.save(springyBot);
+        }
+
+
+
 
         StringBuilder sb = new StringBuilder();
         appendIfNotEmpty(sb, "姓名：", jobSeeker.getName());
@@ -386,36 +380,36 @@ public class Job_II {
         }
     }
 
-    private JobPosting initJobPosting(JobPosting jobPosting) {
-        JobPosting j= new JobPosting();
-        j.setId(jobPosting.getId());
-        j.setCompany(jobPosting.getCompany());
-        j.setPosition(jobPosting.getPosition());
-        j.setBaseSalary(jobPosting.getBaseSalary());
-        j.setCommission(jobPosting.getCommission());
-        j.setWorkTime(jobPosting.getWorkTime());
-        j.setRequirements(jobPosting.getRequirements());
-        j.setLocation(jobPosting.getLocation());
-        j.setFlightNumber(jobPosting.getFlightNumber());
-        return jobPosting;
-    }
+    // private JobPosting initJobPosting(JobPosting jobPosting) {
+    //     JobPosting j= new JobPosting();
+    //     j.setId(jobPosting.getId());
+    //     j.setCompany(jobPosting.getCompany());
+    //     j.setPosition(jobPosting.getPosition());
+    //     j.setBaseSalary(jobPosting.getBaseSalary());
+    //     j.setCommission(jobPosting.getCommission());
+    //     j.setWorkTime(jobPosting.getWorkTime());
+    //     j.setRequirements(jobPosting.getRequirements());
+    //     j.setLocation(jobPosting.getLocation());
+    //     j.setFlightNumber(jobPosting.getFlightNumber());
+    //     return jobPosting;
+    // }
 
-    private JobSeeker initJobSeeker(JobSeeker jobSeeker) {
-        jobSeeker.setName("");
-        jobSeeker.setGender("");
-        jobSeeker.setDateOfBirth("");
-        jobSeeker.setAge("");
-        jobSeeker.setNationality("");
-        jobSeeker.setEducation("");
-        jobSeeker.setSkills("");
-        jobSeeker.setTargetPosition("");
-        jobSeeker.setResources("");
-        jobSeeker.setExpectedSalary("");
-        jobSeeker.setWorkExperience("");
-        jobSeeker.setSelfIntroduction("");
-        jobSeeker.setFlightNumber("");
-        return jobSeeker;
-    }
+    // private JobSeeker initJobSeeker(JobSeeker jobSeeker) {
+    //     jobSeeker.setName("");
+    //     jobSeeker.setGender("");
+    //     jobSeeker.setDateOfBirth("");
+    //     jobSeeker.setAge("");
+    //     jobSeeker.setNationality("");
+    //     jobSeeker.setEducation("");
+    //     jobSeeker.setSkills("");
+    //     jobSeeker.setTargetPosition("");
+    //     jobSeeker.setResources("");
+    //     jobSeeker.setExpectedSalary("");
+    //     jobSeeker.setWorkExperience("");
+    //     jobSeeker.setSelfIntroduction("");
+    //     jobSeeker.setFlightNumber("");
+    //     return jobSeeker;
+    // }
 
     public void setResponse_edit_jobPosting_management(Common common) {
 
@@ -428,16 +422,6 @@ public class Job_II {
         List<ChannelMessageIdPostCounts> channelMessageIdPostCounts = jobManagementServiceImpl
                 .findAllByBotIdAndUserIdAndTypeWithChannelMessageIdPostCounts(String.valueOf(id),
                         userId, "jobPosting");
-        // Map<String, Integer> channelInfo = channelMessageIdPostCounts.stream()
-        //         .collect(Collectors.toMap(
-        //                 ChannelMessageIdPostCounts::getChannelTitle,
-        //                 ChannelMessageIdPostCounts::getPostCount));
-
-        // String alert = channelInfo.entrySet().stream()
-        //         .map(entry -> entry.getValue() != 0
-        //                 ? entry.getKey() + " 发布了" + entry.getValue() + "则 [招聘人才] 信息\n"
-        //                 : "")
-        //         .collect(Collectors.joining());
 
         List<String> alertMessages = channelMessageIdPostCounts.stream().map(cmpc -> {
             String messageLink;
@@ -538,49 +522,10 @@ public class Job_II {
         SendMessage response = new SendMessage();
         response.setChatId(String.valueOf(common.getUpdate().getMessage().getChatId()));
 
-        // List<ChannelMessageIdPostCounts> channelMessageIdPostCounts =
-        // jobManagementServiceImpl
-        // .findAllByBotIdAndUserIdAndTypeWithChannelMessageIdPostCounts(String.valueOf(id),
-        // userId, "jobSeeker");
-        // Map<String, Integer> channelInfo = channelMessageIdPostCounts.stream()
-        // .collect(Collectors.toMap(
-        // ChannelMessageIdPostCounts::getChannelTitle,
-        // ChannelMessageIdPostCounts::getPostCount));
-
-        // String alert = channelInfo.entrySet().stream()
-        // .map(entry -> entry.getValue() != 0
-        // ? entry.getKey() + " 发布了" + entry.getValue() + "则 [求职人员] 信息\n"
-        // : "")
-        // .collect(Collectors.joining());
 
         List<ChannelMessageIdPostCounts> channelMessageIdPostCounts = jobManagementServiceImpl
                 .findAllByBotIdAndUserIdAndTypeWithChannelMessageIdPostCounts(String.valueOf(id),
                         userId, "jobSeeker");
-
-//        List<String> alertMessages = channelMessageIdPostCounts.stream().map(cmpc -> {
-//            String messageLink;
-//            String markdown;
-//            String link ;
-//            try {
-//                link = common.getBot().execute(new ExportChatInviteLink(String.valueOf(cmpc.getChannelId())));
-//                messageLink = link + "/" + cmpc.getMessageId();
-//                markdown = "["+cmpc.getChannelTitle()+"]("+messageLink+")";
-//            } catch (TelegramApiException e) {
-//                markdown=cmpc.getChannelTitle();
-//                e.printStackTrace();
-//            }
-//            if (cmpc.getPostCount()<=0){
-//                return "";
-//            }
-//
-//            return markdown + " 发布 " + cmpc.getPostCount() + " 则 [ 求职人员 ] 信息 ";
-//        }).collect(Collectors.toList());
-//
-//        for (int i =0 ; i<alertMessages.size(); i++){
-//            if (Objects.equals(alertMessages.get(i), "")){
-//                alertMessages.remove(i);
-//            }
-//        }
 
         List<String> alertMessages = channelMessageIdPostCounts.stream()
                 .filter(cmpc -> cmpc.getPostCount() > 0)
