@@ -170,7 +170,9 @@ public class Job_II {
                     return ju;
                 });
         jobUser.getJobPosting().add(jobPosting);
+        springyBot.getJobUser().add(jobUser);
         jobManagementServiceImpl.saveJobPosting(jobPosting);
+        springyBotServiceImpl.save(springyBot);
 
         StringBuilder sb = new StringBuilder();
         appendIfNotEmpty(sb, "公司：", jobPosting.getCompany());
@@ -274,10 +276,13 @@ public class Job_II {
                     JobUser ju = new JobUser();
                     ju.setUserId(userId);
                     springyBot.getJobUser().add(ju);
+                    springyBotServiceImpl.save(springyBot);
                     return ju;
                 });
         jobUser.getJobSeeker().add(jobSeeker);
+        springyBot.getJobUser().add(jobUser);
         jobManagementServiceImpl.saveJobSeeker(jobSeeker);
+        springyBotServiceImpl.save(springyBot);
 
         StringBuilder sb = new StringBuilder();
         appendIfNotEmpty(sb, "姓名：", jobSeeker.getName());

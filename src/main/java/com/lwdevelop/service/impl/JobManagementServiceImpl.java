@@ -5,6 +5,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Optional;
 import java.util.concurrent.ExecutionException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -31,7 +32,6 @@ import com.lwdevelop.utils.CryptoUtil;
 import com.lwdevelop.utils.ResponseUtils;
 import com.lwdevelop.utils.RetEnum;
 import com.lwdevelop.utils.ResponseUtils.ResponseData;
-
 
 // @Slf4j
 @Service
@@ -124,16 +124,66 @@ public class JobManagementServiceImpl implements JobManagementService {
             JobTreeDTO seeker = new JobTreeDTO();
             seeker.setLabel("求職信息");
             seeker.setId(1L);
+
             for (int j = 0; j < springyBots.get(i).getJobUser().size(); j++) {
+                List<JobTreeDTO> jobTreeDTOList = new ArrayList<>();
                 springyBots.get(i).getJobUser().stream().forEach(jobUser -> {
-                    JobTreeDTO user = new JobTreeDTO();
-                    List<JobTreeDTO> ff = new ArrayList<>();
-                    user.setId(jobUser.getId());
-                    user.setLabel(jobUser.getUsername());
-                    user.setChildren(null);
-                    ff.add(user);
-                    posting.setChildren(ff);
-                    seeker.setChildren(ff);
+                    JobTreeDTO jobTreeDTO = new JobTreeDTO();
+                    jobTreeDTO.setId(jobUser.getId());
+                    String name = jobUser.getUsername().equals("") ? jobUser.getFirstname() : jobUser.getUsername();
+                    name = name.equals("") ? jobUser.getLastname() : name;
+                    jobTreeDTO.setLabel(name);
+
+                    Optional<JobPosting> jobPostingOptional = jobUser.getJobPosting().stream().filter(jp -> jp.getUserId().equals(jobUser.getUserId())).findFirst();
+                    if (jobPostingOptional.isPresent()) {
+                        JobPosting jobPosting = jobPostingOptional.get();
+                        JobPostingDTO jobPostingDTO = new JobPostingDTO();
+                        jobPostingDTO.setBaseSalary(jobPosting.getBaseSalary());
+                        jobPostingDTO.setBotId(jobPosting.getBotId());
+                        jobPostingDTO.setCommission(jobPosting.getCommission());
+                        jobPostingDTO.setCompany(jobPosting.getCompany());
+                        jobPostingDTO.setFlightNumber(jobPosting.getFlightNumber());
+                        jobPostingDTO.setId(jobPosting.getId());
+                        jobPostingDTO.setLocation(jobPosting.getLocation());
+                        jobPostingDTO.setPosition(jobPosting.getPosition());
+                        jobPostingDTO.setRequirements(jobPosting.getRequirements());
+                        jobPostingDTO.setUserId(jobPosting.getUserId());
+                        jobPostingDTO.setWorkTime(jobPosting.getWorkTime());
+
+                        List<JobPostingDTO> list = new ArrayList<>();
+                        list.add(jobPostingDTO);
+                        jobTreeDTO.setJobPostingDTO(list);
+                    } 
+
+                    Optional<JobSeeker> jobSeekerOptional = jobUser.getJobSeeker().stream().filter(js -> js.getUserId().equals(jobUser.getUserId())).findFirst();
+                    if (jobSeekerOptional.isPresent()) {
+                        JobSeeker jobSeeker = jobSeekerOptional.get();
+                        JobSeekerDTO jobSeekerDTO = new JobSeekerDTO();
+                        jobSeekerDTO.setAge(jobSeeker.getAge());
+                        jobSeekerDTO.setBotId(jobSeeker.getBotId());
+                        jobSeekerDTO.setDateOfBirth(jobSeeker.getDateOfBirth());
+                        jobSeekerDTO.setEducation(jobSeeker.getEducation());
+                        jobSeekerDTO.setExpectedSalary(jobSeeker.getExpectedSalary());
+                        jobSeekerDTO.setFlightNumber(jobSeeker.getFlightNumber());
+                        jobSeekerDTO.setGender(jobSeeker.getGender());
+                        jobSeekerDTO.setId(jobSeeker.getId());
+                        jobSeekerDTO.setName(jobSeeker.getName());
+                        jobSeekerDTO.setNationality(jobSeeker.getNationality());
+                        jobSeekerDTO.setResources(jobSeeker.getResources());
+                        jobSeekerDTO.setSelfIntroduction(jobSeeker.getSelfIntroduction());
+                        jobSeekerDTO.setSkills(jobSeeker.getSkills());
+                        jobSeekerDTO.setTargetPosition(jobSeeker.getTargetPosition());
+                        jobSeekerDTO.setUserId(jobSeeker.getUserId());
+                        jobSeekerDTO.setWorkExperience(jobSeeker.getWorkExperience());
+
+                        List<JobSeekerDTO> list = new ArrayList<>();
+                        list.add(jobSeekerDTO);
+                        jobTreeDTO.setJobSeekerDTO(list);
+                    } 
+
+                    jobTreeDTOList.add(jobTreeDTO);
+                    posting.setChildren(jobTreeDTOList);
+                    seeker.setChildren(jobTreeDTOList);
                 });
             }
 
@@ -202,19 +252,19 @@ public class JobManagementServiceImpl implements JobManagementService {
 
         // 获取招聘信息的用户ID
         String userId = jobPostingDTO.getUserId();
-        
+
         // 使用用户ID和机器人ID查找原始的招聘信息
         JobPosting jobPosting = this.findByUserIdAndBotIdWithJobPosting(userId, jobPostingDTO.getBotId());
-        
+
         // 更新招聘信息
         updateJobPosting(jobPostingDTO, jobPosting);
 
         // 获取机器人的ID
         Long id = Long.valueOf(jobPostingDTO.getBotId());
-        
+
         // 查找对应的Telegram机器人
         SpringyBot springyBot = springyBotServiceImpl.findById(id).get();
-        
+
         // 创建Custom类的新实例
         SpringyBotDTO springyBotDTO = new SpringyBotDTO();
         springyBotDTO.setToken(springyBot.getToken());
@@ -223,10 +273,10 @@ public class JobManagementServiceImpl implements JobManagementService {
 
         // 获取最后一条已发送的消息的ID
         Integer messageId = jobPosting.getLastMessageId();
-        
+
         // 创建EditMessageText类的新实例以编辑消息
         EditMessageText editMessageText = new EditMessageText();
-        
+
         // 创建更新的招聘信息文本
         String messageText = createJobPostingMessageText(jobPostingDTO);
 
@@ -234,7 +284,7 @@ public class JobManagementServiceImpl implements JobManagementService {
         editMessageText.setChatId(userId);
         editMessageText.setMessageId(messageId);
         editMessageText.setText(messageText);
-        
+
         // 设置回复标记为键盘按钮，允许用户与招聘信息交互
         editMessageText.setReplyMarkup(new KeyboardButton().keyboard_jobPosting(jobPostingDTO, true));
 
@@ -249,16 +299,15 @@ public class JobManagementServiceImpl implements JobManagementService {
         List<ChannelMessageIdPostCounts> channelMessageIdPostCounts = findAllByBotIdAndUserIdAndTypeWithChannelMessageIdPostCounts(
                 String.valueOf(id), userId, "jobPosting");
 
-        
-                // 创建更新的招聘信息更新文本
+        // 创建更新的招聘信息更新文本
         String result = createJobPostingUpdateText(jobPostingDTO);
-        
+
         // 如果更新文本不为空，遍历频道消息并编辑它们
         if (!result.isEmpty()) {
             for (ChannelMessageIdPostCounts cmp : channelMessageIdPostCounts) {
                 // 创建EditMessageText类的新实例以编辑消息
                 EditMessageText editChannelMessageText = new EditMessageText();
-                
+
                 // 设置聊天ID、消息ID和消息文本
                 editChannelMessageText.setChatId(String.valueOf(cmp.getChannelId()));
                 editChannelMessageText.setMessageId(cmp.getMessageId());
@@ -271,7 +320,7 @@ public class JobManagementServiceImpl implements JobManagementService {
                 }
             }
         }
-        
+
         // 返回一个ResponseEntity对象，其中包含成功状态代码和指示成功编辑招聘信息的消息。
         return ResponseUtils.response(RetEnum.RET_SUCCESS, "编辑成功");
     }
@@ -372,7 +421,7 @@ public class JobManagementServiceImpl implements JobManagementService {
 
     @Override
     public ResponseEntity<ResponseData> editAndPost_JobPosting(
-              JobPostingDTO jobPostingDTO) {
+            JobPostingDTO jobPostingDTO) {
         String userId = jobPostingDTO.getUserId();
         JobPosting jobPosting = this.findByUserIdAndBotIdWithJobPosting(userId, jobPostingDTO.getBotId());
         // JobPosting jobPosting = this.findByUserIdWithJobPosting(userId);
@@ -535,7 +584,7 @@ public class JobManagementServiceImpl implements JobManagementService {
         Long channelId = robotChannelManagement.getChannelId();
         String channelTitle = robotChannelManagement.getChannelTitle();
         String channelLink = robotChannelManagement.getLink();
-        
+
         if (!result.isEmpty()) {
             response.setChatId(String.valueOf(channelId));
             response.setText("招聘人才\n\n" + result);
@@ -658,7 +707,6 @@ public class JobManagementServiceImpl implements JobManagementService {
         }
     }
 
-    
     private void updateJobPosting(JobPostingDTO jobPostingDTO, JobPosting jobPosting) {
         jobPosting.setBotId(jobPostingDTO.getBotId());
         jobPosting.setBaseSalary(jobPostingDTO.getBaseSalary());
@@ -699,4 +747,3 @@ public class JobManagementServiceImpl implements JobManagementService {
     }
 
 }
-

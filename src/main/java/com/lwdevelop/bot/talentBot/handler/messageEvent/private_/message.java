@@ -16,20 +16,23 @@ public class message {
 
     public void handler(Common common) {
         this.init(common);
-        // 判斷事件
-        String post = text.substring(0, 4);
-        // 發布招聘
-        if (post.equals("招聘人才")) {
-            new Job_II().generateTextJobPosting(common,false);
-        }else if (post.equals("编辑招聘")){
-            new Job_II().generateTextJobPosting(common,true);
-        }
 
-        // 發布求職
-        else if (post.equals("求职人员")) {
-            new Job_II().generateTextJobSeeker(common,false);
-        } else if (post.equals("编辑求职")) {
-            new Job_II().generateTextJobSeeker(common,true);
+        // 判斷事件
+        if(text.length()>=4){
+            String post = text.substring(0, 4);
+            // 發布招聘
+            if (post.equals("招聘人才")) {
+                new Job_II().generateTextJobPosting(common,false);
+            }else if (post.equals("编辑招聘")){
+                new Job_II().generateTextJobPosting(common,true);
+            }
+    
+            // 發布求職
+            else if (post.equals("求职人员")) {
+                new Job_II().generateTextJobSeeker(common,false);
+            } else if (post.equals("编辑求职")) {
+                new Job_II().generateTextJobSeeker(common,true);
+            }
         }
 
         switch (this.text.toLowerCase()) {
