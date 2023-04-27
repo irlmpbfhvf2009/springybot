@@ -56,7 +56,7 @@ public class Job_II {
                 location = "", flightNumber = "";
         if (jobPosting == null) {
             response.setText("招聘人才\n\n" + "公司：\n" + "职位：\n" + "底薪：\n" + "提成：\n" + "上班时间：\n" + "要求内容：（限50字以内）\n"
-                    + "🐌地址：\n" + "✈️咨询飞机号：");
+                    + "🐌地址：\n" + "✈️咨询飞机号：\n\n" + "关注 @rc499 点击 @rc899Bot 发布");
         } else {
             company = Optional.ofNullable(jobPosting.getCompany()).orElse("");
             position = Optional.ofNullable(jobPosting.getPosition()).orElse("");
@@ -70,7 +70,7 @@ public class Job_II {
                     "招聘人才\n\n" + "公司：" + company + "\n" + "职位：" + position + "\n" + "底薪："
                             + baseSalary + "\n" + "提成：" + commission + "\n" + "上班时间："
                             + workTime + "\n" + "要求内容：" + requirements + "\n"
-                            + "🐌地址：" + location + "\n" + "✈️咨询飞机号：" + flightNumber);
+                            + "🐌地址：" + location + "\n" + "✈️咨询飞机号：" + flightNumber +"\n\n 关注 @rc499 点击 @rc899Bot 发布");
         }
 
         common.sendResponseAsync(response);
@@ -103,7 +103,7 @@ public class Job_II {
                 workExperience = "", selfIntroduction = "", flightNumber = "";
         if (jobSeeker == null) {
             response.setText(
-                    "求职人员\n\n姓名：\n男女：\n出生_年_月_日：\n年龄：\n国籍：\n学历：\n技能：\n目标职位：\n手上有什么资源：\n期望薪资：\n工作经历：（限50字以内）\n自我介绍：（限50字以内）\n✈️咨询飞机号：");
+                    "求职人员\n\n姓名：\n男女：\n出生_年_月_日：\n年龄：\n国籍：\n学历：\n技能：\n目标职位：\n手上有什么资源：\n期望薪资：\n工作经历：（限50字以内）\n自我介绍：（限50字以内）\n✈️咨询飞机号：\n\n 关注 @rc499 点击 @rc899Bot 发布");
         } else {
             name = Optional.ofNullable(jobSeeker.getName()).orElse("");
             gender = Optional.ofNullable(jobSeeker.getGender()).orElse("");
@@ -124,7 +124,7 @@ public class Job_II {
                     + "\n年龄：" + age + "\n国籍：" + nationality + "\n学历：" + education
                     + "\n技能：" + skills + "\n目标职位：" + targetPosition + "\n手上有什么资源："
                     + resources + "\n期望薪资：" + expectedSalary + "\n工作经历："
-                    + workExperience + "\n自我介绍：" + selfIntroduction + "\n✈️咨询飞机号：" + flightNumber);
+                    + workExperience + "\n自我介绍：" + selfIntroduction + "\n✈️咨询飞机号：" + flightNumber +"\n\n 关注 @rc499 点击 @rc899Bot 发布");
         }
 
         common.sendResponseAsync(response);
@@ -183,6 +183,7 @@ public class Job_II {
         appendIfNotEmpty(sb, "要求内容：", jobPosting.getRequirements());
         appendIfNotEmpty(sb, "🐌地址：", jobPosting.getLocation());
         appendIfNotEmpty(sb, "✈️咨询飞机号：", jobPosting.getFlightNumber());
+
         String result = sb.toString().trim();
 
         Iterator<RobotChannelManagement> iterator = springyBot.getRobotChannelManagement().iterator();
@@ -195,7 +196,7 @@ public class Job_II {
                 String channelTitle = robotChannelManagement.getChannelTitle();
                 String channelLink = robotChannelManagement.getLink();
                 response.setChatId(String.valueOf(channelId));
-                response.setText("招聘人才\n\n" + result);
+                response.setText("招聘人才\n\n" + result +"\n\n 关注 @rc499 点击 @rc899Bot 发布");
                 ChannelMessageIdPostCounts channelMessageIdPostCounts = jobManagementServiceImpl
                         .findByChannelIdAndTypeWithChannelMessageIdPostCounts(
                                 channelId, "jobPosting");
@@ -203,7 +204,7 @@ public class Job_II {
                 if (isEdit) {
                     EditMessageText a = new EditMessageText();
                     a.setChatId(String.valueOf(channelId));
-                    a.setText("招聘人才\n\n" + result);
+                    a.setText("招聘人才\n\n" + result +"\n\n 关注 @rc499 点击 @rc899Bot 发布");
                     a.setMessageId(channelMessageIdPostCounts.getMessageId());
                     common.editResponseAsync(a);
                 } else {
@@ -321,7 +322,7 @@ public class Job_II {
                 String channelTitle = robotChannelManagement.getChannelTitle();
                 String channelLink = robotChannelManagement.getLink();
                 response.setChatId(String.valueOf(channelId));
-                response.setText("求职人员\n\n" + result);
+                response.setText("求职人员\n\n" + result+"\n\n 关注 @rc499 点击 @rc899Bot 发布");
                 ChannelMessageIdPostCounts channelMessageIdPostCounts = jobManagementServiceImpl
                         .findByChannelIdAndTypeWithChannelMessageIdPostCounts(
                                 channelId, "jobSeeker");
@@ -329,7 +330,7 @@ public class Job_II {
                 if (isEdit) {
                     EditMessageText a = new EditMessageText();
                     a.setChatId(String.valueOf(channelId));
-                    a.setText("求职人员\n\n" + result);
+                    a.setText("求职人员\n\n" + result +"\n\n 关注 @rc499 点击 @rc899Bot 发布");
                     a.setMessageId(channelMessageIdPostCounts.getMessageId());
                     common.editResponseAsync(a);
                 } else {
@@ -482,7 +483,7 @@ public class Job_II {
                         "编辑招聘\n\n" + "公司：" + company + "\n" + "职位：" + position + "\n" + "底薪："
                                 + baseSalary + "\n" + "提成：" + commission + "\n" + "上班时间："
                                 + workTime + "\n" + "要求内容：" + requirements + "\n"
-                                + "🐌地址：" + location + "\n" + "✈️咨询飞机号：" + flightNumber);
+                                + "🐌地址：" + location + "\n" + "✈️咨询飞机号：" + flightNumber +"\n\n 关注 @rc499 点击 @rc899Bot 发布");
                 jobPostingDTO = new JobPostingDTO(userId, String.valueOf(id), company, position, baseSalary,
                         commission, workTime, requirements, location, flightNumber);
                 response.setReplyMarkup(new KeyboardButton().keyboard_jobPosting(jobPostingDTO, true));
@@ -494,7 +495,7 @@ public class Job_II {
                 jobManagementServiceImpl.saveJobPosting(jobPosting);
             } else {
                 response.setText("编辑招聘\n\n" + "公司：\n" + "职位：\n" + "底薪：\n" + "提成：\n" + "上班时间：\n" + "要求内容：\n"
-                        + "🐌地址：\n" + "✈️咨询飞机号：");
+                        + "🐌地址：\n" + "✈️咨询飞机号：\n\n"+"关注 @rc499 点击 @rc899Bot 发布");
                 response.setReplyMarkup(new KeyboardButton().keyboard_jobPosting(jobPostingDTO, false));
                 // response.setReplyMarkup(new
                 // KeyboardButton().keyboard_jobPosting(jobPostingDTO));
@@ -594,7 +595,7 @@ public class Job_II {
                         + "\n年龄：" + age + "\n国籍：" + nationality + "\n学历：" + education
                         + "\n技能：" + skills + "\n目标职位：" + targetPosition + "\n手上有什么资源："
                         + resources + "\n期望薪资：" + expectedSalary + "\n工作经历："
-                        + workExperience + "\n自我介绍：" + selfIntroduction + "\n✈️咨询飞机号：" + flightNumber);
+                        + workExperience + "\n自我介绍：" + selfIntroduction + "\n✈️咨询飞机号：" + flightNumber +"\n\n 关注 @rc499 点击 @rc899Bot 发布");
                 response.setReplyMarkup(new KeyboardButton().keyboard_jobSeeker(jobSeekerDTO, true));
                 // response.setReplyMarkup(new
                 // KeyboardButton().keyboard_editJobSeeker(jobSeekerDTO));
@@ -605,7 +606,7 @@ public class Job_II {
 
             } else {
                 response.setText(
-                        "编辑求职\n\n姓名：\n男女：\n出生_年_月_日：\n年龄：\n国籍：\n学历：\n技能：\n目标职位：\n手上有什么资源：\n期望薪资：\n工作经历：\n自我介绍：\n✈️咨询飞机号：");
+                        "编辑求职\n\n姓名：\n男女：\n出生_年_月_日：\n年龄：\n国籍：\n学历：\n技能：\n目标职位：\n手上有什么资源：\n期望薪资：\n工作经历：\n自我介绍：\n✈️咨询飞机号：\n\n 关注 @rc499 点击 @rc899Bot 发布");
                 response.setReplyMarkup(new KeyboardButton().keyboard_jobSeeker(jobSeekerDTO, true));
                 // response.setReplyMarkup(new
                 // KeyboardButton().keyboard_jobSeeker(jobSeekerDTO));
