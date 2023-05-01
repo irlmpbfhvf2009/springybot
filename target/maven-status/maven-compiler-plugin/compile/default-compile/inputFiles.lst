@@ -20,6 +20,7 @@ D:\酷寶\開發\tgbot\SpringyBot\src\main\java\com\lwdevelop\controller\SpringyBotC
 D:\酷寶\開發\tgbot\SpringyBot\src\main\java\com\lwdevelop\controller\RedisController.java
 D:\酷寶\開發\tgbot\SpringyBot\src\main\java\com\lwdevelop\SwaggerConfig.java
 D:\酷寶\開發\tgbot\SpringyBot\src\main\java\com\lwdevelop\utils\JwtUtils.java
+D:\酷寶\開發\tgbot\SpringyBot\src\main\java\com\lwdevelop\entity\GroupMessageIdPostCounts.java
 D:\酷寶\開發\tgbot\SpringyBot\src\main\java\com\lwdevelop\utils\RedisUtils.java
 D:\酷寶\開發\tgbot\SpringyBot\src\main\java\com\lwdevelop\dto\JobTreeDTO.java
 D:\酷寶\開發\tgbot\SpringyBot\src\main\java\com\lwdevelop\utils\FileUtil.java
@@ -64,6 +65,7 @@ D:\酷寶\開發\tgbot\SpringyBot\src\main\java\com\lwdevelop\bot\talentBot\utils\Sp
 D:\酷寶\開發\tgbot\SpringyBot\src\main\java\com\lwdevelop\BackendApplication.java
 D:\酷寶\開發\tgbot\SpringyBot\src\main\java\com\lwdevelop\entity\InvitationThreshold.java
 D:\酷寶\開發\tgbot\SpringyBot\src\main\java\com\lwdevelop\entity\JobPosting.java
+D:\酷寶\開發\tgbot\SpringyBot\src\main\java\com\lwdevelop\repository\GroupMessageIdPostCountsRepository.java
 D:\酷寶\開發\tgbot\SpringyBot\src\main\java\com\lwdevelop\service\SpringyBotService.java
 D:\酷寶\開發\tgbot\SpringyBot\src\main\java\com\lwdevelop\bot\talentBot\handler\messageEvent\channel\ChannelMessage.java
 D:\酷寶\開發\tgbot\SpringyBot\src\main\java\com\lwdevelop\service\impl\RobotGroupAndChannelManagementServiceImpl.java
