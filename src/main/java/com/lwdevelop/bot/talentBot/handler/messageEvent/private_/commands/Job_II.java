@@ -577,7 +577,7 @@ public class Job_II {
         String alert_group = String.join("", alertMessages_group);
         String alert = alert_channel +  alert_group;
         if (!alert.isEmpty()) {
-            response.setText("通知：\n" + alert);
+            response.setText("通知：\n" + alert + "\n下方模版可对频道内信息进行编辑和删除操作");
             response.setDisableNotification(true);
             response.setDisableWebPagePreview(true);
             common.sendResponseAsync(response);
@@ -691,7 +691,7 @@ public class Job_II {
         if (!alert.isEmpty()) {
 
             // response.enableMarkdown(true);
-            response.setText("通知：\n" + alert + "\n\n下方模版可对频道内信息进行编辑和删除操作");
+            response.setText("通知：\n" + alert + "\n下方模版可对频道内信息进行编辑和删除操作");
             response.setDisableNotification(true);
             response.setDisableWebPagePreview(true);
             common.sendResponseAsync(response);
