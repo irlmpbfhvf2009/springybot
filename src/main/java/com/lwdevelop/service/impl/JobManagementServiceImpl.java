@@ -79,6 +79,13 @@ public class JobManagementServiceImpl implements JobManagementService {
     }
 
     @Override
+    public List<GroupMessageIdPostCounts> findAllByBotIdAndUserIdAndTypeWithGroupMessageIdPostCounts(String botId,
+            String userId, String type) {
+        return groupMessageIdPostCountsRepository.findAllByBotIdAndUserIdAndType(botId, userId, type);
+    }
+
+
+    @Override
     public JobSeeker findByUserIdAndBotIdWithJobSeeker(String userId,String springyBotId) {
         return jobSeekerRepository.findByUserIdAndBotId(userId,springyBotId);
     }

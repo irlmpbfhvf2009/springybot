@@ -14,6 +14,7 @@ import com.lwdevelop.dto.JobPostingDTO;
 import com.lwdevelop.dto.JobSeekerDTO;
 import com.lwdevelop.dto.SpringyBotDTO;
 import com.lwdevelop.entity.ChannelMessageIdPostCounts;
+import com.lwdevelop.entity.GroupMessageIdPostCounts;
 import com.lwdevelop.entity.JobPosting;
 import com.lwdevelop.entity.JobSeeker;
 import com.lwdevelop.entity.SpringyBot;
@@ -92,6 +93,8 @@ public class CallbackQuerys {
 
 
             List<ChannelMessageIdPostCounts> channelMessageIdPostCounts = jobManagementServiceImpl.findAllByBotIdAndUserIdAndTypeWithChannelMessageIdPostCounts(jobPosting.getBotId(), userId, "jobPosting");
+            List<GroupMessageIdPostCounts> groupMessageIdPostCounts = jobManagementServiceImpl.findAllByBotIdAndUserIdAndTypeWithGroupMessageIdPostCounts(jobPosting.getBotId(), userId, "jobPosting");
+            
             channelMessageIdPostCounts.stream().forEach(cmp -> {
                 DeleteMessage dm = new DeleteMessage();
                 dm.setChatId(String.valueOf(cmp.getChannelId()));
@@ -104,6 +107,20 @@ public class CallbackQuerys {
                 cmp.setMessageId(-1);
                 cmp.setPostCount(0);
                 jobManagementServiceImpl.saveChannelMessageIdPostCounts(cmp);
+            });
+
+            groupMessageIdPostCounts.stream().forEach(cmp -> {
+                DeleteMessage dm = new DeleteMessage();
+                dm.setChatId(String.valueOf(cmp.getGroupId()));
+                dm.setMessageId(cmp.getMessageId());
+                try {
+                    custom.executeAsync(dm);
+                } catch (TelegramApiException e) {
+                    e.printStackTrace();
+                }
+                cmp.setMessageId(-1);
+                cmp.setPostCount(0);
+                jobManagementServiceImpl.saveGroupMessageIdPostCounts(cmp);
             });
 
 
@@ -172,6 +189,7 @@ public class CallbackQuerys {
                 e.printStackTrace();
             }
             List<ChannelMessageIdPostCounts> channelMessageIdPostCounts = jobManagementServiceImpl.findAllByBotIdAndUserIdAndTypeWithChannelMessageIdPostCounts(jobSeeker.getBotId(), userId, "jobSeeker");
+            List<GroupMessageIdPostCounts> groupMessageIdPostCounts = jobManagementServiceImpl.findAllByBotIdAndUserIdAndTypeWithGroupMessageIdPostCounts(jobSeeker.getBotId(), userId, "jobSeeker");
             DeleteMessage dm = new DeleteMessage();
             channelMessageIdPostCounts.stream().forEach(cmp -> {
                 dm.setChatId(String.valueOf(cmp.getChannelId()));
@@ -184,6 +202,19 @@ public class CallbackQuerys {
                 cmp.setMessageId(-1);
                 cmp.setPostCount(0);
                 jobManagementServiceImpl.saveChannelMessageIdPostCounts(cmp);
+            });
+
+            groupMessageIdPostCounts.stream().forEach(cmp -> {
+                dm.setChatId(String.valueOf(cmp.getGroupId()));
+                dm.setMessageId(cmp.getMessageId());
+                try {
+                    custom.executeAsync(dm);
+                } catch (TelegramApiException e) {
+                    e.printStackTrace();
+                }
+                cmp.setMessageId(-1);
+                cmp.setPostCount(0);
+                jobManagementServiceImpl.saveGroupMessageIdPostCounts(cmp);
             });
 
             this.response.setText("删除成功");
