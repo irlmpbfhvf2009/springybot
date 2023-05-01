@@ -3,13 +3,14 @@ package com.lwdevelop.bot.talentBot.handler.event;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.User;
-
 import com.lwdevelop.bot.talentBot.utils.Common;
 import com.lwdevelop.entity.RobotGroupManagement;
 import com.lwdevelop.entity.SpringyBot;
 import com.lwdevelop.service.impl.SpringyBotServiceImpl;
 import com.lwdevelop.utils.SpringUtils;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 public class JoinGroup {
 
     @Autowired
@@ -56,6 +57,7 @@ public class JoinGroup {
                             springyBot.getRobotGroupManagement().add(this.getRobotGroupManagement());
                         });
                 springyBotServiceImpl.save(springyBot);
+                log.info("{} bot join {} group",member.getUserName(),this.groupTitle);
                 // user invite other user
             } else if (isUserInviteEvent(member)) {
             }

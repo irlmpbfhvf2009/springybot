@@ -208,12 +208,12 @@ public class Job_II {
                                     channelId, "jobPosting");
 
                     if (isEdit) {
-                        EditMessageText a = new EditMessageText();
-                        a.setChatId(String.valueOf(channelId));
-                        a.setText("招聘人才\n\n" + result + "\n\n 关注 @rc499 点击 @rc899Bot 发布");
-                        a.setMessageId(channelMessageIdPostCounts.getMessageId());
-                        a.setDisableWebPagePreview(true);
-                        common.editResponseAsync(a);
+                        EditMessageText editMessageText = new EditMessageText();
+                        editMessageText.setChatId(String.valueOf(channelId));
+                        editMessageText.setText("招聘人才\n\n" + result + "\n\n 关注 @rc499 点击 @rc899Bot 发布");
+                        editMessageText.setMessageId(channelMessageIdPostCounts.getMessageId());
+                        editMessageText.setDisableWebPagePreview(true);
+                        common.editResponseAsync(editMessageText);
                     } else {
 
                         if (channelMessageIdPostCounts == null) {
