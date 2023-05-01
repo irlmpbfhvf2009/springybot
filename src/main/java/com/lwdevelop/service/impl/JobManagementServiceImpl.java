@@ -20,11 +20,13 @@ import com.lwdevelop.dto.JobSeekerDTO;
 import com.lwdevelop.dto.JobTreeDTO;
 import com.lwdevelop.dto.SpringyBotDTO;
 import com.lwdevelop.entity.ChannelMessageIdPostCounts;
+import com.lwdevelop.entity.GroupMessageIdPostCounts;
 import com.lwdevelop.entity.JobPosting;
 import com.lwdevelop.entity.JobSeeker;
 import com.lwdevelop.entity.RobotChannelManagement;
 import com.lwdevelop.entity.SpringyBot;
 import com.lwdevelop.repository.ChannelMessageIdPostCountsRepository;
+import com.lwdevelop.repository.GroupMessageIdPostCountsRepository;
 import com.lwdevelop.repository.JobPostingRepository;
 import com.lwdevelop.repository.JobSeekerRepository;
 import com.lwdevelop.service.JobManagementService;
@@ -49,10 +51,19 @@ public class JobManagementServiceImpl implements JobManagementService {
     @Autowired
     private ChannelMessageIdPostCountsRepository channelMessageIdPostCountsRepository;
 
+    @Autowired
+    private GroupMessageIdPostCountsRepository groupMessageIdPostCountsRepository;
+
     @Override
     public ChannelMessageIdPostCounts findByChannelIdAndTypeWithChannelMessageIdPostCounts(Long channelId,
             String type) {
         return channelMessageIdPostCountsRepository.findByChannelIdAndType(channelId, type);
+    }
+
+    @Override
+    public GroupMessageIdPostCounts findByGroupIdAndTypeWithGroupMessageIdPostCounts(Long grouplId,
+            String type) {
+        return groupMessageIdPostCountsRepository.findByGroupIdAndType(grouplId, type);
     }
 
     @Override
@@ -75,6 +86,11 @@ public class JobManagementServiceImpl implements JobManagementService {
     @Override
     public void saveChannelMessageIdPostCounts(ChannelMessageIdPostCounts channelMessageIdPostCounts) {
         channelMessageIdPostCountsRepository.save(channelMessageIdPostCounts);
+    }
+
+    @Override
+    public void saveGroupMessageIdPostCounts(GroupMessageIdPostCounts groupMessageIdPostCounts) {
+        groupMessageIdPostCountsRepository.save(groupMessageIdPostCounts);
     }
 
     @Override

@@ -11,10 +11,12 @@ import com.lwdevelop.bot.talentBot.utils.KeyboardButton;
 import com.lwdevelop.dto.JobPostingDTO;
 import com.lwdevelop.dto.JobSeekerDTO;
 import com.lwdevelop.entity.ChannelMessageIdPostCounts;
+import com.lwdevelop.entity.GroupMessageIdPostCounts;
 import com.lwdevelop.entity.JobPosting;
 import com.lwdevelop.entity.JobSeeker;
 import com.lwdevelop.entity.JobUser;
 import com.lwdevelop.entity.RobotChannelManagement;
+import com.lwdevelop.entity.RobotGroupManagement;
 import com.lwdevelop.entity.SpringyBot;
 import com.lwdevelop.service.impl.JobManagementServiceImpl;
 import com.lwdevelop.service.impl.SpringyBotServiceImpl;
@@ -186,10 +188,10 @@ public class Job_II {
 
         String result = sb.toString().trim();
 
-        Iterator<RobotChannelManagement> iterator = springyBot.getRobotChannelManagement().iterator();
+        Iterator<RobotChannelManagement> iterator_channel = springyBot.getRobotChannelManagement().iterator();
 
-        while (iterator.hasNext()) {
-            RobotChannelManagement robotChannelManagement = iterator.next();
+        while (iterator_channel.hasNext()) {
+            RobotChannelManagement robotChannelManagement = iterator_channel.next();
             if (!result.isEmpty()) {
                 SendMessage response = new SendMessage();
                 Long channelId = robotChannelManagement.getChannelId();
@@ -242,6 +244,64 @@ public class Job_II {
 
             }
         }
+
+        Iterator<RobotGroupManagement> iterator_group = springyBot.getRobotGroupManagement().iterator();
+
+        while (iterator_group.hasNext()) {
+            RobotGroupManagement robotGroupManagement = iterator_group.next();
+            if (!result.isEmpty()) {
+                SendMessage response = new SendMessage();
+                Long groupId = robotGroupManagement.getGroupId();
+                String groupTitle = robotGroupManagement.getGroupTitle();
+                String groupLink = robotGroupManagement.getLink();
+                response.setChatId(String.valueOf(groupId));
+                response.setText("招聘人才\n\n" + result +"\n\n 关注 @rc499 点击 @rc899Bot 发布");
+                GroupMessageIdPostCounts groupMessageIdPostCounts = jobManagementServiceImpl
+                            .findByGroupIdAndTypeWithGroupMessageIdPostCounts(groupId, groupLink);
+
+                if (isEdit) {
+                    EditMessageText editMessageText = new EditMessageText();
+                    editMessageText.setChatId(String.valueOf(groupId));
+                    editMessageText.setText("招聘人才\n\n" + result +"\n\n 关注 @rc499 点击 @rc899Bot 发布");
+                    editMessageText.setMessageId(groupMessageIdPostCounts.getMessageId());
+                    common.editResponseAsync(editMessageText);
+                } else {
+
+                    if (groupMessageIdPostCounts == null) {
+                        final Integer groupMessageId = common.sendResponseAsync(response);
+                        groupMessageIdPostCounts = new GroupMessageIdPostCounts();
+                        groupMessageIdPostCounts.setBotId(jobPosting.getBotId());
+                        groupMessageIdPostCounts.setUserId(jobPosting.getUserId());
+                        groupMessageIdPostCounts.setGroupId(groupId);
+                        groupMessageIdPostCounts.setGroupTitle(groupTitle);
+                        groupMessageIdPostCounts.setGroupLink(groupLink);
+                        groupMessageIdPostCounts.setMessageId(groupMessageId);
+                        groupMessageIdPostCounts.setPostCount(1);
+                        groupMessageIdPostCounts.setType("jobPosting");
+                        jobPosting = jobManagementServiceImpl.findByUserIdAndBotIdWithJobPosting(
+                                String.valueOf(message.getChatId()), String.valueOf(common.getSpringyBotId()));
+                        jobPosting.getGroupMessageIdPostCounts().add(groupMessageIdPostCounts);
+                        jobManagementServiceImpl.saveJobPosting(jobPosting);
+                    } else {
+                        if (groupMessageIdPostCounts.getPostCount() == 0) {
+                            final Integer channelMessageId = common.sendResponseAsync(response);
+                            groupMessageIdPostCounts.setMessageId(channelMessageId);
+                            groupMessageIdPostCounts.setPostCount(groupMessageIdPostCounts.getPostCount() + 1);
+                            jobManagementServiceImpl.saveGroupMessageIdPostCounts(groupMessageIdPostCounts);
+                        } else {
+                            response = new SendMessage();
+                            response.setChatId(jobPosting.getUserId());
+                            response.setText("用户只能发布一条[招聘人才]信息");
+                            common.sendResponseAsync(response);
+                        }
+                    }
+
+                }
+
+            }
+        }
+
+
         }else {
             SendMessage response = new SendMessage();
             response.setChatId(jobPosting.getUserId());
@@ -312,10 +372,10 @@ public class Job_II {
         appendIfNotEmpty(sb, "✈️咨询飞机号：", jobSeeker.getFlightNumber());
         String result = sb.toString().trim();
 
-        Iterator<RobotChannelManagement> iterator = springyBot.getRobotChannelManagement().iterator();
+        Iterator<RobotChannelManagement> iterator_channel = springyBot.getRobotChannelManagement().iterator();
 
-        while (iterator.hasNext()) {
-            RobotChannelManagement robotChannelManagement = iterator.next();
+        while (iterator_channel.hasNext()) {
+            RobotChannelManagement robotChannelManagement = iterator_channel.next();
             if (!result.isEmpty()) {
                 SendMessage response = new SendMessage();
                 Long channelId = robotChannelManagement.getChannelId();
@@ -367,6 +427,63 @@ public class Job_II {
                 }
             }
         }
+
+        
+        Iterator<RobotGroupManagement> iterator_group = springyBot.getRobotGroupManagement().iterator();
+
+        while (iterator_group.hasNext()) {
+            RobotGroupManagement robotGroupManagement = iterator_group.next();
+            if (!result.isEmpty()) {
+                SendMessage response = new SendMessage();
+                Long groupId = robotGroupManagement.getGroupId();
+                String groupTitle = robotGroupManagement.getGroupTitle();
+                String groupLink = robotGroupManagement.getLink();
+                response.setChatId(String.valueOf(groupId));
+                response.setText("求职人员\n\n" + result+"\n\n 关注 @rc499 点击 @rc899Bot 发布");
+                GroupMessageIdPostCounts groupMessageIdPostCounts = jobManagementServiceImpl
+                        .findByGroupIdAndTypeWithGroupMessageIdPostCounts(
+                            groupId, "jobSeeker");
+
+                if (isEdit) {
+                    EditMessageText editMessageText = new EditMessageText();
+                    editMessageText.setChatId(String.valueOf(groupId));
+                    editMessageText.setText("求职人员\n\n" + result +"\n\n 关注 @rc499 点击 @rc899Bot 发布");
+                    editMessageText.setMessageId(groupMessageIdPostCounts.getMessageId());
+                    common.editResponseAsync(editMessageText);
+                } else {
+                    if (groupMessageIdPostCounts == null) {
+                        final Integer groupMessageId = common.sendResponseAsync(response);
+                        groupMessageIdPostCounts = new GroupMessageIdPostCounts();
+                        groupMessageIdPostCounts.setBotId(jobSeeker.getBotId());
+                        groupMessageIdPostCounts.setUserId(jobSeeker.getUserId());
+                        groupMessageIdPostCounts.setGroupId(groupId);
+                        groupMessageIdPostCounts.setGroupLink(groupTitle);
+                        groupMessageIdPostCounts.setGroupLink(groupLink);
+                        groupMessageIdPostCounts.setMessageId(groupMessageId);
+                        groupMessageIdPostCounts.setPostCount(1);
+                        groupMessageIdPostCounts.setType("jobSeeker");
+
+                        jobSeeker = jobManagementServiceImpl.findByUserIdAndBotIdWithJobSeeker(
+                                String.valueOf(message.getChatId()), String.valueOf(common.getSpringyBotId()));
+
+                        jobSeeker.getGroupMessageIdPostCounts().add(groupMessageIdPostCounts);
+                        jobManagementServiceImpl.saveJobSeeker(jobSeeker);
+                    } else {
+                        if (groupMessageIdPostCounts.getPostCount() == 0) {
+                            final Integer groupMessageId = common.sendResponseAsync(response);
+                            groupMessageIdPostCounts.setMessageId(groupMessageId);
+                            groupMessageIdPostCounts.setPostCount(groupMessageIdPostCounts.getPostCount() + 1);
+                            jobManagementServiceImpl.saveGroupMessageIdPostCounts(groupMessageIdPostCounts);
+                        } else {
+                            response = new SendMessage();
+                            response.setChatId(jobSeeker.getUserId());
+                            response.setText("用户只能发布一条[求职人员]信息");
+                            common.sendResponseAsync(response);
+                        }
+                    }
+                }
+            }
+        }
     }else {
             SendMessage response = new SendMessage();
             response.setChatId(jobSeeker.getUserId());
@@ -380,37 +497,6 @@ public class Job_II {
             sb.append(label).append(value).append("\n");
         }
     }
-
-    // private JobPosting initJobPosting(JobPosting jobPosting) {
-    //     JobPosting j= new JobPosting();
-    //     j.setId(jobPosting.getId());
-    //     j.setCompany(jobPosting.getCompany());
-    //     j.setPosition(jobPosting.getPosition());
-    //     j.setBaseSalary(jobPosting.getBaseSalary());
-    //     j.setCommission(jobPosting.getCommission());
-    //     j.setWorkTime(jobPosting.getWorkTime());
-    //     j.setRequirements(jobPosting.getRequirements());
-    //     j.setLocation(jobPosting.getLocation());
-    //     j.setFlightNumber(jobPosting.getFlightNumber());
-    //     return jobPosting;
-    // }
-
-    // private JobSeeker initJobSeeker(JobSeeker jobSeeker) {
-    //     jobSeeker.setName("");
-    //     jobSeeker.setGender("");
-    //     jobSeeker.setDateOfBirth("");
-    //     jobSeeker.setAge("");
-    //     jobSeeker.setNationality("");
-    //     jobSeeker.setEducation("");
-    //     jobSeeker.setSkills("");
-    //     jobSeeker.setTargetPosition("");
-    //     jobSeeker.setResources("");
-    //     jobSeeker.setExpectedSalary("");
-    //     jobSeeker.setWorkExperience("");
-    //     jobSeeker.setSelfIntroduction("");
-    //     jobSeeker.setFlightNumber("");
-    //     return jobSeeker;
-    // }
 
     public void setResponse_edit_jobPosting_management(Common common) {
 

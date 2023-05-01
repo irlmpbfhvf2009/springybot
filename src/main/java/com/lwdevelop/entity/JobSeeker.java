@@ -64,6 +64,10 @@ public class JobSeeker {
     @JsonIgnore
     private Set<ChannelMessageIdPostCounts> channelMessageIdPostCounts;
 
+    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @JsonIgnore
+    private Set<GroupMessageIdPostCounts> groupMessageIdPostCounts;
+
     public JobSeeker(String userId, String botId, Integer lastMessageId) {
         this.userId = userId;
         this.botId = botId;

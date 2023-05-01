@@ -52,6 +52,10 @@ public class JobPosting {
     @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JsonIgnore
     private Set<ChannelMessageIdPostCounts> channelMessageIdPostCounts;
+    
+    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @JsonIgnore
+    private Set<GroupMessageIdPostCounts> groupMessageIdPostCounts;
 
     public JobPosting(String userId, String botId, Integer lastMessageId) {
         this.userId = userId;
