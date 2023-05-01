@@ -2,7 +2,6 @@ package com.lwdevelop.bot.talentBot.handler.messageEvent.channel;
 
 import org.telegram.telegrambots.meta.api.methods.updatingmessages.DeleteMessage;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
-
 import com.lwdevelop.bot.talentBot.utils.Common;
 
 
@@ -21,6 +20,6 @@ public class ChannelMessage {
                 e.printStackTrace();
             }
         }
-
+        
     }
 }

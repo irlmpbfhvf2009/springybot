@@ -204,8 +204,12 @@ public class Job_II {
                     response.setDisableWebPagePreview(true);
                     response.setDisableNotification(true);
                     ChannelMessageIdPostCounts channelMessageIdPostCounts = jobManagementServiceImpl
-                            .findByChannelIdAndTypeWithChannelMessageIdPostCounts(
-                                    channelId, "jobPosting");
+                            .findByChannelIdAndUserIdAndTypeWithChannelMessageIdPostCounts(
+                                    channelId, String.valueOf(message.getChatId()), "jobPosting");
+                    // ChannelMessageIdPostCounts channelMessageIdPostCounts =
+                    // jobManagementServiceImpl
+                    // .findByChannelIdAndTypeWithChannelMessageIdPostCounts(
+                    // channelId, "jobPosting");
 
                     if (isEdit) {
                         EditMessageText a = new EditMessageText();
@@ -397,8 +401,12 @@ public class Job_II {
                     response.setDisableNotification(true);
                     response.setDisableWebPagePreview(true);
                     ChannelMessageIdPostCounts channelMessageIdPostCounts = jobManagementServiceImpl
-                            .findByChannelIdAndTypeWithChannelMessageIdPostCounts(
-                                    channelId, "jobSeeker");
+                            .findByChannelIdAndUserIdAndTypeWithChannelMessageIdPostCounts(
+                                    channelId, String.valueOf(message.getChatId()), "jobSeeker");
+                    // ChannelMessageIdPostCounts channelMessageIdPostCounts =
+                    // jobManagementServiceImpl
+                    // .findByChannelIdAndTypeWithChannelMessageIdPostCounts(
+                    // channelId, "jobSeeker");
 
                     if (isEdit) {
                         EditMessageText a = new EditMessageText();

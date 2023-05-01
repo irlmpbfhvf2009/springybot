@@ -9,6 +9,7 @@ import com.lwdevelop.entity.ChannelMessageIdPostCounts;
 @Repository
 public interface ChannelMessageIdPostCountsRepository extends JpaRepository<ChannelMessageIdPostCounts, Long> {
     ChannelMessageIdPostCounts findByChannelIdAndType(Long channelId,String type);
+    ChannelMessageIdPostCounts findByChannelIdAndUserIdAndType(Long channelId,String userId,String type);
     ChannelMessageIdPostCounts findByBotIdAndUserIdAndType(String botId,String userId,String type);
     List<ChannelMessageIdPostCounts> findAllByBotIdAndUserIdAndType(String botId,String userId,String type);
     

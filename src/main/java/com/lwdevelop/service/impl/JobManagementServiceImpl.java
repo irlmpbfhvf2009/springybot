@@ -59,6 +59,11 @@ public class JobManagementServiceImpl implements JobManagementService {
             String type) {
         return channelMessageIdPostCountsRepository.findByChannelIdAndType(channelId, type);
     }
+    @Override
+    public ChannelMessageIdPostCounts findByChannelIdAndUserIdAndTypeWithChannelMessageIdPostCounts(Long channelId,
+            String userId,String type) {
+        return channelMessageIdPostCountsRepository.findByChannelIdAndUserIdAndType(channelId,userId, type);
+    }
 
     @Override
     public GroupMessageIdPostCounts findByGroupIdAndTypeWithGroupMessageIdPostCounts(Long grouplId,
