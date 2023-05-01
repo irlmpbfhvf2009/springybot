@@ -284,8 +284,8 @@ public class Job_II {
                         jobManagementServiceImpl.saveJobPosting(jobPosting);
                     } else {
                         if (groupMessageIdPostCounts.getPostCount() == 0) {
-                            final Integer channelMessageId = common.sendResponseAsync(response);
-                            groupMessageIdPostCounts.setMessageId(channelMessageId);
+                            final Integer groupMessageId = common.sendResponseAsync(response);
+                            groupMessageIdPostCounts.setMessageId(groupMessageId);
                             groupMessageIdPostCounts.setPostCount(groupMessageIdPostCounts.getPostCount() + 1);
                             jobManagementServiceImpl.saveGroupMessageIdPostCounts(groupMessageIdPostCounts);
                         } else {
