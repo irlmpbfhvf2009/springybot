@@ -35,6 +35,8 @@ public class message {
             }
         }
 
+
+
         switch (this.text.toLowerCase()) {
             case "/start":
                 this.setResponse_job();

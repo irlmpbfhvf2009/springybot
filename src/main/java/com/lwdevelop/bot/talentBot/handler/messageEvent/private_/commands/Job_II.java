@@ -301,14 +301,18 @@ public class Job_II {
 
                 }
             }
+            SendMessage response = new SendMessage();
+            response.setChatId(jobPosting.getUserId());
+            response.setDisableNotification(true);
+            response.setDisableWebPagePreview(true);
             if (isSend) {
-                SendMessage response = new SendMessage();
-                response.setChatId(jobPosting.getUserId());
                 response.setText("用户只能发布一条[招聘人才]信息");
-                response.setDisableNotification(true);
-                response.setDisableWebPagePreview(true);
-                common.sendResponseAsync(response);
+            } else if (!isSend && isEdit) {
+                response.setText("编辑成功");
+            } else if (!isSend && !isEdit) {
+                response.setText("发送成功");
             }
+            common.sendResponseAsync(response);
         } else {
             SendMessage response = new SendMessage();
             response.setChatId(jobPosting.getUserId());
@@ -490,14 +494,18 @@ public class Job_II {
                     }
                 }
             }
-            if(isSend){
-                SendMessage response = new SendMessage();
-                response.setChatId(jobSeeker.getUserId());
+            SendMessage response = new SendMessage();
+            response.setChatId(jobSeeker.getUserId());
+            response.setDisableNotification(true);
+            response.setDisableWebPagePreview(true);
+            if (isSend) {
                 response.setText("用户只能发布一条[求职人员]信息");
-                response.setDisableNotification(true);
-                response.setDisableWebPagePreview(true);
-                common.sendResponseAsync(response);
+            } else if (!isSend && isEdit) {
+                response.setText("编辑成功");
+            } else if (!isSend && !isEdit) {
+                response.setText("发送成功");
             }
+            common.sendResponseAsync(response);
         } else {
             SendMessage response = new SendMessage();
             response.setChatId(jobSeeker.getUserId());
