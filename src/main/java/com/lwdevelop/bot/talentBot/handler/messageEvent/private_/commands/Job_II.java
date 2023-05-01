@@ -4,7 +4,6 @@ import java.util.*;
 import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.StringUtils;
-import org.telegram.telegrambots.meta.api.methods.groupadministration.ExportChatInviteLink;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import com.lwdevelop.bot.talentBot.utils.Common;
 import com.lwdevelop.bot.talentBot.utils.KeyboardButton;
@@ -23,7 +22,6 @@ import com.lwdevelop.service.impl.SpringyBotServiceImpl;
 import com.lwdevelop.utils.SpringUtils;
 import org.telegram.telegrambots.meta.api.methods.updatingmessages.EditMessageText;
 import org.telegram.telegrambots.meta.api.objects.Message;
-import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 
 public class Job_II {
 
@@ -537,34 +535,38 @@ public class Job_II {
                 .findAllByBotIdAndUserIdAndTypeWithChannelMessageIdPostCounts(String.valueOf(id),
                         userId, "jobPosting");
 
-        List<String> alertMessages = channelMessageIdPostCounts.stream().map(cmpc -> {
-            String messageLink;
-            String markdown;
-            String link;
-            try {
-                link = common.getBot().execute(new ExportChatInviteLink(String.valueOf(cmpc.getChannelId())));
-                messageLink = link + "/" + cmpc.getMessageId();
-                markdown = "[" + cmpc.getChannelTitle() + "](" + messageLink + ")";
-            } catch (TelegramApiException e) {
-                markdown = cmpc.getChannelTitle();
-                e.printStackTrace();
-            }
-
+        List<String> alertMessages_channel = channelMessageIdPostCounts.stream().map(cmpc -> {
+            String markdown = "频道 " + cmpc.getChannelTitle();
             if (cmpc.getPostCount() <= 0) {
                 return "";
             }
-            return markdown + " 发布 " + cmpc.getPostCount() + " 则 [ 招聘人才 ] 信息 ";
+            return markdown + " 发布 " + cmpc.getPostCount() + " 则 [ 招聘人才 ] 信息 \n";
         }).filter(str -> !Objects.equals(str, "")).collect(Collectors.toList());
 
-        String alert = String.join("\n", alertMessages);
+        List<GroupMessageIdPostCounts> groupMessageIdPostCounts = jobManagementServiceImpl
+                .findAllByBotIdAndUserIdAndTypeWithGroupMessageIdPostCounts(String.valueOf(id),
+                        userId, "jobPosting");
 
+        List<String> alertMessages_group = groupMessageIdPostCounts.stream().map(gmpc -> {
+
+            String markdown = "群组 " + gmpc.getGroupTitle();
+            if (gmpc.getPostCount() <= 0) {
+                return "";
+            }
+            return markdown + " 发布 " + gmpc.getPostCount() + " 则 [ 招聘人才 ] 信息 \n";
+        }).filter(str -> !Objects.equals(str, "")).collect(Collectors.toList());
+
+
+        // String alert_channel = String.join("\n", alertMessages_channel);
+        // String alert_group = String.join("\n", alertMessages_group);
+        String alert_channel = String.join("", alertMessages_channel);
+        String alert_group = String.join("", alertMessages_group);
+        String alert = alert_channel +  alert_group;
         if (!alert.isEmpty()) {
             response.setText("通知：\n" + alert);
-            response.enableMarkdown(true);
             response.setDisableNotification(true);
             response.setDisableWebPagePreview(true);
             common.sendResponseAsync(response);
-            response.enableMarkdown(false);
 
             JobPosting jobPosting = jobManagementServiceImpl.findByUserIdAndBotIdWithJobPosting(userId,
                     String.valueOf(id));
@@ -602,8 +604,6 @@ public class Job_II {
                 response.setReplyMarkup(new KeyboardButton().keyboard_jobPosting(jobPostingDTO, true));
                 response.setDisableNotification(true);
                 response.setDisableWebPagePreview(true);
-                // response.setReplyMarkup(new
-                // KeyboardButton().keyboard_editJobPosting(jobPostingDTO));
                 Integer messageId = common.sendResponseAsync(response);
                 jobPosting.setLastMessageId(messageId);
                 jobUser.getJobPosting().add(jobPosting);
@@ -614,8 +614,6 @@ public class Job_II {
                 response.setReplyMarkup(new KeyboardButton().keyboard_jobPosting(jobPostingDTO, false));
                 response.setDisableNotification(true);
                 response.setDisableWebPagePreview(true);
-                // response.setReplyMarkup(new
-                // KeyboardButton().keyboard_jobPosting(jobPostingDTO));
 
                 JobPosting jp = new JobPosting(userId, String.valueOf(id),
                         common.sendResponseAsync(response));
@@ -648,32 +646,42 @@ public class Job_II {
                 .findAllByBotIdAndUserIdAndTypeWithChannelMessageIdPostCounts(String.valueOf(id),
                         userId, "jobSeeker");
 
-        List<String> alertMessages = channelMessageIdPostCounts.stream()
-                .filter(cmpc -> cmpc.getPostCount() > 0)
-                .map(cmpc -> {
-                    try {
-                        String link = common.getBot()
-                                .execute(new ExportChatInviteLink(String.valueOf(cmpc.getChannelId())));
-                        String messageLink = link + "/" + cmpc.getMessageId();
-                        return "[" + cmpc.getChannelTitle() + "](" + messageLink + ")" + " 发布 " + cmpc.getPostCount()
-                                + " 则 [ 求职人员 ] 信息 ";
-                    } catch (TelegramApiException e) {
-                        e.printStackTrace();
-                        return cmpc.getChannelTitle();
-                    }
-                }).filter(str -> !Objects.equals(str, ""))
-                .collect(Collectors.toList());
 
-        String alert = String.join("\n", alertMessages);
+        List<String> alertMessages_channel = channelMessageIdPostCounts.stream().map(cmpc -> {
+            String markdown = "频道 " + cmpc.getChannelTitle();
+            if (cmpc.getPostCount() <= 0) {
+                return "";
+            }
+            return markdown + " 发布 " + cmpc.getPostCount() + " 则 [ 求职人员 ] 信息 \n";
+        }).filter(str -> !Objects.equals(str, "")).collect(Collectors.toList());
+
+        List<GroupMessageIdPostCounts> groupMessageIdPostCounts = jobManagementServiceImpl
+                .findAllByBotIdAndUserIdAndTypeWithGroupMessageIdPostCounts(String.valueOf(id),
+                        userId, "jobSeeker");
+
+        List<String> alertMessages_group = groupMessageIdPostCounts.stream().map(gmpc -> {
+
+            String markdown = "群组 " + gmpc.getGroupTitle();
+            if (gmpc.getPostCount() <= 0) {
+                return "";
+            }
+            return markdown + " 发布 " + gmpc.getPostCount() + " 则 [ 求职人员 ] 信息 \n";
+        }).filter(str -> !Objects.equals(str, "")).collect(Collectors.toList());
+
+        String alert_channel = String.join("", alertMessages_channel);
+        String alert_group = String.join("", alertMessages_group);
+        // String alert_channel = String.join("\n", alertMessages_channel);
+        // String alert_group = String.join("\n", alertMessages_group);
+        String alert = alert_channel +alert_group;
 
         if (!alert.isEmpty()) {
 
-            response.enableMarkdown(true);
+            // response.enableMarkdown(true);
             response.setText("通知：\n" + alert + "\n\n下方模版可对频道内信息进行编辑和删除操作");
             response.setDisableNotification(true);
             response.setDisableWebPagePreview(true);
             common.sendResponseAsync(response);
-            response.enableMarkdown(false);
+            // response.enableMarkdown(false);
 
             JobSeeker jobSeeker = jobManagementServiceImpl.findByUserIdAndBotIdWithJobSeeker(userId,
                     String.valueOf(id));
@@ -755,11 +763,15 @@ public class Job_II {
     private String fillJobSeekerInfo(JobSeeker jobSeeker, String[] lines) {
         String returnStr = "";
         for (String line : lines) {
-            String[] parts = line.split("：");
-            if (parts.length == 2) {
-                String key = parts[0].trim();
-                String value = parts[1].trim();
-
+            // String[] parts = line.split("：");
+            // if (parts.length == 2) {
+            //     String key = parts[0].trim();
+            //     String value = parts[1].trim();
+            int colonIndex = line.indexOf("：");
+            if (colonIndex >= 0) {
+            String key = line.substring(0, colonIndex).trim();
+            String value = line.substring(colonIndex + 1).trim();
+            
                 switch (key) {
                     case "姓名":
                         jobSeeker.setName(value);
@@ -818,11 +830,14 @@ public class Job_II {
     private String fillJobPostingInfo(JobPosting jobPosting, String[] lines) {
         String returnStr = "";
         for (String line : lines) {
-            String[] parts = line.split("：");
-            if (parts.length == 2) {
-                String key = parts[0].trim();
-                String value = parts[1].trim();
-
+            // String[] parts = line.split("：");
+            // if (parts.length == 2) {
+                // String key = parts[0].trim();
+                // String value = parts[1].trim();
+            int colonIndex = line.indexOf("：");
+            if (colonIndex >= 0) {
+                String key = line.substring(0, colonIndex).trim();
+                String value = line.substring(colonIndex + 1).trim();
                 switch (key) {
                     case "公司":
                         jobPosting.setCompany(value);
