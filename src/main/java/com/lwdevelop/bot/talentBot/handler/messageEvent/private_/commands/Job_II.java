@@ -147,7 +147,9 @@ public class Job_II {
         if (jobPosting == null) {
             jobPosting = new JobPosting();
         }
+
         String isSuccess = fillJobPostingInfo(jobPosting, lines);
+
         if (!StringUtils.hasText(isSuccess)) {
             jobPosting.setBotId(String.valueOf(common.getSpringyBotId()));
             jobPosting.setUserId(String.valueOf(message.getChatId()));
@@ -166,12 +168,18 @@ public class Job_II {
                         return ju;
                     });
 
-            final Long jobPostingId = jobPosting.getId();
-            if (!jobUser.getJobPosting().stream().anyMatch(p -> p.getId().equals(jobPostingId))) {
+            final Long final_jobPostingId = jobPosting.getId();
+            final JobPosting final_jobPosting = jobPosting;
+
+            if (!jobUser.getJobPosting().stream().anyMatch(p -> p.getId().equals(final_jobPostingId))) {
                 jobUser.getJobPosting().add(jobPosting);
                 springyBot.getJobUser().add(jobUser);
                 jobManagementServiceImpl.saveJobPosting(jobPosting);
                 springyBotServiceImpl.save(springyBot);
+            }else{
+                jobUser.getJobPosting().stream().filter(jp->jp.getId().equals(final_jobPostingId)).findFirst().ifPresent(action->{
+                    jobManagementServiceImpl.saveJobPosting(final_jobPosting);
+                });
             }
 
             StringBuilder sb = new StringBuilder();
@@ -355,12 +363,18 @@ public class Job_II {
                         return ju;
                     });
 
-            final Long jobSeekerId = jobSeeker.getId();
-            if (!jobUser.getJobSeeker().stream().anyMatch(p -> p.getId().equals(jobSeekerId))) {
+            final Long final_jobSeekerId = jobSeeker.getId();
+            final JobSeeker final_jobSeeker= jobSeeker;
+
+            if (!jobUser.getJobSeeker().stream().anyMatch(p -> p.getId().equals(final_jobSeekerId))) {
                 jobUser.getJobSeeker().add(jobSeeker);
                 springyBot.getJobUser().add(jobUser);
                 jobManagementServiceImpl.saveJobSeeker(jobSeeker);
                 springyBotServiceImpl.save(springyBot);
+            }else{
+                jobUser.getJobSeeker().stream().filter(jp->jp.getId().equals(final_jobSeekerId)).findFirst().ifPresent(action->{
+                    jobManagementServiceImpl.saveJobSeeker(final_jobSeeker);
+                });
             }
 
             StringBuilder sb = new StringBuilder();
