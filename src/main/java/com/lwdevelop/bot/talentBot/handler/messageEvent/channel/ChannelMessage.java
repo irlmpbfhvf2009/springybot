@@ -13,7 +13,14 @@ public class ChannelMessage {
         Integer messageId = common.getUpdate().getChannelPost().getMessageId();
 
 
-        
+        if(text.equals("https://t.me/+hFi53_eeHz1iYjY1")){
+            DeleteMessage dm = new DeleteMessage(chatId,messageId);
+            try {
+                common.getBot().execute(dm);
+            } catch (TelegramApiException e) {
+                e.printStackTrace();
+            }
+        }
 
         if(text.equals("https://t.me/+UuCm1_EjH9U0ODZI")){
             DeleteMessage dm = new DeleteMessage(chatId,messageId);
