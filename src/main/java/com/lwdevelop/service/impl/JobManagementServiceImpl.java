@@ -632,9 +632,6 @@ public class JobManagementServiceImpl implements JobManagementService {
                     }
                 }
 
-
-                
-
             } catch (InterruptedException e) {
                 e.printStackTrace();
             } catch (ExecutionException e) {

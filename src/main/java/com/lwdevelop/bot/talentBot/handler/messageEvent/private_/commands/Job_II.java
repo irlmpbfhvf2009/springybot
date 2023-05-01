@@ -238,10 +238,6 @@ public class Job_II {
                                 channelMessageIdPostCounts.setPostCount(channelMessageIdPostCounts.getPostCount() + 1);
                                 jobManagementServiceImpl.saveChannelMessageIdPostCounts(channelMessageIdPostCounts);
                             } else {
-                                // response = new SendMessage();
-                                // response.setChatId(jobPosting.getUserId());
-                                // response.setText("用户只能发布一条[招聘人才]信息");
-                                // common.sendResponseAsync(response);
                                 isSend = true;
                             }
                         }
@@ -297,10 +293,6 @@ public class Job_II {
                                 groupMessageIdPostCounts.setPostCount(groupMessageIdPostCounts.getPostCount() + 1);
                                 jobManagementServiceImpl.saveGroupMessageIdPostCounts(groupMessageIdPostCounts);
                             } else {
-                                // response = new SendMessage();
-                                // response.setChatId(jobPosting.getUserId());
-                                // response.setText("用户只能发布一条[招聘人才]信息");
-                                // common.sendResponseAsync(response);
                                 isSend = true;
                             }
                         }
@@ -308,16 +300,15 @@ public class Job_II {
                     }
 
                 }
-                if (isSend) {
-                    SendMessage response = new SendMessage();
-                    response.setChatId(jobPosting.getUserId());
-                    response.setText("用户只能发布一条[招聘人才]信息");
-                    response.setDisableNotification(true);
-                    response.setDisableWebPagePreview(true);
-                    common.sendResponseAsync(response);
-                }
             }
-
+            if (isSend) {
+                SendMessage response = new SendMessage();
+                response.setChatId(jobPosting.getUserId());
+                response.setText("用户只能发布一条[招聘人才]信息");
+                response.setDisableNotification(true);
+                response.setDisableWebPagePreview(true);
+                common.sendResponseAsync(response);
+            }
         } else {
             SendMessage response = new SendMessage();
             response.setChatId(jobPosting.getUserId());
@@ -437,10 +428,6 @@ public class Job_II {
                                 channelMessageIdPostCounts.setPostCount(channelMessageIdPostCounts.getPostCount() + 1);
                                 jobManagementServiceImpl.saveChannelMessageIdPostCounts(channelMessageIdPostCounts);
                             } else {
-                                // response = new SendMessage();
-                                // response.setChatId(jobSeeker.getUserId());
-                                // response.setText("用户只能发布一条[求职人员]信息");
-                                // common.sendResponseAsync(response);
                                 isSend = true;
                             }
                         }
@@ -479,7 +466,7 @@ public class Job_II {
                             groupMessageIdPostCounts.setBotId(jobSeeker.getBotId());
                             groupMessageIdPostCounts.setUserId(jobSeeker.getUserId());
                             groupMessageIdPostCounts.setGroupId(groupId);
-                            groupMessageIdPostCounts.setGroupLink(groupTitle);
+                            groupMessageIdPostCounts.setGroupTitle(groupTitle);
                             groupMessageIdPostCounts.setGroupLink(groupLink);
                             groupMessageIdPostCounts.setMessageId(groupMessageId);
                             groupMessageIdPostCounts.setPostCount(1);
@@ -497,10 +484,6 @@ public class Job_II {
                                 groupMessageIdPostCounts.setPostCount(groupMessageIdPostCounts.getPostCount() + 1);
                                 jobManagementServiceImpl.saveGroupMessageIdPostCounts(groupMessageIdPostCounts);
                             } else {
-                                // response = new SendMessage();
-                                // response.setChatId(jobSeeker.getUserId());
-                                // response.setText("用户只能发布一条[求职人员]信息");
-                                // common.sendResponseAsync(response);
                                 isSend = true;
                             }
                         }

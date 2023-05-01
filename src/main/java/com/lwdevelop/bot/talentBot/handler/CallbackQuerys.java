@@ -190,8 +190,8 @@ public class CallbackQuerys {
             }
             List<ChannelMessageIdPostCounts> channelMessageIdPostCounts = jobManagementServiceImpl.findAllByBotIdAndUserIdAndTypeWithChannelMessageIdPostCounts(jobSeeker.getBotId(), userId, "jobSeeker");
             List<GroupMessageIdPostCounts> groupMessageIdPostCounts = jobManagementServiceImpl.findAllByBotIdAndUserIdAndTypeWithGroupMessageIdPostCounts(jobSeeker.getBotId(), userId, "jobSeeker");
-            DeleteMessage dm = new DeleteMessage();
             channelMessageIdPostCounts.stream().forEach(cmp -> {
+                DeleteMessage dm = new DeleteMessage();
                 dm.setChatId(String.valueOf(cmp.getChannelId()));
                 dm.setMessageId(cmp.getMessageId());
                 try {
@@ -205,6 +205,7 @@ public class CallbackQuerys {
             });
 
             groupMessageIdPostCounts.stream().forEach(cmp -> {
+                DeleteMessage dm = new DeleteMessage();
                 dm.setChatId(String.valueOf(cmp.getGroupId()));
                 dm.setMessageId(cmp.getMessageId());
                 try {
