@@ -14,10 +14,6 @@ import com.lwdevelop.utils.ResponseUtils;
 
 public interface JobManagementService {
     // CRUD
-    JobSeeker findByUserIdWithJobSeeker(String userId);
-
-    JobPosting findByUserIdWithJobPosting(String userId);
-
     JobSeeker findByUserIdAndBotIdWithJobSeeker(String userId,String springyBotId);
 
     JobPosting findByUserIdAndBotIdWithJobPosting(String userId,String springyBotId);

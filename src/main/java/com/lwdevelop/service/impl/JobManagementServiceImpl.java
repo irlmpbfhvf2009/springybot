@@ -79,8 +79,8 @@ public class JobManagementServiceImpl implements JobManagementService {
     }
 
     @Override
-    public JobSeeker findByUserIdWithJobSeeker(String userId) {
-        return jobSeekerRepository.findByUserId(userId);
+    public JobSeeker findByUserIdAndBotIdWithJobSeeker(String userId,String springyBotId) {
+        return jobSeekerRepository.findByUserIdAndBotId(userId,springyBotId);
     }
 
     @Override
@@ -94,16 +94,6 @@ public class JobManagementServiceImpl implements JobManagementService {
     }
 
     @Override
-    public JobSeeker findByUserIdAndBotIdWithJobSeeker(String userId, String springyBotId) {
-        return jobSeekerRepository.findAllByUserIdAndBotId(userId, springyBotId);
-    }
-
-    @Override
-    public JobPosting findByUserIdAndBotIdWithJobPosting(String userId, String springyBotId) {
-        return jobPostingRepository.findAllByUserIdAndBotId(userId, springyBotId);
-    }
-
-    @Override
     public void saveJobPosting(JobPosting jobPosting) {
         jobPostingRepository.save(jobPosting);
     }
@@ -114,8 +104,8 @@ public class JobManagementServiceImpl implements JobManagementService {
     }
 
     @Override
-    public JobPosting findByUserIdWithJobPosting(String userId) {
-        return jobPostingRepository.findByUserId(userId);
+    public JobPosting findByUserIdAndBotIdWithJobPosting(String userId,String springyBotId) {
+        return jobPostingRepository.findByUserIdAndBotId(userId,springyBotId);
     }
 
     @Override

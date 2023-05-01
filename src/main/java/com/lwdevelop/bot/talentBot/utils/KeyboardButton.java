@@ -87,7 +87,8 @@ public class KeyboardButton {
             dk1.setText("编辑");
             dk1.setCallbackData("editJobPosting_");
             dk2.setText("删除");
-            dk2.setCallbackData("clearJobPosting_" + jobPostingDTO.getUserId());
+            // dk2.setCallbackData("clearJobPosting_" + jobPostingDTO.getUserId());
+            dk2.setCallbackData("clearJobPosting_" + jobPostingDTO.getUserId()+"_"+jobPostingDTO.getBotId());
         } else {
             // url = "http://192.168.0.27:3000/#/jobPostingForm?ub=" + encodedUb;
 //            url = "http://rc.ddb99.vip:18889/#/jobPostingForm?ub=" + encodedUb;
@@ -142,7 +143,8 @@ public class KeyboardButton {
             dk1.setText("编辑");
             dk1.setCallbackData("editJobSeeker_");
             dk2.setText("删除");
-            dk2.setCallbackData("clearJobSeeker_" + jobSeekerDTO.getUserId());
+            // dk2.setCallbackData("clearJobSeeker_" + jobSeekerDTO.getUserId());
+            dk2.setCallbackData("clearJobSeeker_" + jobSeekerDTO.getUserId() +"_"+jobSeekerDTO.getBotId());
         } else {
             // url = "http://192.168.0.27:3000/#/jobSeekerForm?ub=" + encodedUb;
 //            url = "http://rc.ddb99.vip:18889/#/jobSeekerForm?ub=" + encodedUb;\

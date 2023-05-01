@@ -38,9 +38,13 @@ public class CallbackQuerys {
         this.messageSetting(common);
 
         if (callbackQuery.getData().startsWith("clearJobPosting_")) {
-            String userId = callbackQuery.getData().substring("clearJobPosting_".length());
+            // String userId = callbackQuery.getData().substring("clearJobPosting_".length());
+
+            String userId = callbackQuery.getData().substring("clearJobPosting_".length(), callbackQuery.getData().lastIndexOf("_"));
+            String botId = callbackQuery.getData().substring(callbackQuery.getData().lastIndexOf("_") + 1);
+
             // 在这里根据 springyBotId 和 userId 进行相应的清除操作
-            JobPosting jobPosting = jobManagementServiceImpl.findByUserIdWithJobPosting(userId);
+            JobPosting jobPosting = jobManagementServiceImpl.findByUserIdAndBotIdWithJobPosting(userId,botId);
             jobPosting.setBaseSalary("");
             jobPosting.setCommission("");
             jobPosting.setCompany("");
@@ -106,9 +110,12 @@ public class CallbackQuerys {
             this.response.setText("删除成功");
             common.sendResponseAsync(this.response);
         } else if (callbackQuery.getData().startsWith("clearJobSeeker_")) {
-            String userId = callbackQuery.getData().substring("clearJobSeeker_".length());
+            // String userId = callbackQuery.getData().substring("clearJobSeeker_".length());
+
+            String userId = callbackQuery.getData().substring("clearJobSeeker_".length(), callbackQuery.getData().lastIndexOf("_"));
+            String botId = callbackQuery.getData().substring(callbackQuery.getData().lastIndexOf("_") + 1);
             // 在这里根据 springyBotId 和 userId 进行相应的清除操作
-            JobSeeker jobSeeker = jobManagementServiceImpl.findByUserIdWithJobSeeker(userId);
+            JobSeeker jobSeeker = jobManagementServiceImpl.findByUserIdAndBotIdWithJobSeeker(userId,botId);
             jobSeeker.setName("");
             jobSeeker.setGender("");
             jobSeeker.setDateOfBirth("");
