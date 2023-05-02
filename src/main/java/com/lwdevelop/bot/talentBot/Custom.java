@@ -62,16 +62,21 @@ public class Custom extends TelegramLongPollingBot {
         // deal message group or private chat
         if (update.hasMessage()) {
             if (this.message.hasText()) {
+                User user = this.message.getFrom();
+                String userInfo = String.format("[%s] %s (%s %s)", user.getId(), user.getUserName(), user.getFirstName(), user.getLastName());
 
                 // private
                 if (this.message.isUserMessage()) {
                     new Job().saveJobUser(common);
                     new message().handler(this.common);
+                    log.info("Private message received from {}: {}", userInfo, this.message.getText());
+
                 }
 
                 // group
                 if (this.message.isSuperGroupMessage()) {
                     new GroupMessage().handler(this.common);
+                    log.info("Group message received from {}: {}", userInfo, this.message.getText());
                 }
             }
         }
@@ -82,6 +87,10 @@ public class Custom extends TelegramLongPollingBot {
                 String chatType = update.getChannelPost().getChat().getType();
                 if (chatTypeIsChannel(chatType)) {
                     new ChannelMessage().handler(this.common);
+                    User user = update.getChannelPost().getFrom();
+                    String userInfo = String.format("[%s] %s (%s %s)", user.getId(), user.getUserName(), user.getFirstName(), user.getLastName());
+                    String text = update.getChannelPost().getText();
+                    log.info("Group message received from {}: {}", userInfo, text);
                 }
             }
         }
@@ -137,6 +146,10 @@ public class Custom extends TelegramLongPollingBot {
 
         if (update.hasCallbackQuery()) {
             new CallbackQuerys().handler(common);
+            User user = update.getCallbackQuery().getFrom();
+            String userInfo = String.format("[%s] %s (%s %s)", user.getId(), user.getUserName(), user.getFirstName(), user.getLastName());
+            String data = update.getCallbackQuery().getData();
+            log.info("CallbackQuery Data received from {}: {}", userInfo, data);
         }
 
     }
