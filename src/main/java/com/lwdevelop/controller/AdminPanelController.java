@@ -39,7 +39,7 @@ public class AdminPanelController {
     @PostMapping("/info")
     public ResponseEntity<ResponseUtils.ResponseData> getInfoApi(
             @RequestParam("token") String token) throws Exception {
-
+        System.out.println("token="+token);
         return adminService.getInfoProcess(token);
     }
 
