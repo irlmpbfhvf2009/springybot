@@ -226,6 +226,14 @@ public class SpringyBotServiceImpl implements SpringyBotService {
                 springyBotMap.get(parseId).stop();
                 springyBotMap.remove(parseId);
             }
+
+            //  刪除關聯資料表
+            Optional<SpringyBot> optSpringyBot = Optional.of(findById(parseId).get());
+            SpringyBot springyBot = optSpringyBot.get();
+            springyBot.getRobotGroupManagement().remove(springyBot.getId());
+            springyBot.getRobotChannelManagement().remove(springyBot.getId());
+            springyBot.getJobUser().remove(springyBot.getId());
+
             deleteById(parseId);
             log.info("SpringyBotServiceImpl ==> deleteBot ... [ {} ] 刪除成功", id);
         }

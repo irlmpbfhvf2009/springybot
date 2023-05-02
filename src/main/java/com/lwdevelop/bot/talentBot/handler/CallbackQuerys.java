@@ -52,7 +52,7 @@ public class CallbackQuerys {
             jobPosting.setFlightNumber("");
             jobPosting.setLocation("");
             jobPosting.setPosition("");
-            jobPosting.setRequirements("");
+            jobPosting.setRequirements("（限50字以内）");
             jobPosting.setWorkTime("");
             jobManagementServiceImpl.saveJobPosting(jobPosting);
 
@@ -79,7 +79,7 @@ public class CallbackQuerys {
                     "底薪：\n" +
                     "提成：\n" +
                     "上班时间：\n" +
-                    "要求内容：\n" +
+                    "要求内容：（限50字以内）\n" +
                     "🐌 地址：\n" +
                     "✈️咨询飞机号：");
 
@@ -143,8 +143,8 @@ public class CallbackQuerys {
             jobSeeker.setTargetPosition("");
             jobSeeker.setResources("");
             jobSeeker.setExpectedSalary("");
-            jobSeeker.setWorkExperience("");
-            jobSeeker.setSelfIntroduction("");
+            jobSeeker.setWorkExperience("（限50字以内）");
+            jobSeeker.setSelfIntroduction("（限50字以内）");
             jobSeeker.setFlightNumber("");
             jobManagementServiceImpl.saveJobSeeker(jobSeeker);
 
@@ -177,8 +177,8 @@ public class CallbackQuerys {
                     "目标职位：\n" +
                     "手上有什么资源：\n" +
                     "期望薪资：\n" +
-                    "工作经历：\n" +
-                    "自我介绍：\n" +
+                    "工作经历：（限50字以内）\n" +
+                    "自我介绍：（限50字以内）\n" +
                     "✈️咨询飞机号：");
 
             editMessageText.setReplyMarkup(new KeyboardButton().keyboard_jobSeeker(jobSeekerDTO,true));
