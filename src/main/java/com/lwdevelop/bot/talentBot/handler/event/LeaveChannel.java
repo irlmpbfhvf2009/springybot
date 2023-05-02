@@ -7,7 +7,9 @@ import com.lwdevelop.entity.RobotChannelManagement;
 import com.lwdevelop.entity.SpringyBot;
 import com.lwdevelop.service.impl.SpringyBotServiceImpl;
 import com.lwdevelop.utils.SpringUtils;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 public class LeaveChannel {
 
     // @Autowired
@@ -36,6 +38,8 @@ public class LeaveChannel {
             });
 
         this.springyBotServiceImpl.save(springyBot);
+        log.info("{} bot leave {} channel",common.getBot().getBotUsername(),chatMemberUpdated.getChat().getTitle());
+
         // springyBot.getRobotChannelManagement().removeIf(rcm -> hasTarget(rcm));
         // this.springyBotServiceImpl.save(springyBot);
         // RobotChannelManagement robotChannelManagement = this.robotChannelManagementServiceImpl

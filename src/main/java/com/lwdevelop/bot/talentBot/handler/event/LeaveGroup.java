@@ -2,13 +2,14 @@ package com.lwdevelop.bot.talentBot.handler.event;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.telegram.telegrambots.meta.api.objects.Message;
-
 import com.lwdevelop.bot.talentBot.utils.Common;
 import com.lwdevelop.entity.RobotGroupManagement;
 import com.lwdevelop.entity.SpringyBot;
 import com.lwdevelop.service.impl.SpringyBotServiceImpl;
 import com.lwdevelop.utils.SpringUtils;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 public class LeaveGroup {
 
     // @Autowired
@@ -35,6 +36,7 @@ public class LeaveGroup {
                 g.setStatus(false);
             });
         this.springyBotServiceImpl.save(springyBot);
+        log.info("{} bot leave {} group",common.getBot().getBotUsername(), message.getChat().getTitle());
 
         // springyBot.getRobotGroupManagement().removeIf(rgm -> hasTarget(rgm));
         // this.springyBotServiceImpl.save(springyBot);
