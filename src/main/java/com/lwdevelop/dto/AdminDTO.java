@@ -1,5 +1,6 @@
 package com.lwdevelop.dto;
 
+import java.util.List;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
@@ -21,6 +22,9 @@ public class AdminDTO {
 
     @ApiModelProperty(value = "狀態", required = true)
     private Boolean enabled;
+
+    @ApiModelProperty(value = "角色", required = true)
+    private List<String> roles;
     
     
 }

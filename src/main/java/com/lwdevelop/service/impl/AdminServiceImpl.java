@@ -171,11 +171,11 @@ public class AdminServiceImpl implements AdminService, UserDetailsService {
         }
 
         Admin admin = new Admin();
-        List<String> roles = Arrays.asList(new String[] { "ADMIN" });
+        // List<String> roles = Arrays.asList(new String[] { "ADMIN" });
         admin.setUsername(adminDTOUsername);
         admin.setPassword(adminDTO.getPassword());
         admin.setEnabled(adminDTO.getEnabled());
-        admin.setRoles(roles);
+        admin.setRoles(adminDTO.getRoles());
         admin.setRegIp(CommUtils.getClientIP(request));
         admin.setLastLoginIP(CommUtils.getClientIP(request));
         saveAdmin(admin);
