@@ -5,7 +5,7 @@ import com.lwdevelop.bot.coolbaoBot.handler.messageEvent.private_.commands.start
 import com.lwdevelop.bot.coolbaoBot.utils.Common;
 
 public class message {
-    private Common common;
+    // private Common common;
     private Message message;
     private String text;
 
@@ -25,7 +25,7 @@ public class message {
 
     private void init(Common common) {
         this.message = common.getUpdate().getMessage();
-        this.common = common;
+        // this.common = common;
         this.text = this.message.getText();
     }
 }
