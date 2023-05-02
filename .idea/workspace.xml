@@ -5,7 +5,21 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="1e8a3fc2-d57a-46c4-b4bf-a40b13ca6d58" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/lwdevelop/bot/talentBot/handler/CallbackQuerys.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/lwdevelop/bot/talentBot/handler/CallbackQuerys.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/lwdevelop/bot/talentBot/handler/messageEvent/private_/commands/Job_II.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/lwdevelop/bot/talentBot/handler/messageEvent/private_/commands/Job_II.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/lwdevelop/service/impl/SpringyBotServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/lwdevelop/service/impl/SpringyBotServiceImpl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/lwdevelop/bot/talentBot/Custom.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/lwdevelop/bot/talentBot/Custom.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/lwdevelop/bot/talentBot/handler/CallbackQuerys.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/lwdevelop/bot/talentBot/handler/CallbackQuerys.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/lwdevelop/bot/talentBot/handler/event/JoinChannel.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/lwdevelop/bot/talentBot/handler/event/JoinChannel.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/lwdevelop/bot/talentBot/handler/event/JoinGroup.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/lwdevelop/bot/talentBot/handler/event/JoinGroup.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/lwdevelop/bot/talentBot/handler/event/LeaveChannel.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/lwdevelop/bot/talentBot/handler/event/LeaveChannel.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/lwdevelop/bot/talentBot/handler/event/LeaveGroup.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/lwdevelop/bot/talentBot/handler/event/LeaveGroup.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/lwdevelop/bot/talentBot/handler/messageEvent/channel/ChannelMessage.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/lwdevelop/bot/talentBot/handler/messageEvent/channel/ChannelMessage.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/lwdevelop/bot/talentBot/handler/messageEvent/private_/commands/Job_II.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/lwdevelop/bot/talentBot/handler/messageEvent/private_/commands/Job_II.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/lwdevelop/bot/talentBot/handler/messageEvent/private_/message.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/lwdevelop/bot/talentBot/handler/messageEvent/private_/message.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/lwdevelop/service/impl/SpringyBotServiceImpl.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/lwdevelop/service/impl/SpringyBotServiceImpl.class" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -34,23 +48,31 @@
   <component name="MarkdownSettingsMigration">
     <option name="stateVersion" value="1" />
   </component>
+  <component name="MavenImportPreferences">
+    <option name="generalSettings">
+      <MavenGeneralSettings>
+        <option name="mavenHome" value="Use Maven wrapper" />
+        <option name="useMavenConfig" value="true" />
+      </MavenGeneralSettings>
+    </option>
+  </component>
   <component name="ProjectId" id="2P0Ku0LuvcViVMj7IlelguUwTXP" />
   <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "RunOnceActivity.OpenProjectViewOnStart": "true",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "last_opened_file_path": "D:/TGbot/SpringyBot",
-    "project.structure.last.edited": "Project",
-    "project.structure.proportion": "0.19042969",
-    "project.structure.side.proportion": "0.0",
-    "settings.editor.selected.configurable": "reference.settings.ide.settings.file-colors"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;last_opened_file_path&quot;: &quot;D:/TGbot/SpringyBot&quot;,
+    &quot;project.structure.last.edited&quot;: &quot;Project&quot;,
+    &quot;project.structure.proportion&quot;: &quot;0.19042969&quot;,
+    &quot;project.structure.side.proportion&quot;: &quot;0.0&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;reference.settings.ide.settings.file-colors&quot;
   }
-}]]></component>
+}</component>
   <component name="RunManager" selected="Application.BackendApplication">
     <configuration name="BackendApplication" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
       <option name="MAIN_CLASS_NAME" value="com.lwdevelop.BackendApplication" />

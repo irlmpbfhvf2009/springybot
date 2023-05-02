@@ -234,7 +234,7 @@ public class Job_II {
                         common.editResponseAsync(editMessageText);
 
                         response.setChatId(jobPosting.getUserId());
-                        response.setText("编辑成功");
+                        response.setText("[ "+ channelTitle +" ]编辑成功");
                         common.sendResponseAsync(response);
                         
                     } else {
@@ -243,7 +243,7 @@ public class Job_II {
                             final Integer channelMessageId = common.sendResponseAsync(response);
 
                             response.setChatId(jobPosting.getUserId());
-                            response.setText("发送成功");
+                            response.setText("[ "+ channelTitle +" ]发送成功");
                             common.sendResponseAsync(response);
 
                             channelMessageIdPostCounts = new ChannelMessageIdPostCounts();
@@ -263,14 +263,14 @@ public class Job_II {
                             if (channelMessageIdPostCounts.getPostCount() <= 0) {
                                 final Integer channelMessageId = common.sendResponseAsync(response);
                                 response.setChatId(jobPosting.getUserId());
-                                response.setText("发送成功");
+                                response.setText("[ "+ channelTitle +" ]发送 [招聘人才] 信息成功");
                                 common.sendResponseAsync(response);
                                 channelMessageIdPostCounts.setMessageId(channelMessageId);
                                 channelMessageIdPostCounts.setPostCount(channelMessageIdPostCounts.getPostCount() + 1);
                                 jobManagementServiceImpl.saveChannelMessageIdPostCounts(channelMessageIdPostCounts);
                             } else{
                                 response.setChatId(jobPosting.getUserId());
-                                response.setText("用户只能发布一条[招聘人才]信息");
+                                response.setText("您已在[ "+ channelTitle + " ]發送一條 [招聘人才] 信息");
                                 common.sendResponseAsync(response);
                             }
                         }
@@ -304,7 +304,7 @@ public class Job_II {
                         common.editResponseAsync(editMessageText);
 
                         response.setChatId(jobPosting.getUserId());
-                        response.setText("编辑成功");
+                        response.setText("[ "+ groupTitle +" ]编辑成功");
                         common.sendResponseAsync(response);
                     } else {
 
@@ -312,7 +312,7 @@ public class Job_II {
                             final Integer groupMessageId = common.sendResponseAsync(response);
 
                             response.setChatId(jobPosting.getUserId());
-                            response.setText("发送成功");
+                            response.setText("[ "+ groupTitle +" ]发送 [招聘人才] 信息成功");
                             common.sendResponseAsync(response);
 
                             groupMessageIdPostCounts = new GroupMessageIdPostCounts();
@@ -333,7 +333,7 @@ public class Job_II {
                                 final Integer groupMessageId = common.sendResponseAsync(response);
 
                                 response.setChatId(jobPosting.getUserId());
-                                response.setText("发送成功");
+                                response.setText("[ "+ groupTitle +" ]发送 [招聘人才] 成功");
                                 common.sendResponseAsync(response);
 
                                 groupMessageIdPostCounts.setMessageId(groupMessageId);
@@ -341,7 +341,7 @@ public class Job_II {
                                 jobManagementServiceImpl.saveGroupMessageIdPostCounts(groupMessageIdPostCounts);
                             }else{
                                 response.setChatId(jobPosting.getUserId());
-                                response.setText("用户只能发布一条[招聘人才]信息");
+                                response.setText("您已在[ "+ groupTitle + " ]發送一條 [招聘人才] 信息");
                                 common.sendResponseAsync(response);
                             }
                         }
@@ -452,14 +452,14 @@ public class Job_II {
                         common.editResponseAsync(editMessageText);
 
                         response.setChatId(jobSeeker.getUserId());
-                        response.setText("编辑成功");
+                        response.setText("[ "+ channelTitle +" ]编辑成功");
                         common.sendResponseAsync(response);
                     } else {
                         if (channelMessageIdPostCounts == null) {
                             
                             final Integer channelMessageId = common.sendResponseAsync(response);
                             response.setChatId(jobSeeker.getUserId());
-                            response.setText("发送成功");
+                            response.setText("[ "+ channelTitle +" ]发送 [求职人员] 成功");
                             common.sendResponseAsync(response);
 
                             channelMessageIdPostCounts = new ChannelMessageIdPostCounts();
@@ -482,7 +482,7 @@ public class Job_II {
 
                                 final Integer channelMessageId = common.sendResponseAsync(response);
                                 response.setChatId(jobSeeker.getUserId());
-                                response.setText("发送成功");
+                                response.setText("[ "+ channelTitle +" ]发送 [求职人员] 成功");
                                 common.sendResponseAsync(response);
 
                                 channelMessageIdPostCounts.setMessageId(channelMessageId);
@@ -490,7 +490,7 @@ public class Job_II {
                                 jobManagementServiceImpl.saveChannelMessageIdPostCounts(channelMessageIdPostCounts);
                             } else {
                                 response.setChatId(jobSeeker.getUserId());
-                                response.setText("用户只能发布一条[招聘人才]信息");
+                                response.setText("您已在[ "+ channelTitle + " ]發送一條 [求职人员] 信息");
                                 common.sendResponseAsync(response);
                             }
                         }
@@ -524,14 +524,14 @@ public class Job_II {
                         common.editResponseAsync(editMessageText);
 
                         response.setChatId(jobSeeker.getUserId());
-                        response.setText("编辑成功");
+                        response.setText("[ "+ groupTitle +" ]编辑成功");
                         common.sendResponseAsync(response);
 
                     } else {
                         if (groupMessageIdPostCounts == null) {
                             final Integer groupMessageId = common.sendResponseAsync(response);
                             response.setChatId(jobSeeker.getUserId());
-                            response.setText("发送成功");
+                            response.setText("[ "+ groupTitle +" ]发送 [求职人员] 成功");
                             common.sendResponseAsync(response);
 
                             groupMessageIdPostCounts = new GroupMessageIdPostCounts();
@@ -554,7 +554,7 @@ public class Job_II {
 
                                 final Integer groupMessageId = common.sendResponseAsync(response);
                                 response.setChatId(jobSeeker.getUserId());
-                                response.setText("发送成功");
+                                response.setText("[ "+ groupTitle +" ]发送 [求职人员] 成功");
                                 common.sendResponseAsync(response);
 
                                 groupMessageIdPostCounts.setMessageId(groupMessageId);
@@ -562,7 +562,7 @@ public class Job_II {
                                 jobManagementServiceImpl.saveGroupMessageIdPostCounts(groupMessageIdPostCounts);
                             } else {
                                 response.setChatId(jobSeeker.getUserId());
-                                response.setText("用户只能发布一条[招聘人才]信息");
+                                response.setText("您已在[ "+ groupTitle + " ]發送一條 [求职人员] 信息");
                                 common.sendResponseAsync(response);
                             }
                         }
@@ -601,7 +601,7 @@ public class Job_II {
                         userId, "jobPosting");
 
         List<String> alertMessages_channel = channelMessageIdPostCounts.stream().map(cmpc -> {
-            String markdown = "频道 " + cmpc.getChannelTitle();
+            String markdown = "频道 [ " + cmpc.getChannelTitle()+ " ] ";
             if (cmpc.getPostCount() <= 0) {
                 return "";
             }
@@ -614,7 +614,7 @@ public class Job_II {
 
         List<String> alertMessages_group = groupMessageIdPostCounts.stream().map(gmpc -> {
 
-            String markdown = "群组 " + gmpc.getGroupTitle();
+            String markdown = "群组 [ " + gmpc.getGroupTitle()+" ] ";
             if (gmpc.getPostCount() <= 0) {
                 return "";
             }
@@ -711,7 +711,7 @@ public class Job_II {
                         userId, "jobSeeker");
 
         List<String> alertMessages_channel = channelMessageIdPostCounts.stream().map(cmpc -> {
-            String markdown = "频道 " + cmpc.getChannelTitle();
+            String markdown = "频道 [ " + cmpc.getChannelTitle() + " ] ";
             if (cmpc.getPostCount() <= 0) {
                 return "";
             }
@@ -724,7 +724,7 @@ public class Job_II {
 
         List<String> alertMessages_group = groupMessageIdPostCounts.stream().map(gmpc -> {
 
-            String markdown = "群组 " + gmpc.getGroupTitle();
+            String markdown = "群组 [ " + gmpc.getGroupTitle() + " ] ";
             if (gmpc.getPostCount() <= 0) {
                 return "";
             }
@@ -830,7 +830,9 @@ public class Job_II {
             if (colonIndex >= 0) {
                 String key = line.substring(0, colonIndex).trim();
                 String value = line.substring(colonIndex + 1).trim();
-
+                if(value.startsWith("（限50字以内）")){
+                    value = value.substring(8);
+                }
                 switch (key) {
                     case "姓名":
                         jobSeeker.setName(value);
@@ -895,6 +897,9 @@ public class Job_II {
             if (colonIndex >= 0) {
                 String key = line.substring(0, colonIndex).trim();
                 String value = line.substring(colonIndex + 1).trim();
+                if(value.startsWith("（限50字以内）")){
+                    value = value.substring(8);
+                }
                 switch (key) {
                     case "公司":
                         jobPosting.setCompany(value);
