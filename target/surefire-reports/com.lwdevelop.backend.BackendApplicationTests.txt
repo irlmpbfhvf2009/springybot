@@ -1,8 +1,4 @@
 -------------------------------------------------------------------------------
 Test set: com.lwdevelop.backend.BackendApplicationTests
 -------------------------------------------------------------------------------
-<<<<<<< HEAD
-Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 6.406 s - in com.lwdevelop.backend.BackendApplicationTests
-=======
-Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 21.466 s - in com.lwdevelop.backend.BackendApplicationTests
->>>>>>> 11862772adebfb611cb8a737ad084f8a79e1a7c5
+Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 6.728 s - in com.lwdevelop.backend.BackendApplicationTests

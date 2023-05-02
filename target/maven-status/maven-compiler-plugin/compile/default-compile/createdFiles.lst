@@ -6,6 +6,7 @@ com\lwdevelop\bot\talentBot\handler\messageEvent\private_\message.class
 com\lwdevelop\bot\talentBot\utils\SpringyBotEnum.class
 com\lwdevelop\bot\talentBot\handler\messageEvent\channel\ChannelMessage.class
 com\lwdevelop\entity\Config.class
+com\lwdevelop\bot\coolbaoBot\handler\event\JoinChannel.class
 com\lwdevelop\entity\GroupMessageIdPostCounts.class
 com\lwdevelop\bot\talentBot\utils\KeyboardButton.class
 com\lwdevelop\service\JobManagementService.class
@@ -13,11 +14,15 @@ com\lwdevelop\service\impl\RobotGroupAndChannelManagementServiceImpl.class
 com\lwdevelop\bot\talentBot\handler\event\LeaveGroup.class
 com\lwdevelop\utils\FileUtil.class
 com\lwdevelop\repository\GroupMessageIdPostCountsRepository.class
+com\lwdevelop\bot\coolbaoBot\utils\SpringyBotEnum.class
 com\lwdevelop\service\RobotGroupAndChannelManagementService.class
+com\lwdevelop\bot\coolbaoBot\utils\Common.class
 com\lwdevelop\entity\JobPosting.class
 com\lwdevelop\repository\AdminRepository.class
 com\lwdevelop\utils\CommUtils.class
+com\lwdevelop\bot\coolbaoBot\handler\event\JoinGroup.class
 com\lwdevelop\utils\ResponseUtils$ResponseData.class
+com\lwdevelop\bot\coolbaoBot\handler\event\LeaveChannel.class
 com\lwdevelop\repository\JobPostingRepository.class
 com\lwdevelop\controller\AdminPanelController.class
 com\lwdevelop\service\AdminService.class
@@ -28,9 +33,12 @@ com\lwdevelop\dto\JobUserDTO.class
 com\lwdevelop\utils\JwtUtils.class
 com\lwdevelop\dto\JobTreeDTO.class
 com\lwdevelop\repository\JobSeekerRepository.class
+com\lwdevelop\bot\coolbaoBot\Custom.class
 com\lwdevelop\dto\JobSeekerDTO.class
 com\lwdevelop\repository\RobotGroupManagementRepository.class
 com\lwdevelop\utils\JwtAuthFilter.class
+com\lwdevelop\bot\coolbaoBot\utils\KeyboardButton.class
+com\lwdevelop\bot\coolbaoBot\handler\event\LeaveGroup.class
 com\lwdevelop\converter\ListToJsonConverter.class
 com\lwdevelop\entity\ChannelMessageIdPostCounts.class
 com\lwdevelop\entity\RobotChannelManagement.class
@@ -50,6 +58,7 @@ com\lwdevelop\dto\JobPostingDTO.class
 com\lwdevelop\service\SpringyBotService.class
 com\lwdevelop\SwaggerConfig.class
 com\lwdevelop\bot\talentBot\handler\messageEvent\private_\commands\Manage.class
+com\lwdevelop\bot\coolbaoBot\handler\messageEvent\private_\message.class
 com\lwdevelop\bot\talentBot\handler\messageEvent\group\GroupMessage.class
 com\lwdevelop\entity\RobotGroupManagement.class
 com\lwdevelop\controller\JobManagementController.class
@@ -59,6 +68,7 @@ com\lwdevelop\bot\talentBot\handler\event\JoinGroup.class
 com\lwdevelop\config\SpringyBotConfig.class
 com\lwdevelop\service\impl\AdminServiceImpl.class
 com\lwdevelop\converter\ListToJsonConverter$1.class
+com\lwdevelop\bot\coolbaoBot\handler\messageEvent\private_\commands\start.class
 com\lwdevelop\converter\StringListConverter.class
 com\lwdevelop\utils\ResponseUtils.class
 com\lwdevelop\bot\talentBot\handler\event\LeaveChannel.class
@@ -71,5 +81,6 @@ com\lwdevelop\dto\RobotGroupManagementDTO.class
 com\lwdevelop\bot\talentBot\handler\messageEvent\private_\commands\Job.class
 com\lwdevelop\config\AdminDataLoader.class
 com\lwdevelop\dto\AdminDTO.class
+com\lwdevelop\bot\coolbaoBot\handler\CallbackQuerys.class
 com\lwdevelop\bot\talentBot\utils\Common.class
 com\lwdevelop\entity\JobSeeker.class
