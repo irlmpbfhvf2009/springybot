@@ -2,6 +2,13 @@
     "configurations": [
         {
             "type": "java",
+            "name": "addMerchant",
+            "request": "launch",
+            "mainClass": "com.lwdevelop.bot.coolbaoBot.handler.messageEvent.private_.commands.addMerchant",
+            "projectName": "backend"
+        },
+        {
+            "type": "java",
             "name": "Spring Boot-BackendApplication<backend>",
             "request": "launch",
             "cwd": "${workspaceFolder}",

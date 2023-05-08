@@ -1,5 +1,7 @@
 package com.lwdevelop.bot.coolbaoBot;
 
+import java.util.HashMap;
+
 import org.telegram.telegrambots.bots.DefaultBotOptions;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.meta.api.objects.Message;
@@ -12,19 +14,20 @@ import com.lwdevelop.bot.coolbaoBot.handler.messageEvent.private_.*;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
-public class Custom extends TelegramLongPollingBot {
+public class CoolBao extends TelegramLongPollingBot {
 
     public Common common;
     private SpringyBotDTO dto;
     private Message message;
 
-    public Custom(SpringyBotDTO springyBotDTO) {
+    public CoolBao(SpringyBotDTO springyBotDTO) {
         super(new DefaultBotOptions());
         this.dto = springyBotDTO;
 
         try {
             this.common = new Common(dto.getId(), getMe().getId(), getMe().getUserName());
             this.common.setBot(this);
+            this.common.setUserState(new HashMap<>());
         } catch (TelegramApiException e) {
             e.printStackTrace();
         }
@@ -50,7 +53,7 @@ public class Custom extends TelegramLongPollingBot {
 
             if (this.message.hasText()) {
                 User user = this.message.getFrom();
-                String userInfo = String.format("[%s] %s (%s %s)", user.getId(), user.getUserName(),
+                String userInfo = String.format("[%s] @%s (%s %s)", user.getId(), user.getUserName(),
                         user.getFirstName(), user.getLastName());
 
                 // private

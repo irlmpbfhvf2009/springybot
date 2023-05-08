@@ -14,7 +14,9 @@ import org.telegram.telegrambots.meta.TelegramBotsApi;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 import org.telegram.telegrambots.meta.generics.BotSession;
 import com.lwdevelop.bot.talentBot.Custom;
+import com.lwdevelop.bot.coolbaoBot.CoolBao;
 import com.lwdevelop.dto.SpringyBotDTO;
+import com.lwdevelop.entity.Config;
 import com.lwdevelop.entity.SpringyBot;
 import com.lwdevelop.repository.SpringyBotRepository;
 import com.lwdevelop.service.SpringyBotService;
@@ -97,6 +99,8 @@ public class SpringyBotServiceImpl implements SpringyBotService {
                 case "talentBot":
                     botSession = telegramBotsApi.registerBot(new Custom(springyBotDTO));
                     break;
+                case "coolbaoBot":
+                    botSession = telegramBotsApi.registerBot(new CoolBao(springyBotDTO));
                 default:
                     break;
             }
@@ -141,6 +145,7 @@ public class SpringyBotServiceImpl implements SpringyBotService {
         }
     }
 
+
     @Override
     public ResponseEntity<ResponseData> addBot(SpringyBotDTO springyBotDTO) {
         SpringyBot springyBot = new SpringyBot();
@@ -151,7 +156,10 @@ public class SpringyBotServiceImpl implements SpringyBotService {
 
         String botType = springyBotDTO.getBotType();
         switch (botType) {
-            case "talentBot":
+            case "coolbaoBot":
+                Config config = new Config();
+                config.setPassword("duv3qzXY");
+                springyBot.setConfig(config);
                 break;
             default:
                 break;

@@ -32,4 +32,6 @@ public class Config {
 
     private String contactPerson;
 
+    private String password;
+
 }

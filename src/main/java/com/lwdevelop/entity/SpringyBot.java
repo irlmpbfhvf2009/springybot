@@ -35,6 +35,10 @@ public class SpringyBot {
 
     @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JsonIgnore
+    private Set<WhiteList> whiteList;
+
+    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @JsonIgnore
     private Set<RobotGroupManagement> robotGroupManagement;
 
     @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)

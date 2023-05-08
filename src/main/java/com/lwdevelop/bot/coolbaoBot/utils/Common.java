@@ -1,5 +1,7 @@
 package com.lwdevelop.bot.coolbaoBot.utils;
 
+import java.util.HashMap;
+
 import org.springframework.scheduling.annotation.Async;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
@@ -28,7 +30,7 @@ public class Common {
     private ChatMemberUpdated chatMemberUpdated;
 
     // 用来存储用户的状态(会话)
-    // private HashMap<Long, String> userState;
+    private HashMap<Long, String> userState;
 
     public Common(Long springyBotId, Long botId, String username) {
         this.springyBotId = springyBotId;
