@@ -3,7 +3,7 @@ package com.lwdevelop.bot.coolbaoBot.utils;
 public enum SpringyBotEnum {
 
     PASSWORD("duv3qzXY"),
-    COMMANDS_HELP("/start - 開始\n/punch_in - 打卡\n/cg_balance - 查詢cg01-cg04餘額\n/add_merchant - 新增商戶\n/info - 顯示收錄後台\n/help - 幫助！"),
+    COMMANDS_HELP("/start - 開始\n/login - 身分卡\n/punch_in - 打卡\n/cg_balance - 查詢cg01-cg04餘額\n/add_merchant - 新增商戶\n/info - 顯示收錄後台\n/help - 幫助！"),
     COMMANDS_INFO("/xxpay - 四方\n/sevendays - 七天\n/bbippo - 錢程"),
 
     COMMANDS_XXPAY("● 正式 營運平台：http://4pay.ddb22.vip/xxpay-manage/x_mgr/start/index.html\n" +

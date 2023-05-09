@@ -6,6 +6,7 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.text.DecimalFormat;
 import java.util.Random;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Message;
@@ -67,8 +68,11 @@ public class addMerchant {
             response = new SendMessage(chatId, "建立商戶 " + name + " 中.......");
             common.sendResponseAsync(response);
 
+            long timestamp = System.currentTimeMillis();
+            String timestampString = formatTimestamp(timestamp);
+
             String params = "name=" + name + "&userName=" + text + "&email=" + text + "@abc.com&status=1&access_token="
-                    + token + "&mobile=1683551219000";
+                    + token + "&mobile="+timestampString;
             String create_mch_response = sendPostRequest(xxpay_mch_info_add_url, params);
 
             response = new SendMessage(chatId, "新增成功 response : " + create_mch_response);
@@ -77,6 +81,11 @@ public class addMerchant {
 
     }
 
+    private static String formatTimestamp(long timestamp) {
+        DecimalFormat decimalFormat = new DecimalFormat("0000000000000");
+        return decimalFormat.format(timestamp);
+    }
+    
     private static String generateToken() {
         String params = "username=leo&password=as794613";
         String response = sendGetRequest(xxpay_login_url, params, "access_token");

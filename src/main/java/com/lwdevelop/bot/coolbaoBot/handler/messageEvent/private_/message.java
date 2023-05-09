@@ -39,10 +39,13 @@ public class message {
             switch (state) {
                 case "enter_password":
                     new enter_password().ep(common);
+                    break;
                 case "addMerchant":
                     new addMerchant().am(common);
+                    break;
                 case "enter_name":
                     new enter_name().en(common);
+                    break;
             }
         } else {
             switch (this.text.toLowerCase()) {
@@ -64,7 +67,6 @@ public class message {
                     case "/punch_in":
                         LocalDate currentDate = LocalDate.now();
                         String dateString = formatCurrentDateWithWeekday(currentDate);
-                        System.out.println(dateString);
                         whiteList.stream().filter(wl -> wl.getUserId().equals(chatId)).findFirst().ifPresent(action -> {
                             response.setText(dateString + action.getName() + "值班 10:00-19:00");
                             common.sendResponseAsync(response);
