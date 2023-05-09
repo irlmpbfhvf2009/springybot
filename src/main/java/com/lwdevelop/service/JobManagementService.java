@@ -29,10 +29,12 @@ public interface JobManagementService {
     ChannelMessageIdPostCounts findByChannelIdAndUserIdAndTypeWithChannelMessageIdPostCounts(Long channelId,String userId,String type);
     ChannelMessageIdPostCounts findByBotIdAndUserIdAndTypeWithChannelMessageIdPostCounts(String botId,String userId,String type);
     List<ChannelMessageIdPostCounts> findAllByBotIdAndUserIdAndTypeWithChannelMessageIdPostCounts(String botId,String userId,String type);
+    void deleteByIdChannelMessageIdPostCounts(Long id);
     void saveChannelMessageIdPostCounts(ChannelMessageIdPostCounts channelMessageIdPostCounts);
     
     List<GroupMessageIdPostCounts> findAllByBotIdAndUserIdAndTypeWithGroupMessageIdPostCounts(String botId,String userId,String type);
     GroupMessageIdPostCounts findByGroupIdAndTypeWithGroupMessageIdPostCounts(Long groupId,String type);
+    void deleteByIdGroupMessageIdPostCounts(Long id);
     void saveGroupMessageIdPostCounts(GroupMessageIdPostCounts groupMessageIdPostCounts);
 
 

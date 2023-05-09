@@ -106,6 +106,16 @@ public class JobManagementServiceImpl implements JobManagementService {
     }
 
     @Override
+    public void deleteByIdChannelMessageIdPostCounts(Long id) {
+        channelMessageIdPostCountsRepository.deleteById(id);
+    }
+
+    @Override
+    public void deleteByIdGroupMessageIdPostCounts(Long id) {
+        groupMessageIdPostCountsRepository.deleteById(id);
+    }
+
+    @Override
     public void saveJobPosting(JobPosting jobPosting) {
         jobPostingRepository.save(jobPosting);
     }
