@@ -17,4 +17,6 @@ public class WhiteList {
 
     private Long userId;
 
+    private String name;
+
 }

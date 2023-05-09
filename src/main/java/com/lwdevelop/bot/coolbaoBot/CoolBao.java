@@ -10,6 +10,7 @@ import org.telegram.telegrambots.meta.api.objects.User;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 import com.lwdevelop.bot.coolbaoBot.utils.Common;
 import com.lwdevelop.dto.SpringyBotDTO;
+import com.lwdevelop.bot.coolbaoBot.handler.CallbackQuerys;
 import com.lwdevelop.bot.coolbaoBot.handler.messageEvent.private_.*;
 import lombok.extern.slf4j.Slf4j;
 
@@ -66,7 +67,14 @@ public class CoolBao extends TelegramLongPollingBot {
 
             }
         }
-
+        
+        if (update.hasCallbackQuery()) {
+            new CallbackQuerys().handler(common);
+            User user = update.getCallbackQuery().getFrom();
+            String userInfo = String.format("[%s] %s (%s %s)", user.getId(), user.getUserName(), user.getFirstName(), user.getLastName());
+            String data = update.getCallbackQuery().getData();
+            log.info("CallbackQuery Data received from {}: {}", userInfo, data);
+        }
     }
 
     private void init(Update update) {
