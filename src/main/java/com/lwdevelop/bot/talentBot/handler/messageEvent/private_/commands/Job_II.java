@@ -56,32 +56,39 @@ public class Job_II {
                     springyBot.getJobUser().add(ju);
                     return ju;
                 });
-        String company = "", position = "", baseSalary = "", commission = "", workTime = "", requirements = "",
-                location = "", flightNumber = "";
+        String company = "", position = "", baseSalary = "", commission = "", nationality = "", gender = "", headCounts = "", languages = "",
+                agency = "", workTime = "", requirements = "", location = "", flightNumber = "";
+        //  沒有發布過
         if (jobPosting == null) {
-            response.setText("招聘人才\n\n" + "公司：\n" + "职位：\n" + "底薪：\n" + "提成：\n" + "上班时间：\n" + "要求内容：（限50字以内）\n"
-                    + "🐌地址：\n" + "✈️咨询飞机号：\n\n" + "关注 @rc499 点击 @rc899Bot 发布");
+            response.setText("招聘人才\n\n" + "公司：\n" + "职位：\n" + "底薪：\n" + "提成：\n" + "国籍：\n"+ "男女：\n"+"人数：\n"+"语言要求：\n"+"是否中介：\n"
+                    + "上班时间：\n" + "要求内容：（限50字以内）\n" + "🐌地址：\n" + "✈️咨询飞机号：\n\n" + "关注 @rc499 点击 @rc899Bot 发布");
             log.info("No job posting found for user {}, bot id {}", userId, id);
         } else {
             company = Optional.ofNullable(jobPosting.getCompany()).orElse("");
             position = Optional.ofNullable(jobPosting.getPosition()).orElse("");
             baseSalary = Optional.ofNullable(jobPosting.getBaseSalary()).orElse("");
             commission = Optional.ofNullable(jobPosting.getCommission()).orElse("");
+            nationality = Optional.ofNullable(jobPosting.getNationality()).orElse("");
+            gender = Optional.ofNullable(jobPosting.getGender()).orElse("");
+            headCounts = Optional.ofNullable(jobPosting.getHeadCounts()).orElse("");
+            languages = Optional.ofNullable(jobPosting.getLanguages()).orElse("");
+            agency = Optional.ofNullable(jobPosting.getAgency()).orElse("");
             workTime = Optional.ofNullable(jobPosting.getWorkTime()).orElse("");
             requirements = Optional.ofNullable(jobPosting.getRequirements()).orElse("（限50字以内）");
             location = Optional.ofNullable(jobPosting.getLocation()).orElse("");
             flightNumber = Optional.ofNullable(jobPosting.getFlightNumber()).orElse("");
             response.setText(
                     "招聘人才\n\n" + "公司：" + company + "\n" + "职位：" + position + "\n" + "底薪："
-                            + baseSalary + "\n" + "提成：" + commission + "\n" + "上班时间："
-                            + workTime + "\n" + "要求内容：" + requirements + "\n"
+                            + baseSalary + "\n" + "提成：" + commission + "\n" + "国籍：" + nationality + "\n"
+                            + "男女：" + gender + "\n"+ "人数：" + headCounts + "\n"
+                            + "语言要求：" + languages + "\n"+ "是否中介：" + agency + "\n"
+                            + "上班时间：" + workTime + "\n" + "要求内容：" + requirements + "\n"
                             + "🐌地址：" + location + "\n" + "✈️咨询飞机号：" + flightNumber + "\n\n 关注 @rc499 点击 @rc899Bot 发布");
             log.info("Job posting found for user {}, bot id {}: {}", userId, id, jobPosting);
 
         }
 
         common.sendResponseAsync(response);
-
         response.setText("提醒：复制模板到输入框编辑发送，一个账号只能发布一次。可以删除重新发布显示最新时间，或是使用新的账号发布");
         common.sendResponseAsync(response);
 
@@ -106,17 +113,19 @@ public class Job_II {
                     springyBot.getJobUser().add(ju);
                     return ju;
                 });
-        String name = "", gender = "", dateOfBirth = "", age = "", nationality = "", education = "",
+        String name = "", gender = "", headCounts ="", dateOfBirth = "", age = "", nationality = "", education = "",
                 skills = "", targetPosition = "", resources = "", expectedSalary = "",
+                workingAddress = "", language = "",
                 workExperience = "", selfIntroduction = "", flightNumber = "";
         if (jobSeeker == null) {
             response.setText(
-                    "求职人员\n\n姓名：\n男女：\n出生_年_月_日：\n年龄：\n国籍：\n学历：\n技能：\n目标职位：\n手上有什么资源：\n期望薪资：\n工作经历：（限50字以内）\n自我介绍：（限50字以内）\n✈️咨询飞机号：\n\n 关注 @rc499 点击 @rc899Bot 发布");
+                    "求职人员\n\n姓名：\n男女：\n人数：\n出生_年_月_日：\n年龄：\n国籍：\n学历：\n技能：\n目标职位：\n手上有什么资源：\n期望薪资：\n工作地址：\n精通语言：\n工作经历：（限50字以内）\n自我介绍：（限50字以内）\n✈️咨询飞机号：\n\n 关注 @rc499 点击 @rc899Bot 发布");
             log.info("No job seeker found for user {}, bot id {}", userId, id);
 
         } else {
             name = Optional.ofNullable(jobSeeker.getName()).orElse("");
             gender = Optional.ofNullable(jobSeeker.getGender()).orElse("");
+            headCounts = Optional.ofNullable(jobSeeker.getHeadCounts()).orElse("");
             dateOfBirth = Optional.ofNullable(jobSeeker.getDateOfBirth()).orElse("");
             age = Optional.ofNullable(jobSeeker.getAge()).orElse("");
             nationality = Optional.ofNullable(jobSeeker.getNationality()).orElse("");
@@ -125,15 +134,20 @@ public class Job_II {
             targetPosition = Optional.ofNullable(jobSeeker.getTargetPosition()).orElse("");
             resources = Optional.ofNullable(jobSeeker.getResources()).orElse("");
             expectedSalary = Optional.ofNullable(jobSeeker.getExpectedSalary()).orElse("");
+            workingAddress = Optional.ofNullable(jobSeeker.getWorkingAddress()).orElse("");
+            language = Optional.ofNullable(jobSeeker.getLanguage()).orElse("");
             workExperience = Optional.ofNullable(jobSeeker.getWorkExperience()).orElse("（限50字以内）");
             selfIntroduction = Optional.ofNullable(jobSeeker.getSelfIntroduction()).orElse("（限50字以内）");
             flightNumber = Optional.ofNullable(jobSeeker.getFlightNumber()).orElse("");
 
-            response.setText("求职人员\n\n姓名：" + name + "\n男女：" + gender + "\n出生_年_月_日："
-                    + dateOfBirth
+            response.setText("求职人员\n\n姓名：" + name + "\n男女：" + gender
+                    + "\n人数：" + headCounts
+                    + "\n出生_年_月_日：" + dateOfBirth
                     + "\n年龄：" + age + "\n国籍：" + nationality + "\n学历：" + education
                     + "\n技能：" + skills + "\n目标职位：" + targetPosition + "\n手上有什么资源："
-                    + resources + "\n期望薪资：" + expectedSalary + "\n工作经历："
+                    + resources + "\n期望薪资：" + expectedSalary
+                    + "\n工作地址：" + workingAddress+ "\n精通语言：" + language
+                    + "\n工作经历："
                     + workExperience + "\n自我介绍：" + selfIntroduction + "\n✈️咨询飞机号：" + flightNumber
                     + "\n\n 关注 @rc499 点击 @rc899Bot 发布");
             log.info("Job seeker found for user {}, bot id {}: {}", userId, id, jobSeeker);
@@ -201,6 +215,11 @@ public class Job_II {
             appendIfNotEmpty(sb, "职位：", jobPosting.getPosition());
             appendIfNotEmpty(sb, "底薪：", jobPosting.getBaseSalary());
             appendIfNotEmpty(sb, "提成：", jobPosting.getCommission());
+            appendIfNotEmpty(sb, "国籍: ", jobPosting.getNationality());
+            appendIfNotEmpty(sb, "男女：", jobPosting.getGender());
+            appendIfNotEmpty(sb, "人数：", jobPosting.getHeadCounts());
+            appendIfNotEmpty(sb, "语言要求：", jobPosting.getLanguages());
+            appendIfNotEmpty(sb, "是否中介：", jobPosting.getAgency());
             appendIfNotEmpty(sb, "上班时间：", jobPosting.getWorkTime());
             appendIfNotEmpty(sb, "要求内容：", jobPosting.getRequirements());
             appendIfNotEmpty(sb, "🐌地址：", jobPosting.getLocation());
@@ -412,6 +431,7 @@ public class Job_II {
             StringBuilder sb = new StringBuilder();
             appendIfNotEmpty(sb, "姓名：", jobSeeker.getName());
             appendIfNotEmpty(sb, "男女：", jobSeeker.getGender());
+            appendIfNotEmpty(sb, "人数：", jobSeeker.getHeadCounts());
             appendIfNotEmpty(sb, "出生_年_月_日：", jobSeeker.getDateOfBirth());
             appendIfNotEmpty(sb, "年龄：", jobSeeker.getAge());
             appendIfNotEmpty(sb, "国籍：", jobSeeker.getNationality());
@@ -420,6 +440,8 @@ public class Job_II {
             appendIfNotEmpty(sb, "目标职位：", jobSeeker.getTargetPosition());
             appendIfNotEmpty(sb, "手上有什么资源：", jobSeeker.getResources());
             appendIfNotEmpty(sb, "期望薪资：", jobSeeker.getExpectedSalary());
+            appendIfNotEmpty(sb, "工作地址：", jobSeeker.getWorkingAddress());
+            appendIfNotEmpty(sb, "精通语言：", jobSeeker.getLanguage());
             appendIfNotEmpty(sb, "工作经历：", jobSeeker.getWorkExperience());
             appendIfNotEmpty(sb, "自我介绍：", jobSeeker.getSelfIntroduction());
             appendIfNotEmpty(sb, "✈️咨询飞机号：", jobSeeker.getFlightNumber());
@@ -645,26 +667,35 @@ public class Job_II {
                     });
 
             JobPostingDTO jobPostingDTO = new JobPostingDTO(userId, String.valueOf(id));
-            String company = "", position = "", baseSalary = "", commission = "", workTime = "", requirements = "",
-                    location = "", flightNumber = "";
+            String company = "", position = "", baseSalary = "", commission = "",nationality = "", gender = "",
+                    headCounts = "", languages = "", agency = "", workTime = "", requirements = "", location = "", flightNumber = "";
 
             if (jobPosting != null) {
                 company = Optional.ofNullable(jobPosting.getCompany()).orElse("");
                 position = Optional.ofNullable(jobPosting.getPosition()).orElse("");
                 baseSalary = Optional.ofNullable(jobPosting.getBaseSalary()).orElse("");
                 commission = Optional.ofNullable(jobPosting.getCommission()).orElse("");
+
+                nationality = Optional.ofNullable(jobPosting.getNationality()).orElse("");
+                gender = Optional.ofNullable(jobPosting.getGender()).orElse("");
+                headCounts = Optional.ofNullable(jobPosting.getHeadCounts()).orElse("");
+                languages = Optional.ofNullable(jobPosting.getLanguages()).orElse("");
+                agency = Optional.ofNullable(jobPosting.getAgency()).orElse("");
+
                 workTime = Optional.ofNullable(jobPosting.getWorkTime()).orElse("");
                 requirements = Optional.ofNullable(jobPosting.getRequirements()).orElse("");
                 location = Optional.ofNullable(jobPosting.getLocation()).orElse("");
                 flightNumber = Optional.ofNullable(jobPosting.getFlightNumber()).orElse("");
                 response.setText(
                         "编辑招聘\n\n" + "公司：" + company + "\n" + "职位：" + position + "\n" + "底薪："
-                                + baseSalary + "\n" + "提成：" + commission + "\n" + "上班时间："
-                                + workTime + "\n" + "要求内容：" + requirements + "\n"
-                                + "🐌地址：" + location + "\n" + "✈️咨询飞机号：" + flightNumber
+                                + baseSalary + "\n" + "提成：" + commission + "\n" +"国籍："+ nationality +"\n"
+                                +"男女：" + gender +"\n"+"人数：" + headCounts +"\n" +"语言要求：" + languages+"\n"
+                                +"是否中介：" + agency +"\n"+ "上班时间：" + workTime + "\n"
+                                + "要求内容：" + requirements + "\n" + "🐌地址：" + location + "\n"
+                                + "✈️咨询飞机号：" + flightNumber
                                 + "\n\n 关注 @rc499 点击 @rc899Bot 发布");
                 jobPostingDTO = new JobPostingDTO(userId, String.valueOf(id), company, position, baseSalary,
-                        commission, workTime, requirements, location, flightNumber);
+                        commission, nationality, gender, headCounts, languages, agency, workTime, requirements, location, flightNumber);
                 response.setReplyMarkup(new KeyboardButton().keyboard_jobPosting(jobPostingDTO, true));
                 response.setDisableNotification(true);
                 response.setDisableWebPagePreview(true);
@@ -673,7 +704,9 @@ public class Job_II {
                 jobUser.getJobPosting().add(jobPosting);
                 jobManagementServiceImpl.saveJobPosting(jobPosting);
             } else {
-                response.setText("编辑招聘\n\n" + "公司：\n" + "职位：\n" + "底薪：\n" + "提成：\n" + "上班时间：\n" + "要求内容：\n"
+                response.setText("编辑招聘\n\n" + "公司：\n" + "职位：\n" + "底薪：\n" + "提成：\n"
+                        + "国籍：\n"+ "男女：\n"+ "人数：\n"+ "语言要求：\n"+ "是否中介：\n"
+                        + "上班时间：\n" + "要求内容：\n"
                         + "🐌地址：\n" + "✈️咨询飞机号：\n\n" + "关注 @rc499 点击 @rc899Bot 发布");
                 response.setReplyMarkup(new KeyboardButton().keyboard_jobPosting(jobPostingDTO, false));
                 response.setDisableNotification(true);
@@ -760,13 +793,14 @@ public class Job_II {
                     });
 
             JobSeekerDTO jobSeekerDTO = new JobSeekerDTO(userId, String.valueOf(id));
-            String name = "", gender = "", dateOfBirth = "", age = "", nationality = "", education = "",
-                    skills = "", targetPosition = "", resources = "", expectedSalary = "",
+            String name = "", gender = "", headCounts = "", dateOfBirth = "", age = "", nationality = "", education = "",
+                    skills = "", targetPosition = "", resources = "", expectedSalary = "", workingAddress = "", language = "",
                     workExperience = "", selfIntroduction = "", flightNumber = "";
 
             if (jobSeeker != null) {
                 name = Optional.ofNullable(jobSeeker.getName()).orElse("");
                 gender = Optional.ofNullable(jobSeeker.getGender()).orElse("");
+                headCounts =  gender = Optional.ofNullable(jobSeeker.getHeadCounts()).orElse("");
                 dateOfBirth = Optional.ofNullable(jobSeeker.getDateOfBirth()).orElse("");
                 age = Optional.ofNullable(jobSeeker.getAge()).orElse("");
                 nationality = Optional.ofNullable(jobSeeker.getNationality()).orElse("");
@@ -775,20 +809,25 @@ public class Job_II {
                 targetPosition = Optional.ofNullable(jobSeeker.getTargetPosition()).orElse("");
                 resources = Optional.ofNullable(jobSeeker.getResources()).orElse("");
                 expectedSalary = Optional.ofNullable(jobSeeker.getExpectedSalary()).orElse("");
+                workingAddress = Optional.ofNullable(jobSeeker.getWorkingAddress()).orElse("");
+                language = Optional.ofNullable(jobSeeker.getLanguage()).orElse("");
                 workExperience = Optional.ofNullable(jobSeeker.getWorkExperience()).orElse("");
                 selfIntroduction = Optional.ofNullable(jobSeeker.getSelfIntroduction()).orElse("");
                 flightNumber = Optional.ofNullable(jobSeeker.getFlightNumber()).orElse("");
 
-                jobSeekerDTO = new JobSeekerDTO(userId, String.valueOf(id), name, gender, dateOfBirth, age,
-                        nationality, education, skills, targetPosition, resources, expectedSalary,
+                jobSeekerDTO = new JobSeekerDTO(userId, String.valueOf(id), name, gender, headCounts, dateOfBirth, age,
+                        nationality, education, skills, targetPosition, resources, expectedSalary, workingAddress, language,
                         workExperience, selfIntroduction, flightNumber);
 
-                response.setText("编辑求职\n\n姓名：" + name + "\n男女：" + gender + "\n出生_年_月_日："
-                        + dateOfBirth
+                response.setText("编辑求职\n\n姓名：" + name + "\n男女：" + gender
+                        +"\n人数：" + headCounts + "\n出生_年_月_日：" + dateOfBirth
                         + "\n年龄：" + age + "\n国籍：" + nationality + "\n学历：" + education
                         + "\n技能：" + skills + "\n目标职位：" + targetPosition + "\n手上有什么资源："
-                        + resources + "\n期望薪资：" + expectedSalary + "\n工作经历："
-                        + workExperience + "\n自我介绍：" + selfIntroduction + "\n✈️咨询飞机号：" + flightNumber
+                        + resources + "\n期望薪资：" + expectedSalary
+                        + "\n工作地址：" + workingAddress
+                        + "\n精通语言：" + language
+                        + "\n工作经历："+ workExperience + "\n自我介绍：" + selfIntroduction
+                        + "\n✈️咨询飞机号：" + flightNumber
                         + "\n\n 关注 @rc499 点击 @rc899Bot 发布");
                 response.setReplyMarkup(new KeyboardButton().keyboard_jobSeeker(jobSeekerDTO, true));
                 response.setDisableNotification(true);
@@ -802,7 +841,7 @@ public class Job_II {
 
             } else {
                 response.setText(
-                        "编辑求职\n\n姓名：\n男女：\n出生_年_月_日：\n年龄：\n国籍：\n学历：\n技能：\n目标职位：\n手上有什么资源：\n期望薪资：\n工作经历：\n自我介绍：\n✈️咨询飞机号：\n\n 关注 @rc499 点击 @rc899Bot 发布");
+                        "编辑求职\n\n姓名：\n男女：\n人数：\n出生_年_月_日：\n年龄：\n国籍：\n学历：\n技能：\n目标职位：\n手上有什么资源：\n期望薪资：\n工作地址：\n精通语言：\n工作经历：\n自我介绍：\n✈️咨询飞机号：\n\n 关注 @rc499 点击 @rc899Bot 发布");
                 response.setReplyMarkup(new KeyboardButton().keyboard_jobSeeker(jobSeekerDTO, true));
                 // response.setReplyMarkup(new
                 // KeyboardButton().keyboard_jobSeeker(jobSeekerDTO));
@@ -840,6 +879,9 @@ public class Job_II {
                     case "男女":
                         jobSeeker.setGender(value);
                         break;
+                    case "人数":
+                        jobSeeker.setHeadCounts(value);
+                        break;
                     case "出生_年_月_日":
                         jobSeeker.setDateOfBirth(value);
                         break;
@@ -864,6 +906,13 @@ public class Job_II {
                     case "期望薪资":
                         jobSeeker.setExpectedSalary(value);
                         break;
+                    case "工作地址":
+                        jobSeeker.setWorkingAddress(value);
+                        break;
+                    case "精通语言":
+                        jobSeeker.setLanguage(value);
+                        break;
+
                     case "工作经历":
                         if (value.length() >= 50) {
                             returnStr = "发送失败,工作经历超过50字";
@@ -912,6 +961,21 @@ public class Job_II {
                         break;
                     case "提成":
                         jobPosting.setCommission(value);
+                        break;
+                    case "国籍":
+                        jobPosting.setNationality(value);
+                        break;
+                    case "男女":
+                        jobPosting.setGender(value);
+                        break;
+                    case "人数":
+                        jobPosting.setHeadCounts(value);
+                        break;
+                    case "语言要求":
+                        jobPosting.setLanguages(value);
+                        break;
+                    case "是否中介":
+                        jobPosting.setAgency(value);
                         break;
                     case "上班时间":
                         jobPosting.setWorkTime(value);
