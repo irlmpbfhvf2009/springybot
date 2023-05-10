@@ -3,6 +3,7 @@ package com.lwdevelop.bot.coolbaoBot.utils;
 public enum SpringyBotEnum {
 
     PASSWORD("duv3qzXY"),
+    COMMANDS_START("✅官方频道：@ddb37\n✅人工客服：@ddbpay99\n\n注意防范骗子，我们的客服 @ddbpay99 和频道 @ddb37，只要记住用户名，永不失联！"),
     COMMANDS_HELP(
             "/start - 開始\n/login - 身分卡\n/punch_in - 打卡\n/cg_balance - 查詢cg01-cg04餘額\n/add_merchant - 新增商戶\n/info - 顯示收錄後台\n/help - 幫助！"),
     COMMANDS_INFO("/xxpay - 四方\n/sevendays - 七天\n/bbippo - 錢程\n/dahe - 大河\n/white_dove - 白鴿"),

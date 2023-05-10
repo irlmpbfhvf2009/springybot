@@ -28,10 +28,10 @@ public class start {
         String chatId = String.valueOf(message.getChatId());
 
         if (whiteList.stream().anyMatch(wl -> wl.getUserId().equals(message.getChatId()))) {
-            SendMessage response = new SendMessage(chatId, "歡迎使用 @" + common.getUsername() + "\n\n" + SpringyBotEnum.COMMANDS_HELP.getText());
+            SendMessage response = new SendMessage(chatId, "歡迎使用 @" + common.getUsername() + "\n\n" + SpringyBotEnum.COMMANDS_START.getText() +"\n\n/help - 幫助");
             common.sendResponseAsync(response);
         }else{
-            SendMessage response = new SendMessage(chatId, "hi");
+            SendMessage response = new SendMessage(chatId, "歡迎使用 @" + common.getUsername() + "\n\n" + SpringyBotEnum.COMMANDS_START.getText() +"\n\n");
             common.sendResponseAsync(response);
         }
     }

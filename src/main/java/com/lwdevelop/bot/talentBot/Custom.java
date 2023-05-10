@@ -78,7 +78,8 @@ public class Custom extends TelegramLongPollingBot {
                 // group
                 if (this.message.isSuperGroupMessage()) {
                     new GroupMessage().handler(this.common);
-                    log.info("[{}] Group message received from {}: {}", common.getUsername(),userInfo, this.message.getText());
+                    log.info("[{}] Group message received from {}", common.getUsername(),userInfo);
+                    // log.info("[{}] Group message received from {}: {}", common.getUsername(),userInfo, this.message.getText());
                 }
             }
         }
@@ -92,8 +93,9 @@ public class Custom extends TelegramLongPollingBot {
                     User user = update.getChannelPost().getFrom();
                     String username = user.getUserName() == null ? "無題" : user.getUserName();
                     String userInfo = String.format("[%s] %s", user.getId(), username);
-                    String text = update.getChannelPost().getText();
-                    log.info("[{}] Channel message received from {}: {}",common.getUsername(), userInfo, text);
+                    // String text = update.getChannelPost().getText();
+                    log.info("[{}] Channel message received from {}",common.getUsername(), userInfo);
+                    // log.info("[{}] Channel message received from {}: {}",common.getUsername(), userInfo, text);
                 }
             }
         }
