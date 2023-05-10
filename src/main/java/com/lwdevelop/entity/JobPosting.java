@@ -38,6 +38,16 @@ public class JobPosting {
 
     private String commission; // 提成
 
+    private String nationality; // 国籍
+
+    private String gender;  // 男女
+
+    private String headCounts;   //  人數
+
+    private String languages;   // 语言要求
+
+    private String agency;  //是否中介
+
     private String workTime; // 上班时间
 
     private String requirements; // 要求内容

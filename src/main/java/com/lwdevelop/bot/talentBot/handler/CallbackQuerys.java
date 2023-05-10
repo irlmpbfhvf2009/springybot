@@ -50,6 +50,11 @@ public class CallbackQuerys {
             jobManagementServiceImpl.findByUserIdAndBotIdWithJobPosting(userId,botId);
             jobPosting.setBaseSalary("");
             jobPosting.setCommission("");
+            jobPosting.setNationality("");
+            jobPosting.setGender("");
+            jobPosting.setHeadCounts("");
+            jobPosting.setLanguages("");
+            jobPosting.setAgency("");
             jobPosting.setCompany("");
             jobPosting.setFlightNumber("");
             jobPosting.setLocation("");
@@ -66,27 +71,31 @@ public class CallbackQuerys {
             springyBotDTO.setUsername(springyBot.getUsername());
             Custom custom = new Custom(springyBotDTO);
 
-            JobPostingDTO jobPostingDTO = new JobPostingDTO(userId,
-            jobPosting.getBotId(), jobPosting.getCompany(),
-            jobPosting.getPosition(), jobPosting.getBaseSalary(),
-            jobPosting.getCommission(),
-            jobPosting.getWorkTime(), jobPosting.getRequirements(),
-            jobPosting.getLocation(),
-            jobPosting.getFlightNumber());
+            JobPostingDTO jobPostingDTO = new JobPostingDTO(userId, jobPosting.getBotId(), jobPosting.getCompany(),
+                    jobPosting.getPosition(), jobPosting.getBaseSalary(), jobPosting.getCommission(),
+                    jobPosting.getNationality(),jobPosting.getGender(), jobPosting.getHeadCounts(),
+                    jobPosting.getLanguages(), jobPosting.getAgency(),
+                    jobPosting.getWorkTime(), jobPosting.getRequirements(), jobPosting.getLocation(),
+                    jobPosting.getFlightNumber());
 
             Integer messageId = jobPosting.getLastMessageId();
             EditMessageText editMessageText = new EditMessageText();
             editMessageText.setChatId(userId);
             editMessageText.setMessageId(messageId);
             editMessageText.setText("招聘人才\n\n" +
-            "公司：\n" +
-            "职位：\n" +
-            "底薪：\n" +
-            "提成：\n" +
-            "上班时间：\n" +
-            "要求内容：（限50字以内）\n" +
-            "🐌 地址：\n" +
-            "✈️咨询飞机号：");
+                    "公司：\n" +
+                    "职位：\n" +
+                    "底薪：\n" +
+                    "提成：\n" +
+                    "国籍：\n" +
+                    "男女：\n" +
+                    "人数：\n" +
+                    "语言要求：\n" +
+                    "是否中介：\n" +
+                    "上班时间：\n" +
+                    "要求内容：（限50字以内）\n" +
+                    "🐌 地址：\n" +
+                    "✈️咨询飞机号：");
 
             editMessageText.setReplyMarkup(new
             KeyboardButton().keyboard_jobPosting(jobPostingDTO,true));
@@ -140,6 +149,7 @@ public class CallbackQuerys {
             JobSeeker jobSeeker = jobManagementServiceImpl.findByUserIdAndBotIdWithJobSeeker(userId, botId);
             jobSeeker.setName("");
             jobSeeker.setGender("");
+            jobSeeker.setHeadCounts("");
             jobSeeker.setDateOfBirth("");
             jobSeeker.setAge("");
             jobSeeker.setNationality("");
@@ -148,6 +158,8 @@ public class CallbackQuerys {
             jobSeeker.setTargetPosition("");
             jobSeeker.setResources("");
             jobSeeker.setExpectedSalary("");
+            jobSeeker.setWorkingAddress("");
+            jobSeeker.setLanguage("");
             jobSeeker.setWorkExperience("（限50字以内）");
             jobSeeker.setSelfIntroduction("（限50字以内）");
             jobSeeker.setFlightNumber("");
@@ -162,16 +174,33 @@ public class CallbackQuerys {
             Custom custom = new Custom(springyBotDTO);
 
             JobSeekerDTO jobSeekerDTO = new JobSeekerDTO(userId, jobSeeker.getBotId(), jobSeeker.getName(),
-                    jobSeeker.getGender(), jobSeeker.getDateOfBirth(), jobSeeker.getAge(), jobSeeker.getNationality(),
+                    jobSeeker.getGender(), jobSeeker.getHeadCounts(), jobSeeker.getDateOfBirth(), jobSeeker.getAge(), jobSeeker.getNationality(),
                     jobSeeker.getEducation(), jobSeeker.getSkills(), jobSeeker.getTargetPosition(),
-                    jobSeeker.getResources(), jobSeeker.getExpectedSalary(), jobSeeker.getWorkExperience(),
-                    jobSeeker.getSelfIntroduction(), jobSeeker.getFlightNumber());
+                    jobSeeker.getResources(), jobSeeker.getExpectedSalary(),
+                    jobSeeker.getWorkingAddress(), jobSeeker.getLanguage(), jobSeeker.getWorkExperience(),
+                    jobSeeker.getSelfIntroduction(),jobSeeker.getFlightNumber());
 
             Integer messageId = jobSeeker.getLastMessageId();
             EditMessageText editMessageText = new EditMessageText();
             editMessageText.setChatId(userId);
             editMessageText.setMessageId(messageId);
-            editMessageText.setText(SpringyBotEnum.JOBSEEKERDEFAULTFORM.getText());
+            editMessageText.setText("求职人员\n\n" +
+                    "姓名：\n" +
+                    "男女：\n" +
+                    "人数：\n" +
+                    "出生_年_月_日：\n" +
+                    "年龄：\n" +
+                    "国籍：\n" +
+                    "学历：\n" +
+                    "技能：\n" +
+                    "目标职位：\n" +
+                    "手上有什么资源：\n" +
+                    "期望薪资：\n" +
+                    "工作地址：\n" +
+                    "精通语言：\n" +
+                    "工作经历：（限50字以内）\n" +
+                    "自我介绍：（限50字以内）\n" +
+                    "✈️咨询飞机号：");
 
             editMessageText.setReplyMarkup(new KeyboardButton().keyboard_jobSeeker(jobSeekerDTO, true));
             try {

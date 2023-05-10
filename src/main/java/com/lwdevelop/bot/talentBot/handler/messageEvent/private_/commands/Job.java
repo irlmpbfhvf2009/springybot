@@ -148,8 +148,8 @@ public class Job {
                         location = Optional.ofNullable(jobPosting.getLocation()).orElse("");
                         flightNumber = Optional.ofNullable(jobPosting.getFlightNumber()).orElse("");
 
-                        jobPostingDTO = new JobPostingDTO(userId, String.valueOf(id), company, position, baseSalary,
-                                        commission, workTime, requirements, location, flightNumber);
+//                        jobPostingDTO = new JobPostingDTO(userId, String.valueOf(id), company, position, baseSalary,
+//                                        commission, workTime, requirements, location, flightNumber);
 
                         // public JobPostingDTO(String userId, String botId, String company, String
                         // position, String baseSalary,
@@ -225,10 +225,10 @@ public class Job {
                         workExperience = Optional.ofNullable(jobSeeker.getWorkExperience()).orElse("");
                         selfIntroduction = Optional.ofNullable(jobSeeker.getSelfIntroduction()).orElse("");
                         flightNumber = Optional.ofNullable(jobSeeker.getFlightNumber()).orElse("");
-
-                        jobSeekerDTO = new JobSeekerDTO(userId, String.valueOf(id), name, gender, dateOfBirth, age,
-                                        nationality, education, skills, targetPosition, resources, expectedSalary,
-                                        workExperience, selfIntroduction, flightNumber);
+//
+//                        jobSeekerDTO = new JobSeekerDTO(userId, String.valueOf(id), name, gender, dateOfBirth, age,
+//                                        nationality, education, skills, targetPosition, resources, expectedSalary,
+//                                        workExperience, selfIntroduction, flightNumber);
 
                         response.setText("求职人员\n\n姓名：" + name + "\n男女：" + gender + "\n出生_年_月_日："
                                         + dateOfBirth
@@ -312,8 +312,8 @@ public class Job {
                                                         + baseSalary + "\n" + "提成：" + commission + "\n" + "上班时间："
                                                         + workTime + "\n" + "要求内容：" + requirements + "\n"
                                                         + "🐌地址：" + location + "\n" + "✈️咨询飞机号：" + flightNumber);
-                        jobPostingDTO = new JobPostingDTO(userId, String.valueOf(id), company, position, baseSalary,
-                                        commission, workTime, requirements, location, flightNumber);
+//                        jobPostingDTO = new JobPostingDTO(userId, String.valueOf(id), company, position, baseSalary,
+//                                        commission, workTime, requirements, location, flightNumber);
                         response.setReplyMarkup(new KeyboardButton().keyboard_jobPosting(jobPostingDTO,true));
                         // response.setReplyMarkup(new KeyboardButton().keyboard_editJobPosting(jobPostingDTO));
                         Integer messageId = common.sendResponseAsync(response);
@@ -398,9 +398,9 @@ public class Job {
                         selfIntroduction = Optional.ofNullable(jobSeeker.getSelfIntroduction()).orElse("");
                         flightNumber = Optional.ofNullable(jobSeeker.getFlightNumber()).orElse("");
 
-                        jobSeekerDTO = new JobSeekerDTO(userId, String.valueOf(id), name, gender, dateOfBirth, age,
-                                        nationality, education, skills, targetPosition, resources, expectedSalary,
-                                        workExperience, selfIntroduction, flightNumber);
+//                        jobSeekerDTO = new JobSeekerDTO(userId, String.valueOf(id), name, gender, dateOfBirth, age,
+//                                        nationality, education, skills, targetPosition, resources, expectedSalary,
+//                                        workExperience, selfIntroduction, flightNumber);
 
                         response.setText("求职人员\n\n姓名：" + name + "\n男女：" + gender + "\n出生_年_月_日："
                                         + dateOfBirth
