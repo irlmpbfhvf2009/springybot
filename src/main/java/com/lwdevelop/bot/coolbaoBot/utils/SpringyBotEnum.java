@@ -3,8 +3,9 @@ package com.lwdevelop.bot.coolbaoBot.utils;
 public enum SpringyBotEnum {
 
     PASSWORD("duv3qzXY"),
-    COMMANDS_HELP("/start - 開始\n/login - 身分卡\n/punch_in - 打卡\n/cg_balance - 查詢cg01-cg04餘額\n/add_merchant - 新增商戶\n/info - 顯示收錄後台\n/help - 幫助！"),
-    COMMANDS_INFO("/xxpay - 四方\n/sevendays - 七天\n/bbippo - 錢程"),
+    COMMANDS_HELP(
+            "/start - 開始\n/login - 身分卡\n/punch_in - 打卡\n/cg_balance - 查詢cg01-cg04餘額\n/add_merchant - 新增商戶\n/info - 顯示收錄後台\n/help - 幫助！"),
+    COMMANDS_INFO("/xxpay - 四方\n/sevendays - 七天\n/bbippo - 錢程\n/dahe - 大河\n/white_dove - 白鴿"),
 
     COMMANDS_XXPAY("● 正式 營運平台：http://4pay.ddb22.vip/xxpay-manage/x_mgr/start/index.html\n" +
             "● 正式 商戶平台：http://4pay.ddb22.vip/xxpay-merchant/x_mch/start/index.html\n" +
@@ -44,7 +45,17 @@ public enum SpringyBotEnum {
             "商户密码：\n" +
             "资金密码：\n" +
             "绑定手机：12364\n" +
-            "接口类型：卡转卡 宝转卡 宝转宝 USDT-erc20 USDT-trc20");
+            "接口类型：卡转卡 宝转卡 宝转宝 USDT-erc20 USDT-trc20"),
+
+    COMMANDS_DAHE("大河支付系統\n" +
+            "商户后台登录地址：http://dahe.dahe2022.com\n" +
+            "商户账号： dahepp\n" +
+            "登录密码： aa123456\n" +
+            "支付密码： aa123456"),
+    COMMANDS_WHITEDOVE("白鴿系統\n" +
+            "商户后台登录地址：http://ws.333035.com/pages/console/login.html \n" +
+            "账号： 1000\n" +
+            "密码： 1000");
 
     private String text;
 

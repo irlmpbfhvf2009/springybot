@@ -1,8 +1,6 @@
 package com.lwdevelop.bot.talentBot.handler;
 
 import java.util.List;
-import java.util.Set;
-import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.methods.updatingmessages.DeleteMessage;
@@ -12,13 +10,13 @@ import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 import com.lwdevelop.bot.talentBot.Custom;
 import com.lwdevelop.bot.talentBot.utils.Common;
 import com.lwdevelop.bot.talentBot.utils.KeyboardButton;
+import com.lwdevelop.dto.JobPostingDTO;
 import com.lwdevelop.dto.JobSeekerDTO;
 import com.lwdevelop.dto.SpringyBotDTO;
 import com.lwdevelop.entity.ChannelMessageIdPostCounts;
 import com.lwdevelop.entity.GroupMessageIdPostCounts;
 import com.lwdevelop.entity.JobPosting;
 import com.lwdevelop.entity.JobSeeker;
-import com.lwdevelop.entity.JobUser;
 import com.lwdevelop.entity.SpringyBot;
 import com.lwdevelop.service.impl.JobManagementServiceImpl;
 import com.lwdevelop.service.impl.SpringyBotServiceImpl;
@@ -41,25 +39,23 @@ public class CallbackQuerys {
         this.messageSetting(common);
 
         if (callbackQuery.getData().startsWith("clearJobPosting_")) {
-            // String userId =
-            // callbackQuery.getData().substring("clearJobPosting_".length());
 
             String userId = callbackQuery.getData().substring("clearJobPosting_".length(),
                     callbackQuery.getData().lastIndexOf("_"));
             String botId = callbackQuery.getData().substring(callbackQuery.getData().lastIndexOf("_") + 1);
 
             // 在这里根据 springyBotId 和 userId 进行相应的清除操作
-            // JobPosting jobPosting =
-            // jobManagementServiceImpl.findByUserIdAndBotIdWithJobPosting(userId,botId);
-            // jobPosting.setBaseSalary("");
-            // jobPosting.setCommission("");
-            // jobPosting.setCompany("");
-            // jobPosting.setFlightNumber("");
-            // jobPosting.setLocation("");
-            // jobPosting.setPosition("");
-            // jobPosting.setRequirements("（限50字以内）");
-            // jobPosting.setWorkTime("");
-            // jobManagementServiceImpl.saveJobPosting(jobPosting);
+            JobPosting jobPosting =
+            jobManagementServiceImpl.findByUserIdAndBotIdWithJobPosting(userId,botId);
+            jobPosting.setBaseSalary("");
+            jobPosting.setCommission("");
+            jobPosting.setCompany("");
+            jobPosting.setFlightNumber("");
+            jobPosting.setLocation("");
+            jobPosting.setPosition("");
+            jobPosting.setRequirements("（限50字以内）");
+            jobPosting.setWorkTime("");
+            jobManagementServiceImpl.saveJobPosting(jobPosting);
 
             // // 清除訊息
             Long id = Long.valueOf(botId);
@@ -69,37 +65,35 @@ public class CallbackQuerys {
             springyBotDTO.setUsername(springyBot.getUsername());
             Custom custom = new Custom(springyBotDTO);
 
-            // JobPostingDTO jobPostingDTO = new JobPostingDTO(userId,
-            // jobPosting.getBotId(), jobPosting.getCompany(),
-            // jobPosting.getPosition(), jobPosting.getBaseSalary(),
-            // jobPosting.getCommission(),
-            // jobPosting.getWorkTime(), jobPosting.getRequirements(),
-            // jobPosting.getLocation(),
-            // jobPosting.getFlightNumber());
+            JobPostingDTO jobPostingDTO = new JobPostingDTO(userId,
+            jobPosting.getBotId(), jobPosting.getCompany(),
+            jobPosting.getPosition(), jobPosting.getBaseSalary(),
+            jobPosting.getCommission(),
+            jobPosting.getWorkTime(), jobPosting.getRequirements(),
+            jobPosting.getLocation(),
+            jobPosting.getFlightNumber());
 
-            // Integer messageId = jobPosting.getLastMessageId();
-            // EditMessageText editMessageText = new EditMessageText();
-            // editMessageText.setChatId(userId);
-            // editMessageText.setMessageId(messageId);
-            // editMessageText.setText("招聘人才\n\n" +
-            // "公司：\n" +
-            // "职位：\n" +
-            // "底薪：\n" +
-            // "提成：\n" +
-            // "上班时间：\n" +
-            // "要求内容：（限50字以内）\n" +
-            // "🐌 地址：\n" +
-            // "✈️咨询飞机号：");
+            Integer messageId = jobPosting.getLastMessageId();
+            EditMessageText editMessageText = new EditMessageText();
+            editMessageText.setChatId(userId);
+            editMessageText.setMessageId(messageId);
+            editMessageText.setText("招聘人才\n\n" +
+            "公司：\n" +
+            "职位：\n" +
+            "底薪：\n" +
+            "提成：\n" +
+            "上班时间：\n" +
+            "要求内容：（限50字以内）\n" +
+            "🐌 地址：\n" +
+            "✈️咨询飞机号：");
 
-            // editMessageText.setReplyMarkup(new
-            // KeyboardButton().keyboard_jobPosting(jobPostingDTO,true));
-            // // editMessageText.setReplyMarkup(new
-            // KeyboardButton().keyboard_editJobPosting(jobPostingDTO));
-            // try {
-            // custom.executeAsync(editMessageText);
-            // } catch (TelegramApiException e) {
-            // e.printStackTrace();
-            // }
+            editMessageText.setReplyMarkup(new
+            KeyboardButton().keyboard_jobPosting(jobPostingDTO,true));
+            try {
+            custom.executeAsync(editMessageText);
+            } catch (TelegramApiException e) {
+            e.printStackTrace();
+            }
 
             List<ChannelMessageIdPostCounts> channelMessageIdPostCounts = jobManagementServiceImpl
                     .findAllByBotIdAndUserIdAndTypeWithChannelMessageIdPostCounts(botId, userId, "jobPosting");
@@ -124,10 +118,10 @@ public class CallbackQuerys {
                 } catch (TelegramApiException e) {
                     e.printStackTrace();
                 }
-                // cmp.setMessageId(-1);
-                // cmp.setPostCount(0);
-                // jobManagementServiceImpl.deleteByIdChannelMessageIdPostCounts(cmp.getId());
-                // jobManagementServiceImpl.saveChannelMessageIdPostCounts(cmp);
+                cmp.setMessageId(-1);
+                cmp.setPostCount(0);
+                jobManagementServiceImpl.deleteByIdChannelMessageIdPostCounts(cmp.getId());
+                jobManagementServiceImpl.saveChannelMessageIdPostCounts(cmp);
             });
 
             groupMessageIdPostCounts.stream().forEach(cmp -> {
@@ -139,10 +133,10 @@ public class CallbackQuerys {
                 } catch (TelegramApiException e) {
                     e.printStackTrace();
                 }
-                // cmp.setMessageId(-1);
-                // cmp.setPostCount(0);
-                // jobManagementServiceImpl.deleteByIdGroupMessageIdPostCounts(cmp.getId());
-                // jobManagementServiceImpl.saveGroupMessageIdPostCounts(cmp);
+                cmp.setMessageId(-1);
+                cmp.setPostCount(0);
+                jobManagementServiceImpl.deleteByIdGroupMessageIdPostCounts(cmp.getId());
+                jobManagementServiceImpl.saveGroupMessageIdPostCounts(cmp);
             });
 
             springyBotServiceImpl.save(springyBot); // 保存更新后的 JobUser 对象
@@ -150,8 +144,6 @@ public class CallbackQuerys {
             this.response.setText("删除成功");
             common.sendResponseAsync(this.response);
         } else if (callbackQuery.getData().startsWith("clearJobSeeker_")) {
-            // String userId =
-            // callbackQuery.getData().substring("clearJobSeeker_".length());
 
             String userId = callbackQuery.getData().substring("clearJobSeeker_".length(),
                     callbackQuery.getData().lastIndexOf("_"));
@@ -207,8 +199,6 @@ public class CallbackQuerys {
                     "✈️咨询飞机号：");
 
             editMessageText.setReplyMarkup(new KeyboardButton().keyboard_jobSeeker(jobSeekerDTO, true));
-            // editMessageText.setReplyMarkup(new
-            // KeyboardButton().keyboard_JobSeeker(jobSeekerDTO));
             try {
                 custom.executeAsync(editMessageText);
             } catch (TelegramApiException e) {

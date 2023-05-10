@@ -105,6 +105,18 @@ public class message {
                             response.setText(
                                     "歡迎使用 @" + common.getUsername() + "\n\n" + SpringyBotEnum.COMMANDS_HELP.getText());
                         break;
+                    case "/dahe":
+                        response.setText(SpringyBotEnum.COMMANDS_DAHE.getText());
+                        common.sendResponseAsync(response);
+                            response.setText(
+                                    "歡迎使用 @" + common.getUsername() + "\n\n" + SpringyBotEnum.COMMANDS_HELP.getText());
+                        break;
+                    case "/white_dove":
+                        response.setText(SpringyBotEnum.COMMANDS_WHITEDOVE.getText());
+                        common.sendResponseAsync(response);
+                            response.setText(
+                                    "歡迎使用 @" + common.getUsername() + "\n\n" + SpringyBotEnum.COMMANDS_HELP.getText());
+                        break;
                     case "/help":
                         response.setText(
                                 "歡迎使用 @" + common.getUsername() + "\n\n" + SpringyBotEnum.COMMANDS_HELP.getText());
