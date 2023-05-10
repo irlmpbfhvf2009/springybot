@@ -10,6 +10,7 @@ import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 import com.lwdevelop.bot.talentBot.Custom;
 import com.lwdevelop.bot.talentBot.utils.Common;
 import com.lwdevelop.bot.talentBot.utils.KeyboardButton;
+import com.lwdevelop.bot.talentBot.utils.SpringyBotEnum;
 import com.lwdevelop.dto.JobPostingDTO;
 import com.lwdevelop.dto.JobSeekerDTO;
 import com.lwdevelop.dto.SpringyBotDTO;
@@ -58,7 +59,7 @@ public class CallbackQuerys {
             jobManagementServiceImpl.saveJobPosting(jobPosting);
 
             // // 清除訊息
-            Long id = Long.valueOf(botId);
+            Long id = Long.valueOf(jobPosting.getBotId());
             SpringyBot springyBot = springyBotServiceImpl.findById(id).get();
             SpringyBotDTO springyBotDTO = new SpringyBotDTO();
             springyBotDTO.setToken(springyBot.getToken());
@@ -96,18 +97,9 @@ public class CallbackQuerys {
             }
 
             List<ChannelMessageIdPostCounts> channelMessageIdPostCounts = jobManagementServiceImpl
-                    .findAllByBotIdAndUserIdAndTypeWithChannelMessageIdPostCounts(botId, userId, "jobPosting");
+                    .findAllByBotIdAndUserIdAndTypeWithChannelMessageIdPostCounts(jobPosting.getBotId(), userId, SpringyBotEnum.JOBPOSTING.getText());
             List<GroupMessageIdPostCounts> groupMessageIdPostCounts = jobManagementServiceImpl
-                    .findAllByBotIdAndUserIdAndTypeWithGroupMessageIdPostCounts(botId, userId, "jobPosting");
-
-            springyBot.getJobUser().stream().filter(ju -> ju.getUserId().equals(userId)).findFirst()
-                    .ifPresent(action -> {
-                        action.getJobPosting().forEach(jp -> {
-                            jp.getChannelMessageIdPostCounts().remove((Object) jp.getId());
-                            jp.getGroupMessageIdPostCounts().remove((Object) jp.getId());
-                            jobManagementServiceImpl.deleteByIdWithJobPosting(jp.getId());
-                        });
-                    });
+                    .findAllByBotIdAndUserIdAndTypeWithGroupMessageIdPostCounts(jobPosting.getBotId(), userId, SpringyBotEnum.JOBPOSTING.getText());
 
             channelMessageIdPostCounts.stream().forEach(cmp -> {
                 DeleteMessage dm = new DeleteMessage();
@@ -120,7 +112,6 @@ public class CallbackQuerys {
                 }
                 cmp.setMessageId(-1);
                 cmp.setPostCount(0);
-                jobManagementServiceImpl.deleteByIdChannelMessageIdPostCounts(cmp.getId());
                 jobManagementServiceImpl.saveChannelMessageIdPostCounts(cmp);
             });
 
@@ -135,13 +126,10 @@ public class CallbackQuerys {
                 }
                 cmp.setMessageId(-1);
                 cmp.setPostCount(0);
-                jobManagementServiceImpl.deleteByIdGroupMessageIdPostCounts(cmp.getId());
                 jobManagementServiceImpl.saveGroupMessageIdPostCounts(cmp);
             });
 
-            springyBotServiceImpl.save(springyBot); // 保存更新后的 JobUser 对象
-
-            this.response.setText("删除成功");
+            this.response.setText(SpringyBotEnum.SUCCESSFULLYDELETED.getText());
             common.sendResponseAsync(this.response);
         } else if (callbackQuery.getData().startsWith("clearJobSeeker_")) {
 
@@ -183,20 +171,7 @@ public class CallbackQuerys {
             EditMessageText editMessageText = new EditMessageText();
             editMessageText.setChatId(userId);
             editMessageText.setMessageId(messageId);
-            editMessageText.setText("求职人员\n\n" +
-                    "姓名：\n" +
-                    "男女：\n" +
-                    "出生_年_月_日：\n" +
-                    "年龄：\n" +
-                    "国籍：\n" +
-                    "学历：\n" +
-                    "技能：\n" +
-                    "目标职位：\n" +
-                    "手上有什么资源：\n" +
-                    "期望薪资：\n" +
-                    "工作经历：（限50字以内）\n" +
-                    "自我介绍：（限50字以内）\n" +
-                    "✈️咨询飞机号：");
+            editMessageText.setText(SpringyBotEnum.JOBSEEKERDEFAULTFORM.getText());
 
             editMessageText.setReplyMarkup(new KeyboardButton().keyboard_jobSeeker(jobSeekerDTO, true));
             try {
@@ -206,10 +181,10 @@ public class CallbackQuerys {
             }
             List<ChannelMessageIdPostCounts> channelMessageIdPostCounts = jobManagementServiceImpl
                     .findAllByBotIdAndUserIdAndTypeWithChannelMessageIdPostCounts(jobSeeker.getBotId(), userId,
-                            "jobSeeker");
+                            SpringyBotEnum.JOBSEEKER.getText());
             List<GroupMessageIdPostCounts> groupMessageIdPostCounts = jobManagementServiceImpl
                     .findAllByBotIdAndUserIdAndTypeWithGroupMessageIdPostCounts(jobSeeker.getBotId(), userId,
-                            "jobSeeker");
+                    SpringyBotEnum.JOBSEEKER.getText());
             channelMessageIdPostCounts.stream().forEach(cmp -> {
                 DeleteMessage dm = new DeleteMessage();
                 dm.setChatId(String.valueOf(cmp.getChannelId()));
@@ -238,14 +213,14 @@ public class CallbackQuerys {
                 jobManagementServiceImpl.saveGroupMessageIdPostCounts(cmp);
             });
 
-            this.response.setText("删除成功");
+            this.response.setText(SpringyBotEnum.SUCCESSFULLYDELETED.getText());
             common.sendResponseAsync(this.response);
-        } else if (callbackQuery.getData().equals("editJobPosting_")) {
-            response.setText("提醒：请复制上列信息到输入框并进行编辑，编辑完毕发送");
+        } else if (callbackQuery.getData().equals(SpringyBotEnum.EDITJOBPOSTING.getText())) {
+            response.setText(SpringyBotEnum.REMINDEDITOR.getText());
 
             common.sendResponseAsync(this.response);
-        } else if (callbackQuery.getData().equals("editJobSeeker_")) {
-            response.setText("提醒：请复制上列信息到输入框并进行编辑，编辑完毕发送");
+        } else if (callbackQuery.getData().equals(SpringyBotEnum.EDITJOBSEEKER.getText())) {
+            response.setText(SpringyBotEnum.REMINDEDITOR.getText());
             common.sendResponseAsync(this.response);
         }
 

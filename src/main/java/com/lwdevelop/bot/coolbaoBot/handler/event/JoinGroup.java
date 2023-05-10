@@ -57,7 +57,7 @@ public class JoinGroup {
                             springyBot.getRobotGroupManagement().add(this.getRobotGroupManagement());
                         });
                 springyBotServiceImpl.save(springyBot);
-                log.info("{} bot join {} group",member.getUserName(),this.groupTitle);
+                log.info("[{}] bot join {} group",common.getUsername(),this.groupTitle);
                 // user invite other user
             } else if (isUserInviteEvent(member)) {
             }

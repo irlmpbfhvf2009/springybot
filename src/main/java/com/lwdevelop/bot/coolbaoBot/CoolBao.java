@@ -66,6 +66,12 @@ public class CoolBao extends TelegramLongPollingBot {
                 }
 
             }
+            
+            if(this.message.hasPhoto()){
+                // System.out.println(this.message.getPhoto());
+                // System.out.println("----------------------------------------");
+                // System.out.println(this.message);
+            }
         }
         
         if (update.hasCallbackQuery()) {

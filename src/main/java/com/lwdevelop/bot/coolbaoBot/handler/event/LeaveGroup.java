@@ -36,7 +36,7 @@ public class LeaveGroup {
                 g.setStatus(false);
             });
         this.springyBotServiceImpl.save(springyBot);
-        log.info("{} bot leave {} group",common.getBot().getBotUsername(), message.getChat().getTitle());
+        log.info("[{}] bot leave {} group",common.getUsername(), message.getChat().getTitle());
 
         // springyBot.getRobotGroupManagement().removeIf(rgm -> hasTarget(rgm));
         // this.springyBotServiceImpl.save(springyBot);

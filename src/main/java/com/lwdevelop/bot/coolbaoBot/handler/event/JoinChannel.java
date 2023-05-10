@@ -45,7 +45,7 @@ public class JoinChannel {
                 springyBot.getRobotChannelManagement().add(getRobotChannelManagement());
             });
             springyBotServiceImpl.save(springyBot);
-            log.info("{} bot join {} channel",common.getBot().getBotUsername(),this.channelTitle);
+            log.info("[{}] bot join {} channel",common.getUsername(),this.channelTitle);
     }
 
     private Boolean hasTarget(RobotChannelManagement rcm) {

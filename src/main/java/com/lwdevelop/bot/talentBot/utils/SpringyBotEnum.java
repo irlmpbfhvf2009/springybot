@@ -16,10 +16,29 @@ public enum SpringyBotEnum {
 
     // command job 
     EDIT_RECRUITMENT("发布招聘"),
-    // POST_RECRUITMENT("发布招聘"),
     EDIT_JOBSEARCH("发布求职"),
-    // POST_JOBSEARCH("发布求职"),
-
+    JOBPOSTING("jobPosting"),
+    JOBSEEKER("jobSeeker"),
+    REMINDEDITOR("提醒：请复制上列信息到输入框并进行编辑，编辑完毕发送"),
+    EDITJOBPOSTING("editJobPosting_"),
+    EDITJOBSEEKER("editJobSeeker_"),
+    SUCCESSFULLYDELETED("删除成功"),
+    JOBSEEKERDEFAULTFORM("求职人员\n\n" +
+                            "姓名：\n" +
+                            "男女：\n" +
+                            "出生_年_月_日：\n" +
+                            "年龄：\n" +
+                            "国籍：\n" +
+                            "学历：\n" +
+                            "技能：\n" +
+                            "目标职位：\n" +
+                            "手上有什么资源：\n" +
+                            "期望薪资：\n" +
+                            "工作经历：（限50字以内）\n" +
+                            "自我介绍：（限50字以内）\n" +
+                            "✈️咨询飞机号："),
+                            
+                            
     JOB_MANAGEMENT("招聘和求职信息管理"),
     POST_JOB("发布"),
 

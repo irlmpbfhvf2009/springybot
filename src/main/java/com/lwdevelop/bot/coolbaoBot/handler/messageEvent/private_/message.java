@@ -7,6 +7,8 @@ import java.util.Set;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.StringUtils;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
+import org.telegram.telegrambots.meta.api.methods.send.SendPhoto;
+import org.telegram.telegrambots.meta.api.objects.InputFile;
 import org.telegram.telegrambots.meta.api.objects.Message;
 import com.lwdevelop.bot.coolbaoBot.handler.messageEvent.private_.commands.addMerchant;
 import com.lwdevelop.bot.coolbaoBot.handler.messageEvent.private_.commands.cgBalance;
@@ -96,6 +98,12 @@ public class message {
                     case "/sevendays":
                         response.setText(SpringyBotEnum.COMMANDS_SEVENDAYS.getText());
                         common.sendResponseAsync(response);
+                        SendPhoto sendPhoto = new SendPhoto();
+                        sendPhoto.setChatId(String.valueOf(chatId));
+                        String fileId = "AgACAgUAAxkBAAIoj2RbOJRM-e6bIs7pNQbBcY4a9uA5AAIYtjEbO9PYVhYO1zjC8iI5AQADAgADcwADLwQ";
+                        InputFile inputFile = new InputFile(fileId);
+                        sendPhoto.setPhoto(inputFile);
+                        common.sendResponseAsync(sendPhoto);
                             response.setText(
                                     "歡迎使用 @" + common.getUsername() + "\n\n" + SpringyBotEnum.COMMANDS_HELP.getText());
                         break;

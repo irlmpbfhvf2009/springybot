@@ -5,6 +5,7 @@ import java.util.HashMap;
 import org.springframework.scheduling.annotation.Async;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
+import org.telegram.telegrambots.meta.api.methods.send.SendPhoto;
 import org.telegram.telegrambots.meta.api.methods.updatingmessages.EditMessageText;
 import org.telegram.telegrambots.meta.api.objects.ChatMemberUpdated;
 import org.telegram.telegrambots.meta.api.objects.Update;
@@ -44,6 +45,13 @@ public class Common {
     public Integer sendResponseAsync(SendMessage response) {
         return this.bot.executeAsync(response).get().getMessageId();
     }
+
+    @Async
+    @SneakyThrows
+    public Integer sendResponseAsync(SendPhoto response) {
+        return this.bot.executeAsync(response).get().getMessageId();
+    }
+
     @Async
     @SneakyThrows
     public void editResponseAsync(EditMessageText response) {

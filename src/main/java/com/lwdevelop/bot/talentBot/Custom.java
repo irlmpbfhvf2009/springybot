@@ -63,20 +63,22 @@ public class Custom extends TelegramLongPollingBot {
         if (update.hasMessage()) {
             if (this.message.hasText()) {
                 User user = this.message.getFrom();
-                String userInfo = String.format("[%s] %s (%s %s)", user.getId(), user.getUserName(), user.getFirstName(), user.getLastName());
+                String username = user.getUserName() == null ? "無題" : user.getUserName();
+                String userInfo = String.format("[%s] %s", user.getId(), username);
 
                 // private
                 if (this.message.isUserMessage()) {
                     new Job().saveJobUser(common);
                     new message().handler(this.common);
-                    log.info("Private message received from {}: {}", userInfo, this.message.getText());
+                    log.info("[{}] Private message received from {}: {}", common.getUsername(), userInfo,
+                            this.message.getText());
 
                 }
 
                 // group
                 if (this.message.isSuperGroupMessage()) {
                     new GroupMessage().handler(this.common);
-                    log.info("Group message received from {}: {}", userInfo, this.message.getText());
+                    log.info("[{}] Group message received from {}: {}", common.getUsername(),userInfo, this.message.getText());
                 }
             }
         }
@@ -88,9 +90,10 @@ public class Custom extends TelegramLongPollingBot {
                 if (chatTypeIsChannel(chatType)) {
                     new ChannelMessage().handler(this.common);
                     User user = update.getChannelPost().getFrom();
-                    String userInfo = String.format("[%s] %s (%s %s)", user.getId(), user.getUserName(), user.getFirstName(), user.getLastName());
+                    String username = user.getUserName() == null ? "無題" : user.getUserName();
+                    String userInfo = String.format("[%s] %s", user.getId(), username);
                     String text = update.getChannelPost().getText();
-                    log.info("Group message received from {}: {}", userInfo, text);
+                    log.info("[{}] Channel message received from {}: {}",common.getUsername(), userInfo, text);
                 }
             }
         }
@@ -127,7 +130,7 @@ public class Custom extends TelegramLongPollingBot {
                 common.setChatMemberUpdated(chatMemberUpdated);
 
                 if (chatTypeIsChannel(chatMemberUpdated.getChat().getType())) {
-    
+
                     // is robot join channel
                     if (isBotJoinChannel(chatMemberUpdated)) {
                         dealInviteLink(chatMemberUpdated.getChat().getId());
@@ -147,7 +150,8 @@ public class Custom extends TelegramLongPollingBot {
         if (update.hasCallbackQuery()) {
             new CallbackQuerys().handler(common);
             User user = update.getCallbackQuery().getFrom();
-            String userInfo = String.format("[%s] %s (%s %s)", user.getId(), user.getUserName(), user.getFirstName(), user.getLastName());
+            String username = user.getUserName() == null ? "無題" : user.getUserName();
+            String userInfo = String.format("[%s] %s", user.getId(), username);
             String data = update.getCallbackQuery().getData();
             log.info("CallbackQuery Data received from {}: {}", userInfo, data);
         }
@@ -198,7 +202,8 @@ public class Custom extends TelegramLongPollingBot {
         this.response.setDisableNotification(false);
         this.response.setText(title + SpringyBotEnum.BOT_NOT_ENOUGH_RIGHTS.getText());
     }
-    private void dealInviteLink(Long chatId){
+
+    private void dealInviteLink(Long chatId) {
         try {
             String inviteLink = execute(
                     new ExportChatInviteLink(String.valueOf(chatId)));
