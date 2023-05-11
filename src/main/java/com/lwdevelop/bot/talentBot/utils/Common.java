@@ -2,12 +2,14 @@ package com.lwdevelop.bot.talentBot.utils;
 
 import org.springframework.scheduling.annotation.Async;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
+import org.telegram.telegrambots.meta.api.methods.groupadministration.GetChatMember;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.methods.updatingmessages.EditMessageText;
 import org.telegram.telegrambots.meta.api.objects.ChatMemberUpdated;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import lombok.Data;
 import lombok.SneakyThrows;
+import org.telegram.telegrambots.meta.api.objects.chatmember.ChatMember;
 
 @Data
 public class Common {
@@ -47,5 +49,9 @@ public class Common {
         this.bot.executeAsync(response);
     }
 
-
+    @Async
+    @SneakyThrows
+    public ChatMember getChatMemberAsync(GetChatMember getChatMember) {
+        return this.bot.executeAsync(getChatMember).get();
+    }
 }

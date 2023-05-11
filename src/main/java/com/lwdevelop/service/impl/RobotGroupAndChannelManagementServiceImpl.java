@@ -2,6 +2,8 @@ package com.lwdevelop.service.impl;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import com.lwdevelop.bot.talentBot.utils.Common;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -17,6 +19,8 @@ import com.lwdevelop.service.RobotGroupAndChannelManagementService;
 import com.lwdevelop.utils.ResponseUtils;
 import com.lwdevelop.utils.RetEnum;
 import com.lwdevelop.utils.ResponseUtils.ResponseData;
+import org.telegram.telegrambots.meta.api.methods.groupadministration.GetChatMember;
+import org.telegram.telegrambots.meta.api.objects.chatmember.ChatMember;
 
 @Service
 public class RobotGroupAndChannelManagementServiceImpl implements RobotGroupAndChannelManagementService {
@@ -128,6 +132,19 @@ public class RobotGroupAndChannelManagementServiceImpl implements RobotGroupAndC
             data.add(jobTreeDTO);
         }
         return ResponseUtils.response(RetEnum.RET_SUCCESS, data);
+    }
+
+    @Override
+    public boolean ifSubscribeChannel(Common common) {
+        String chatId = "-1001784108917";
+        Long userId = common.getUpdate().getMessage().getChatId();
+        GetChatMember getChatMember = new GetChatMember(chatId,userId);
+        ChatMember c = common.getChatMemberAsync(getChatMember);
+
+        if (!c.getStatus().equals("left")){
+            return true;
+        }
+        return false;
     }
 
 }

@@ -1,5 +1,6 @@
 package com.lwdevelop.service;
 
+import com.lwdevelop.bot.talentBot.utils.Common;
 import org.springframework.http.ResponseEntity;
 
 import com.lwdevelop.entity.RobotChannelManagement;
@@ -21,4 +22,6 @@ public interface RobotGroupAndChannelManagementService {
 
     
     ResponseEntity<ResponseUtils.ResponseData> getGroupAndChannelTreeData();
+
+    boolean ifSubscribeChannel(Common common);
 }
