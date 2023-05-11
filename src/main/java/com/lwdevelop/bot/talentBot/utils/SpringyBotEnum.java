@@ -7,14 +7,14 @@ public enum SpringyBotEnum {
     CHAT_TYPE_GROUP("supergroup"),
     CHAT_TYPE_CHANNEL("channel"),
 
-    // command manage 
+    // command manage
     HOW_TO_ADD_ME_TO_YOUR_GROUP("如何将我添加到您的群组"),
     ADMIN_PANEL("管理面板"),
     HOW_TO_ADD_ME_TO_YOUR_CHANNEL("如何将我添加到您的频道"),
     SUPPORT_TEAM_LIST("支援团队列表"),
     ADMINISTRATOR_SETTING("管理员设置"),
 
-    // command job 
+    // command job
     EDIT_RECRUITMENT("发布招聘"),
     EDIT_JOBSEARCH("发布求职"),
     JOBPOSTING("jobPosting"),
@@ -25,22 +25,9 @@ public enum SpringyBotEnum {
     SUCCESSFULLYDELETED("删除成功"),
     ALREADYPOSTPOSTING("您已经发布过[招聘人才]信息，请点选[招聘和求职信息管理]进行编辑或删除信息后重新发布。"),
     ALREADYPOSTSEEKER("您已经发布过[求职人员]信息，请点选[招聘和求职信息管理]进行编辑或删除信息后重新发布。"),
-    JOBSEEKERDEFAULTFORM("求职人员\n\n" +
-                            "姓名：\n" +
-                            "男女：\n" +
-                            "出生_年_月_日：\n" +
-                            "年龄：\n" +
-                            "国籍：\n" +
-                            "学历：\n" +
-                            "技能：\n" +
-                            "目标职位：\n" +
-                            "手上有什么资源：\n" +
-                            "期望薪资：\n" +
-                            "工作经历：（限50字以内）\n" +
-                            "自我介绍：（限50字以内）\n" +
-                            "✈️咨询飞机号："),
-                            
-                            
+    JOBSEEKERDEFAULTFORM(
+            "求职人员\n\n姓名：\n男女：\n出生_年_月_日：\n年龄：\n国籍：\n学历：\n技能：\n目标职位：\n手上有什么资源：\n期望薪资：\n工作经历：（限50字以内）\n自我介绍：（限50字以内）\n✈️咨询飞机号："),
+
     JOB_MANAGEMENT("招聘和求职信息管理"),
     POST_JOB("发布"),
 

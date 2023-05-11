@@ -41,12 +41,14 @@ public class Job_II {
     public void setResponse_jobPosting_management(Common common) {
 
         log.info("Entering setResponse_jobPosting_management method...");
+
+
         Long id = common.getSpringyBotId();
         String userId = String.valueOf(common.getUpdate().getMessage().getChatId());
 
         List<ChannelMessageIdPostCounts> channelMessageIdPostCounts = jobManagementServiceImpl
                 .findAllByBotIdAndUserIdAndTypeWithChannelMessageIdPostCounts(
-                    String.valueOf(id), userId, "jobPosting");
+                    String.valueOf(id), userId, SpringyBotEnum.JOBPOSTING.getText());
         channelMessageIdPostCounts.stream().filter(cmpc->cmpc.getPostCount()>=1).findAny().ifPresentOrElse(action->{
             SendMessage response = new SendMessage(userId, SpringyBotEnum.ALREADYPOSTPOSTING.getText());
             common.sendResponseAsync(response);
@@ -67,9 +69,11 @@ public class Job_II {
                         springyBot.getJobUser().add(ju);
                         return ju;
                     });
+
             String company = "", position = "", baseSalary = "", commission = "", nationality = "", gender = "",
                     headCounts = "", languages = "",
                     agency = "", workTime = "", requirements = "", location = "", flightNumber = "";
+                    
             // 沒有發布過
             if (jobPosting == null) {
                 response.setText("招聘人才\n\n" + "公司：\n" + "职位：\n" + "底薪：\n" + "提成：\n" + "国籍：\n" + "男女：\n" + "人数：\n"
