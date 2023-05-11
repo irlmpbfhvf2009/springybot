@@ -123,6 +123,13 @@ public class JobPostingDTO {
                 this.location, this.flightNumber);
     }
 
+    public JobPostingDTO convertToJobPostingDTO(JobPosting jobPosting) {
+        return new JobPostingDTO(jobPosting.getUserId(), jobPosting.getBotId(), jobPosting.getCompany(), jobPosting.getPosition(), jobPosting.getBaseSalary(),
+        jobPosting.getCommission(), jobPosting.getNationality(), jobPosting.getGender(), jobPosting.getHeadCounts(), jobPosting.getLanguages(), jobPosting.getAgency(), jobPosting.getWorkTime(),
+        jobPosting.getRequirements(),
+        jobPosting.getLocation(), jobPosting.getFlightNumber());
+    }
+
     public String generateJobPostingResponse(JobPosting jobPosting, Boolean isEdit) {
 
         this.company = Optional.ofNullable(jobPosting.getCompany()).orElse("");

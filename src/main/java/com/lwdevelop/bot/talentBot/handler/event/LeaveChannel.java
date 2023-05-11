@@ -12,10 +12,6 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class LeaveChannel {
 
-    // @Autowired
-    // private RobotChannelManagementServiceImpl robotChannelManagementServiceImpl = SpringUtils.getApplicationContext()
-    //         .getBean(RobotChannelManagementServiceImpl.class);
-
     @Autowired
     private SpringyBotServiceImpl springyBotServiceImpl = SpringUtils.getApplicationContext()
             .getBean(SpringyBotServiceImpl.class);
@@ -40,18 +36,10 @@ public class LeaveChannel {
         this.springyBotServiceImpl.save(springyBot);
         log.info("{} bot leave {} channel",common.getBot().getBotUsername(),chatMemberUpdated.getChat().getTitle());
 
-        // springyBot.getRobotChannelManagement().removeIf(rcm -> hasTarget(rcm));
-        // this.springyBotServiceImpl.save(springyBot);
-        // RobotChannelManagement robotChannelManagement = this.robotChannelManagementServiceImpl
-        //     .findByBotIdAndChannelId(this.botId, this.channelId);
-        // this.robotChannelManagementServiceImpl.deleteById(robotChannelManagement.getId());
 
     }
 
     private Boolean hasTarget(RobotChannelManagement rcm) {
         return rcm.getBotId().equals(this.botId) && rcm.getChannelId().equals(this.channelId);
     }
-    // private Boolean hasTarget(RobotChannelManagement rcm) {
-    //     return rcm.getChannelId().equals(this.channelId) && rcm.getBotId().equals(this.botId);
-    // }
 }

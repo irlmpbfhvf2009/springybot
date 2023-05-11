@@ -117,6 +117,27 @@ public class JobSeekerDTO {
         this.selfIntroduction = selfIntroduction;
         this.flightNumber = flightNumber;
     }
+
+    public JobSeeker resetJobSeekerFields(JobSeeker jobSeeker) {
+        jobSeeker.setName("");
+        jobSeeker.setGender("");
+        jobSeeker.setHeadCounts("");
+        jobSeeker.setDateOfBirth("");
+        jobSeeker.setAge("");
+        jobSeeker.setNationality("");
+        jobSeeker.setEducation("");
+        jobSeeker.setSkills("");
+        jobSeeker.setTargetPosition("");
+        jobSeeker.setResources("");
+        jobSeeker.setExpectedSalary("");
+        jobSeeker.setWorkingAddress("");
+        jobSeeker.setLanguage("");
+        jobSeeker.setWorkExperience("（限50字以内）");
+        jobSeeker.setSelfIntroduction("（限50字以内）");
+        jobSeeker.setFlightNumber("");
+        return jobSeeker;
+    }
+
     public JobSeekerDTO createJobSeekerDTO(String userId, String id) {
         return new JobSeekerDTO(userId, id, this.name, this.gender, this.headCounts, this.dateOfBirth, this.age,
                 this.nationality, this.education, this.skills, this.targetPosition, this.resources, this.expectedSalary,
@@ -124,6 +145,17 @@ public class JobSeekerDTO {
                 this.language,
                 this.workExperience, this.selfIntroduction, this.flightNumber);
     }
+
+    public JobSeekerDTO convertToJobSeekerDTO(JobSeeker jobSeeker){
+        return new JobSeekerDTO(jobSeeker.getUserId(), jobSeeker.getBotId(), jobSeeker.getName(),
+        jobSeeker.getGender(), jobSeeker.getHeadCounts(), jobSeeker.getDateOfBirth(), jobSeeker.getAge(),
+        jobSeeker.getNationality(),
+        jobSeeker.getEducation(), jobSeeker.getSkills(), jobSeeker.getTargetPosition(),
+        jobSeeker.getResources(), jobSeeker.getExpectedSalary(),
+        jobSeeker.getWorkingAddress(), jobSeeker.getLanguage(), jobSeeker.getWorkExperience(),
+        jobSeeker.getSelfIntroduction(), jobSeeker.getFlightNumber());
+    }
+
     public String generateJobSeekerResponse(JobSeeker jobSeeker, Boolean isEdit) {
         this.name = Optional.ofNullable(jobSeeker.getName()).orElse("");
         this.gender = Optional.ofNullable(jobSeeker.getGender()).orElse("");
