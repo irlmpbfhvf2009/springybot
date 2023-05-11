@@ -46,8 +46,8 @@ public class KeyboardButton {
         ReplyKeyboardMarkup keyboardMarkup = new ReplyKeyboardMarkup();
         List<KeyboardRow> keyboard = new ArrayList<>();
         KeyboardRow row = new KeyboardRow();
-        row.add(SpringyBotEnum.EDIT_RECRUITMENT.getText());
-        row.add(SpringyBotEnum.EDIT_JOBSEARCH.getText());
+        row.add(SpringyBotEnum.POST_RECRUITMENT.getText());
+        row.add(SpringyBotEnum.POST_JOBSEARCH.getText());
         keyboard.add(row);
         row = new KeyboardRow();
         row.add(SpringyBotEnum.JOB_MANAGEMENT.getText());

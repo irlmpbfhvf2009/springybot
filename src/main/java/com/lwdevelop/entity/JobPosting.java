@@ -72,6 +72,5 @@ public class JobPosting {
         this.botId = botId;
         this.lastMessageId = lastMessageId;
     }
-
     
 }

@@ -39,15 +39,14 @@ public class CallbackQuerys {
 
         this.messageSetting(common);
 
-        if (callbackQuery.getData().startsWith("clearJobPosting_")) {
+        if (callbackQuery.getData().startsWith(SpringyBotEnum.CLEAR_JOBPOSTING.getText())) {
 
-            String userId = callbackQuery.getData().substring("clearJobPosting_".length(),
+            String userId = callbackQuery.getData().substring(SpringyBotEnum.CLEAR_JOBPOSTING.getText().length(),
                     callbackQuery.getData().lastIndexOf("_"));
             String botId = callbackQuery.getData().substring(callbackQuery.getData().lastIndexOf("_") + 1);
 
             // 在这里根据 springyBotId 和 userId 进行相应的清除操作
-            JobPosting jobPosting =
-            jobManagementServiceImpl.findByUserIdAndBotIdWithJobPosting(userId,botId);
+            JobPosting jobPosting = jobManagementServiceImpl.findByUserIdAndBotIdWithJobPosting(userId, botId);
             jobPosting.setBaseSalary("");
             jobPosting.setCommission("");
             jobPosting.setNationality("");
@@ -59,9 +58,10 @@ public class CallbackQuerys {
             jobPosting.setFlightNumber("");
             jobPosting.setLocation("");
             jobPosting.setPosition("");
-            jobPosting.setRequirements("（限50字以内）");
+            jobPosting.setRequirements(SpringyBotEnum.FIFTY_CHARACTERS_LIMIT.getText());
             jobPosting.setWorkTime("");
             jobManagementServiceImpl.saveJobPosting(jobPosting);
+            // jobManagementServiceImpl.saveJobPosting(new JobPostingDTO().resetJobPostingFields(jobPosting));
 
             // // 清除訊息
             Long id = Long.valueOf(jobPosting.getBotId());
@@ -73,7 +73,7 @@ public class CallbackQuerys {
 
             JobPostingDTO jobPostingDTO = new JobPostingDTO(userId, jobPosting.getBotId(), jobPosting.getCompany(),
                     jobPosting.getPosition(), jobPosting.getBaseSalary(), jobPosting.getCommission(),
-                    jobPosting.getNationality(),jobPosting.getGender(), jobPosting.getHeadCounts(),
+                    jobPosting.getNationality(), jobPosting.getGender(), jobPosting.getHeadCounts(),
                     jobPosting.getLanguages(), jobPosting.getAgency(),
                     jobPosting.getWorkTime(), jobPosting.getRequirements(), jobPosting.getLocation(),
                     jobPosting.getFlightNumber());
@@ -97,18 +97,19 @@ public class CallbackQuerys {
                     "🐌 地址：\n" +
                     "✈️咨询飞机号：");
 
-            editMessageText.setReplyMarkup(new
-            KeyboardButton().keyboard_jobPosting(jobPostingDTO,true));
+            editMessageText.setReplyMarkup(new KeyboardButton().keyboard_jobPosting(jobPostingDTO, true));
             try {
-            custom.executeAsync(editMessageText);
+                custom.executeAsync(editMessageText);
             } catch (TelegramApiException e) {
-            e.printStackTrace();
+                e.printStackTrace();
             }
 
             List<ChannelMessageIdPostCounts> channelMessageIdPostCounts = jobManagementServiceImpl
-                    .findAllByBotIdAndUserIdAndTypeWithChannelMessageIdPostCounts(jobPosting.getBotId(), userId, SpringyBotEnum.JOBPOSTING.getText());
+                    .findAllByBotIdAndUserIdAndTypeWithChannelMessageIdPostCounts(jobPosting.getBotId(), userId,
+                            SpringyBotEnum.JOBPOSTING.getText());
             List<GroupMessageIdPostCounts> groupMessageIdPostCounts = jobManagementServiceImpl
-                    .findAllByBotIdAndUserIdAndTypeWithGroupMessageIdPostCounts(jobPosting.getBotId(), userId, SpringyBotEnum.JOBPOSTING.getText());
+                    .findAllByBotIdAndUserIdAndTypeWithGroupMessageIdPostCounts(jobPosting.getBotId(), userId,
+                            SpringyBotEnum.JOBPOSTING.getText());
 
             channelMessageIdPostCounts.stream().forEach(cmp -> {
                 DeleteMessage dm = new DeleteMessage();
@@ -174,11 +175,12 @@ public class CallbackQuerys {
             Custom custom = new Custom(springyBotDTO);
 
             JobSeekerDTO jobSeekerDTO = new JobSeekerDTO(userId, jobSeeker.getBotId(), jobSeeker.getName(),
-                    jobSeeker.getGender(), jobSeeker.getHeadCounts(), jobSeeker.getDateOfBirth(), jobSeeker.getAge(), jobSeeker.getNationality(),
+                    jobSeeker.getGender(), jobSeeker.getHeadCounts(), jobSeeker.getDateOfBirth(), jobSeeker.getAge(),
+                    jobSeeker.getNationality(),
                     jobSeeker.getEducation(), jobSeeker.getSkills(), jobSeeker.getTargetPosition(),
                     jobSeeker.getResources(), jobSeeker.getExpectedSalary(),
                     jobSeeker.getWorkingAddress(), jobSeeker.getLanguage(), jobSeeker.getWorkExperience(),
-                    jobSeeker.getSelfIntroduction(),jobSeeker.getFlightNumber());
+                    jobSeeker.getSelfIntroduction(), jobSeeker.getFlightNumber());
 
             Integer messageId = jobSeeker.getLastMessageId();
             EditMessageText editMessageText = new EditMessageText();
@@ -213,7 +215,7 @@ public class CallbackQuerys {
                             SpringyBotEnum.JOBSEEKER.getText());
             List<GroupMessageIdPostCounts> groupMessageIdPostCounts = jobManagementServiceImpl
                     .findAllByBotIdAndUserIdAndTypeWithGroupMessageIdPostCounts(jobSeeker.getBotId(), userId,
-                    SpringyBotEnum.JOBSEEKER.getText());
+                            SpringyBotEnum.JOBSEEKER.getText());
             channelMessageIdPostCounts.stream().forEach(cmp -> {
                 DeleteMessage dm = new DeleteMessage();
                 dm.setChatId(String.valueOf(cmp.getChannelId()));
@@ -244,12 +246,12 @@ public class CallbackQuerys {
 
             this.response.setText(SpringyBotEnum.SUCCESSFULLYDELETED.getText());
             common.sendResponseAsync(this.response);
-        } else if (callbackQuery.getData().equals(SpringyBotEnum.EDITJOBPOSTING.getText())) {
-            response.setText(SpringyBotEnum.REMINDEDITOR.getText());
+        } else if (callbackQuery.getData().equals(SpringyBotEnum.EDIT_JOBPOSTING.getText())) {
+            response.setText(SpringyBotEnum.REMIND_EDITOR.getText());
 
             common.sendResponseAsync(this.response);
-        } else if (callbackQuery.getData().equals(SpringyBotEnum.EDITJOBSEEKER.getText())) {
-            response.setText(SpringyBotEnum.REMINDEDITOR.getText());
+        } else if (callbackQuery.getData().equals(SpringyBotEnum.EDIT_JOBSEEKER.getText())) {
+            response.setText(SpringyBotEnum.REMIND_EDITOR.getText());
             common.sendResponseAsync(this.response);
         }
 
