@@ -3,9 +3,12 @@ package com.lwdevelop.bot.talentBot.handler.messageEvent.private_;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
-import com.lwdevelop.bot.talentBot.handler.messageEvent.private_.commands.Job_II;
+import com.lwdevelop.bot.talentBot.handler.messageEvent.private_.commands.Job;
 import com.lwdevelop.bot.talentBot.utils.Common;
 import com.lwdevelop.bot.talentBot.utils.KeyboardButton;
+import com.lwdevelop.bot.talentBot.utils.SpringyBotEnum;
+import com.lwdevelop.dto.JobPostingDTO;
+import com.lwdevelop.dto.JobSeekerDTO;
 
 public class message {
 
@@ -13,29 +16,28 @@ public class message {
     private Message message;
     private String text;
     private SendMessage response;
+    private Job job_II;
 
     public void handler(Common common) {
         this.init(common);
 
         // 判斷事件
-        if(text.length()>=4){
+        if (text.length() >= 4) {
             String post = text.substring(0, 4);
             // 發布招聘
-            if (post.equals("招聘人才")) {
-                new Job_II().generateTextJobPosting(common,false);
-            }else if (post.equals("编辑招聘")){
-                new Job_II().generateTextJobPosting(common,true);
+            if (post.equals(SpringyBotEnum.RECRUITMENT.getText())) {
+                this.job_II.generateTextJobPosting(common, false);
+            } else if (post.equals(SpringyBotEnum.EDIT_RECRUITMENT.getText())) {
+                this.job_II.generateTextJobPosting(common, true);
             }
-    
+
             // 發布求職
-            else if (post.equals("求职人员")) {
-                new Job_II().generateTextJobSeeker(common,false);
-            } else if (post.equals("编辑求职")) {
-                new Job_II().generateTextJobSeeker(common,true);
+            else if (post.equals(SpringyBotEnum.JOBSEARCH.getText())) {
+                this.job_II.generateTextJobSeeker(common, false);
+            } else if (post.equals(SpringyBotEnum.EDIT_JOBSEARCH.getText())) {
+                this.job_II.generateTextJobSeeker(common, true);
             }
         }
-
-
 
         switch (this.text.toLowerCase()) {
             case "/start":
@@ -44,7 +46,7 @@ public class message {
 
             case "发布招聘":
                 if (hasUsername()) {
-                    new Job_II().setResponse_jobPosting_management(common);
+                    this.job_II.setResponse_jobPosting_management(common);
                 } else {
                     this.send_nullUsername();
                 }
@@ -52,36 +54,16 @@ public class message {
 
             case "发布求职":
                 if (hasUsername()) {
-                    new Job_II().setResponse_jobSeeker_management(common);
+                    this.job_II.setResponse_jobSeeker_management(common);
                 } else {
                     this.send_nullUsername();
                 }
                 break;
 
             case "招聘和求职信息管理":
-                new Job_II().setResponse_edit_jobPosting_management(common);
-                new Job_II().setResponse_edit_jobSeeker_management(common);
+                this.job_II.setResponse_edit_jobPosting_management(common);
+                this.job_II.setResponse_edit_jobSeeker_management(common);
                 break;
-
-            // web 端
-            // case "发布招聘":
-            // if (hasUsername()) {
-            // new Job().setResponse_jobPosting_management(common);
-            // } else {
-            // this.send_nullUsername();
-            // }
-            // break;
-            // case "发布求职":
-            // if (hasUsername()) {
-            // new Job().setResponse_jobSeeker_management(common);
-            // } else {
-            // this.send_nullUsername();
-            // }
-            // break;
-            // case "招聘和求职信息管理":
-            // new Job().setResponse_edit_jobPosting_management(common);
-            // new Job().setResponse_edit_jobSeeker_management(common);
-            // break;
 
             default:
                 this.text = "";
@@ -94,6 +76,7 @@ public class message {
         this.common = common;
         this.text = this.message.getText();
         this.privateMessageSettings(this.message);
+        this.job_II = new Job(new JobPostingDTO(common), new JobSeekerDTO(common));
     }
 
     private void setResponse_job() {
@@ -121,13 +104,6 @@ public class message {
         this.common.sendResponseAsync(this.response);
     }
 
-    // private void setResponse_manage() {
-    // this.response.setText(SpringyBotEnum.COMMEND_MANAGE.getText());
-    // this.response.setReplyMarkup(new
-    // KeyboardButton().manageReplyKeyboardMarkup());
-    // this.common.sendResponseAsync(this.response);
-    // }
-
     public void privateMessageSettings(Message message) {
         String chatId = String.valueOf(message.getChatId());
         this.response = new SendMessage();
@@ -144,7 +120,7 @@ public class message {
     }
 
     private void send_nullUsername() {
-        this.response.setText("请设置Telegram 用户名称");
+        this.response.setText(SpringyBotEnum.PLEASE_SET_TELEGRAM_USERNAME.getText());
         this.common.sendResponseAsync(this.response);
     }
 
