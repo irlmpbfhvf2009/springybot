@@ -23,6 +23,8 @@ public enum SpringyBotEnum {
     EDITJOBPOSTING("editJobPosting_"),
     EDITJOBSEEKER("editJobSeeker_"),
     SUCCESSFULLYDELETED("删除成功"),
+    ALREADYPOSTPOSTING("您已经发布过[招聘人才]信息，请点选[招聘和求职信息管理]进行编辑或删除信息后重新发布。"),
+    ALREADYPOSTSEEKER("您已经发布过[求职人员]信息，请点选[招聘和求职信息管理]进行编辑或删除信息后重新发布。"),
     JOBSEEKERDEFAULTFORM("求职人员\n\n" +
                             "姓名：\n" +
                             "男女：\n" +

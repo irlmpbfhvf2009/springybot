@@ -2,6 +2,13 @@
     "configurations": [
         {
             "type": "java",
+            "name": "Job_II",
+            "request": "launch",
+            "mainClass": "com.lwdevelop.bot.talentBot.handler.messageEvent.private_.commands.Job_II",
+            "projectName": "backend"
+        },
+        {
+            "type": "java",
             "name": "addMerchant",
             "request": "launch",
             "mainClass": "com.lwdevelop.bot.coolbaoBot.handler.messageEvent.private_.commands.addMerchant",

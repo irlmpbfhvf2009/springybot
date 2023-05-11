@@ -63,7 +63,7 @@ public class Custom extends TelegramLongPollingBot {
         if (update.hasMessage()) {
             if (this.message.hasText()) {
                 User user = this.message.getFrom();
-                String username = user.getUserName() == null ? "無題" : user.getUserName();
+                String username = user.getUserName() == null ? "" : user.getUserName();
                 String userInfo = String.format("[%s] %s", user.getId(), username);
 
                 // private
@@ -90,11 +90,8 @@ public class Custom extends TelegramLongPollingBot {
                 String chatType = update.getChannelPost().getChat().getType();
                 if (chatTypeIsChannel(chatType)) {
                     new ChannelMessage().handler(this.common);
-                    User user = update.getChannelPost().getFrom();
-                    String username = user.getUserName() == null ? "無題" : user.getUserName();
-                    String userInfo = String.format("[%s] %s", user.getId(), username);
-                    // String text = update.getChannelPost().getText();
-                    log.info("[{}] Channel message received from {}",common.getUsername(), userInfo);
+                    System.out.println(update.getChannelPost().getAuthorSignature());
+                    log.info("[{}] Channel message received from {}",common.getUsername(), update.getChannelPost().getAuthorSignature());
                     // log.info("[{}] Channel message received from {}: {}",common.getUsername(), userInfo, text);
                 }
             }
