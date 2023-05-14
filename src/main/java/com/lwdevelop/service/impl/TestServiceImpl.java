@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import com.lwdevelop.entity.Config;
+import com.lwdevelop.entity.RobotChannelManagement;
 import com.lwdevelop.entity.SpringyBot;
 import com.lwdevelop.repository.SpringyBotRepository;
 import com.lwdevelop.service.TestService;
@@ -17,6 +18,7 @@ public class TestServiceImpl implements TestService{
     @Autowired
     private SpringyBotRepository springyBotRepository;
 
+
     @Override
     public ResponseEntity<ResponseData> addConfig(Long id) {
         SpringyBot springyBot = springyBotRepository.findById(id).get();
@@ -28,7 +30,25 @@ public class TestServiceImpl implements TestService{
             }
             springyBotRepository.save(springyBot);
         }
-        return ResponseUtils.response(RetEnum.RET_SUCCESS, "新增参数成功");
+        return ResponseUtils.response(RetEnum.RET_SUCCESS, "success");
+    }
+
+    @Override
+    public ResponseEntity<ResponseData> addRobotChannelManagement(Long id) {
+        SpringyBot springyBot = springyBotRepository.findById(id).get();
+        RobotChannelManagement robotChannelManagement = new RobotChannelManagement();
+        robotChannelManagement.setBotId(0L);
+        robotChannelManagement.setChannelId(0L);
+        robotChannelManagement.setChannelTitle("");
+        robotChannelManagement.setInviteFirstname("");
+        robotChannelManagement.setInviteId(0L);
+        robotChannelManagement.setInviteLastname("");
+        robotChannelManagement.setInviteUsername("");
+        robotChannelManagement.setLink("");
+        robotChannelManagement.setStatus(true);
+        springyBot.getRobotChannelManagement().add(robotChannelManagement);
+        springyBotRepository.save(springyBot);
+        return ResponseUtils.response(RetEnum.RET_SUCCESS, "success");
     }
     
 }
