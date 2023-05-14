@@ -3,10 +3,11 @@ package com.lwdevelop.service.impl;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.lwdevelop.bot.talentBot.utils.Common;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+
+import com.lwdevelop.bot.talent.utils.Common;
 import com.lwdevelop.dto.GroupAndChannelTreeDTO;
 import com.lwdevelop.dto.RobotChannelManagementDTO;
 import com.lwdevelop.dto.RobotGroupManagementDTO;

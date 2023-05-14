@@ -4,8 +4,8 @@ import java.util.Optional;
 
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 
-import com.lwdevelop.bot.talentBot.utils.Common;
-import com.lwdevelop.bot.talentBot.utils.SpringyBotEnum;
+import com.lwdevelop.bot.talent.utils.Common;
+import com.lwdevelop.bot.talent.utils.SpringyBotEnum;
 import com.lwdevelop.entity.JobPosting;
 
 import lombok.AllArgsConstructor;

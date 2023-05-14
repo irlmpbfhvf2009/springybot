@@ -13,8 +13,9 @@ import org.springframework.stereotype.Service;
 import org.telegram.telegrambots.meta.TelegramBotsApi;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 import org.telegram.telegrambots.meta.generics.BotSession;
-import com.lwdevelop.bot.talentBot.Custom;
-import com.lwdevelop.bot.coolbaoBot.CoolBao;
+import com.lwdevelop.bot.coolbao.coolbao_bot;
+import com.lwdevelop.bot.talent.talent_bot;
+import com.lwdevelop.bot.triSpeak.triSpeak_bot;
 import com.lwdevelop.dto.SpringyBotDTO;
 import com.lwdevelop.entity.Config;
 import com.lwdevelop.entity.SpringyBot;
@@ -96,11 +97,15 @@ public class SpringyBotServiceImpl implements SpringyBotService {
             String botType = springyBot.getBotType();
 
             switch (botType) {
-                case "talentBot":
-                    botSession = telegramBotsApi.registerBot(new Custom(springyBotDTO));
+                case "talent":
+                    botSession = telegramBotsApi.registerBot(new talent_bot(springyBotDTO));
                     break;
-                case "coolbaoBot":
-                    botSession = telegramBotsApi.registerBot(new CoolBao(springyBotDTO));
+                case "coolbao":
+                    botSession = telegramBotsApi.registerBot(new coolbao_bot(springyBotDTO));
+                    break;
+                case "triSpeak":
+                    botSession = telegramBotsApi.registerBot(new triSpeak_bot(springyBotDTO));
+                    break;
                 default:
                     break;
             }
@@ -145,7 +150,6 @@ public class SpringyBotServiceImpl implements SpringyBotService {
         }
     }
 
-
     @Override
     public ResponseEntity<ResponseData> addBot(SpringyBotDTO springyBotDTO) {
         SpringyBot springyBot = new SpringyBot();
@@ -155,26 +159,18 @@ public class SpringyBotServiceImpl implements SpringyBotService {
         springyBot.setState(springyBotDTO.getState());
 
         String botType = springyBotDTO.getBotType();
+        Config config= new Config();
+
         switch (botType) {
-            case "coolbaoBot":
-                Config config = new Config();
+            case "coolbao":
                 config.setPassword("duv3qzXY");
                 springyBot.setConfig(config);
                 break;
+            case "triSpeak":
+            config.setFollowChannelSet(false);
             default:
                 break;
         }
-        // Config config = new Config();
-        // config.setInviteFriendsAutoClearTime(springyBotDTO.getConfig().getInviteFriendsAutoClearTime());
-        // config.setInviteFriendsSet(springyBotDTO.getConfig().getInviteFriendsSet());
-        // config.setFollowChannelSet(springyBotDTO.getConfig().getFollowChannelSet());
-        // config.setInviteFriendsQuantity(springyBotDTO.getConfig().getInviteFriendsQuantity());
-        // config.setDeleteSeconds(springyBotDTO.getConfig().getDeleteSeconds());
-        // config.setInvitationBonusSet(springyBotDTO.getConfig().getInvitationBonusSet());
-        // config.setInviteMembers(springyBotDTO.getConfig().getInviteMembers());
-        // config.setInviteEarnedOutstand(springyBotDTO.getConfig().getInviteEarnedOutstand());
-        // config.setContactPerson(springyBotDTO.getConfig().getContactPerson());
-        // springyBot.setConfig(config);
         save(springyBot);
         log.info("SpringyBotServiceImpl ==> addBot ... [ {} ] 新增成功", springyBotDTO.getUsername());
         return ResponseUtils.response(RetEnum.RET_SUCCESS, "新增成功");
@@ -210,15 +206,6 @@ public class SpringyBotServiceImpl implements SpringyBotService {
         springyBot.setUsername(springyBotDTO.getUsername());
         springyBot.setToken(springyBotDTO.getToken());
         springyBot.setBotType(springyBotDTO.getBotType());
-        // springyBot.getConfig().setContactPerson(springyBotDTO.getConfig().getContactPerson());
-        // springyBot.getConfig().setDeleteSeconds(springyBotDTO.getConfig().getDeleteSeconds());
-        // springyBot.getConfig().setFollowChannelSet(springyBotDTO.getConfig().getFollowChannelSet());
-        // springyBot.getConfig().setInvitationBonusSet(springyBotDTO.getConfig().getInvitationBonusSet());
-        // springyBot.getConfig().setInviteEarnedOutstand(springyBotDTO.getConfig().getInviteEarnedOutstand());
-        // springyBot.getConfig().setInviteFriendsAutoClearTime(springyBotDTO.getConfig().getInviteFriendsAutoClearTime());
-        // springyBot.getConfig().setInviteFriendsQuantity(springyBotDTO.getConfig().getInviteFriendsQuantity());
-        // springyBot.getConfig().setInviteFriendsSet(springyBotDTO.getConfig().getInviteFriendsSet());
-        // springyBot.getConfig().setInviteMembers(springyBotDTO.getConfig().getInviteMembers());
         save(springyBot);
         log.info("SpringyBotServiceImpl ==> updateBot ... [ {} ] 修改成功", springyBotDTO.getUsername());
         return ResponseUtils.response(RetEnum.RET_SUCCESS, "修改成功");
@@ -235,7 +222,7 @@ public class SpringyBotServiceImpl implements SpringyBotService {
                 springyBotMap.remove(parseId);
             }
 
-            //  刪除關聯資料表
+            // 刪除關聯資料表
             Optional<SpringyBot> optSpringyBot = Optional.of(findById(parseId).get());
             SpringyBot springyBot = optSpringyBot.get();
             springyBot.getRobotGroupManagement().remove((Object) springyBot.getId());

@@ -13,8 +13,9 @@ import org.springframework.stereotype.Service;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.methods.updatingmessages.EditMessageText;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
-import com.lwdevelop.bot.talentBot.Custom;
-import com.lwdevelop.bot.talentBot.utils.KeyboardButton;
+
+import com.lwdevelop.bot.talent.talent_bot;
+import com.lwdevelop.bot.talent.utils.KeyboardButton;
 import com.lwdevelop.dto.JobPostingDTO;
 import com.lwdevelop.dto.JobSeekerDTO;
 import com.lwdevelop.dto.JobTreeDTO;
@@ -297,7 +298,7 @@ public class JobManagementServiceImpl implements JobManagementService {
         SpringyBotDTO springyBotDTO = new SpringyBotDTO();
         springyBotDTO.setToken(springyBot.getToken());
         springyBotDTO.setUsername(springyBot.getUsername());
-        Custom custom = new Custom(springyBotDTO);
+        talent_bot custom = new talent_bot(springyBotDTO);
 
         // 获取最后一条已发送的消息的ID
         Integer messageId = jobPosting.getLastMessageId();
@@ -380,7 +381,7 @@ public class JobManagementServiceImpl implements JobManagementService {
         SpringyBotDTO springyBotDTO = new SpringyBotDTO();
         springyBotDTO.setToken(springyBot.getToken());
         springyBotDTO.setUsername(springyBot.getUsername());
-        Custom custom = new Custom(springyBotDTO);
+        talent_bot custom = new talent_bot(springyBotDTO);
 
         Integer messageId = jobSeeker.getLastMessageId();
         EditMessageText editMessageText = new EditMessageText();
@@ -470,7 +471,7 @@ public class JobManagementServiceImpl implements JobManagementService {
         SpringyBotDTO springyBotDTO = new SpringyBotDTO();
         springyBotDTO.setToken(springyBot.getToken());
         springyBotDTO.setUsername(springyBot.getUsername());
-        Custom custom = new Custom(springyBotDTO);
+        talent_bot custom = new talent_bot(springyBotDTO);
 
         Integer messageId = jobPosting.getLastMessageId();
         EditMessageText editMessageText = new EditMessageText();
@@ -540,7 +541,7 @@ public class JobManagementServiceImpl implements JobManagementService {
         SpringyBotDTO springyBotDTO = new SpringyBotDTO();
         springyBotDTO.setToken(springyBot.getToken());
         springyBotDTO.setUsername(springyBot.getUsername());
-        Custom custom = new Custom(springyBotDTO);
+        talent_bot custom = new talent_bot(springyBotDTO);
 
         Integer messageId = jobSeeker.getLastMessageId();
         EditMessageText editMessageText = new EditMessageText();
@@ -595,7 +596,7 @@ public class JobManagementServiceImpl implements JobManagementService {
         return ResponseUtils.response(RetEnum.RET_SUCCESS, "发送成功");
     }
 
-    public void sendTextWithJobPosting(JobPosting jobPosting, Custom custom,
+    public void sendTextWithJobPosting(JobPosting jobPosting, talent_bot custom,
             RobotChannelManagement robotChannelManagement) {
         StringBuilder sb = new StringBuilder();
         appendIfNotEmpty(sb, "公司：", jobPosting.getCompany());
@@ -658,7 +659,7 @@ public class JobManagementServiceImpl implements JobManagementService {
         }
     }
 
-    private void sendTextWithJobSeeker(JobSeeker jobSeeker, Custom custom,
+    private void sendTextWithJobSeeker(JobSeeker jobSeeker, talent_bot custom,
             RobotChannelManagement robotChannelManagement) {
 
         StringBuilder sb = new StringBuilder();

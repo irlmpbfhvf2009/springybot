@@ -1,8 +1,8 @@
 package com.lwdevelop.service;
 
-import com.lwdevelop.bot.talentBot.utils.Common;
 import org.springframework.http.ResponseEntity;
 
+import com.lwdevelop.bot.talent.utils.Common;
 import com.lwdevelop.entity.RobotChannelManagement;
 import com.lwdevelop.entity.RobotGroupManagement;
 import com.lwdevelop.utils.ResponseUtils;
