@@ -1,5 +1,6 @@
 package com.lwdevelop.service.impl;
 
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -41,6 +42,8 @@ public class SpringyBotServiceImpl implements SpringyBotService {
 
     private static Map<Long, BotSession> springyBotMap = new HashMap<>();
 
+    private static Map<String,Date> run_time = new HashMap<>();
+
     // SpringyBot CRUD
     @Override
     public Optional<SpringyBot> findById(Long id) {
@@ -80,8 +83,6 @@ public class SpringyBotServiceImpl implements SpringyBotService {
 
     @Override
     public ResponseEntity<ResponseData> start(SpringyBotDTO springyBotDTO) {
-        // public synchronized ResponseEntity<ResponseData> start(SpringyBotDTO
-        // springyBotDTO) {
         try {
             Long id = springyBotDTO.getId();
 
@@ -115,6 +116,8 @@ public class SpringyBotServiceImpl implements SpringyBotService {
             }
 
             log.info("Common Telegram bot started.");
+            run_time.put(springyBot.getUsername(), new Date());
+            
             return ResponseUtils.response(RetEnum.RET_SUCCESS, "启动成功");
         } catch (TelegramApiException e) {
             log.error("Catch TelegramApiException : {}", e.toString());
@@ -130,8 +133,6 @@ public class SpringyBotServiceImpl implements SpringyBotService {
 
     @Override
     public ResponseEntity<ResponseData> stop(SpringyBotDTO springyBotDTO) {
-        // public synchronized ResponseEntity<ResponseData> stop(SpringyBotDTO
-        // springyBotDTO) {
         try {
             Long id = springyBotDTO.getId();
             if (springyBotMap.containsKey(id)) {
@@ -144,6 +145,8 @@ public class SpringyBotServiceImpl implements SpringyBotService {
             save(springyBot);
 
             log.info("Common Telegram bot stoped.");
+
+
             return ResponseUtils.response(RetEnum.RET_SUCCESS, "已停止");
         } catch (Exception e) {
             log.error("Catch exception : {}", e.toString());
@@ -234,6 +237,11 @@ public class SpringyBotServiceImpl implements SpringyBotService {
             log.info("SpringyBotServiceImpl ==> deleteBot ... [ {} ] 刪除成功", id);
         }
         return ResponseUtils.response(RetEnum.RET_SUCCESS, "删除成功");
+    }
+
+    @Override
+    public ResponseEntity<ResponseData> getRunTime() {
+        return ResponseUtils.response(RetEnum.RET_SUCCESS, "");
     }
 
 }

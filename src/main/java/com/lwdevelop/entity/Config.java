@@ -20,6 +20,8 @@ public class Config {
     
     private Long followChannelSet_chatId;
 
+    private String followChannelSet_chatTitle;
+
     private Boolean invitationBonusSet;
 
     private int deleteSeconds;

@@ -68,9 +68,6 @@ public class bot extends TelegramLongPollingBot {
             }
 
             if (this.message.hasPhoto()) {
-                // System.out.println(this.message.getPhoto());
-                // System.out.println("----------------------------------------");
-                // System.out.println(this.message);
             }
         }
 

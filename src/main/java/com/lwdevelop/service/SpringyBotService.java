@@ -38,4 +38,6 @@ public interface SpringyBotService {
         ResponseEntity<ResponseUtils.ResponseData> start(SpringyBotDTO springyBotDTO);
 
         ResponseEntity<ResponseUtils.ResponseData> stop(SpringyBotDTO springyBotDTO);
+
+        ResponseEntity<ResponseUtils.ResponseData> getRunTime();
 }

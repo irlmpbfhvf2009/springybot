@@ -47,10 +47,6 @@ public class cgBalance {
                 "cg03   " + cg03_ + "\n" +
                 "cg04   " + cg04_ + "\n";
 
-        System.out.println("cg01 = " + cg01_);
-        System.out.println("cg02 = " + cg02_);
-        System.out.println("cg03 = " + cg03_);
-        System.out.println("cg04 = " + cg04_);
         return str;
     }
 

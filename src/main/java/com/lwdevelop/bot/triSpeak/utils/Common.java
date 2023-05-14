@@ -1,14 +1,17 @@
 package com.lwdevelop.bot.triSpeak.utils;
 
 import java.util.HashMap;
-
+import java.util.Timer;
+import java.util.TimerTask;
 import org.springframework.scheduling.annotation.Async;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
+import org.telegram.telegrambots.meta.api.methods.groupadministration.GetChat;
 import org.telegram.telegrambots.meta.api.methods.groupadministration.GetChatMember;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.methods.send.SendPhoto;
 import org.telegram.telegrambots.meta.api.methods.updatingmessages.DeleteMessage;
 import org.telegram.telegrambots.meta.api.methods.updatingmessages.EditMessageText;
+import org.telegram.telegrambots.meta.api.objects.Chat;
 import org.telegram.telegrambots.meta.api.objects.ChatMemberUpdated;
 import org.telegram.telegrambots.meta.api.objects.Update;
 
@@ -41,6 +44,17 @@ public class Common {
         this.username = username;
     }
 
+    public void deleteMessageTask(String chatId,Integer messageId,int second){
+        Timer timer = new Timer();
+        timer.schedule(new TimerTask() {
+            @Override
+            public void run() {
+                DeleteMessage deleteMessage = new DeleteMessage(chatId, messageId);
+                executeAsync(deleteMessage);
+            }
+        }, second, second);
+    }
+    
     @Async
     @SneakyThrows
     public Integer executeAsync(SendMessage response) {
@@ -68,6 +82,12 @@ public class Common {
     @SneakyThrows
     public String executeAsync(GetChatMember getChatMember) {
         return this.bot.executeAsync(getChatMember).get().getStatus();
+    }
+
+    @Async
+    @SneakyThrows
+    public Chat executeAsync(GetChat getChat) {
+        return this.bot.executeAsync(getChat).get();
     }
 
 }
