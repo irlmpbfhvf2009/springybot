@@ -6,8 +6,13 @@ import com.lwdevelop.bot.triSpeak.utils.Common;
 
 
 public class CallbackQuerys {
+    private Common common;
+
+    public CallbackQuerys(Common common){
+        this.common = common;
+    }
     
-    public void handler(Common common) {
+    public void handler() {
 
         CallbackQuery callbackQuery = common.getUpdate().getCallbackQuery();
 

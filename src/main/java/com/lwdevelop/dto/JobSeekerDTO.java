@@ -284,7 +284,7 @@ public class JobSeekerDTO {
                         // 未知键值对，可以忽略或抛出异常
                         SendMessage response = new SendMessage(jobSeeker.getUserId(),
                                 SpringyBotEnum.FILTERKEY.getText() + key);
-                        this.common.sendResponseAsync(response);
+                        this.common.executeAsync(response);
                         break;
                 }
             }

@@ -91,7 +91,7 @@ public class Job {
         channelMessageIdPostCounts.stream().filter(cmpc -> cmpc.getPostCount() >= 1).findAny()
                 .ifPresentOrElse(action -> {
                     SendMessage response = new SendMessage(userId, SpringyBotEnum.ALREADY_POST_POSTING.getText());
-                    common.sendResponseAsync(response);
+                    common.executeAsync(response);
                 }, () -> {
 
                     SendMessage response = new SendMessage();
@@ -119,9 +119,9 @@ public class Job {
 
                     }
 
-                    common.sendResponseAsync(response);
+                    common.executeAsync(response);
                     response.setText(SpringyBotEnum.REMIND_EDITOR_.getText());
-                    common.sendResponseAsync(response);
+                    common.executeAsync(response);
                 });
 
     }
@@ -136,7 +136,7 @@ public class Job {
         channelMessageIdPostCounts.stream().filter(cmpc -> cmpc.getPostCount() >= 1).findAny()
                 .ifPresentOrElse(action -> {
                     SendMessage response = new SendMessage(userId, SpringyBotEnum.ALREADY_POST_SEEKER.getText());
-                    common.sendResponseAsync(response);
+                    common.executeAsync(response);
                 }, () -> {
                     log.info("Entering setResponse_jobSeeker_management method...");
 
@@ -165,10 +165,10 @@ public class Job {
 
                     }
 
-                    common.sendResponseAsync(response);
+                    common.executeAsync(response);
 
                     response.setText(SpringyBotEnum.REMIND_EDITOR_.getText());
-                    common.sendResponseAsync(response);
+                    common.executeAsync(response);
                 });
 
     }
@@ -233,7 +233,7 @@ public class Job {
                     String channelTitle = robotChannelManagement.getChannelTitle();
                     String channelLink = robotChannelManagement.getLink();
                     response.setChatId(String.valueOf(channelId));
-                    response.setText("招聘人才\n\n" + result + "\n\n 关注 @rc499 点击 @rc899Bot 发布");
+                    response.setText(SpringyBotEnum.send_recruitment_text(result));
                     response.setDisableWebPagePreview(true);
                     response.setDisableNotification(true);
                     ChannelMessageIdPostCounts channelMessageIdPostCounts = jobManagementServiceImpl
@@ -244,23 +244,23 @@ public class Job {
                     if (isEdit) {
                         EditMessageText editMessageText = new EditMessageText();
                         editMessageText.setChatId(String.valueOf(channelId));
-                        editMessageText.setText("招聘人才\n\n" + result + "\n\n 关注 @rc499 点击 @rc899Bot 发布");
+                        editMessageText.setText(SpringyBotEnum.send_recruitment_text(result));
                         editMessageText.setMessageId(channelMessageIdPostCounts.getMessageId());
                         editMessageText.setDisableWebPagePreview(true);
-                        common.editResponseAsync(editMessageText);
+                        common.executeAsync(editMessageText);
 
                         response.setChatId(jobPosting.getUserId());
                         response.setText("[ " + channelTitle + " ]编辑成功");
-                        common.sendResponseAsync(response);
+                        common.executeAsync(response);
 
                     } else {
 
                         if (channelMessageIdPostCounts == null) {
-                            final Integer channelMessageId = common.sendResponseAsync(response);
+                            final Integer channelMessageId = common.executeAsync(response);
 
                             response.setChatId(jobPosting.getUserId());
                             response.setText("[ " + channelTitle + " ]发送成功");
-                            common.sendResponseAsync(response);
+                            common.executeAsync(response);
 
                             channelMessageIdPostCounts = new ChannelMessageIdPostCounts();
                             channelMessageIdPostCounts.setBotId(jobPosting.getBotId());
@@ -277,17 +277,17 @@ public class Job {
                             jobManagementServiceImpl.saveJobPosting(jobPosting);
                         } else {
                             if (channelMessageIdPostCounts.getPostCount() <= 0) {
-                                final Integer channelMessageId = common.sendResponseAsync(response);
+                                final Integer channelMessageId = common.executeAsync(response);
                                 response.setChatId(jobPosting.getUserId());
                                 response.setText("[ " + channelTitle + " ]发送 [招聘人才] 信息成功");
-                                common.sendResponseAsync(response);
+                                common.executeAsync(response);
                                 channelMessageIdPostCounts.setMessageId(channelMessageId);
                                 channelMessageIdPostCounts.setPostCount(channelMessageIdPostCounts.getPostCount() + 1);
                                 jobManagementServiceImpl.saveChannelMessageIdPostCounts(channelMessageIdPostCounts);
                             } else {
                                 response.setChatId(jobPosting.getUserId());
                                 response.setText("您已在[ " + channelTitle + " ]發送一條 [招聘人才] 信息");
-                                common.sendResponseAsync(response);
+                                common.executeAsync(response);
                             }
                         }
 
@@ -306,7 +306,7 @@ public class Job {
                     String groupTitle = robotGroupManagement.getGroupTitle();
                     String groupLink = robotGroupManagement.getLink();
                     response.setChatId(String.valueOf(groupId));
-                    response.setText("招聘人才\n\n" + result + "\n\n 关注 @rc499 点击 @rc899Bot 发布");
+                    response.setText(SpringyBotEnum.send_recruitment_text(result));
                     response.setDisableNotification(true);
                     response.setDisableWebPagePreview(true);
                     GroupMessageIdPostCounts groupMessageIdPostCounts = jobManagementServiceImpl
@@ -315,22 +315,22 @@ public class Job {
                     if (isEdit) {
                         EditMessageText editMessageText = new EditMessageText();
                         editMessageText.setChatId(String.valueOf(groupId));
-                        editMessageText.setText("招聘人才\n\n" + result + "\n\n 关注 @rc499 点击 @rc899Bot 发布");
+                        editMessageText.setText(SpringyBotEnum.send_recruitment_text(result));
                         editMessageText.setMessageId(groupMessageIdPostCounts.getMessageId());
                         editMessageText.setDisableWebPagePreview(true);
-                        common.editResponseAsync(editMessageText);
+                        common.executeAsync(editMessageText);
 
                         response.setChatId(jobPosting.getUserId());
                         response.setText("[ " + groupTitle + " ]编辑成功");
-                        common.sendResponseAsync(response);
+                        common.executeAsync(response);
                     } else {
 
                         if (groupMessageIdPostCounts == null) {
-                            final Integer groupMessageId = common.sendResponseAsync(response);
+                            final Integer groupMessageId = common.executeAsync(response);
 
                             response.setChatId(jobPosting.getUserId());
                             response.setText("[ " + groupTitle + " ]发送 [招聘人才] 信息成功");
-                            common.sendResponseAsync(response);
+                            common.executeAsync(response);
 
                             groupMessageIdPostCounts = new GroupMessageIdPostCounts();
                             groupMessageIdPostCounts.setBotId(jobPosting.getBotId());
@@ -347,11 +347,11 @@ public class Job {
                             jobManagementServiceImpl.saveJobPosting(jobPosting);
                         } else {
                             if (groupMessageIdPostCounts.getPostCount() == 0) {
-                                final Integer groupMessageId = common.sendResponseAsync(response);
+                                final Integer groupMessageId = common.executeAsync(response);
 
                                 response.setChatId(jobPosting.getUserId());
                                 response.setText("[ " + groupTitle + " ]发送 [招聘人才] 成功");
-                                common.sendResponseAsync(response);
+                                common.executeAsync(response);
 
                                 groupMessageIdPostCounts.setMessageId(groupMessageId);
                                 groupMessageIdPostCounts.setPostCount(groupMessageIdPostCounts.getPostCount() + 1);
@@ -359,7 +359,7 @@ public class Job {
                             } else {
                                 response.setChatId(jobPosting.getUserId());
                                 response.setText("您已在[ " + groupTitle + " ]發送一條 [招聘人才] 信息");
-                                common.sendResponseAsync(response);
+                                common.executeAsync(response);
                             }
                         }
 
@@ -371,7 +371,7 @@ public class Job {
             SendMessage response = new SendMessage();
             response.setDisableNotification(true);
             response.setDisableWebPagePreview(true);
-            common.sendResponseAsync(response);
+            common.executeAsync(response);
         }
     }
 
@@ -451,18 +451,18 @@ public class Job {
                         editMessageText.setText("求职人员\n\n" + result + "\n\n 关注 @rc499 点击 @rc899Bot 发布");
                         editMessageText.setMessageId(channelMessageIdPostCounts.getMessageId());
                         editMessageText.setDisableWebPagePreview(true);
-                        common.editResponseAsync(editMessageText);
+                        common.executeAsync(editMessageText);
 
                         response.setChatId(jobSeeker.getUserId());
                         response.setText("[ " + channelTitle + " ]编辑成功");
-                        common.sendResponseAsync(response);
+                        common.executeAsync(response);
                     } else {
                         if (channelMessageIdPostCounts == null) {
 
-                            final Integer channelMessageId = common.sendResponseAsync(response);
+                            final Integer channelMessageId = common.executeAsync(response);
                             response.setChatId(jobSeeker.getUserId());
                             response.setText("[ " + channelTitle + " ]发送 [求职人员] 成功");
-                            common.sendResponseAsync(response);
+                            common.executeAsync(response);
 
                             channelMessageIdPostCounts = new ChannelMessageIdPostCounts();
                             channelMessageIdPostCounts.setBotId(jobSeeker.getBotId());
@@ -482,10 +482,10 @@ public class Job {
                         } else {
                             if (channelMessageIdPostCounts.getPostCount() == 0) {
 
-                                final Integer channelMessageId = common.sendResponseAsync(response);
+                                final Integer channelMessageId = common.executeAsync(response);
                                 response.setChatId(jobSeeker.getUserId());
                                 response.setText("[ " + channelTitle + " ]发送 [求职人员] 成功");
-                                common.sendResponseAsync(response);
+                                common.executeAsync(response);
 
                                 channelMessageIdPostCounts.setMessageId(channelMessageId);
                                 channelMessageIdPostCounts.setPostCount(channelMessageIdPostCounts.getPostCount() + 1);
@@ -493,7 +493,7 @@ public class Job {
                             } else {
                                 response.setChatId(jobSeeker.getUserId());
                                 response.setText("您已在[ " + channelTitle + " ]發送一條 [求职人员] 信息");
-                                common.sendResponseAsync(response);
+                                common.executeAsync(response);
                             }
                         }
                     }
@@ -523,18 +523,18 @@ public class Job {
                         editMessageText.setText("求职人员\n\n" + result + "\n\n 关注 @rc499 点击 @rc899Bot 发布");
                         editMessageText.setMessageId(groupMessageIdPostCounts.getMessageId());
                         editMessageText.setDisableWebPagePreview(true);
-                        common.editResponseAsync(editMessageText);
+                        common.executeAsync(editMessageText);
 
                         response.setChatId(jobSeeker.getUserId());
                         response.setText("[ " + groupTitle + " ]编辑成功");
-                        common.sendResponseAsync(response);
+                        common.executeAsync(response);
 
                     } else {
                         if (groupMessageIdPostCounts == null) {
-                            final Integer groupMessageId = common.sendResponseAsync(response);
+                            final Integer groupMessageId = common.executeAsync(response);
                             response.setChatId(jobSeeker.getUserId());
                             response.setText("[ " + groupTitle + " ]发送 [求职人员] 成功");
-                            common.sendResponseAsync(response);
+                            common.executeAsync(response);
 
                             groupMessageIdPostCounts = new GroupMessageIdPostCounts();
                             groupMessageIdPostCounts.setBotId(jobSeeker.getBotId());
@@ -554,10 +554,10 @@ public class Job {
                         } else {
                             if (groupMessageIdPostCounts.getPostCount() == 0) {
 
-                                final Integer groupMessageId = common.sendResponseAsync(response);
+                                final Integer groupMessageId = common.executeAsync(response);
                                 response.setChatId(jobSeeker.getUserId());
                                 response.setText("[ " + groupTitle + " ]发送 [求职人员] 成功");
-                                common.sendResponseAsync(response);
+                                common.executeAsync(response);
 
                                 groupMessageIdPostCounts.setMessageId(groupMessageId);
                                 groupMessageIdPostCounts.setPostCount(groupMessageIdPostCounts.getPostCount() + 1);
@@ -565,7 +565,7 @@ public class Job {
                             } else {
                                 response.setChatId(jobSeeker.getUserId());
                                 response.setText("您已在[ " + groupTitle + " ]發送一條 [求职人员] 信息");
-                                common.sendResponseAsync(response);
+                                common.executeAsync(response);
                             }
                         }
                     }
@@ -577,7 +577,7 @@ public class Job {
             response.setText(isSuccess);
             response.setDisableNotification(true);
             response.setDisableWebPagePreview(true);
-            common.sendResponseAsync(response);
+            common.executeAsync(response);
         }
 
     }
@@ -624,7 +624,7 @@ public class Job {
             response.setText("通知：\n" + alert + "\n下方模版可对频道内信息进行编辑和删除操作");
             response.setDisableNotification(true);
             response.setDisableWebPagePreview(true);
-            common.sendResponseAsync(response);
+            common.executeAsync(response);
 
             JobPosting jobPosting = jobManagementServiceImpl.findByUserIdAndBotIdWithJobPosting(userId,
                     String.valueOf(id));
@@ -648,7 +648,7 @@ public class Job {
                 response.setReplyMarkup(new KeyboardButton().keyboard_jobPosting(jobPostingDTO, true));
                 response.setDisableNotification(true);
                 response.setDisableWebPagePreview(true);
-                Integer messageId = common.sendResponseAsync(response);
+                Integer messageId = common.executeAsync(response);
                 jobPosting.setLastMessageId(messageId);
                 jobUser.getJobPosting().add(jobPosting);
                 jobManagementServiceImpl.saveJobPosting(jobPosting);
@@ -659,7 +659,7 @@ public class Job {
                 response.setDisableWebPagePreview(true);
 
                 JobPosting jp = new JobPosting(userId, String.valueOf(id),
-                        common.sendResponseAsync(response));
+                        common.executeAsync(response));
                 jobUser.getJobPosting().add(jp);
                 jobManagementServiceImpl.saveJobPosting(jp);
                 springyBotServiceImpl.save(springyBot);
@@ -669,7 +669,7 @@ public class Job {
             response.setText(SpringyBotEnum.UNPUBLISHED_RECRUITMENT.getText());
             response.setDisableNotification(true);
             response.setDisableWebPagePreview(true);
-            common.sendResponseAsync(response);
+            common.executeAsync(response);
 
         }
 
@@ -719,7 +719,7 @@ public class Job {
             response.setText("通知：\n" + alert + "\n下方模版可对频道内信息进行编辑和删除操作");
             response.setDisableNotification(true);
             response.setDisableWebPagePreview(true);
-            common.sendResponseAsync(response);
+            common.executeAsync(response);
 
             JobSeeker jobSeeker = jobManagementServiceImpl.findByUserIdAndBotIdWithJobSeeker(userId,
                     String.valueOf(id));
@@ -745,7 +745,7 @@ public class Job {
                 response.setReplyMarkup(new KeyboardButton().keyboard_jobSeeker(jobSeekerDTO, true));
                 response.setDisableNotification(true);
                 response.setDisableWebPagePreview(true);
-                Integer messageId = common.sendResponseAsync(response);
+                Integer messageId = common.executeAsync(response);
                 jobSeeker.setLastMessageId(messageId);
                 jobUser.getJobSeeker().add(jobSeeker);
                 jobManagementServiceImpl.saveJobSeeker(jobSeeker);
@@ -757,7 +757,7 @@ public class Job {
                 response.setDisableNotification(true);
                 response.setDisableWebPagePreview(true);
                 JobSeeker js = new JobSeeker(userId, String.valueOf(id),
-                        common.sendResponseAsync(response));
+                        common.executeAsync(response));
                 jobUser.getJobSeeker().add(js);
                 jobManagementServiceImpl.saveJobSeeker(js);
                 springyBotServiceImpl.save(springyBot);
@@ -767,7 +767,7 @@ public class Job {
             response.setText(SpringyBotEnum.UNPUBLISHED_JOBSEARCH.getText());
             response.setDisableNotification(true);
             response.setDisableWebPagePreview(true);
-            common.sendResponseAsync(response);
+            common.executeAsync(response);
         }
     }
 

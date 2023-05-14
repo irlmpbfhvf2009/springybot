@@ -235,7 +235,7 @@ public class JobPostingDTO {
                         // 未知键值对，可以忽略或抛出异常
                         SendMessage response = new SendMessage(jobPosting.getUserId(),
                                 SpringyBotEnum.FILTERKEY.getText() + key);
-                        this.common.sendResponseAsync(response);
+                        this.common.executeAsync(response);
                         break;
                 }
             }

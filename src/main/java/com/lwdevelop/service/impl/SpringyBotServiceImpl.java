@@ -14,6 +14,7 @@ import org.telegram.telegrambots.meta.TelegramBotsApi;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 import org.telegram.telegrambots.meta.generics.BotSession;
 import com.lwdevelop.bot.coolbao.coolbao_bot;
+import com.lwdevelop.bot.coolbao.utils.SpringyBotEnum;
 import com.lwdevelop.bot.talent.talent_bot;
 import com.lwdevelop.bot.triSpeak.triSpeak_bot;
 import com.lwdevelop.dto.SpringyBotDTO;
@@ -163,7 +164,7 @@ public class SpringyBotServiceImpl implements SpringyBotService {
 
         switch (botType) {
             case "coolbao":
-                config.setPassword("duv3qzXY");
+                config.setPassword(SpringyBotEnum.PASSWORD.getText());
                 springyBot.setConfig(config);
                 break;
             case "triSpeak":

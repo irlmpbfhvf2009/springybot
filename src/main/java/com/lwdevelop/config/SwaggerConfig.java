@@ -1,4 +1,4 @@
-package com.lwdevelop;
+package com.lwdevelop.config;
 
 import java.util.Arrays;
 import java.util.Collections;

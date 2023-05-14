@@ -17,6 +17,8 @@ public class Config {
     private Boolean inviteFriendsSet;
 
     private Boolean followChannelSet;
+    
+    private Long followChannelSet_chatId;
 
     private Boolean invitationBonusSet;
 

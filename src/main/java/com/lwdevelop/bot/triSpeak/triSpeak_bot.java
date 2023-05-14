@@ -51,25 +51,20 @@ public class triSpeak_bot extends TelegramLongPollingBot {
 
                 // private
                 if (this.message.isUserMessage()) {
-                    new PrivateMessage_().handler(this.common);
+                    new PrivateMessage_(this.common).handler();
                     log.info("[{}] Private message received from {}: {}", this.common.getUsername(), userInfo,
                             this.message.getText());
 
                 }
                 // group
                 if (this.message.isSuperGroupMessage()) {
-                    new GroupMessage().handler(this.common);
+                    new GroupMessage(this.common).handler();
                     log.info("[{}] Group message received from {}", common.getUsername(), userInfo);
-                    // log.info("[{}] Group message received from {}: {}",
-                    // common.getUsername(),userInfo, this.message.getText());
                 }
 
             }
 
             if (this.message.hasPhoto()) {
-                // System.out.println(this.message.getPhoto());
-                // System.out.println("----------------------------------------");
-                // System.out.println(this.message);
             }
         }
 
@@ -78,14 +73,14 @@ public class triSpeak_bot extends TelegramLongPollingBot {
             if (update.getChannelPost().hasText()) {
                 String chatType = update.getChannelPost().getChat().getType();
                 if (chatTypeIsChannel(chatType)) {
-                    new ChannelMessage().handler(this.common);
+                    new ChannelMessage(this.common).handler();
                     log.info("[{}] Channel message received from {}",common.getUsername(), update.getChannelPost().getAuthorSignature());
                 }
             }
         }
 
         if (update.hasCallbackQuery()) {
-            new CallbackQuerys().handler(common);
+            new CallbackQuerys(this.common).handler();
             User user = update.getCallbackQuery().getFrom();
             String userInfo = String.format("[%s] %s (%s %s)", user.getId(), user.getUserName(), user.getFirstName(),
                     user.getLastName());

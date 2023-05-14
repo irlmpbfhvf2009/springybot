@@ -23,78 +23,78 @@ public class PrivateMessage_ {
     private Job job;
 
     @Autowired
-    private RobotGroupAndChannelManagementServiceImpl robotGroupAndChannelManagementService = SpringUtils.getApplicationContext()
+    private RobotGroupAndChannelManagementServiceImpl robotGroupAndChannelManagementService = SpringUtils
+            .getApplicationContext()
             .getBean(RobotGroupAndChannelManagementServiceImpl.class);
 
-    public void handler(Common common) {
-        this.init(common);
-        boolean ifSubscribeChannel = robotGroupAndChannelManagementService.ifSubscribeChannel(common);
-        // 判斷是否有關注頻道
-        if (ifSubscribeChannel){
-            // 判斷事件
-            if (text.length() >= 4) {
-                String post = text.substring(0, 4);
-                    // 發布招聘
-                    if (post.equals(SpringyBotEnum.RECRUITMENT.getText())) {
-                        this.job.generateTextJobPosting(common, false);
-                    } else if (post.equals(SpringyBotEnum.EDIT_RECRUITMENT.getText())) {
-                        this.job.generateTextJobPosting(common, true);
-                    }
-
-                    // 發布求職
-                    else if (post.equals(SpringyBotEnum.JOBSEARCH.getText())) {
-                        this.job.generateTextJobSeeker(common, false);
-                    } else if (post.equals(SpringyBotEnum.EDIT_JOBSEARCH.getText())) {
-                        this.job.generateTextJobSeeker(common, true);
-                    }
-            }
-
-                switch (this.text.toLowerCase()) {
-                    case "/start":
-                        this.setResponse_job();
-                        break;
-
-                    case "发布招聘":
-                        if (hasUsername()) {
-                            this.job.setResponse_jobPosting_management(common);
-                        } else {
-                            this.send_nullUsername();
-                        }
-                        break;
-
-                    case "发布求职":
-                        if (hasUsername()) {
-                            this.job.setResponse_jobSeeker_management(common);
-                        } else {
-                            this.send_nullUsername();
-                        }
-                        break;
-
-                    case "招聘和求职信息管理":
-                            this.job.setResponse_edit_jobPosting_management(common);
-                            this.job.setResponse_edit_jobSeeker_management(common);
-                        break;
-
-                    default:
-                        this.text = "";
-                        break;
-                  }
-    }else {
-            SendMessage s = new SendMessage();
-            s.setChatId(common.getUpdate().getMessage().getChatId().toString());
-            s.setText("✅ 官方频道\n" +
-                    "➡️ @rc499 ️\n" +
-                    "\uD83D\uDD08关注后可发布");
-            common.sendResponseAsync(s);
-        }
-    }
-
-    private void init(Common common) {
+    public PrivateMessage_(Common common){
         this.message = common.getUpdate().getMessage();
         this.common = common;
         this.text = this.message.getText();
-        this.privateMessageSettings(this.message);
+        this.response = new SendMessage();
+        this.response.setChatId(String.valueOf(message.getChatId()));
+        this.response.setDisableNotification(false);
+        this.response.setDisableWebPagePreview(false);
         this.job = new Job(new JobPostingDTO(common), new JobSeekerDTO(common));
+    }
+
+    public void handler() {
+        boolean ifSubscribeChannel = robotGroupAndChannelManagementService.ifSubscribeChannel(common);
+        // 判斷是否有關注頻道
+        if (ifSubscribeChannel) {
+            // 判斷事件
+            if (text.length() >= 4) {
+                String post = text.substring(0, 4);
+                // 發布招聘
+                if (post.equals(SpringyBotEnum.RECRUITMENT.getText())) {
+                    this.job.generateTextJobPosting(common, false);
+                } else if (post.equals(SpringyBotEnum.EDIT_RECRUITMENT.getText())) {
+                    this.job.generateTextJobPosting(common, true);
+                    
+                // 發布求職
+                } else if (post.equals(SpringyBotEnum.JOBSEARCH.getText())) {
+                    this.job.generateTextJobSeeker(common, false);
+                } else if (post.equals(SpringyBotEnum.EDIT_JOBSEARCH.getText())) {
+                    this.job.generateTextJobSeeker(common, true);
+                }
+            }
+
+            switch (this.text.toLowerCase()) {
+                case "/start":
+                    this.setResponse_job();
+                    break;
+
+                case "发布招聘":
+                    if (hasUsername()) {
+                        this.job.setResponse_jobPosting_management(common);
+                    } else {
+                        this.send_nullUsername();
+                    }
+                    break;
+
+                case "发布求职":
+                    if (hasUsername()) {
+                        this.job.setResponse_jobSeeker_management(common);
+                    } else {
+                        this.send_nullUsername();
+                    }
+                    break;
+
+                case "招聘和求职信息管理":
+                    this.job.setResponse_edit_jobPosting_management(common);
+                    this.job.setResponse_edit_jobSeeker_management(common);
+                    break;
+
+                default:
+                    this.text = "";
+                    break;
+            }
+        } else {
+            SendMessage s = new SendMessage();
+            s.setChatId(common.getUpdate().getMessage().getChatId().toString());
+            s.setText(SpringyBotEnum.subscribeChannel_text());
+            common.executeAsync(s);
+        }
     }
 
     private void setResponse_job() {
@@ -108,27 +108,12 @@ public class PrivateMessage_ {
             botName = "";
             e.printStackTrace();
         }
-        String text = "👋🏻 嗨 " + name + "！\n" +
-        // botName + " 能帮您便捷安全地管理群组, Telegram 上最完善的機器人!\n" +
-        // "👉🏻 添加我進入超級群組、频道並賦予我管理員以便我能夠操作!\n" +
-                "欢迎使用我们的机器人！\n" +
-                botName + " 可以帮助您快速找到合适的工作或人才。\n\n" +
-                "我们希望这个机器人能为您提供帮助，如果您有任何问题或建议，请随时联系我们。谢谢！";
-        // "❓ 指令是什么?\n" +
-        // "点击 /help 查看指令以及如何使用它們!";
 
-        this.response.setText(text);
+        this.response.setText(SpringyBotEnum.help_text(name, botName));
         this.response.setReplyMarkup(new KeyboardButton().jobReplyKeyboardMarkup());
-        this.common.sendResponseAsync(this.response);
+        this.common.executeAsync(this.response);
     }
 
-    public void privateMessageSettings(Message message) {
-        String chatId = String.valueOf(message.getChatId());
-        this.response = new SendMessage();
-        this.response.setChatId(chatId);
-        this.response.setDisableNotification(false);
-        this.response.setDisableWebPagePreview(false);
-    }
 
     private Boolean hasUsername() {
         if (this.common.getUpdate().getMessage().getChat().getUserName() == null) {
@@ -139,7 +124,7 @@ public class PrivateMessage_ {
 
     private void send_nullUsername() {
         this.response.setText(SpringyBotEnum.PLEASE_SET_TELEGRAM_USERNAME.getText());
-        this.common.sendResponseAsync(this.response);
+        this.common.executeAsync(this.response);
     }
 
 }

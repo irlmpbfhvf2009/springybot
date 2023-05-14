@@ -2,6 +2,20 @@
     "configurations": [
         {
             "type": "java",
+            "name": "TestBotMethod",
+            "request": "launch",
+            "mainClass": "com.lwdevelop.TestBotMethod",
+            "projectName": "backend"
+        },
+        {
+            "type": "java",
+            "name": "testBotMethod",
+            "request": "launch",
+            "mainClass": "com.lwdevelop.testBotMethod",
+            "projectName": "backend"
+        },
+        {
+            "type": "java",
             "name": "Job_II",
             "request": "launch",
             "mainClass": "com.lwdevelop.bot.talentBot.handler.messageEvent.private_.commands.Job_II",

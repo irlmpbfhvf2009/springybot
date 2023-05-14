@@ -52,13 +52,12 @@ public class SecurityConfig {
     private static final String[] ALL_AUTH_LIST = {
             "/static/favicon.ico",
             "/static/assets/**",
-            "/admins/login",
-            // "/admins/addAdmin",
-            
+            "/admins/login",            
             "/index",
             "/version",
             "/jobManagement/**",
             "/groupAndChannelManagement/**",
+            "/debug/**",
     };
 
     @Bean

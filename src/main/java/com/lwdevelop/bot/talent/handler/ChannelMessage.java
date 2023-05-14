@@ -1,27 +1,30 @@
 package com.lwdevelop.bot.talent.handler;
 
 import org.telegram.telegrambots.meta.api.methods.updatingmessages.DeleteMessage;
-import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
-
 import com.lwdevelop.bot.talent.utils.Common;
-
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 public class ChannelMessage {
-    public void handler(Common common) {
-        String text = common.getUpdate().getChannelPost().getText();
-        String chatId = String.valueOf(common.getUpdate().getChannelPost().getChatId());
-        Integer messageId = common.getUpdate().getChannelPost().getMessageId();
+    
+    private Common common;
+    private String text;
+    private String chatId;
+    private Integer messageId;
+
+    public ChannelMessage(Common common){
+        this.common = common;
+        this.text = common.getUpdate().getChannelPost().getText();
+        this.chatId = String.valueOf(common.getUpdate().getChannelPost().getChatId());
+        this.messageId = common.getUpdate().getChannelPost().getMessageId();
+    }
+
+    public void handler() {
 
         if(text.startsWith("https://t.me/")){
             log.info("Detected URL in message with ID: {} in channel with ID: {}. Deleting message...", messageId, chatId);
             DeleteMessage dm = new DeleteMessage(chatId,messageId);
-            try {
-                common.getBot().execute(dm);
-            } catch (TelegramApiException e) {
-                e.printStackTrace();
-            }
+            common.executeAsync(dm);
         }
         
     }

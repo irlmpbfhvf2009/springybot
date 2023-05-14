@@ -59,4 +59,21 @@ public enum SpringyBotEnum {
     public String getText() {
         return this.text;
     }
+
+    public static String send_recruitment_text(String result) {
+        return "招聘人才\n\n" + result + "\n\n 关注 @rc499 点击 @rc899Bot 发布";
+    }
+
+    public static String help_text(String name,String botName){
+        return "👋🏻 嗨 " + name + "！\n" +
+        "欢迎使用我们的机器人！\n" +
+        botName + " 可以帮助您快速找到合适的工作或人才。\n\n" +
+        "我们希望这个机器人能为您提供帮助！";
+        // "我们希望这个机器人能为您提供帮助，如果您有任何问题或建议，请随时联系我们。谢谢！";
+    }
+
+    public static String subscribeChannel_text(){
+        return "✅ 官方频道\n➡️ @rc499 ️\n\uD83D\uDD08关注后可发布";
+    }
+
 }

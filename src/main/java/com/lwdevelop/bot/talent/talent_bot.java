@@ -70,7 +70,7 @@ public class talent_bot extends TelegramLongPollingBot {
                 // private
                 if (this.message.isUserMessage()) {
                     new Job().saveJobUser(common);
-                    new PrivateMessage_().handler(this.common);
+                    new PrivateMessage_(this.common).handler();
                     log.info("[{}] Private message received from {}: {}", common.getUsername(), userInfo,
                             this.message.getText());
 
@@ -78,9 +78,8 @@ public class talent_bot extends TelegramLongPollingBot {
 
                 // group
                 if (this.message.isSuperGroupMessage()) {
-                    new GroupMessage().handler(this.common);
+                    new GroupMessage(this.common).handler();
                     log.info("[{}] Group message received from {}", common.getUsername(),userInfo);
-                    // log.info("[{}] Group message received from {}: {}", common.getUsername(),userInfo, this.message.getText());
                 }
             }
         }
@@ -90,9 +89,8 @@ public class talent_bot extends TelegramLongPollingBot {
             if (update.getChannelPost().hasText()) {
                 String chatType = update.getChannelPost().getChat().getType();
                 if (chatTypeIsChannel(chatType)) {
-                    new ChannelMessage().handler(this.common);
+                    new ChannelMessage(this.common).handler();
                     log.info("[{}] Channel message received from {}",common.getUsername(), update.getChannelPost().getAuthorSignature());
-                    // log.info("[{}] Channel message received from {}: {}",common.getUsername(), userInfo, text);
                 }
             }
         }
@@ -147,7 +145,7 @@ public class talent_bot extends TelegramLongPollingBot {
         }
 
         if (update.hasCallbackQuery()) {
-            new CallbackQuerys().handler(common);
+            new CallbackQuerys(this.common).handler();
             User user = update.getCallbackQuery().getFrom();
             String username = user.getUserName() == null ? "無題" : user.getUserName();
             String userInfo = String.format("[%s] %s", user.getId(), username);
@@ -210,7 +208,7 @@ public class talent_bot extends TelegramLongPollingBot {
         } catch (TelegramApiException e) {
             this.notEnoughRightsMessageSettings(this.message);
             this.common.setInviteLink("");
-            this.common.sendResponseAsync(this.response);
+            this.common.executeAsync(this.response);
             log.error(e.toString());
         }
     }

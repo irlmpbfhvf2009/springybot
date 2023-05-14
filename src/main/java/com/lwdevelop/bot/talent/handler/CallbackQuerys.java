@@ -34,11 +34,20 @@ public class CallbackQuerys {
             .getBean(SpringyBotServiceImpl.class);
 
     private SendMessage response;
+    private Common common;
+    private CallbackQuery callbackQuery;
 
-    public void handler(Common common) {
-        CallbackQuery callbackQuery = common.getUpdate().getCallbackQuery();
+    public CallbackQuerys(Common common){
+        this.common = common;
+        this.callbackQuery = common.getUpdate().getCallbackQuery();
+        String chatId = String.valueOf(common.getUpdate().getCallbackQuery().getFrom().getId());
+        this.response = new SendMessage();
+        this.response.setChatId(chatId);
+        this.response.setDisableNotification(false);
+        this.response.setDisableWebPagePreview(false);
+    }
 
-        this.messageSetting(common);
+    public void handler() {
 
         if (callbackQuery.getData().startsWith(SpringyBotEnum.CLEAR_JOBPOSTING.getText())) {
 
@@ -81,35 +90,23 @@ public class CallbackQuerys {
                             SpringyBotEnum.JOBPOSTING.getText());
 
             channelMessageIdPostCounts.stream().forEach(cmp -> {
-                DeleteMessage dm = new DeleteMessage();
-                dm.setChatId(String.valueOf(cmp.getChannelId()));
-                dm.setMessageId(cmp.getMessageId());
-                try {
-                    custom.executeAsync(dm);
-                } catch (TelegramApiException e) {
-                    e.printStackTrace();
-                }
+                DeleteMessage dm = new DeleteMessage(String.valueOf(cmp.getChannelId()),cmp.getMessageId());
+                common.executeAsync(dm);
                 cmp.setMessageId(-1);
                 cmp.setPostCount(0);
                 jobManagementServiceImpl.saveChannelMessageIdPostCounts(cmp);
             });
 
             groupMessageIdPostCounts.stream().forEach(cmp -> {
-                DeleteMessage dm = new DeleteMessage();
-                dm.setChatId(String.valueOf(cmp.getGroupId()));
-                dm.setMessageId(cmp.getMessageId());
-                try {
-                    custom.executeAsync(dm);
-                } catch (TelegramApiException e) {
-                    e.printStackTrace();
-                }
+                DeleteMessage dm = new DeleteMessage(String.valueOf(cmp.getGroupId()),cmp.getMessageId());
+                common.executeAsync(dm);
                 cmp.setMessageId(-1);
                 cmp.setPostCount(0);
                 jobManagementServiceImpl.saveGroupMessageIdPostCounts(cmp);
             });
 
             this.response.setText(SpringyBotEnum.SUCCESSFULLYDELETED.getText());
-            common.sendResponseAsync(this.response);
+            common.executeAsync(this.response);
         } else if (callbackQuery.getData().startsWith(SpringyBotEnum.CLEAR_JOBSEEKER.getText())) {
 
             String userId = callbackQuery.getData().substring(SpringyBotEnum.CLEAR_JOBSEEKER.getText().length(),
@@ -149,51 +146,32 @@ public class CallbackQuerys {
                     .findAllByBotIdAndUserIdAndTypeWithGroupMessageIdPostCounts(jobSeeker.getBotId(), userId,
                             SpringyBotEnum.JOBSEEKER.getText());
             channelMessageIdPostCounts.stream().forEach(cmp -> {
-                DeleteMessage dm = new DeleteMessage();
-                dm.setChatId(String.valueOf(cmp.getChannelId()));
-                dm.setMessageId(cmp.getMessageId());
-                try {
-                    custom.executeAsync(dm);
-                } catch (TelegramApiException e) {
-                    e.printStackTrace();
-                }
+                DeleteMessage dm = new DeleteMessage(String.valueOf(cmp.getChannelId()),cmp.getMessageId());
+                common.executeAsync(dm);
                 cmp.setMessageId(-1);
                 cmp.setPostCount(0);
                 jobManagementServiceImpl.saveChannelMessageIdPostCounts(cmp);
             });
 
             groupMessageIdPostCounts.stream().forEach(cmp -> {
-                DeleteMessage dm = new DeleteMessage();
-                dm.setChatId(String.valueOf(cmp.getGroupId()));
-                dm.setMessageId(cmp.getMessageId());
-                try {
-                    custom.executeAsync(dm);
-                } catch (TelegramApiException e) {
-                    e.printStackTrace();
-                }
+                DeleteMessage dm = new DeleteMessage(String.valueOf(cmp.getGroupId()),cmp.getMessageId());
+                common.executeAsync(dm);
                 cmp.setMessageId(-1);
                 cmp.setPostCount(0);
                 jobManagementServiceImpl.saveGroupMessageIdPostCounts(cmp);
             });
 
             this.response.setText(SpringyBotEnum.SUCCESSFULLYDELETED.getText());
-            common.sendResponseAsync(this.response);
+            common.executeAsync(this.response);
         } else if (callbackQuery.getData().equals(SpringyBotEnum.EDIT_JOBPOSTING.getText())) {
             response.setText(SpringyBotEnum.REMIND_EDITOR.getText());
 
-            common.sendResponseAsync(this.response);
+            common.executeAsync(this.response);
         } else if (callbackQuery.getData().equals(SpringyBotEnum.EDIT_JOBSEEKER.getText())) {
             response.setText(SpringyBotEnum.REMIND_EDITOR.getText());
-            common.sendResponseAsync(this.response);
+            common.executeAsync(this.response);
         }
 
     }
 
-    private void messageSetting(Common common) {
-        String chatId = String.valueOf(common.getUpdate().getCallbackQuery().getFrom().getId());
-        this.response = new SendMessage();
-        this.response.setChatId(chatId);
-        this.response.setDisableNotification(false);
-        this.response.setDisableWebPagePreview(false);
-    }
 }

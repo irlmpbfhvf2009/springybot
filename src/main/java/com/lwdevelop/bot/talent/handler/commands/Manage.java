@@ -22,7 +22,7 @@ public class Manage{
         this.manageMessageSetting(common.getUpdate().getMessage());
         this.response.setText(howToAddForText(common.getUsername(), getUrl(type, common.getUsername()), type));
         this.response.setReplyMarkup(new KeyboardButton().addToGroupOrChannelMarkupInline(getUrl(type, common.getUsername()), type));
-        common.sendResponseAsync(this.response);
+        common.executeAsync(this.response);
     }
 
     public String howToAddForText(String username, String url, String type) {
