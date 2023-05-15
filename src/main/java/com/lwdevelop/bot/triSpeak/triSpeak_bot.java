@@ -31,6 +31,7 @@ public class triSpeak_bot extends TelegramLongPollingBot {
             this.common = new Common(dto.getId(), getMe().getId(), getMe().getUserName());
             this.common.setBot(this);
             this.common.setUserState(new HashMap<>());
+            this.common.setConfigDTO_map(new HashMap<>());
         } catch (TelegramApiException e) {
             e.printStackTrace();
         }
@@ -60,7 +61,8 @@ public class triSpeak_bot extends TelegramLongPollingBot {
                 // group
                 if (this.message.isSuperGroupMessage()) {
                     new GroupMessage(this.common).handler();
-                    log.info("[{}] Group message received from {}", common.getUsername(), userInfo);
+                    log.info("[{}] Group message received from {}", common.getUsername(),
+                            userInfo);
                 }
 
             }

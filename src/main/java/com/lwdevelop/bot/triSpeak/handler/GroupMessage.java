@@ -1,7 +1,6 @@
 package com.lwdevelop.bot.triSpeak.handler;
 
 import java.util.HashMap;
-import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.telegram.telegrambots.meta.api.methods.groupadministration.GetChatMember;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
@@ -22,7 +21,6 @@ public class GroupMessage {
     private String chatId;
     private Long userId;
     private Integer messageId;
-    private static Map<Long, ConfigDTO> configDTO_map = new HashMap<>();
     private Boolean followChannelSet;
     private int deleteSeconds;
     private Long channel_id;
@@ -39,24 +37,15 @@ public class GroupMessage {
         this.messageId = common.getUpdate().getMessage().getMessageId();
     }
 
-    public void handler() {
+    public synchronized void handler() {
 
-        assignment();
+        // String chatId = String.valueOf(common.getUpdate().getMessage().getChatId());
+        // Long userId = common.getUpdate().getMessage().getFrom().getId();
+        // Integer messageId = common.getUpdate().getMessage().getMessageId();
 
-        if (followChannelSet) {
-            if (!isSubscribeChannel()) {
-                DeleteMessage deleteMessage = new DeleteMessage(chatId, messageId);
-                common.executeAsync(deleteMessage);
-                SendMessage response = new SendMessage(chatId, generate_warning_text());
-                Integer msgId = common.executeAsync(response);
-                common.deleteMessageTask(chatId, msgId, deleteSeconds);
-            }
+        HashMap<Long,ConfigDTO> configDTO_map = this.common.getConfigDTO_map();
 
-        }
-    }
-
-    private void assignment(){
-        if (configDTO_map.get(common.getSpringyBotId()) == null) {
+        if(configDTO_map.get(common.getSpringyBotId()) == null){
             SpringyBot springyBot = springyBotServiceImpl.findById(common.getSpringyBotId()).get();
             Boolean followChannelSet = springyBot.getConfig().getFollowChannelSet();
             Long channel_id = springyBot.getConfig().getFollowChannelSet_chatId();
@@ -72,12 +61,23 @@ public class GroupMessage {
             this.deleteSeconds = deleteSeconds;
             this.channel_id = channel_id;
             this.channel_title = channel_title;
-        }else{
+        } else {
             this.followChannelSet = configDTO_map.get(common.getSpringyBotId()).getFollowChannelSet();
             this.deleteSeconds = configDTO_map.get(common.getSpringyBotId()).getDeleteSeconds();
             this.channel_id = configDTO_map.get(common.getSpringyBotId()).getFollowChannelSet_chatId();
             this.channel_title = configDTO_map.get(common.getSpringyBotId()).getFollowChannelSet_chatTitle();
         }
+
+        if (followChannelSet) {
+            if (!isSubscribeChannel()) {
+                DeleteMessage deleteMessage = new DeleteMessage(chatId, messageId);
+                common.executeAsync(deleteMessage);
+                SendMessage response = new SendMessage(chatId, generate_warning_text());
+                Integer msgId = common.executeAsync(response);
+                common.deleteMessageTask(chatId, msgId, deleteSeconds);
+            }
+        }
+
     }
 
     private boolean isSubscribeChannel() {

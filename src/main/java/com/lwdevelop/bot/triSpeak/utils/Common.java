@@ -3,8 +3,6 @@ package com.lwdevelop.bot.triSpeak.utils;
 import java.util.HashMap;
 import java.util.Timer;
 import java.util.TimerTask;
-import java.util.concurrent.CompletableFuture;
-
 import org.springframework.scheduling.annotation.Async;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.meta.api.methods.groupadministration.GetChat;
@@ -16,6 +14,8 @@ import org.telegram.telegrambots.meta.api.methods.updatingmessages.EditMessageTe
 import org.telegram.telegrambots.meta.api.objects.Chat;
 import org.telegram.telegrambots.meta.api.objects.ChatMemberUpdated;
 import org.telegram.telegrambots.meta.api.objects.Update;
+
+import com.lwdevelop.dto.ConfigDTO;
 
 import lombok.Data;
 import lombok.SneakyThrows;
@@ -40,6 +40,8 @@ public class Common {
     // 用来存储用户的状态(会话)
     private HashMap<Long, String> userState;
 
+    private HashMap<Long, ConfigDTO> configDTO_map;
+
     public Common(Long springyBotId, Long botId, String username) {
         this.springyBotId = springyBotId;
         this.botId = botId;
@@ -51,16 +53,12 @@ public class Common {
         timer.schedule(new TimerTask() {
             @Override
             public void run() {
-                CompletableFuture.runAsync(() -> {
-                    DeleteMessage deleteMessage = new DeleteMessage(chatId, messageId);
-                    executeAsync(deleteMessage);
-                });
+                DeleteMessage deleteMessage = new DeleteMessage(chatId, messageId);
+                executeAsync(deleteMessage);
             }
         }, second);
     }
-    
-    
-    
+
     @Async
     @SneakyThrows
     public Integer executeAsync(SendMessage response) {
@@ -78,6 +76,7 @@ public class Common {
     public void executeAsync(EditMessageText response) {
         this.bot.executeAsync(response);
     }
+
     @Async
     @SneakyThrows
     public void executeAsync(DeleteMessage response) {
