@@ -1,7 +1,6 @@
 package com.lwdevelop.bot.triSpeak;
 
 import java.util.HashMap;
-
 import org.telegram.telegrambots.bots.DefaultBotOptions;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.meta.api.objects.Message;
@@ -39,7 +38,7 @@ public class triSpeak_bot extends TelegramLongPollingBot {
     }
 
     public void onUpdateReceived(Update update) {
-        
+
         this.common.setUpdate(update);
         this.message = update.getMessage();
 
@@ -76,7 +75,8 @@ public class triSpeak_bot extends TelegramLongPollingBot {
                 String chatType = update.getChannelPost().getChat().getType();
                 if (chatTypeIsChannel(chatType)) {
                     new ChannelMessage(this.common).handler();
-                    log.info("[{}] Channel message received from {}",common.getUsername(), update.getChannelPost().getAuthorSignature());
+                    log.info("[{}] Channel message received from {}", common.getUsername(),
+                            update.getChannelPost().getAuthorSignature());
                 }
             }
         }
