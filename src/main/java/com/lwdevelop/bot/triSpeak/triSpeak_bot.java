@@ -61,8 +61,8 @@ public class triSpeak_bot extends TelegramLongPollingBot {
                 // group
                 if (this.message.isSuperGroupMessage()) {
                     new GroupMessage(this.common).handler();
-                    log.info("[{}] Group message received from {}", common.getUsername(),
-                            userInfo);
+                    // log.info("[{}] Group message received from {}", common.getUsername(),
+                    //         userInfo);
                 }
 
             }
@@ -77,8 +77,8 @@ public class triSpeak_bot extends TelegramLongPollingBot {
                 String chatType = update.getChannelPost().getChat().getType();
                 if (chatTypeIsChannel(chatType)) {
                     new ChannelMessage(this.common).handler();
-                    log.info("[{}] Channel message received from {}", common.getUsername(),
-                            update.getChannelPost().getAuthorSignature());
+                    // log.info("[{}] Channel message received from {}", common.getUsername(),
+                    //         update.getChannelPost().getAuthorSignature());
                 }
             }
         }
