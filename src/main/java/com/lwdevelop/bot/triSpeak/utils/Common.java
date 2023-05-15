@@ -3,6 +3,8 @@ package com.lwdevelop.bot.triSpeak.utils;
 import java.util.HashMap;
 import java.util.Timer;
 import java.util.TimerTask;
+import java.util.concurrent.CompletableFuture;
+
 import org.springframework.scheduling.annotation.Async;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.meta.api.methods.groupadministration.GetChat;
@@ -44,16 +46,31 @@ public class Common {
         this.username = username;
     }
 
-    public void deleteMessageTask(String chatId,Integer messageId,int second){
+    // public void deleteMessageTask(String chatId,Integer messageId,int second){
+    //     Timer timer = new Timer();
+    //     timer.schedule(new TimerTask() {
+    //         @Override
+    //         public void run() {
+    //             DeleteMessage deleteMessage = new DeleteMessage(chatId, messageId);
+    //             executeAsync(deleteMessage);
+    //         }
+    //     }, second);
+    // }
+
+    public void deleteMessageTask(String chatId, Integer messageId, int second) {
         Timer timer = new Timer();
         timer.schedule(new TimerTask() {
             @Override
             public void run() {
-                DeleteMessage deleteMessage = new DeleteMessage(chatId, messageId);
-                executeAsync(deleteMessage);
+                CompletableFuture.runAsync(() -> {
+                    DeleteMessage deleteMessage = new DeleteMessage(chatId, messageId);
+                    executeAsync(deleteMessage);
+                });
             }
-        }, second, second);
+        }, second);
     }
+    
+    
     
     @Async
     @SneakyThrows
