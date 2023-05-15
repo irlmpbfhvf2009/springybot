@@ -46,17 +46,6 @@ public class Common {
         this.username = username;
     }
 
-    // public void deleteMessageTask(String chatId,Integer messageId,int second){
-    //     Timer timer = new Timer();
-    //     timer.schedule(new TimerTask() {
-    //         @Override
-    //         public void run() {
-    //             DeleteMessage deleteMessage = new DeleteMessage(chatId, messageId);
-    //             executeAsync(deleteMessage);
-    //         }
-    //     }, second);
-    // }
-
     public void deleteMessageTask(String chatId, Integer messageId, int second) {
         Timer timer = new Timer();
         timer.schedule(new TimerTask() {

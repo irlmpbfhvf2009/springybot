@@ -8,6 +8,10 @@ public class ConfigDTO {
     private Boolean inviteFriendsSet;
 
     private Boolean followChannelSet;
+    
+    private Long followChannelSet_chatId;
+
+    private String followChannelSet_chatTitle;
 
     private Boolean invitationBonusSet;
 
@@ -22,5 +26,6 @@ public class ConfigDTO {
     private double inviteEarnedOutstand;
 
     private String contactPerson;
-
+    
+    private String password;
 }
