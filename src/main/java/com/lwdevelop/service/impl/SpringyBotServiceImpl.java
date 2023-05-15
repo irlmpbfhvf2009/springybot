@@ -168,13 +168,13 @@ public class SpringyBotServiceImpl implements SpringyBotService {
         switch (botType) {
             case "coolbao":
                 config.setPassword(SpringyBotEnum.PASSWORD.getText());
-                springyBot.setConfig(config);
                 break;
             case "triSpeak":
-            config.setFollowChannelSet(false);
+                config.setFollowChannelSet(false);
             default:
                 break;
         }
+        springyBot.setConfig(config);
         save(springyBot);
         log.info("SpringyBotServiceImpl ==> addBot ... [ {} ] 新增成功", springyBotDTO.getUsername());
         return ResponseUtils.response(RetEnum.RET_SUCCESS, "新增成功");
