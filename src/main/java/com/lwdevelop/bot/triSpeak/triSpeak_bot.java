@@ -39,7 +39,9 @@ public class triSpeak_bot extends TelegramLongPollingBot {
     }
 
     public void onUpdateReceived(Update update) {
-        this.init(update);
+        
+        this.common.setUpdate(update);
+        this.message = update.getMessage();
 
         // deal message group or private chat
         if (update.hasMessage()) {
@@ -99,10 +101,6 @@ public class triSpeak_bot extends TelegramLongPollingBot {
         return this.dto.getUsername();
     }
 
-    private void init(Update update) {
-        this.common.setUpdate(update);
-        this.message = update.getMessage();
-    }
     private Boolean chatTypeIsChannel(String type) {
         return type.equals(SpringyBotEnum.CHAT_TYPE_CHANNEL.getText()) ? true : false;
     }
