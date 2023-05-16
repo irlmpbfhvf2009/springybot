@@ -38,9 +38,7 @@ public class GroupMessage {
     }
 
     public void handler() {
-
         HashMap<Long,ConfigDTO> configDTO_map = this.common.getConfigDTO_map();
-
         if(configDTO_map.get(common.getSpringyBotId()) == null){
             SpringyBot springyBot = springyBotServiceImpl.findById(common.getSpringyBotId()).get();
             this.followChannelSet = springyBot.getConfig().getFollowChannelSet();
@@ -60,6 +58,7 @@ public class GroupMessage {
             this.channel_title = configDTO_map.get(common.getSpringyBotId()).getFollowChannelSet_chatTitle();
         }
 
+        long startTime = System.currentTimeMillis();
         if (followChannelSet) {
             if (!isSubscribeChannel()) {
                 DeleteMessage deleteMessage = new DeleteMessage(chatId, messageId);
@@ -69,6 +68,9 @@ public class GroupMessage {
                 common.deleteMessageTask(chatId, msgId, deleteSeconds);
             }
         }
+        long endTime = System.currentTimeMillis();
+        long executionTime = endTime - startTime;
+        System.out.println("Execution time: " + executionTime + "ms");
 
     }
 
