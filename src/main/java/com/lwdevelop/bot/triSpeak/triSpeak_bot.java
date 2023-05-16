@@ -1,9 +1,6 @@
 package com.lwdevelop.bot.triSpeak;
 
 import java.util.HashMap;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-
 import org.telegram.telegrambots.bots.DefaultBotOptions;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.meta.api.objects.Message;
@@ -24,12 +21,10 @@ public class triSpeak_bot extends TelegramLongPollingBot {
 
     public Common common;
     private SpringyBotDTO dto;
-    private ExecutorService executor;
     
     public triSpeak_bot(SpringyBotDTO springyBotDTO) {
         super(new DefaultBotOptions());
         this.dto = springyBotDTO;
-        executor = Executors.newFixedThreadPool(10);
         try {
             this.common = new Common(dto.getId(), getMe().getId(), getMe().getUserName());
             this.common.setBot(this);
@@ -63,7 +58,7 @@ public class triSpeak_bot extends TelegramLongPollingBot {
                 }
                 // group
                 if (message.isSuperGroupMessage()) {
-                    executor.execute(() -> new GroupMessage(this.common).handler());
+                    new GroupMessage(this.common).handler();
                 // log.info("[{}] Group message received from {}", common.getUsername(),
                 // userInfo);
                 }
