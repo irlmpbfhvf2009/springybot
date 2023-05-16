@@ -56,6 +56,8 @@ public class JobPosting {
 
     private String flightNumber; // 咨询飞机号
 
+    private String publisher;   //發布人
+
     private Integer lastMessageId;
     
     // channelId  messageId 訊息ID  postCount 發送次數

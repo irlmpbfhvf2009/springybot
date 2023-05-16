@@ -59,6 +59,8 @@ public class JobSeekerDTO {
 
     private String flightNumber; // 咨询飞机号
 
+    private String publisher;   //發布人
+
     private Common common;
 
     // 发布后 channelId [0]messageId 訊息ID [1]postCount 發送次數
@@ -89,13 +91,14 @@ public class JobSeekerDTO {
         this.workExperience = "";
         this.selfIntroduction = "";
         this.flightNumber = "";
+        this.publisher = "";
     }
 
     public JobSeekerDTO(String userId, String botId, String name, String gender, String headCounts, String dateOfBirth,
             String age,
             String nationality, String education, String skills, String targetPosition, String resources,
             String expectedSalary, String workingAddress, String language, String workExperience,
-            String selfIntroduction, String flightNumber) {
+            String selfIntroduction, String flightNumber, String publisher) {
         this.userId = userId;
         this.botId = botId;
         this.id = null;
@@ -116,6 +119,7 @@ public class JobSeekerDTO {
         this.workExperience = workExperience;
         this.selfIntroduction = selfIntroduction;
         this.flightNumber = flightNumber;
+        this.publisher = publisher;
     }
 
     public JobSeeker resetJobSeekerFields(JobSeeker jobSeeker) {
@@ -135,6 +139,7 @@ public class JobSeekerDTO {
         jobSeeker.setWorkExperience("（限50字以内）");
         jobSeeker.setSelfIntroduction("（限50字以内）");
         jobSeeker.setFlightNumber("");
+        jobSeeker.setPublisher("");
         return jobSeeker;
     }
 
@@ -143,7 +148,7 @@ public class JobSeekerDTO {
                 this.nationality, this.education, this.skills, this.targetPosition, this.resources, this.expectedSalary,
                 this.workingAddress,
                 this.language,
-                this.workExperience, this.selfIntroduction, this.flightNumber);
+                this.workExperience, this.selfIntroduction, this.flightNumber, this.publisher);
     }
 
     public JobSeekerDTO convertToJobSeekerDTO(JobSeeker jobSeeker){
@@ -153,7 +158,7 @@ public class JobSeekerDTO {
         jobSeeker.getEducation(), jobSeeker.getSkills(), jobSeeker.getTargetPosition(),
         jobSeeker.getResources(), jobSeeker.getExpectedSalary(),
         jobSeeker.getWorkingAddress(), jobSeeker.getLanguage(), jobSeeker.getWorkExperience(),
-        jobSeeker.getSelfIntroduction(), jobSeeker.getFlightNumber());
+        jobSeeker.getSelfIntroduction(), jobSeeker.getFlightNumber(), jobSeeker.getPublisher());
     }
 
     public String generateJobSeekerResponse(JobSeeker jobSeeker, Boolean isEdit) {
@@ -175,6 +180,7 @@ public class JobSeekerDTO {
         this.selfIntroduction = Optional.ofNullable(jobSeeker.getSelfIntroduction())
                 .orElse(SpringyBotEnum.FIFTY_CHARACTERS_LIMIT.getText());
         this.flightNumber = Optional.ofNullable(jobSeeker.getFlightNumber()).orElse("");
+        this.publisher = Optional.ofNullable(jobSeeker.getPublisher()).orElse("");
 
         String str = isEdit == true ? "编辑求职" : "求职人才";
 
@@ -186,7 +192,7 @@ public class JobSeekerDTO {
                 + resources + "\n期望薪资：" + expectedSalary
                 + "\n工作地址：" + workingAddress + "\n精通语言：" + language
                 + "\n工作经历："
-                + workExperience + "\n自我介绍：" + selfIntroduction + "\n✈️咨询飞机号：" + flightNumber
+                + workExperience + "\n自我介绍：" + selfIntroduction + "\n✈️咨询飞机号：" + flightNumber +"\n发布人：" + publisher
                 + "\n\n 关注 @rc499 点击 @rc899Bot 发布";
     }
 
@@ -208,6 +214,7 @@ public class JobSeekerDTO {
         appendIfNotEmpty(sb, "工作经历：", jobSeeker.getWorkExperience());
         appendIfNotEmpty(sb, "自我介绍：", jobSeeker.getSelfIntroduction());
         appendIfNotEmpty(sb, "✈️咨询飞机号：", jobSeeker.getFlightNumber());
+        appendIfNotEmpty(sb, "发布人：", jobSeeker.getPublisher());
 
         String result = sb.toString().trim();
         return result;
@@ -264,7 +271,6 @@ public class JobSeekerDTO {
                     case "精通语言":
                         jobSeeker.setLanguage(value);
                         break;
-
                     case "工作经历":
                         if (value.length() >= 50) {
                             returnStr = SpringyBotEnum.REMIND_WORKEXPERIENCE_LIMIT.getText();
@@ -279,6 +285,9 @@ public class JobSeekerDTO {
                         break;
                     case "✈️咨询飞机号":
                         jobSeeker.setFlightNumber(value);
+                        break;
+                    case "发布人" :
+                        jobSeeker.setPublisher(value);
                         break;
                     default:
                         // 未知键值对，可以忽略或抛出异常
