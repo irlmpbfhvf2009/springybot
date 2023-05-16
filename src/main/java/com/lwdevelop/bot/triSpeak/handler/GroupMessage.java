@@ -37,30 +37,22 @@ public class GroupMessage {
         this.messageId = common.getUpdate().getMessage().getMessageId();
     }
 
-    public synchronized void handler() {
-
-        // String chatId = String.valueOf(common.getUpdate().getMessage().getChatId());
-        // Long userId = common.getUpdate().getMessage().getFrom().getId();
-        // Integer messageId = common.getUpdate().getMessage().getMessageId();
+    public void handler() {
 
         HashMap<Long,ConfigDTO> configDTO_map = this.common.getConfigDTO_map();
 
         if(configDTO_map.get(common.getSpringyBotId()) == null){
             SpringyBot springyBot = springyBotServiceImpl.findById(common.getSpringyBotId()).get();
-            Boolean followChannelSet = springyBot.getConfig().getFollowChannelSet();
-            Long channel_id = springyBot.getConfig().getFollowChannelSet_chatId();
-            String channel_title = springyBot.getConfig().getFollowChannelSet_chatTitle();
-            int deleteSeconds = springyBot.getConfig().getDeleteSeconds();
+            this.followChannelSet = springyBot.getConfig().getFollowChannelSet();
+            this.channel_id = springyBot.getConfig().getFollowChannelSet_chatId();
+            this.channel_title = springyBot.getConfig().getFollowChannelSet_chatTitle();
+            this.deleteSeconds = springyBot.getConfig().getDeleteSeconds();
             ConfigDTO configDTO = new ConfigDTO();
-            configDTO.setFollowChannelSet(followChannelSet);
-            configDTO.setFollowChannelSet_chatTitle(channel_title);
-            configDTO.setFollowChannelSet_chatId(channel_id);
-            configDTO.setDeleteSeconds(deleteSeconds);
+            configDTO.setFollowChannelSet(this.followChannelSet);
+            configDTO.setFollowChannelSet_chatTitle(this.channel_title);
+            configDTO.setFollowChannelSet_chatId(this.channel_id);
+            configDTO.setDeleteSeconds(this.deleteSeconds);
             configDTO_map.put(common.getSpringyBotId(), configDTO);
-            this.followChannelSet = followChannelSet;
-            this.deleteSeconds = deleteSeconds;
-            this.channel_id = channel_id;
-            this.channel_title = channel_title;
         } else {
             this.followChannelSet = configDTO_map.get(common.getSpringyBotId()).getFollowChannelSet();
             this.deleteSeconds = configDTO_map.get(common.getSpringyBotId()).getDeleteSeconds();
@@ -81,11 +73,11 @@ public class GroupMessage {
     }
 
     private boolean isSubscribeChannel() {
-        String parseId = String.valueOf(channel_id);
+        String parseId = String.valueOf(this.channel_id);
         GetChatMember getChatMember = new GetChatMember(parseId, this.userId);
         boolean status;
         try {
-            status = common.executeAsync(getChatMember).equals("left") ? false : true;
+            status = this.common.executeAsync(getChatMember).equals("left") ? false : true;
         } catch (Exception e) {
             status = false;
             log.error(e.toString());
@@ -94,7 +86,7 @@ public class GroupMessage {
     }
 
     private String generate_warning_text() {
-        User user = common.getUpdate().getMessage().getFrom();
+        User user = this.common.getUpdate().getMessage().getFrom();
         String username = user.getUserName();
         String firstname = user.getFirstName();
         String lastname = user.getLastName();

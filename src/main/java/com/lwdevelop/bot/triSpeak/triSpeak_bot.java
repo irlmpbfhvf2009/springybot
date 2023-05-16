@@ -21,7 +21,6 @@ public class triSpeak_bot extends TelegramLongPollingBot {
 
     public Common common;
     private SpringyBotDTO dto;
-    private Message message;
 
     public triSpeak_bot(SpringyBotDTO springyBotDTO) {
         super(new DefaultBotOptions());
@@ -41,33 +40,33 @@ public class triSpeak_bot extends TelegramLongPollingBot {
     public void onUpdateReceived(Update update) {
 
         this.common.setUpdate(update);
-        this.message = update.getMessage();
+        Message message = update.getMessage();
 
         // deal message group or private chat
         if (update.hasMessage()) {
 
-            if (this.message.hasText()) {
-                User user = this.message.getFrom();
+            if (message.hasText()) {
+                User user = message.getFrom();
                 String userInfo = String.format("[%s] @%s (%s %s)", user.getId(), user.getUserName(),
                         user.getFirstName(), user.getLastName());
 
                 // private
-                if (this.message.isUserMessage()) {
+                if (message.isUserMessage()) {
                     new PrivateMessage_(this.common).handler();
                     log.info("[{}] Private message received from {}: {}", this.common.getUsername(), userInfo,
-                            this.message.getText());
+                            message.getText());
 
                 }
                 // group
-                if (this.message.isSuperGroupMessage()) {
-                    new GroupMessage(this.common).handler();
-                    // log.info("[{}] Group message received from {}", common.getUsername(),
-                    //         userInfo);
+                if (message.isSuperGroupMessage()) {
+                new GroupMessage(this.common).handler();
+                // log.info("[{}] Group message received from {}", common.getUsername(),
+                // userInfo);
                 }
 
             }
 
-            if (this.message.hasPhoto()) {
+            if (message.hasPhoto()) {
             }
         }
 
@@ -77,8 +76,6 @@ public class triSpeak_bot extends TelegramLongPollingBot {
                 String chatType = update.getChannelPost().getChat().getType();
                 if (chatTypeIsChannel(chatType)) {
                     new ChannelMessage(this.common).handler();
-                    // log.info("[{}] Channel message received from {}", common.getUsername(),
-                    //         update.getChannelPost().getAuthorSignature());
                 }
             }
         }
