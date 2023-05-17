@@ -1,12 +1,14 @@
 package com.lwdevelop.bot.triSpeak.handler;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.telegram.telegrambots.meta.api.methods.groupadministration.GetChatMember;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.methods.updatingmessages.DeleteMessage;
 import com.lwdevelop.bot.triSpeak.utils.Common;
-import com.lwdevelop.bot.triSpeak.utils.MessageQueue;
 import com.lwdevelop.bot.triSpeak.utils.SpringyBotEnum;
 import com.lwdevelop.dto.ConfigDTO;
 import com.lwdevelop.entity.SpringyBot;
@@ -26,7 +28,6 @@ public class GroupMessage {
     private String username;
     private String firstname;
     private String lastname;
-    
 
     @Autowired
     private SpringyBotServiceImpl springyBotServiceImpl = SpringUtils.getApplicationContext()
@@ -41,6 +42,8 @@ public class GroupMessage {
         this.firstname = common.getUpdate().getMessage().getFrom().getFirstName();
         this.lastname = common.getUpdate().getMessage().getFrom().getLastName();
     }
+
+    private static List<DeleteMessage> deleteSystemMessages = new ArrayList<>();
 
     public void handler() {
         HashMap<Long, ConfigDTO> configDTO_map = this.common.getConfigDTO_map();
@@ -70,37 +73,22 @@ public class GroupMessage {
                 common.executeAsync(deleteMessage);
                 // 发送系统消息及删除任务
                 SendMessage response = new SendMessage(chatId, generate_warning_text());
-                MessageQueue.enqueue(new MessageQueueTask(deleteMessage, response, chatId, deleteSeconds));
-                // Integer msgId = common.executeAsync(response);
-                // common.deleteMessageTask(chatId, msgId, deleteSeconds);
+                // MessageQueue.enqueue(new MessageQueueTask(deleteMessage, response, chatId,
+                // deleteSeconds));
+                Integer msgId = common.executeAsync(response);
+                DeleteMessage deleteSystemMessage = new DeleteMessage(chatId, msgId);
+                deleteSystemMessages.add(deleteSystemMessage);
+                System.out.println("deleteSystemMessages.size()="+deleteSystemMessages.size());
+                if (deleteSystemMessages.size() == 10) {
+                    System.out.println("handler.deleteSystemMessages  "+deleteSystemMessages);
+                    common.deleteMessageTask(deleteSystemMessages, deleteSeconds);
+                    deleteSystemMessages.clear();
+                }
             }
         }
 
     }
-    public class MessageQueueTask implements Runnable {
-        private final DeleteMessage deleteMessage;
-        private final SendMessage sendMessage;
-        private final String chatId;
-        private final Integer deleteSeconds;
-    
-        public MessageQueueTask(DeleteMessage deleteMessage, SendMessage sendMessage, String chatId, Integer deleteSeconds) {
-            this.deleteMessage = deleteMessage;
-            this.sendMessage = sendMessage;
-            this.chatId = chatId;
-            this.deleteSeconds = deleteSeconds;
-        }
-    
-        @Override
-        public void run() {
-            // 删除消息
-            common.executeAsync(deleteMessage);
-            
-            // 发送系统消息及删除任务
-            Integer msgId = common.executeAsync(sendMessage);
-            common.deleteMessageTask(chatId, msgId, deleteSeconds);
-        }
-    }
-    
+
     private boolean isSubscribeChannel() {
         String parseId = String.valueOf(this.channel_id);
         GetChatMember getChatMember = new GetChatMember(parseId, this.userId);
@@ -115,7 +103,7 @@ public class GroupMessage {
             this.firstname = this.firstname == null ? "" : this.firstname;
             this.lastname = this.lastname == null ? "" : this.lastname;
             this.username = this.firstname + this.lastname;
-        }else{
+        } else {
             this.username = "@" + this.username;
         }
 

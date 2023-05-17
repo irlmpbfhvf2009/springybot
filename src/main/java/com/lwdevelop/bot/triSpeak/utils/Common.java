@@ -1,8 +1,12 @@
 package com.lwdevelop.bot.triSpeak.utils;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.TimeUnit;
+
 import org.springframework.scheduling.annotation.Async;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.meta.api.methods.groupadministration.GetChat;
@@ -48,39 +52,62 @@ public class Common {
         this.username = username;
     }
 
-    public void deleteMessageTask(String chatId, Integer messageId, int second) {
-        Timer timer = new Timer();
-        timer.schedule(new TimerTask() {
-            @Override
-            public void run() {
-                DeleteMessage deleteMessage = new DeleteMessage(chatId, messageId);
+    // @Async
+    // public void deleteMessageTask(List<DeleteMessage> deleteSystemMessage, int second) {
+    //     System.out.println("deleteMessageTask.deleteSystemMessage "+deleteSystemMessage);
+    //     System.out.println("second "+second);
+    //     Timer timer = new Timer();
+    //     timer.schedule(new TimerTask() {
+    //         @Override
+    //         public void run() {
+    //             for (DeleteMessage deleteMessage : deleteSystemMessage) {
+    //                 System.out.println("删除 "+deleteMessage.getMessageId());
+    //                 executeAsync(deleteMessage);
+    //             }
+    //         }
+    //     }, second * 1000);
+    // }
+    public void deleteMessageTask(List<DeleteMessage> deleteSystemMessage, int second) {
+        System.out.println("deleteMessageTask.deleteSystemMessage " + deleteSystemMessage);
+        System.out.println("second " + second);
+    
+        CompletableFuture.runAsync(() -> {
+            try {
+                TimeUnit.SECONDS.sleep(second);
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+                // 处理中断异常
+                return;
+            }
+    
+            for (DeleteMessage deleteMessage : deleteSystemMessage) {
+                System.out.println("删除 " + deleteMessage.getMessageId());
                 executeAsync(deleteMessage);
             }
-        }, second);
+        });
+    }
+    @Async
+    @SneakyThrows
+    public Integer executeAsync(SendMessage sendMessage) {
+        return this.bot.executeAsync(sendMessage).get().getMessageId();
     }
 
     @Async
     @SneakyThrows
-    public Integer executeAsync(SendMessage response) {
-        return this.bot.executeAsync(response).get().getMessageId();
+    public Integer executeAsync(SendPhoto sendPhoto) {
+        return this.bot.executeAsync(sendPhoto).get().getMessageId();
     }
 
     @Async
     @SneakyThrows
-    public Integer executeAsync(SendPhoto response) {
-        return this.bot.executeAsync(response).get().getMessageId();
+    public void executeAsync(EditMessageText editMessageText) {
+        this.bot.executeAsync(editMessageText);
     }
 
     @Async
     @SneakyThrows
-    public void executeAsync(EditMessageText response) {
-        this.bot.executeAsync(response);
-    }
-
-    @Async
-    @SneakyThrows
-    public void executeAsync(DeleteMessage response) {
-        this.bot.executeAsync(response);
+    public void executeAsync(DeleteMessage deleteMessage) {
+        this.bot.executeAsync(deleteMessage);
     }
 
     @Async

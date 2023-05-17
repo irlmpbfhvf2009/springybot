@@ -14,6 +14,6 @@ public enum SpringyBotEnum {
     }
 
     public static String warning_text(String username,String channel_title){
-        return "@" + username + " : 关注频道 " + channel_title + " 后才能发言";
+        return username + " : 关注频道 " + channel_title + " 后才能发言";
     }
 }
