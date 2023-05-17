@@ -4,9 +4,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
-import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.TimeUnit;
-
 import org.springframework.scheduling.annotation.Async;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.meta.api.methods.groupadministration.GetChat;
@@ -18,9 +15,7 @@ import org.telegram.telegrambots.meta.api.methods.updatingmessages.EditMessageTe
 import org.telegram.telegrambots.meta.api.objects.Chat;
 import org.telegram.telegrambots.meta.api.objects.ChatMemberUpdated;
 import org.telegram.telegrambots.meta.api.objects.Update;
-
 import com.lwdevelop.dto.ConfigDTO;
-
 import lombok.Data;
 import lombok.SneakyThrows;
 
@@ -52,40 +47,19 @@ public class Common {
         this.username = username;
     }
 
-    // @Async
-    // public void deleteMessageTask(List<DeleteMessage> deleteSystemMessage, int second) {
-    //     System.out.println("deleteMessageTask.deleteSystemMessage "+deleteSystemMessage);
-    //     System.out.println("second "+second);
-    //     Timer timer = new Timer();
-    //     timer.schedule(new TimerTask() {
-    //         @Override
-    //         public void run() {
-    //             for (DeleteMessage deleteMessage : deleteSystemMessage) {
-    //                 System.out.println("删除 "+deleteMessage.getMessageId());
-    //                 executeAsync(deleteMessage);
-    //             }
-    //         }
-    //     }, second * 1000);
-    // }
+    @Async
     public void deleteMessageTask(List<DeleteMessage> deleteSystemMessage, int second) {
-        System.out.println("deleteMessageTask.deleteSystemMessage " + deleteSystemMessage);
-        System.out.println("second " + second);
-    
-        CompletableFuture.runAsync(() -> {
-            try {
-                TimeUnit.SECONDS.sleep(second);
-            } catch (InterruptedException e) {
-                Thread.currentThread().interrupt();
-                // 处理中断异常
-                return;
+        Timer timer = new Timer();
+        timer.schedule(new TimerTask() {
+            @Override
+            public void run() {
+                for (DeleteMessage deleteMessage : deleteSystemMessage) {
+                    executeAsync(deleteMessage);
+                }
             }
-    
-            for (DeleteMessage deleteMessage : deleteSystemMessage) {
-                System.out.println("删除 " + deleteMessage.getMessageId());
-                executeAsync(deleteMessage);
-            }
-        });
+        }, second);
     }
+
     @Async
     @SneakyThrows
     public Integer executeAsync(SendMessage sendMessage) {
@@ -119,7 +93,7 @@ public class Common {
     @Async
     @SneakyThrows
     public Chat executeAsync(GetChat getChat) {
-        return this.bot.executeAsync(getChat).get();
+            return this.bot.executeAsync(getChat).get();
     }
 
 }

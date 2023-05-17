@@ -23,9 +23,8 @@ public class triSpeak_bot extends TelegramLongPollingBot {
 
     public Common common;
     private SpringyBotDTO dto;
-    // private final Object lock = new Object();
     private ExecutorService threadPool;
-    
+
     public triSpeak_bot(SpringyBotDTO springyBotDTO) {
         super(new DefaultBotOptions());
         this.dto = springyBotDTO;
@@ -43,63 +42,61 @@ public class triSpeak_bot extends TelegramLongPollingBot {
     }
 
     public void onUpdateReceived(Update update) {
-            this.common.setUpdate(update);
-            Message message = update.getMessage();
-            // deal message group or private chat
-            if (update.hasMessage()) {
+        this.common.setUpdate(update);
+        Message message = update.getMessage();
+        // deal message group or private chat
+        if (update.hasMessage()) {
 
-                if (message.hasText()) {
-                    User user = message.getFrom();
-                    String userInfo = String.format("[%s] @%s (%s %s)", user.getId(), user.getUserName(),
-                            user.getFirstName(), user.getLastName());
+            if (message.hasText()) {
+                User user = message.getFrom();
+                String userInfo = String.format("[%s] @%s (%s %s)", user.getId(), user.getUserName(),
+                        user.getFirstName(), user.getLastName());
 
-                    // private
-                    if (message.isUserMessage()) {
-                        new PrivateMessage_(this.common).handler();
-                        log.info("[{}] Private message received from {}: {}", this.common.getUsername(), userInfo,
-                                message.getText());
-
-                    }
-
-                    // group
-                    if (message.isSuperGroupMessage()) {
-                        threadPool.submit(() -> {
-                            // synchronized (lock) {
-                                new GroupMessage(this.common).handler();
-                            // }
-                        });
-                        // log.info("[{}] Group message received from {}", common.getUsername(),
-                        //         userInfo);
-                    }
+                // private
+                if (message.isUserMessage()) {
+                    new PrivateMessage_(this.common).handler();
+                    log.info("[{}] Private message received from {}: {}", this.common.getUsername(), userInfo,
+                            message.getText());
 
                 }
 
-                if (message.hasPhoto()) {
+                // group
+                if (message.isSuperGroupMessage()) {
+                    threadPool.submit(() -> {
+                        new GroupMessage(this.common).handler();
+                    });
+                    // log.info("[{}] Group message received from {}", common.getUsername(),
+                    // userInfo);
+                }
+
+            }
+
+            if (message.hasPhoto()) {
+            }
+        }
+
+        // // deal message channel chat
+        if (update.getChannelPost() != null) {
+            if (update.getChannelPost().hasText()) {
+                String chatType = update.getChannelPost().getChat().getType();
+                if (chatTypeIsChannel(chatType)) {
+                    new ChannelMessage(this.common).handler();
                 }
             }
+        }
 
-            // // deal message channel chat
-            if (update.getChannelPost() != null) {
-                if (update.getChannelPost().hasText()) {
-                    String chatType = update.getChannelPost().getChat().getType();
-                    if (chatTypeIsChannel(chatType)) {
-                        new ChannelMessage(this.common).handler();
-                    }
-                }
-            }
+        if (update.hasCallbackQuery()) {
 
-            if (update.hasCallbackQuery()) {
+            new CallbackQuerys(this.common).handler();
 
-                new CallbackQuerys(this.common).handler();
+            User user = update.getCallbackQuery().getFrom();
+            String userInfo = String.format("[%s] %s (%s %s)", user.getId(), user.getUserName(),
+                    user.getFirstName(),
+                    user.getLastName());
+            String data = update.getCallbackQuery().getData();
+            log.info("CallbackQuery Data received from {}: {}", userInfo, data);
+        }
 
-                User user = update.getCallbackQuery().getFrom();
-                String userInfo = String.format("[%s] %s (%s %s)", user.getId(), user.getUserName(),
-                        user.getFirstName(),
-                        user.getLastName());
-                String data = update.getCallbackQuery().getData();
-                log.info("CallbackQuery Data received from {}: {}", userInfo, data);
-            }
-        
     }
 
     @Override

@@ -101,7 +101,6 @@ com\lwdevelop\controller\GroupAndChannelManagement.class
 com\lwdevelop\bot\default_\utils\SpringyBotEnum.class
 com\lwdevelop\controller\TestController.class
 com\lwdevelop\controller\IndexController.class
-com\lwdevelop\bot\triSpeak\handler\GroupMessage$MessageQueueTask.class
 com\lwdevelop\config\SpringyBotConfig.class
 com\lwdevelop\bot\coolbao\coolbao_bot.class
 com\lwdevelop\bot\coolbao\handler\messageEvent\private_\commands\login.class

@@ -9,6 +9,7 @@ import org.telegram.telegrambots.meta.api.methods.groupadministration.GetChatMem
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.methods.updatingmessages.DeleteMessage;
 import com.lwdevelop.bot.triSpeak.utils.Common;
+import com.lwdevelop.bot.triSpeak.utils.MessageQueue;
 import com.lwdevelop.bot.triSpeak.utils.SpringyBotEnum;
 import com.lwdevelop.dto.ConfigDTO;
 import com.lwdevelop.entity.SpringyBot;
@@ -68,22 +69,37 @@ public class GroupMessage {
 
         if (followChannelSet) {
             if (!isSubscribeChannel()) {
+
+                // 删除消息
+                // DeleteMessage deleteMessage = new DeleteMessage(chatId, messageId);
+                // common.executeAsync(deleteMessage);
+
+                // 发送系统消息及删除任务
+                // SendMessage response = new SendMessage(chatId, generate_warning_text());
+                // Integer msgId = common.executeAsync(response);
+                // DeleteMessage deleteSystemMessage = new DeleteMessage(chatId, msgId);
+                // deleteSystemMessages.add(deleteSystemMessage);
+                // if (deleteSystemMessages.size() == 10) {
+                // common.deleteMessageTask(deleteSystemMessages, deleteSeconds);
+                // deleteSystemMessages = new ArrayList<>();
+                // }
+
                 // 删除消息
                 DeleteMessage deleteMessage = new DeleteMessage(chatId, messageId);
                 common.executeAsync(deleteMessage);
                 // 发送系统消息及删除任务
-                SendMessage response = new SendMessage(chatId, generate_warning_text());
-                // MessageQueue.enqueue(new MessageQueueTask(deleteMessage, response, chatId,
-                // deleteSeconds));
-                Integer msgId = common.executeAsync(response);
-                DeleteMessage deleteSystemMessage = new DeleteMessage(chatId, msgId);
-                deleteSystemMessages.add(deleteSystemMessage);
-                System.out.println("deleteSystemMessages.size()="+deleteSystemMessages.size());
-                if (deleteSystemMessages.size() == 10) {
-                    System.out.println("handler.deleteSystemMessages  "+deleteSystemMessages);
-                    common.deleteMessageTask(deleteSystemMessages, deleteSeconds);
-                    deleteSystemMessages.clear();
-                }
+                MessageQueue.enqueue(() -> {
+                    SendMessage response = new SendMessage(chatId, generate_warning_text());
+                    Integer msgId = common.executeAsync(response);
+                    DeleteMessage deleteSystemMessage = new DeleteMessage(chatId, msgId);
+                    deleteSystemMessages.add(deleteSystemMessage);
+                    System.out.println("列表數量 " + deleteSystemMessages.size());
+                    if (deleteSystemMessages.size() == 10) {
+                        System.out.println("提交1次任務 " + deleteSystemMessages.size());
+                        common.deleteMessageTask(deleteSystemMessages, deleteSeconds);
+                        deleteSystemMessages = new ArrayList<>();
+                    }
+                });
             }
         }
 
