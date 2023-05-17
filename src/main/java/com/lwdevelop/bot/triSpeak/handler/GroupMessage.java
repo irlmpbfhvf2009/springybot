@@ -86,12 +86,12 @@ public class GroupMessage {
         String parseId = String.valueOf(this.channel_id);
         GetChatMember getChatMember = new GetChatMember(parseId, this.userId);
 
-        long startTime = System.currentTimeMillis();
+        // long startTime = System.currentTimeMillis();
         boolean status = this.common.executeAsync(getChatMember).equals("left") ? false : true;
 
-        long endTime = System.currentTimeMillis();
-        long isSubscribeChannelTime = endTime - startTime;
-        System.out.println("isSubscribeChannelTime: " + isSubscribeChannelTime + "ms");
+        // long endTime = System.currentTimeMillis();
+        // long isSubscribeChannelTime = endTime - startTime;
+        // System.out.println("isSubscribeChannelTime: " + isSubscribeChannelTime + "ms");
 
         return status;
     }
