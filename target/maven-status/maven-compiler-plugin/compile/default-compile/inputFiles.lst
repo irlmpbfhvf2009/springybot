@@ -14,7 +14,6 @@ D:\酷寶\開發\tgbot\SpringyBot\src\main\java\com\lwdevelop\controller\SpringyBotC
 D:\酷寶\開發\tgbot\SpringyBot\src\main\java\com\lwdevelop\utils\JwtUtils.java
 D:\酷寶\開發\tgbot\SpringyBot\src\main\java\com\lwdevelop\service\TestService.java
 D:\酷寶\開發\tgbot\SpringyBot\src\main\java\com\lwdevelop\utils\RedisUtils.java
-D:\酷寶\開發\tgbot\SpringyBot\src\main\java\com\lwdevelop\bot\triSpeak\utils\GroupMessageHandler.java
 D:\酷寶\開發\tgbot\SpringyBot\src\main\java\com\lwdevelop\dto\RobotChannelManagementDTO.java
 D:\酷寶\開發\tgbot\SpringyBot\src\main\java\com\lwdevelop\repository\JobSeekerRepository.java
 D:\酷寶\開發\tgbot\SpringyBot\src\main\java\com\lwdevelop\config\SpringyBotConfig.java
