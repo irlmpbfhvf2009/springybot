@@ -3,9 +3,9 @@ package com.lwdevelop.bot.triSpeak.handler;
 import java.util.HashMap;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.telegram.telegrambots.meta.api.methods.groupadministration.GetChatMember;
-import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.methods.updatingmessages.DeleteMessage;
 import com.lwdevelop.bot.triSpeak.utils.Common;
+import com.lwdevelop.bot.triSpeak.utils.GroupMessageHandler;
 import com.lwdevelop.bot.triSpeak.utils.SpringyBotEnum;
 import com.lwdevelop.dto.ConfigDTO;
 import com.lwdevelop.entity.SpringyBot;
@@ -26,6 +26,9 @@ public class GroupMessage {
     private String firstname;
     private String lastname;
 
+    @Autowired
+    private GroupMessageHandler groupMessageHandler;
+    
 
     @Autowired
     private SpringyBotServiceImpl springyBotServiceImpl = SpringUtils.getApplicationContext()
@@ -68,10 +71,11 @@ public class GroupMessage {
                 DeleteMessage deleteMessage = new DeleteMessage(chatId, messageId);
                 common.executeAsync(deleteMessage);
 
-                SendMessage response = new SendMessage(chatId, generate_warning_text());
-                Integer msgId = common.executeAsync(response);
+                groupMessageHandler.processSendMessage(chatId, generate_warning_text(), deleteSeconds, common);
 
-                common.deleteMessageTask(chatId, msgId, deleteSeconds);
+                // SendMessage response = new SendMessage(chatId, generate_warning_text());
+                // Integer msgId = common.executeAsync(response);
+                // common.deleteMessageTask(chatId, msgId, deleteSeconds);
             }
         }
 

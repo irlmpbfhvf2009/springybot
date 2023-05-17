@@ -68,8 +68,8 @@ public class triSpeak_bot extends TelegramLongPollingBot {
                                 new GroupMessage(this.common).handler();
                             // }
                         });
-                        log.info("[{}] Group message received from {}", common.getUsername(),
-                                userInfo);
+                        // log.info("[{}] Group message received from {}", common.getUsername(),
+                        //         userInfo);
                     }
 
                 }

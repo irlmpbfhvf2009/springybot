@@ -46,6 +46,7 @@ D:\酷寶\開發\tgbot\SpringyBot\src\main\java\com\lwdevelop\entity\InvitationThres
 D:\酷寶\開發\tgbot\SpringyBot\src\main\java\com\lwdevelop\bot\coolbao\handler\event\LeaveGroup.java
 D:\酷寶\開發\tgbot\SpringyBot\src\main\java\com\lwdevelop\bot\coolbao\utils\SpringyBotEnum.java
 D:\酷寶\開發\tgbot\SpringyBot\src\main\java\com\lwdevelop\entity\JobPosting.java
+D:\酷寶\開發\tgbot\SpringyBot\src\main\java\com\lwdevelop\bot\triSpeak\utils\MessageQueue.java
 D:\酷寶\開發\tgbot\SpringyBot\src\main\java\com\lwdevelop\service\JobManagementService.java
 D:\酷寶\開發\tgbot\SpringyBot\src\main\java\com\lwdevelop\config\WebSocketConfig.java
 D:\酷寶\開發\tgbot\SpringyBot\src\main\java\com\lwdevelop\bot\triSpeak\handler\PrivateMessage_.java
