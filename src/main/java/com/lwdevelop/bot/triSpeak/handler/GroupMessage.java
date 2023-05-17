@@ -115,6 +115,8 @@ public class GroupMessage {
             this.firstname = this.firstname == null ? "" : this.firstname;
             this.lastname = this.lastname == null ? "" : this.lastname;
             this.username = this.firstname + this.lastname;
+        }else{
+            this.username = "@" + this.username;
         }
 
         return SpringyBotEnum.warning_text(this.username, this.channel_title);
