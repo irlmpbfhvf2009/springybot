@@ -1,6 +1,8 @@
 package com.lwdevelop.bot.triSpeak;
 
 import java.util.HashMap;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import org.telegram.telegrambots.bots.DefaultBotOptions;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.meta.api.objects.Message;
@@ -21,10 +23,14 @@ public class triSpeak_bot extends TelegramLongPollingBot {
 
     public Common common;
     private SpringyBotDTO dto;
+    // private final Object lock = new Object();
+    private ExecutorService threadPool;
     
     public triSpeak_bot(SpringyBotDTO springyBotDTO) {
         super(new DefaultBotOptions());
         this.dto = springyBotDTO;
+        threadPool = Executors.newFixedThreadPool(30); // 指定執行緒池的大小
+
         try {
             this.common = new Common(dto.getId(), getMe().getId(), getMe().getUserName());
             this.common.setBot(this);
@@ -37,56 +43,63 @@ public class triSpeak_bot extends TelegramLongPollingBot {
     }
 
     public void onUpdateReceived(Update update) {
+            this.common.setUpdate(update);
+            Message message = update.getMessage();
+            // deal message group or private chat
+            if (update.hasMessage()) {
 
-        this.common.setUpdate(update);
-        Message message = update.getMessage();
+                if (message.hasText()) {
+                    User user = message.getFrom();
+                    String userInfo = String.format("[%s] @%s (%s %s)", user.getId(), user.getUserName(),
+                            user.getFirstName(), user.getLastName());
 
-        // deal message group or private chat
-        if (update.hasMessage()) {
+                    // private
+                    if (message.isUserMessage()) {
+                        new PrivateMessage_(this.common).handler();
+                        log.info("[{}] Private message received from {}: {}", this.common.getUsername(), userInfo,
+                                message.getText());
 
-            if (message.hasText()) {
-                User user = message.getFrom();
-                String userInfo = String.format("[%s] @%s (%s %s)", user.getId(), user.getUserName(),
-                        user.getFirstName(), user.getLastName());
+                    }
 
-                // private
-                if (message.isUserMessage()) {
-                    new PrivateMessage_(this.common).handler();
-                    log.info("[{}] Private message received from {}: {}", this.common.getUsername(), userInfo,
-                            message.getText());
+                    // group
+                    if (message.isSuperGroupMessage()) {
+                        threadPool.submit(() -> {
+                            // synchronized (lock) {
+                                new GroupMessage(this.common).handler();
+                            // }
+                        });
+                        log.info("[{}] Group message received from {}", common.getUsername(),
+                                userInfo);
+                    }
 
                 }
-                // group
-                if (message.isSuperGroupMessage()) {
-                    new GroupMessage(this.common).handler();
-                // log.info("[{}] Group message received from {}", common.getUsername(),
-                // userInfo);
-                }
 
-            }
-
-            if (message.hasPhoto()) {
-            }
-        }
-
-        // // deal message channel chat
-        if (update.getChannelPost() != null) {
-            if (update.getChannelPost().hasText()) {
-                String chatType = update.getChannelPost().getChat().getType();
-                if (chatTypeIsChannel(chatType)) {
-                    new ChannelMessage(this.common).handler();
+                if (message.hasPhoto()) {
                 }
             }
-        }
 
-        if (update.hasCallbackQuery()) {
-            new CallbackQuerys(this.common).handler();
-            User user = update.getCallbackQuery().getFrom();
-            String userInfo = String.format("[%s] %s (%s %s)", user.getId(), user.getUserName(), user.getFirstName(),
-                    user.getLastName());
-            String data = update.getCallbackQuery().getData();
-            log.info("CallbackQuery Data received from {}: {}", userInfo, data);
-        }
+            // // deal message channel chat
+            if (update.getChannelPost() != null) {
+                if (update.getChannelPost().hasText()) {
+                    String chatType = update.getChannelPost().getChat().getType();
+                    if (chatTypeIsChannel(chatType)) {
+                        new ChannelMessage(this.common).handler();
+                    }
+                }
+            }
+
+            if (update.hasCallbackQuery()) {
+
+                new CallbackQuerys(this.common).handler();
+
+                User user = update.getCallbackQuery().getFrom();
+                String userInfo = String.format("[%s] %s (%s %s)", user.getId(), user.getUserName(),
+                        user.getFirstName(),
+                        user.getLastName());
+                String data = update.getCallbackQuery().getData();
+                log.info("CallbackQuery Data received from {}: {}", userInfo, data);
+            }
+        
     }
 
     @Override
@@ -102,4 +115,5 @@ public class triSpeak_bot extends TelegramLongPollingBot {
     private Boolean chatTypeIsChannel(String type) {
         return type.equals(SpringyBotEnum.CHAT_TYPE_CHANNEL.getText()) ? true : false;
     }
+
 }
