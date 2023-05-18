@@ -68,18 +68,18 @@ public class GroupMessage {
         }
 
         if (followChannelSet) {
-            if (!isSubscribeChannel()) {
+            if (!isSubscribeChannel()) {  // 200ms
 
                 // 删除消息.
                 // System.out.println("删除消息 " + messageId);
-                deleteMessage(chatId, messageId);
+                deleteMessage(chatId, messageId);  // 0ms
                 // 发送系统消息
                 // System.out.println("发送系统消息");
-                Integer msgId = sendSystemMessage(chatId);
+                Integer msgId = sendSystemMessage(chatId);  // 800ms
                 //删除任务
-                processDeleteSystemMessage(msgId);
+                processDeleteSystemMessage(msgId);  // 0ms
                 // System.out.println("删除任务" + msgId);
-            }
+            }  // 1s ~ 1.5s
         }
 
     }
