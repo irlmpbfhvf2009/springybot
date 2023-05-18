@@ -52,7 +52,7 @@ public class SecurityConfig {
             "/admins/login",            
             "/index",
             "/version",
-            "/jobManagement/**",
+            // "/jobManagement/**",
             "/groupAndChannelManagement/**",
             "/debug/**",
     };
