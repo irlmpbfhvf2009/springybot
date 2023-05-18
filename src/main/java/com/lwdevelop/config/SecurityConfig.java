@@ -1,6 +1,5 @@
 package com.lwdevelop.config;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
@@ -12,8 +11,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.cors.CorsUtils;
-
-import com.lwdevelop.service.impl.AdminServiceImpl;
 import com.lwdevelop.utils.JwtAuthFilter;
 
 // import com.lwdevelop.backend.service.MemberUserDetailsService;
@@ -29,8 +26,8 @@ public class SecurityConfig {
      * return new BCryptPasswordEncoder();
      * }
      */
-    @Autowired
-    AdminServiceImpl adminServiceImpl;
+    // @Autowired
+    // AdminServiceImpl adminServiceImpl;
 
     @Bean
     JwtAuthFilter JwtFilter() {

@@ -11,7 +11,6 @@ com\lwdevelop\bot\triSpeak\utils\Common.class
 com\lwdevelop\service\JobManagementService.class
 com\lwdevelop\bot\triSpeak\handler\GroupMessage.class
 com\lwdevelop\service\impl\WhiteListServiceImpl.class
-com\lwdevelop\bot\triSpeak\utils\MessageQueue.class
 com\lwdevelop\service\RobotGroupAndChannelManagementService.class
 com\lwdevelop\bot\talent\utils\KeyboardButton.class
 com\lwdevelop\entity\WhiteList.class
@@ -23,6 +22,7 @@ com\lwdevelop\utils\RetEnum.class
 com\lwdevelop\dto\JobUserDTO.class
 com\lwdevelop\bot\default_\handler\ChannelMessage.class
 com\lwdevelop\bot\coolbao\handler\messageEvent\private_\commands\start.class
+com\lwdevelop\bot\triSpeak\utils\MessageTaskExecutor.class
 com\lwdevelop\repository\RobotGroupManagementRepository.class
 com\lwdevelop\utils\JwtAuthFilter.class
 com\lwdevelop\bot\talent\handler\event\LeaveChannel.class
@@ -56,7 +56,6 @@ com\lwdevelop\utils\ResponseUtils.class
 com\lwdevelop\dto\GroupAndChannelTreeDTO.class
 com\lwdevelop\bot\talent\handler\event\JoinChannel.class
 com\lwdevelop\bot\talent\utils\SpringyBotEnum.class
-com\lwdevelop\config\AdminDataLoader.class
 com\lwdevelop\dto\AdminDTO.class
 com\lwdevelop\repository\WhiteListRepository.class
 com\lwdevelop\bot\talent\handler\event\LeaveGroup.class
@@ -75,6 +74,7 @@ com\lwdevelop\entity\JobPosting.class
 com\lwdevelop\utils\CommUtils.class
 com\lwdevelop\service\AdminService.class
 com\lwdevelop\bot\triSpeak\handler\CallbackQuerys.class
+com\lwdevelop\bot\triSpeak\utils\MessageTaskExecutor$1.class
 com\lwdevelop\entity\SpringyBot.class
 com\lwdevelop\bot\coolbao\handler\event\JoinChannel.class
 com\lwdevelop\utils\JwtUtils.class
@@ -107,6 +107,7 @@ com\lwdevelop\bot\coolbao\handler\messageEvent\private_\commands\login.class
 com\lwdevelop\converter\StringListConverter.class
 com\lwdevelop\bot\default_\handler\CallbackQuerys.class
 com\lwdevelop\bot\talent\talent_bot.class
+com\lwdevelop\config\DataLoader.class
 com\lwdevelop\config\SecurityConfig.class
 com\lwdevelop\dto\SpringyBotDTO.class
 com\lwdevelop\BackendApplication.class

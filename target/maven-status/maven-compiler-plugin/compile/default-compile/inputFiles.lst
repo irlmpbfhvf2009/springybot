@@ -34,6 +34,7 @@ D:\酷寶\開發\tgbot\SpringyBot\src\main\java\com\lwdevelop\bot\default_\handler\C
 D:\酷寶\開發\tgbot\SpringyBot\src\main\java\com\lwdevelop\dto\AdminDTO.java
 D:\酷寶\開發\tgbot\SpringyBot\src\main\java\com\lwdevelop\bot\default_\handler\GroupMessage.java
 D:\酷寶\開發\tgbot\SpringyBot\src\main\java\com\lwdevelop\entity\RobotGroupManagement.java
+D:\酷寶\開發\tgbot\SpringyBot\src\main\java\com\lwdevelop\bot\triSpeak\utils\MessageTaskExecutor.java
 D:\酷寶\開發\tgbot\SpringyBot\src\main\java\com\lwdevelop\entity\JobUser.java
 D:\酷寶\開發\tgbot\SpringyBot\src\main\java\com\lwdevelop\utils\JwtAuthFilter.java
 D:\酷寶\開發\tgbot\SpringyBot\src\main\java\com\lwdevelop\entity\Config.java
@@ -46,11 +47,9 @@ D:\酷寶\開發\tgbot\SpringyBot\src\main\java\com\lwdevelop\entity\InvitationThres
 D:\酷寶\開發\tgbot\SpringyBot\src\main\java\com\lwdevelop\bot\coolbao\handler\event\LeaveGroup.java
 D:\酷寶\開發\tgbot\SpringyBot\src\main\java\com\lwdevelop\bot\coolbao\utils\SpringyBotEnum.java
 D:\酷寶\開發\tgbot\SpringyBot\src\main\java\com\lwdevelop\entity\JobPosting.java
-D:\酷寶\開發\tgbot\SpringyBot\src\main\java\com\lwdevelop\bot\triSpeak\utils\MessageQueue.java
 D:\酷寶\開發\tgbot\SpringyBot\src\main\java\com\lwdevelop\service\JobManagementService.java
 D:\酷寶\開發\tgbot\SpringyBot\src\main\java\com\lwdevelop\config\WebSocketConfig.java
 D:\酷寶\開發\tgbot\SpringyBot\src\main\java\com\lwdevelop\bot\triSpeak\handler\PrivateMessage_.java
-D:\酷寶\開發\tgbot\SpringyBot\src\main\java\com\lwdevelop\config\AdminDataLoader.java
 D:\酷寶\開發\tgbot\SpringyBot\src\main\java\com\lwdevelop\bot\coolbao\handler\CallbackQuerys.java
 D:\酷寶\開發\tgbot\SpringyBot\src\main\java\com\lwdevelop\bot\coolbao\handler\messageEvent\private_\message.java
 D:\酷寶\開發\tgbot\SpringyBot\src\main\java\com\lwdevelop\repository\WhiteListRepository.java
@@ -114,3 +113,4 @@ D:\酷寶\開發\tgbot\SpringyBot\src\main\java\com\lwdevelop\service\impl\RobotGrou
 D:\酷寶\開發\tgbot\SpringyBot\src\main\java\com\lwdevelop\dto\JobUserDTO.java
 D:\酷寶\開發\tgbot\SpringyBot\src\main\java\com\lwdevelop\bot\triSpeak\triSpeak_bot.java
 D:\酷寶\開發\tgbot\SpringyBot\src\main\java\com\lwdevelop\controller\IndexController.java
+D:\酷寶\開發\tgbot\SpringyBot\src\main\java\com\lwdevelop\config\DataLoader.java
