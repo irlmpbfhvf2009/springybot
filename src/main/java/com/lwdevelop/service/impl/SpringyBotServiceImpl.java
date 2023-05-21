@@ -12,11 +12,13 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.telegram.telegrambots.meta.TelegramBotsApi;
+import org.telegram.telegrambots.meta.api.methods.updates.SetWebhook;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 import org.telegram.telegrambots.meta.generics.BotSession;
 import com.lwdevelop.bot.coolbao.coolbao_bot;
 import com.lwdevelop.bot.coolbao.utils.SpringyBotEnum;
 import com.lwdevelop.bot.talent.talent_bot;
+import com.lwdevelop.bot.test.telegrambot;
 import com.lwdevelop.bot.triSpeak.triSpeak_bot;
 import com.lwdevelop.dto.SpringyBotDTO;
 import com.lwdevelop.entity.Config;
@@ -107,6 +109,10 @@ public class SpringyBotServiceImpl implements SpringyBotService {
                     break;
                 case "triSpeak":
                     botSession = telegramBotsApi.registerBot(new triSpeak_bot(springyBotDTO));
+                    break;
+                case "telegrambot":
+                    SetWebhook setWebhook= new SetWebhook("/api/your_bot_path");
+                    telegramBotsApi.registerBot(new telegrambot(springyBotDTO), setWebhook);
                     break;
                 default:
                     break;

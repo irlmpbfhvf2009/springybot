@@ -28,7 +28,7 @@ public class triSpeak_bot extends TelegramLongPollingBot {
     public triSpeak_bot(SpringyBotDTO springyBotDTO) {
         super(new DefaultBotOptions());
         this.dto = springyBotDTO;
-        threadPool = Executors.newFixedThreadPool(30); // 指定執行緒池的大小
+        threadPool = Executors.newFixedThreadPool(10); // 指定執行緒池的大小
 
         try {
             this.common = new Common(dto.getId(), getMe().getId(), getMe().getUserName());

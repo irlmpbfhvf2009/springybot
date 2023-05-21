@@ -1,15 +1,12 @@
 package com.lwdevelop.bot.triSpeak.handler;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Async;
 import org.telegram.telegrambots.meta.api.methods.groupadministration.GetChatMember;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.methods.updatingmessages.DeleteMessage;
 import com.lwdevelop.bot.triSpeak.utils.Common;
-import com.lwdevelop.bot.triSpeak.utils.MessageTaskExecutor;
 import com.lwdevelop.bot.triSpeak.utils.SpringyBotEnum;
 import com.lwdevelop.dto.ConfigDTO;
 import com.lwdevelop.entity.SpringyBot;
@@ -44,7 +41,9 @@ public class GroupMessage {
         this.lastname = common.getUpdate().getMessage().getFrom().getLastName();
     }
 
-    private static List<DeleteMessage> deleteSystemMessages = new ArrayList<>();
+    // private static List<DeleteMessage> deleteSystemMessages = new ArrayList<>();
+
+    private static int i = 0;
 
     public void handler() {
         HashMap<Long, ConfigDTO> configDTO_map = this.common.getConfigDTO_map();
@@ -67,25 +66,41 @@ public class GroupMessage {
             this.channel_title = configDTO_map.get(common.getSpringyBotId()).getFollowChannelSet_chatTitle();
         }
 
-        if (followChannelSet) {
-            if (!isSubscribeChannel()) {  // 200ms
+        i++;
+        long start_time = System.currentTimeMillis();
 
+        System.out.println("任務執行第 " + i + " 次");
+        if (followChannelSet) {
+            if (!isSubscribeChannel()) { // 200ms
+                long isSubscribeChannel_time = System.currentTimeMillis() - start_time;
+                System.out.println("[" + i + "]判斷用戶訂閱 " + this.userId + " 執行時間" + isSubscribeChannel_time + "ms");
                 // 删除消息.
-                // System.out.println("删除消息 " + messageId);
-                deleteMessage(chatId, messageId);  // 0ms
+                deleteMessage(chatId, messageId); // 0ms
+                long deleteMessage_time = System.currentTimeMillis() - start_time - isSubscribeChannel_time;
+                System.out.println("[" + i + "]刪除消息 " + messageId + " 執行時間" + deleteMessage_time + "ms");
                 // 发送系统消息
-                // System.out.println("发送系统消息");
-                Integer msgId = sendSystemMessage(chatId);  // 800ms
-                //删除任务
-                processDeleteSystemMessage(msgId);  // 0ms
-                // System.out.println("删除任务" + msgId);
-            }  // 1s ~ 1.5s
+                long sendSystemMessage_time = System.currentTimeMillis() -start_time - deleteMessage_time;
+                SendMessage response = new SendMessage(chatId, generate_warning_text());
+                common.executeAsync_(response);
+                // Integer msgId = sendSystemMessage(chatId); // 800ms
+                System.out.println("[" + i + "]發送系統消息 執行時間"+sendSystemMessage_time+"ms");
+                // 删除任务
+                // long deleteMessage_time_ = System.currentTimeMillis() - start_time -sendSystemMessage_time;
+                // DeleteMessage deleteMessage = new DeleteMessage(chatId, msgId);
+                // common.deleteMessageTask(deleteMessage, deleteSeconds);
+                // processDeleteSystemMessage(msgId); // 0ms
+
+                // System.out.println("[" + i + "]系統消息刪除" + msgId + " 執行時間"+deleteMessage_time_+"ms");
+
+                long end_time = System.currentTimeMillis() - start_time;
+                System.out.println("任務 ["+i+"] 完成 任務耗時" + end_time + "ms") ;
+            } // 1s ~ 1.5s
         }
 
     }
 
     @Async
-    private void deleteMessage(String chatId,Integer messageId){
+    private void deleteMessage(String chatId, Integer messageId) {
         DeleteMessage deleteMessage = new DeleteMessage(chatId, messageId);
         common.executeAsync(deleteMessage);
     }
@@ -96,18 +111,19 @@ public class GroupMessage {
         Integer msgId = common.executeAsync(response);
         return msgId;
     }
-    @Async
-    private void processDeleteSystemMessage(Integer msgId){
-        DeleteMessage deleteSystemMessage = new DeleteMessage(chatId, msgId);
-        deleteSystemMessages.add(deleteSystemMessage);
-        if (deleteSystemMessages.size() == 10) {
-            MessageTaskExecutor taskExecutor = new MessageTaskExecutor(this.common);
-            taskExecutor.executeDeleteMessageTask(deleteSystemMessages, deleteSeconds);
-            // common.deleteMessageTask(deleteSystemMessages, deleteSeconds);
-            deleteSystemMessages = new ArrayList<>();
-        }
-    }
+    // @Async
+    // private void processDeleteSystemMessage(Integer msgId){
+    // DeleteMessage deleteSystemMessage = new DeleteMessage(chatId, msgId);
+    // deleteSystemMessages.add(deleteSystemMessage);
+    // if (deleteSystemMessages.size() == 10) {
+    // MessageTaskExecutor taskExecutor = new MessageTaskExecutor(this.common);
+    // taskExecutor.executeDeleteMessageTask(deleteSystemMessages, deleteSeconds);
+    // // common.deleteMessageTask(deleteSystemMessages, deleteSeconds);
+    // deleteSystemMessages = new ArrayList<>();
+    // }
+    // }
 
+    @Async
     private boolean isSubscribeChannel() {
         String parseId = String.valueOf(this.channel_id);
         GetChatMember getChatMember = new GetChatMember(parseId, this.userId);

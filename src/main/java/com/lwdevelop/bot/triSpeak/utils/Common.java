@@ -48,22 +48,39 @@ public class Common {
     }
 
     @Async
-    public void deleteMessageTask(List<DeleteMessage> deleteSystemMessage, int second) {
+    public void deleteMessageTask(List<DeleteMessage> deleteSystemMessages, int second) {
         Timer timer = new Timer();
         timer.schedule(new TimerTask() {
             @Override
             public void run() {
-                for (DeleteMessage deleteMessage : deleteSystemMessage) {
+                for (DeleteMessage deleteMessage : deleteSystemMessages) {
                     executeAsync(deleteMessage);
                 }
             }
-        }, second);
+        }, second * 1000);
+    }
+
+    @Async
+    public void deleteMessageTask(DeleteMessage deleteSystemMessage, int second) {
+        Timer timer = new Timer();
+        timer.schedule(new TimerTask() {
+            @Override
+            public void run() {
+                executeAsync(deleteSystemMessage);
+            }
+        }, second * 1000);
     }
 
     @Async
     @SneakyThrows
     public Integer executeAsync(SendMessage sendMessage) {
         return this.bot.executeAsync(sendMessage).get().getMessageId();
+    }
+
+    @Async
+    @SneakyThrows
+    public void executeAsync_(SendMessage sendMessage) {
+        this.bot.executeAsync(sendMessage);
     }
 
     @Async
@@ -93,7 +110,7 @@ public class Common {
     @Async
     @SneakyThrows
     public Chat executeAsync(GetChat getChat) {
-            return this.bot.executeAsync(getChat).get();
+        return this.bot.executeAsync(getChat).get();
     }
 
 }
