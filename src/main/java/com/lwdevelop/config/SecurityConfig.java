@@ -55,6 +55,7 @@ public class SecurityConfig {
             // "/jobManagement/**",
             "/groupAndChannelManagement/**",
             "/debug/**",
+            "/springybot/start",
     };
 
     @Bean
