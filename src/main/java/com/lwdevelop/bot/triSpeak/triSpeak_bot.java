@@ -55,7 +55,7 @@ public class triSpeak_bot extends TelegramLongPollingBot {
                 // private
                 if (message.isUserMessage()) {
                     new PrivateMessage_(this.common).handler();
-                    log.info("[{}] Private message received from {}: {}", this.common.getUsername(), userInfo,
+                    log.info("[{}] Private message received fTErom {}: {}", this.common.getUsername(), userInfo,
                             message.getText());
 
                 }
