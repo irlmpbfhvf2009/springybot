@@ -76,6 +76,7 @@ D:\酷寶\開發\tgbot\SpringyBot\src\main\java\com\lwdevelop\utils\CryptoUtil.java
 D:\酷寶\開發\tgbot\SpringyBot\src\main\java\com\lwdevelop\bot\coolbao\utils\Common.java
 D:\酷寶\開發\tgbot\SpringyBot\src\main\java\com\lwdevelop\service\impl\WhiteListServiceImpl.java
 D:\酷寶\開發\tgbot\SpringyBot\src\main\java\com\lwdevelop\bot\talent\handler\GroupMessage.java
+D:\酷寶\開發\tgbot\SpringyBot\src\main\java\com\lwdevelop\bot\test\telegrambot.java
 D:\酷寶\開發\tgbot\SpringyBot\src\main\java\com\lwdevelop\bot\triSpeak\handler\CallbackQuerys.java
 D:\酷寶\開發\tgbot\SpringyBot\src\main\java\com\lwdevelop\controller\RedisController.java
 D:\酷寶\開發\tgbot\SpringyBot\src\main\java\com\lwdevelop\entity\GroupMessageIdPostCounts.java
@@ -95,6 +96,7 @@ D:\酷寶\開發\tgbot\SpringyBot\src\main\java\com\lwdevelop\service\impl\JobManage
 D:\酷寶\開發\tgbot\SpringyBot\src\main\java\com\lwdevelop\repository\AdminRepository.java
 D:\酷寶\開發\tgbot\SpringyBot\src\main\java\com\lwdevelop\bot\coolbao\handler\messageEvent\private_\state\enter_name.java
 D:\酷寶\開發\tgbot\SpringyBot\src\main\java\com\lwdevelop\service\RobotGroupAndChannelManagementService.java
+D:\酷寶\開發\tgbot\SpringyBot\src\main\java\com\lwdevelop\controller\TelegramBotController.java
 D:\酷寶\開發\tgbot\SpringyBot\src\main\java\com\lwdevelop\bot\talent\handler\event\JoinChannel.java
 D:\酷寶\開發\tgbot\SpringyBot\src\main\java\com\lwdevelop\repository\ChannelMessageIdPostCountsRepository.java
 D:\酷寶\開發\tgbot\SpringyBot\src\main\java\com\lwdevelop\utils\CommUtils.java

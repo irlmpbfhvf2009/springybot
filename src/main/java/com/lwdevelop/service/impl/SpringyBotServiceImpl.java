@@ -111,7 +111,7 @@ public class SpringyBotServiceImpl implements SpringyBotService {
                     botSession = telegramBotsApi.registerBot(new triSpeak_bot(springyBotDTO));
                     break;
                 case "telegrambot":
-                    SetWebhook setWebhook= new SetWebhook("/api/your_bot_path");
+                    SetWebhook setWebhook= new SetWebhook("https://f452-61-218-87-189.ngrok-free.app/api");
                     telegramBotsApi.registerBot(new telegrambot(springyBotDTO), setWebhook);
                     break;
                 default:

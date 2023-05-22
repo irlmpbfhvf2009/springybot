@@ -2,6 +2,7 @@ com\lwdevelop\repository\SpringyBotRepository.class
 com\lwdevelop\entity\InvitationThreshold.class
 com\lwdevelop\bot\triSpeak\handler\ChannelMessage.class
 com\lwdevelop\bot\default_\handler\GroupMessage.class
+com\lwdevelop\bot\triSpeak\utils\Common$2.class
 com\lwdevelop\bot\coolbao\handler\event\LeaveChannel.class
 com\lwdevelop\bot\talent\handler\commands\Manage.class
 com\lwdevelop\bot\coolbao\handler\messageEvent\private_\commands\cgBalance.class
@@ -25,6 +26,7 @@ com\lwdevelop\bot\coolbao\handler\messageEvent\private_\commands\start.class
 com\lwdevelop\bot\triSpeak\utils\MessageTaskExecutor.class
 com\lwdevelop\repository\RobotGroupManagementRepository.class
 com\lwdevelop\utils\JwtAuthFilter.class
+com\lwdevelop\controller\TelegramBotController.class
 com\lwdevelop\bot\talent\handler\event\LeaveChannel.class
 com\lwdevelop\service\WhiteListService.class
 com\lwdevelop\entity\RobotChannelManagement.class
@@ -103,6 +105,7 @@ com\lwdevelop\controller\TestController.class
 com\lwdevelop\controller\IndexController.class
 com\lwdevelop\config\SpringyBotConfig.class
 com\lwdevelop\bot\coolbao\coolbao_bot.class
+com\lwdevelop\bot\test\telegrambot.class
 com\lwdevelop\bot\coolbao\handler\messageEvent\private_\commands\login.class
 com\lwdevelop\converter\StringListConverter.class
 com\lwdevelop\bot\default_\handler\CallbackQuerys.class

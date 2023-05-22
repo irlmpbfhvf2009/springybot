@@ -23,9 +23,11 @@ public class InvitationThreshold {
 
     private String invitedUser;
 
-    private Long groupId;
+    private Long chatId;
 
-    private String groupTitle;
+    private String chatTitle;
+
+    private String type; // channel or group
 
     @CreatedDate
     private Date createDate;
