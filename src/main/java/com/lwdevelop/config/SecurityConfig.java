@@ -50,12 +50,10 @@ public class SecurityConfig {
             "/static/favicon.ico",
             "/static/assets/**",
             "/admins/login",            
+            "/springybot/start",
             "/index",
-            "/version",
-            // "/jobManagement/**",
             "/groupAndChannelManagement/**",
             "/debug/**",
-            "/springybot/start",
     };
 
     @Bean
