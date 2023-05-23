@@ -28,14 +28,28 @@ public class JoinGroup {
     private String inviteLastname;
     private Long groupId;
     private String groupTitle;
+    private Long invitedId;
+    private String invitedFirstname;
+    private String invitedUsername;
+    private String invitedLastname;
+
 
     public void isUserJoinGroup(Common common) {
         SpringyBot springyBot = springyBotServiceImpl.findById(common.getSpringyBotId()).get();
         this.common = common;
         this.message = common.getUpdate().getMessage();
         this.botId = common.getBotId();
+        this.inviteId = message.getFrom().getId();
+        this.inviteFirstname = message.getFrom().getFirstName();
+        this.inviteUsername = message.getFrom().getUserName();
+        this.inviteLastname = message.getFrom().getLastName();
 
         for (User member : this.message.getNewChatMembers()) {
+            this.invitedId = member.getId();
+            this.invitedFirstname = member.getFirstName();
+            this.invitedUsername = member.getUserName();
+            this.invitedLastname = member.getLastName();
+            
             // bot join group
             if (isUserInviteEvent(member)) {
                 springyBot.getInvitationThreshold().stream()
@@ -47,7 +61,7 @@ public class JoinGroup {
                             springyBot.getInvitationThreshold().add(this.getInvitationThreshold());
                         });
                 springyBotServiceImpl.save(springyBot);
-                log.info("{} invite {} join group", member.getUserName(), this.groupTitle);
+                log.info("{} invite {} join group {}", member.getUserName(), this.groupTitle);
             }
         }
     }
@@ -116,8 +130,14 @@ public class JoinGroup {
         invitationThreshold.setBotId(this.botId);
         invitationThreshold.setChatId(this.groupId);
         invitationThreshold.setChatTitle(this.groupTitle);
-        invitationThreshold.setInvitedUser();
-        invitationThreshold.setInviter();
+        invitationThreshold.setInviteId(this.inviteId);
+        invitationThreshold.setInviteFirstname(this.inviteFirstname);;
+        invitationThreshold.setInviteUsername(this.inviteUsername);
+        invitationThreshold.setInviteLastname(this.inviteLastname);
+        invitationThreshold.setInvitedId(this.invitedId);
+        invitationThreshold.setInvitedFirstname(this.invitedFirstname);
+        invitationThreshold.setInvitedUsername(this.invitedUsername);
+        invitationThreshold.setInvitedLastname(this.invitedLastname);
         invitationThreshold.setType("group");
         invitationThreshold.setStatus(true);
         return invitationThreshold;

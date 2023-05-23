@@ -24,9 +24,21 @@ public class InvitationThreshold {
 
     private Long botId;
 
-    private String Inviter;
+    private Long inviteId;
 
-    private String invitedUser;
+    private String inviteFirstname;
+
+    private String inviteUsername;
+
+    private String inviteLastname;
+
+    private Long invitedId;
+
+    private String invitedFirstname;
+
+    private String invitedUsername;
+
+    private String invitedLastname;
 
     private Long chatId;
 
@@ -35,7 +47,7 @@ public class InvitationThreshold {
     private String type; // channel or group
 
     private Boolean status;
-    
+
     @CreatedDate
     private Date createDate;
 }
