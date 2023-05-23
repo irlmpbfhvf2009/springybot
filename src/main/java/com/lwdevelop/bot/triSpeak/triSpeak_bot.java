@@ -44,9 +44,11 @@ public class triSpeak_bot extends TelegramLongPollingBot {
     public void onUpdateReceived(Update update) {
         this.common.setUpdate(update);
         Message message = update.getMessage();
+
+        System.out.println(update);
+
         // deal message group or private chat
         if (update.hasMessage()) {
-
             if (message.hasText()) {
                 User user = message.getFrom();
                 String userInfo = String.format("[%s] @%s (%s %s)", user.getId(), user.getUserName(),
