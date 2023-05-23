@@ -5,11 +5,16 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import org.telegram.telegrambots.bots.DefaultBotOptions;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
+import org.telegram.telegrambots.meta.api.objects.ChatMemberUpdated;
 import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.api.objects.User;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 import com.lwdevelop.bot.Common;
+import com.lwdevelop.bot.event.JoinChannel;
+import com.lwdevelop.bot.event.JoinGroup;
+import com.lwdevelop.bot.event.LeaveChannel;
+import com.lwdevelop.bot.event.LeaveGroup;
 import com.lwdevelop.bot.triSpeak.handler.CallbackQuerys;
 import com.lwdevelop.bot.triSpeak.handler.ChannelMessage;
 import com.lwdevelop.bot.triSpeak.handler.GroupMessage;
@@ -84,7 +89,57 @@ public class triSpeak_bot extends TelegramLongPollingBot {
                 }
             }
         }
+        // join group event
+        try {
+            if (common.hasNewChatMembers()) {
+                JoinGroup joinGroup = new JoinGroup();
+                // is robot join group
+                for (User member : message.getNewChatMembers()) {
+                    if (common.isBot(member)) {
+                        common.dealInviteLink(message.getChatId());
+                        joinGroup.isBotJoinGroup(this.common);
+                    } else {
+                        joinGroup.isUserJoinGroup(this.common);
+                    }
+                }
+            }
 
+            // leave event
+            if (common.hasLeftChatMember()) {
+                LeaveGroup leaveGroup = new LeaveGroup();
+                if (common.isBot_leftChat()) {
+                    leaveGroup.isBotLeave(common);
+
+                }
+            }
+        } catch (Exception e) {
+        }
+
+        // join channel event
+        try {
+            if (update.getMyChatMember() != null) {
+
+                ChatMemberUpdated chatMemberUpdated = update.getMyChatMember();
+                common.setChatMemberUpdated(chatMemberUpdated);
+
+                if (common.chatTypeIsChannel(chatMemberUpdated.getChat().getType())) {
+
+                    // is robot join channel
+                    if (common.isBotJoinChannel(chatMemberUpdated)) {
+                        common.dealInviteLink(chatMemberUpdated.getChat().getId());
+                        new JoinChannel().isBotJoin(common);
+                    }
+
+                    // leave event
+                    if (common.isBotLeftChannel(chatMemberUpdated)) {
+                        new LeaveChannel().isBotLeave(common);
+                    }
+                }
+            }
+
+        } catch (Exception e) {
+            log.error(e.toString());
+        }
         if (update.hasCallbackQuery()) {
 
             new CallbackQuerys(this.common).handler();

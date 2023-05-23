@@ -26,7 +26,7 @@ public class JoinChannel {
     private String channelTitle;
 
     public void isBotJoin(Common common) {
-
+ 
         this.common = common;
         this.botId = common.getBotId();
         this.inviteId = common.getChatMemberUpdated().getFrom().getId();

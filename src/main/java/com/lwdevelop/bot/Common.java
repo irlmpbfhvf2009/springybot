@@ -4,9 +4,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
-
 import org.springframework.scheduling.annotation.Async;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
+import org.telegram.telegrambots.meta.api.methods.groupadministration.ExportChatInviteLink;
 import org.telegram.telegrambots.meta.api.methods.groupadministration.GetChat;
 import org.telegram.telegrambots.meta.api.methods.groupadministration.GetChatMember;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
@@ -15,14 +15,18 @@ import org.telegram.telegrambots.meta.api.methods.updatingmessages.DeleteMessage
 import org.telegram.telegrambots.meta.api.methods.updatingmessages.EditMessageText;
 import org.telegram.telegrambots.meta.api.objects.Chat;
 import org.telegram.telegrambots.meta.api.objects.ChatMemberUpdated;
+import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.Update;
-
+import org.telegram.telegrambots.meta.api.objects.User;
+import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
+import com.lwdevelop.bot.talent.utils.SpringyBotEnum;
 import com.lwdevelop.dto.ConfigDTO;
-
 import lombok.Data;
 import lombok.SneakyThrows;
+import lombok.extern.slf4j.Slf4j;
 
 @Data
+@Slf4j
 public class Common {
 
     private Long springyBotId;
@@ -116,4 +120,55 @@ public class Common {
         return this.bot.executeAsync(getChat).get();
     }
 
+    public Boolean hasNewChatMembers() {
+        Message message = this.update.getMessage();
+        return message.getNewChatMembers() != null && message.getNewChatMembers().size() != 0;
+    }
+
+    public Boolean isBot(User member) {
+        return member.getUserName().equals(getUsername()) && member.getIsBot();
+    }
+
+    public Boolean isBot_leftChat() {
+        Message message = this.update.getMessage();
+        return message.getLeftChatMember().getIsBot()
+                && message.getLeftChatMember().getUserName().equals(getUsername());
+    }
+
+    public Boolean hasLeftChatMember() {
+        Message message = this.update.getMessage();
+        return message.getLeftChatMember() != null;
+    }
+
+    public Boolean chatTypeIsChannel(String type) {
+        return type.equals("channel") ? true : false;
+    }
+
+    public Boolean isBotJoinChannel(ChatMemberUpdated chatMemberUpdated) {
+        return chatMemberUpdated.getNewChatMember().getUser().getIsBot()
+                && chatMemberUpdated.getNewChatMember().getStatus().equals("administrator");
+    }
+
+    public Boolean isBotLeftChannel(ChatMemberUpdated chatMemberUpdated) {
+        return chatMemberUpdated.getNewChatMember().getUser().getIsBot()
+                && chatMemberUpdated.getNewChatMember().getStatus().equals("left");
+    }
+
+
+    public void dealInviteLink(Long chatId) {
+        try {
+            String inviteLink = this.bot.execute(
+                    new ExportChatInviteLink(String.valueOf(chatId)));
+            setInviteLink(inviteLink);
+        } catch (TelegramApiException e) {
+            Message message = this.update.getMessage();
+            String title = message.getChat().getTitle();
+            SendMessage response = new SendMessage();
+            response.setChatId(String.valueOf(message.getFrom().getId()));
+            response.setText(title + SpringyBotEnum.BOT_NOT_ENOUGH_RIGHTS.getText());
+            setInviteLink("");
+            executeAsync(response);
+            log.error(e.toString());
+        }
+    }
 }

@@ -22,6 +22,8 @@ public class InvitationThreshold {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
+    private Long botId;
+
     private String Inviter;
 
     private String invitedUser;
@@ -32,6 +34,8 @@ public class InvitationThreshold {
 
     private String type; // channel or group
 
+    private Boolean status;
+    
     @CreatedDate
     private Date createDate;
 }
