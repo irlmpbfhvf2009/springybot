@@ -10,16 +10,16 @@ import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.api.objects.User;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 
+import com.lwdevelop.bot.Common;
+import com.lwdevelop.bot.event.JoinChannel;
+import com.lwdevelop.bot.event.JoinGroup;
+import com.lwdevelop.bot.event.LeaveChannel;
+import com.lwdevelop.bot.event.LeaveGroup;
 import com.lwdevelop.bot.talent.handler.CallbackQuerys;
 import com.lwdevelop.bot.talent.handler.ChannelMessage;
 import com.lwdevelop.bot.talent.handler.GroupMessage;
 import com.lwdevelop.bot.talent.handler.PrivateMessage_;
 import com.lwdevelop.bot.talent.handler.commands.Job;
-import com.lwdevelop.bot.talent.handler.event.JoinChannel;
-import com.lwdevelop.bot.talent.handler.event.JoinGroup;
-import com.lwdevelop.bot.talent.handler.event.LeaveChannel;
-import com.lwdevelop.bot.talent.handler.event.LeaveGroup;
-import com.lwdevelop.bot.talent.utils.Common;
 import com.lwdevelop.bot.talent.utils.SpringyBotEnum;
 import com.lwdevelop.dto.SpringyBotDTO;
 import lombok.extern.slf4j.Slf4j;
@@ -58,7 +58,8 @@ public class talent_bot extends TelegramLongPollingBot {
     @Override
     public void onUpdateReceived(Update update) {
 
-        this.init(update);
+        this.common.setUpdate(update);
+        this.message = update.getMessage();
 
         // deal message group or private chat
         if (update.hasMessage()) {
@@ -154,12 +155,6 @@ public class talent_bot extends TelegramLongPollingBot {
         }
 
     }
-
-    private void init(Update update) {
-        this.common.setUpdate(update);
-        this.message = update.getMessage();
-    }
-
     private Boolean isNewChatMembersNotNullAndIsNewChatMembersNotEmpty() {
         return this.message.getNewChatMembers() != null && this.message.getNewChatMembers().size() != 0;
     }

@@ -1,19 +1,17 @@
 package com.lwdevelop.bot.default_;
 
 import java.util.HashMap;
-
 import org.telegram.telegrambots.bots.DefaultBotOptions;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.api.objects.User;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
-
 import com.lwdevelop.bot.default_.handler.CallbackQuerys;
 import com.lwdevelop.bot.default_.handler.ChannelMessage;
 import com.lwdevelop.bot.default_.handler.GroupMessage;
 import com.lwdevelop.bot.default_.handler.PrivateMessage_;
-import com.lwdevelop.bot.default_.utils.Common;
+import com.lwdevelop.bot.Common;
 import com.lwdevelop.bot.default_.utils.SpringyBotEnum;
 import com.lwdevelop.dto.SpringyBotDTO;
 import lombok.extern.slf4j.Slf4j;

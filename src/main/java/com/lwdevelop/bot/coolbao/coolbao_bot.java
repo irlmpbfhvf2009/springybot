@@ -11,7 +11,7 @@ import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 
 import com.lwdevelop.bot.coolbao.handler.CallbackQuerys;
 import com.lwdevelop.bot.coolbao.handler.messageEvent.private_.*;
-import com.lwdevelop.bot.coolbao.utils.Common;
+import com.lwdevelop.bot.Common;
 import com.lwdevelop.dto.SpringyBotDTO;
 
 import lombok.extern.slf4j.Slf4j;

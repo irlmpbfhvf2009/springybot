@@ -7,8 +7,8 @@ import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 
+import com.lwdevelop.bot.Common;
 import com.lwdevelop.bot.talent.handler.commands.Job;
-import com.lwdevelop.bot.talent.utils.Common;
 import com.lwdevelop.bot.talent.utils.KeyboardButton;
 import com.lwdevelop.bot.talent.utils.SpringyBotEnum;
 import com.lwdevelop.dto.JobPostingDTO;

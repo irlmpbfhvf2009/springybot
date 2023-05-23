@@ -10,8 +10,7 @@ import com.lwdevelop.dto.JobPostingDTO;
 import com.lwdevelop.dto.JobSeekerDTO;
 
 public class KeyboardButton {
-
-
+    
     // manage keyboard
     public final ReplyKeyboardMarkup manageReplyKeyboardMarkup() {
         ReplyKeyboardMarkup keyboardMarkup = new ReplyKeyboardMarkup();

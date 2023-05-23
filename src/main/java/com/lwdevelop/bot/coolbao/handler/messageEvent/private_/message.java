@@ -17,7 +17,7 @@ import com.lwdevelop.bot.coolbao.handler.messageEvent.private_.commands.login;
 import com.lwdevelop.bot.coolbao.handler.messageEvent.private_.commands.start;
 import com.lwdevelop.bot.coolbao.handler.messageEvent.private_.state.enter_name;
 import com.lwdevelop.bot.coolbao.handler.messageEvent.private_.state.enter_password;
-import com.lwdevelop.bot.coolbao.utils.Common;
+import com.lwdevelop.bot.Common;
 import com.lwdevelop.bot.coolbao.utils.SpringyBotEnum;
 import com.lwdevelop.entity.SpringyBot;
 import com.lwdevelop.entity.WhiteList;
@@ -72,9 +72,9 @@ public class message {
                         String dateString = formatCurrentDateWithWeekday(currentDate);
                         whiteList.stream().filter(wl -> wl.getUserId().equals(chatId)).findFirst().ifPresent(action -> {
                             response.setText(dateString + action.getName() + "值班 10:00-19:00");
-                            common.sendResponseAsync(response);
+                            common.executeAsync(response);
                             response.setText(dateString + action.getName() + "值班 13:00-22:00");
-                            common.sendResponseAsync(response);
+                            common.executeAsync(response);
                             response.setText(
                                     "歡迎使用 @" + common.getUsername() + "\n\n" + SpringyBotEnum.COMMANDS_HELP.getText());
                         });
@@ -92,37 +92,37 @@ public class message {
                         break;
                     case "/xxpay":
                         response.setText(SpringyBotEnum.COMMANDS_XXPAY.getText());
-                        common.sendResponseAsync(response);
+                        common.executeAsync(response);
                             response.setText(
                                     "歡迎使用 @" + common.getUsername() + "\n\n" + SpringyBotEnum.COMMANDS_HELP.getText());
                         break;
                     case "/sevendays":
                         response.setText(SpringyBotEnum.COMMANDS_SEVENDAYS.getText());
-                        common.sendResponseAsync(response);
+                        common.executeAsync(response);
                         SendPhoto sendPhoto = new SendPhoto();
                         sendPhoto.setChatId(String.valueOf(chatId));
                         String fileId = "AgACAgUAAxkBAAIoj2RbOJRM-e6bIs7pNQbBcY4a9uA5AAIYtjEbO9PYVhYO1zjC8iI5AQADAgADcwADLwQ";
                         InputFile inputFile = new InputFile(fileId);
                         sendPhoto.setPhoto(inputFile);
-                        common.sendResponseAsync(sendPhoto);
+                        common.executeAsync(sendPhoto);
                             response.setText(
                                     "歡迎使用 @" + common.getUsername() + "\n\n" + SpringyBotEnum.COMMANDS_HELP.getText());
                         break;
                     case "/bbippo":
                         response.setText(SpringyBotEnum.COMMANDS_BBIPPO.getText());
-                        common.sendResponseAsync(response);
+                        common.executeAsync(response);
                             response.setText(
                                     "歡迎使用 @" + common.getUsername() + "\n\n" + SpringyBotEnum.COMMANDS_HELP.getText());
                         break;
                     case "/dahe":
                         response.setText(SpringyBotEnum.COMMANDS_DAHE.getText());
-                        common.sendResponseAsync(response);
+                        common.executeAsync(response);
                             response.setText(
                                     "歡迎使用 @" + common.getUsername() + "\n\n" + SpringyBotEnum.COMMANDS_HELP.getText());
                         break;
                     case "/white_dove":
                         response.setText(SpringyBotEnum.COMMANDS_WHITEDOVE.getText());
-                        common.sendResponseAsync(response);
+                        common.executeAsync(response);
                             response.setText(
                                     "歡迎使用 @" + common.getUsername() + "\n\n" + SpringyBotEnum.COMMANDS_HELP.getText());
                         break;
@@ -132,7 +132,7 @@ public class message {
                         break;
                 }
                 if (response.getText() != null) {
-                    common.sendResponseAsync(response);
+                    common.executeAsync(response);
                 }
             }
 

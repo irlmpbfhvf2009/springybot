@@ -1,11 +1,9 @@
 package com.lwdevelop.bot.coolbao.handler.messageEvent.private_.state;
 
 import java.util.Set;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
-
-import com.lwdevelop.bot.coolbao.utils.Common;
+import com.lwdevelop.bot.Common;
 import com.lwdevelop.bot.coolbao.utils.SpringyBotEnum;
 import com.lwdevelop.entity.SpringyBot;
 import com.lwdevelop.entity.WhiteList;
@@ -31,11 +29,11 @@ public class enter_password {
         if (text.equals(password)) {
 
             SendMessage response = new SendMessage(String.valueOf(chatId), userId + " 已加白");
-            common.sendResponseAsync(response);
+            common.executeAsync(response);
 
             response = new SendMessage(String.valueOf(chatId),
                     "歡迎使用 @" + common.getUsername() + "\n\n" + SpringyBotEnum.COMMANDS_HELP.getText());
-            common.sendResponseAsync(response);
+            common.executeAsync(response);
 
             common.getUserState().put(chatId, "");
             WhiteList wl = new WhiteList();
@@ -44,7 +42,7 @@ public class enter_password {
             springyBotServiceImpl.save(springyBot);
         } else {
             SendMessage response = new SendMessage(String.valueOf(chatId), "輸入錯誤,退出輸入模式");
-            common.sendResponseAsync(response);
+            common.executeAsync(response);
             common.getUserState().put(chatId, "");
         }
 

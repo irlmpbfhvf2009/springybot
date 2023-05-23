@@ -1,9 +1,10 @@
-package com.lwdevelop.bot.triSpeak.utils;
+package com.lwdevelop.bot;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
+
 import org.springframework.scheduling.annotation.Async;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.meta.api.methods.groupadministration.GetChat;
@@ -15,7 +16,9 @@ import org.telegram.telegrambots.meta.api.methods.updatingmessages.EditMessageTe
 import org.telegram.telegrambots.meta.api.objects.Chat;
 import org.telegram.telegrambots.meta.api.objects.ChatMemberUpdated;
 import org.telegram.telegrambots.meta.api.objects.Update;
+
 import com.lwdevelop.dto.ConfigDTO;
+
 import lombok.Data;
 import lombok.SneakyThrows;
 

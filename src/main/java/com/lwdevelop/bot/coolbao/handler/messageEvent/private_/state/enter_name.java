@@ -2,8 +2,7 @@ package com.lwdevelop.bot.coolbao.handler.messageEvent.private_.state;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
-
-import com.lwdevelop.bot.coolbao.utils.Common;
+import com.lwdevelop.bot.Common;
 import com.lwdevelop.bot.coolbao.utils.KeyboardButton;
 import com.lwdevelop.bot.coolbao.utils.SpringyBotEnum;
 import com.lwdevelop.entity.SpringyBot;
@@ -35,12 +34,12 @@ public class enter_name {
         springyBot.getWhiteList().stream().filter(wl -> wl.getUserId().equals(common.getUpdate().getMessage().getChatId())).findFirst().ifPresent(action->{
             SendMessage response = new SendMessage(chatId, "Your user ID: " + chatId + "\nCurrent name: "+action.getName());
             response.setReplyMarkup(new KeyboardButton().loginMarkupInline());
-            common.sendResponseAsync(response);
+            common.executeAsync(response);
             common.getUserState().put(common.getUpdate().getMessage().getChatId(), "");
         });
 
         SendMessage response = new SendMessage(chatId, "歡迎使用 @" + common.getUsername() + "\n\n" + SpringyBotEnum.COMMANDS_HELP.getText());
-        common.sendResponseAsync(response);
+        common.executeAsync(response);
 
 
     }

@@ -5,7 +5,7 @@ import org.telegram.telegrambots.meta.api.methods.BotApiMethod;
 import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.Update;
 
-import com.lwdevelop.bot.coolbao.utils.Common;
+import com.lwdevelop.bot.Common;
 import com.lwdevelop.dto.SpringyBotDTO;
 
 public class telegrambot extends TelegramWebhookBot {

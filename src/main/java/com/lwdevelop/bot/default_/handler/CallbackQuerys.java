@@ -1,8 +1,7 @@
 package com.lwdevelop.bot.default_.handler;
 
 import org.telegram.telegrambots.meta.api.objects.CallbackQuery;
-
-import com.lwdevelop.bot.default_.utils.Common;
+import com.lwdevelop.bot.Common;
 
 public class CallbackQuerys {
     

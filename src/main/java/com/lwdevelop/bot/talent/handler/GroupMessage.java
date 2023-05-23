@@ -1,6 +1,6 @@
 package com.lwdevelop.bot.talent.handler;
 
-import com.lwdevelop.bot.talent.utils.Common;
+import com.lwdevelop.bot.Common;
 
 public class GroupMessage {
 

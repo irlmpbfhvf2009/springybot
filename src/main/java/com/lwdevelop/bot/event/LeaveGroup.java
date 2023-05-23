@@ -1,9 +1,9 @@
-package com.lwdevelop.bot.coolbao.handler.event;
+package com.lwdevelop.bot.event;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.telegram.telegrambots.meta.api.objects.Message;
 
-import com.lwdevelop.bot.coolbao.utils.Common;
+import com.lwdevelop.bot.Common;
 import com.lwdevelop.entity.RobotGroupManagement;
 import com.lwdevelop.entity.SpringyBot;
 import com.lwdevelop.service.impl.SpringyBotServiceImpl;
@@ -12,10 +12,6 @@ import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 public class LeaveGroup {
-
-    // @Autowired
-    // private RobotGroupManagementServiceImpl robotGroupManagementServiceImpl = SpringUtils.getApplicationContext()
-    //         .getBean(RobotGroupManagementServiceImpl.class);
 
     @Autowired
     private SpringyBotServiceImpl springyBotServiceImpl = SpringUtils.getApplicationContext()
@@ -37,20 +33,11 @@ public class LeaveGroup {
                 g.setStatus(false);
             });
         this.springyBotServiceImpl.save(springyBot);
-        log.info("[{}] bot leave {} group",common.getUsername(), message.getChat().getTitle());
-
-        // springyBot.getRobotGroupManagement().removeIf(rgm -> hasTarget(rgm));
-        // this.springyBotServiceImpl.save(springyBot);
-        // RobotGroupManagement robotGroupManagement = this.robotGroupManagementServiceImpl
-        //         .findByBotIdAndGroupId(this.botId, this.groupId);
-        // this.robotGroupManagementServiceImpl.deleteById(robotGroupManagement.getId());
+        log.info("{} bot leave {} group",common.getBot().getBotUsername(), message.getChat().getTitle());
 
     }
 
     private Boolean hasTarget(RobotGroupManagement rgm) {
         return rgm.getBotId().equals(this.botId) && rgm.getGroupId().equals(this.groupId);
     }
-    // private Boolean hasTarget(RobotGroupManagement rgm) {
-    //     return rgm.getGroupId().equals(this.groupId) && rgm.getBotId().equals(this.botId);
-    // }
 }

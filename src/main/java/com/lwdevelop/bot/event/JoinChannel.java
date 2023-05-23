@@ -1,8 +1,8 @@
-package com.lwdevelop.bot.coolbao.handler.event;
+package com.lwdevelop.bot.event;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
-import com.lwdevelop.bot.coolbao.utils.Common;
+import com.lwdevelop.bot.Common;
 import com.lwdevelop.entity.RobotChannelManagement;
 import com.lwdevelop.entity.SpringyBot;
 import com.lwdevelop.service.impl.SpringyBotServiceImpl;
@@ -46,7 +46,7 @@ public class JoinChannel {
                 springyBot.getRobotChannelManagement().add(getRobotChannelManagement());
             });
             springyBotServiceImpl.save(springyBot);
-            log.info("[{}] bot join {} channel",common.getUsername(),this.channelTitle);
+            log.info("{} bot join {} channel",common.getBot().getBotUsername(),this.channelTitle);
     }
 
     private Boolean hasTarget(RobotChannelManagement rcm) {

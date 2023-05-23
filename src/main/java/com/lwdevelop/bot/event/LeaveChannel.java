@@ -1,9 +1,9 @@
-package com.lwdevelop.bot.coolbao.handler.event;
+package com.lwdevelop.bot.event;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.telegram.telegrambots.meta.api.objects.ChatMemberUpdated;
 
-import com.lwdevelop.bot.coolbao.utils.Common;
+import com.lwdevelop.bot.Common;
 import com.lwdevelop.entity.RobotChannelManagement;
 import com.lwdevelop.entity.SpringyBot;
 import com.lwdevelop.service.impl.SpringyBotServiceImpl;
@@ -12,10 +12,6 @@ import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 public class LeaveChannel {
-
-    // @Autowired
-    // private RobotChannelManagementServiceImpl robotChannelManagementServiceImpl = SpringUtils.getApplicationContext()
-    //         .getBean(RobotChannelManagementServiceImpl.class);
 
     @Autowired
     private SpringyBotServiceImpl springyBotServiceImpl = SpringUtils.getApplicationContext()
@@ -39,7 +35,8 @@ public class LeaveChannel {
             });
 
         this.springyBotServiceImpl.save(springyBot);
-        log.info("[{}] bot leave {} channel",common.getUsername(),chatMemberUpdated.getChat().getTitle());
+        log.info("{} bot leave {} channel",common.getBot().getBotUsername(),chatMemberUpdated.getChat().getTitle());
+
 
     }
 

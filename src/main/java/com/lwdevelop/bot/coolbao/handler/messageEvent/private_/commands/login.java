@@ -4,7 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Message;
 
-import com.lwdevelop.bot.coolbao.utils.Common;
+import com.lwdevelop.bot.Common;
 import com.lwdevelop.bot.coolbao.utils.KeyboardButton;
 import com.lwdevelop.entity.SpringyBot;
 import com.lwdevelop.service.impl.SpringyBotServiceImpl;
@@ -25,12 +25,12 @@ public class login {
             springyBot.getWhiteList().stream().filter(wl -> wl.getUserId().equals(message.getChatId())).findFirst().ifPresent(action->{
                 SendMessage response = new SendMessage(chatId, "Your user ID: " + chatId + "\nCurrent name: "+action.getName());
                 response.setReplyMarkup(new KeyboardButton().loginMarkupInline());
-                common.sendResponseAsync(response);
+                common.executeAsync(response);
                 common.getUserState().put(message.getChatId(), "");
             });
         } else {
             SendMessage response = new SendMessage(chatId, "Please enter password");
-            common.sendResponseAsync(response);
+            common.executeAsync(response);
             common.getUserState().put(message.getChatId(), "enter_password");
         }
     }

@@ -1,10 +1,10 @@
-package com.lwdevelop.bot.talent.handler.event;
+package com.lwdevelop.bot.event;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.User;
 
-import com.lwdevelop.bot.talent.utils.Common;
+import com.lwdevelop.bot.Common;
 import com.lwdevelop.entity.RobotGroupManagement;
 import com.lwdevelop.entity.SpringyBot;
 import com.lwdevelop.service.impl.SpringyBotServiceImpl;

@@ -5,7 +5,8 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import com.lwdevelop.bot.talent.utils.Common;
+
+import com.lwdevelop.bot.Common;
 import com.lwdevelop.dto.GroupAndChannelTreeDTO;
 import com.lwdevelop.dto.RobotChannelManagementDTO;
 import com.lwdevelop.dto.RobotGroupManagementDTO;

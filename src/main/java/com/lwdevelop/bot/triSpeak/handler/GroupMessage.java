@@ -6,7 +6,7 @@ import org.springframework.scheduling.annotation.Async;
 import org.telegram.telegrambots.meta.api.methods.groupadministration.GetChatMember;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.methods.updatingmessages.DeleteMessage;
-import com.lwdevelop.bot.triSpeak.utils.Common;
+import com.lwdevelop.bot.Common;
 import com.lwdevelop.bot.triSpeak.utils.SpringyBotEnum;
 import com.lwdevelop.dto.ConfigDTO;
 import com.lwdevelop.entity.SpringyBot;

@@ -9,11 +9,11 @@ import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.api.objects.User;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
+import com.lwdevelop.bot.Common;
 import com.lwdevelop.bot.triSpeak.handler.CallbackQuerys;
 import com.lwdevelop.bot.triSpeak.handler.ChannelMessage;
 import com.lwdevelop.bot.triSpeak.handler.GroupMessage;
 import com.lwdevelop.bot.triSpeak.handler.PrivateMessage_;
-import com.lwdevelop.bot.triSpeak.utils.Common;
 import com.lwdevelop.bot.triSpeak.utils.SpringyBotEnum;
 import com.lwdevelop.dto.SpringyBotDTO;
 import lombok.extern.slf4j.Slf4j;
@@ -44,8 +44,6 @@ public class triSpeak_bot extends TelegramLongPollingBot {
     public void onUpdateReceived(Update update) {
         this.common.setUpdate(update);
         Message message = update.getMessage();
-
-        System.out.println(update);
 
         // deal message group or private chat
         if (update.hasMessage()) {

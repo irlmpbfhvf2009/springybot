@@ -12,7 +12,7 @@ import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Message;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.lwdevelop.bot.coolbao.utils.Common;
+import com.lwdevelop.bot.Common;
 import com.lwdevelop.bot.coolbao.utils.SpringyBotEnum;
 
 import lombok.extern.slf4j.Slf4j;
@@ -38,7 +38,7 @@ public class addMerchant {
             SendMessage response = new SendMessage();
             response.setChatId(chatId);
             response.setText("歡迎使用 @" + common.getUsername() + "\n\n" + SpringyBotEnum.COMMANDS_HELP.getText());
-            common.sendResponseAsync(response);
+            common.executeAsync(response);
 
         } else {
 
@@ -62,11 +62,11 @@ public class addMerchant {
                     "3.请参考清单下方对接文挡完成对接";
 
             SendMessage response = new SendMessage(chatId, str);
-            common.sendResponseAsync(response);
+            common.executeAsync(response);
             common.getUserState().put(message.getChatId(), "");
 
             response = new SendMessage(chatId, "建立商戶 " + name + " 中.......");
-            common.sendResponseAsync(response);
+            common.executeAsync(response);
 
             long timestamp = System.currentTimeMillis();
             String timestampString = formatTimestamp(timestamp);
@@ -76,7 +76,7 @@ public class addMerchant {
             String create_mch_response = sendPostRequest(xxpay_mch_info_add_url, params);
 
             response = new SendMessage(chatId, "新增成功 response : " + create_mch_response);
-            common.sendResponseAsync(response);
+            common.executeAsync(response);
         }
 
     }

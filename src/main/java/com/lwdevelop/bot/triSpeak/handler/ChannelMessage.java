@@ -1,6 +1,6 @@
 package com.lwdevelop.bot.triSpeak.handler;
 
-import com.lwdevelop.bot.triSpeak.utils.Common;
+import com.lwdevelop.bot.Common;
 
 public class ChannelMessage {
 

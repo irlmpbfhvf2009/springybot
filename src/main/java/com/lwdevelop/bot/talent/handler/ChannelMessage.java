@@ -1,7 +1,9 @@
 package com.lwdevelop.bot.talent.handler;
 
 import org.telegram.telegrambots.meta.api.methods.updatingmessages.DeleteMessage;
-import com.lwdevelop.bot.talent.utils.Common;
+
+import com.lwdevelop.bot.Common;
+
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
