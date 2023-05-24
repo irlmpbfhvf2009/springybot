@@ -128,7 +128,7 @@ public class talent_bot extends TelegramLongPollingBot {
                     // is robot join channel
                     if (common.isBotJoinChannel(chatMemberUpdated)) {
                         common.dealInviteLink(chatMemberUpdated.getChat().getId());
-                        new JoinChannel().isBotJoin(common);
+                        new JoinChannel().isBotJoinChannel(common);
                     }
 
                     // leave event

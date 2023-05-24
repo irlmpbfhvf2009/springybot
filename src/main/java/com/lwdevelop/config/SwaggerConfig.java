@@ -22,6 +22,7 @@ import springfox.documentation.spring.web.plugins.Docket;
 @EnableOpenApi
 @Configuration
 public class SwaggerConfig {
+    
     @Value("${springfox.documentation.swagger-ui.enabled}")
     private boolean enabled;
 

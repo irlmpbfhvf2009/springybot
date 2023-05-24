@@ -33,7 +33,6 @@ public class JoinGroup {
     private String invitedUsername;
     private String invitedLastname;
 
-
     public void isUserJoinGroup(Common common) {
         SpringyBot springyBot = springyBotServiceImpl.findById(common.getSpringyBotId()).get();
         this.common = common;
@@ -43,13 +42,20 @@ public class JoinGroup {
         this.inviteFirstname = message.getFrom().getFirstName();
         this.inviteUsername = message.getFrom().getUserName();
         this.inviteLastname = message.getFrom().getLastName();
+        this.groupId = message.getChat().getId();
+        this.groupTitle = message.getChat().getTitle();
 
+        String invite_name = "[" + String.valueOf(this.inviteId) + "]" + this.inviteFirstname + this.inviteUsername
+                + this.inviteLastname;
         for (User member : this.message.getNewChatMembers()) {
             this.invitedId = member.getId();
             this.invitedFirstname = member.getFirstName();
             this.invitedUsername = member.getUserName();
             this.invitedLastname = member.getLastName();
-            
+            String invited_name = "[" + String.valueOf(this.invitedId) + "]" + this.invitedFirstname
+                    + this.invitedUsername
+                    + this.invitedLastname;
+                    
             // bot join group
             if (isUserInviteEvent(member)) {
                 springyBot.getInvitationThreshold().stream()
@@ -61,7 +67,7 @@ public class JoinGroup {
                             springyBot.getInvitationThreshold().add(this.getInvitationThreshold());
                         });
                 springyBotServiceImpl.save(springyBot);
-                log.info("{} invite {} join group {}", member.getUserName(), this.groupTitle);
+                log.info("{} invite {} join group {}", invite_name, invited_name, this.groupTitle);
             }
         }
     }
@@ -108,7 +114,7 @@ public class JoinGroup {
     }
 
     private Boolean hasTarget(InvitationThreshold it) {
-        return it.getChatId().equals(this.groupId) && it.getBotId().equals(this.botId);
+        return it.getChatId().equals(this.groupId) && it.getBotId().equals(this.botId) && it.getType().equals("group");
     }
 
     private RobotGroupManagement getRobotGroupManagement() {
@@ -131,7 +137,8 @@ public class JoinGroup {
         invitationThreshold.setChatId(this.groupId);
         invitationThreshold.setChatTitle(this.groupTitle);
         invitationThreshold.setInviteId(this.inviteId);
-        invitationThreshold.setInviteFirstname(this.inviteFirstname);;
+        invitationThreshold.setInviteFirstname(this.inviteFirstname);
+        ;
         invitationThreshold.setInviteUsername(this.inviteUsername);
         invitationThreshold.setInviteLastname(this.inviteLastname);
         invitationThreshold.setInvitedId(this.invitedId);

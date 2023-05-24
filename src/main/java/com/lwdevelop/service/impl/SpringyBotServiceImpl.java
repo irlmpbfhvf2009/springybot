@@ -171,12 +171,23 @@ public class SpringyBotServiceImpl implements SpringyBotService {
         String botType = springyBotDTO.getBotType();
         Config config= new Config();
 
+        config.setContactPerson("");
+        config.setDeleteSeconds(0);
+        config.setFollowChannelSet(false);
+        config.setFollowChannelSet_chatId(0L);
+        config.setFollowChannelSet_chatTitle("");
+        config.setInvitationBonusSet(false);
+        config.setInviteEarnedOutstand(0);
+        config.setInviteFriendsAutoClearTime(0);
+        config.setInviteFriendsQuantity(0);
+        config.setInviteFriendsSet(false);
+        config.setInviteMembers(0);
+        config.setPassword("");
+
         switch (botType) {
             case "coolbao":
                 config.setPassword(SpringyBotEnum.PASSWORD.getText());
                 break;
-            case "triSpeak":
-                config.setFollowChannelSet(false);
             default:
                 break;
         }
@@ -216,6 +227,18 @@ public class SpringyBotServiceImpl implements SpringyBotService {
         springyBot.setUsername(springyBotDTO.getUsername());
         springyBot.setToken(springyBotDTO.getToken());
         springyBot.setBotType(springyBotDTO.getBotType());
+        springyBot.getConfig().setContactPerson(springyBotDTO.getConfig().getContactPerson());
+        springyBot.getConfig().setDeleteSeconds(springyBotDTO.getConfig().getDeleteSeconds());
+        springyBot.getConfig().setFollowChannelSet(springyBotDTO.getConfig().getFollowChannelSet());
+        springyBot.getConfig().setFollowChannelSet_chatId(springyBotDTO.getConfig().getFollowChannelSet_chatId());
+        springyBot.getConfig().setFollowChannelSet_chatTitle(springyBotDTO.getConfig().getFollowChannelSet_chatTitle());
+        springyBot.getConfig().setInvitationBonusSet(springyBotDTO.getConfig().getInvitationBonusSet());
+        springyBot.getConfig().setInviteEarnedOutstand(springyBotDTO.getConfig().getInviteEarnedOutstand());
+        springyBot.getConfig().setInviteFriendsAutoClearTime(springyBotDTO.getConfig().getInviteFriendsAutoClearTime());
+        springyBot.getConfig().setInviteFriendsQuantity(springyBotDTO.getConfig().getInviteFriendsQuantity());
+        springyBot.getConfig().setInviteFriendsSet(springyBotDTO.getConfig().getInviteFriendsSet());
+        springyBot.getConfig().setInviteMembers(springyBotDTO.getConfig().getInviteMembers());
+        springyBot.getConfig().setPassword(springyBotDTO.getConfig().getPassword());
         save(springyBot);
         log.info("SpringyBotServiceImpl ==> updateBot ... [ {} ] 修改成功", springyBotDTO.getUsername());
         return ResponseUtils.response(RetEnum.RET_SUCCESS, "修改成功");
