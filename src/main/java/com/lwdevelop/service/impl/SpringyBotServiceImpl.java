@@ -169,8 +169,8 @@ public class SpringyBotServiceImpl implements SpringyBotService {
         springyBot.setState(springyBotDTO.getState());
 
         String botType = springyBotDTO.getBotType();
-        Config config= new Config();
 
+        Config config= new Config();
         config.setContactPerson("");
         config.setDeleteSeconds(0);
         config.setFollowChannelSet(false);
