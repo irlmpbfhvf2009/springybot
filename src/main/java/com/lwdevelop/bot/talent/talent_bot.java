@@ -23,7 +23,7 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class talent_bot extends TelegramLongPollingBot {
 
-    public Common common;
+    private Common common;
     private SpringyBotDTO dto;
 
     public talent_bot(SpringyBotDTO springyBotDTO) {

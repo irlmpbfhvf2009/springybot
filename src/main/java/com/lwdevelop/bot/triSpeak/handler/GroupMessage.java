@@ -66,24 +66,19 @@ public class GroupMessage {
             this.channel_title = configDTO_map.get(common.getSpringyBotId()).getFollowChannelSet_chatTitle();
         }
 
-        i++;
-        long start_time = System.currentTimeMillis();
-
-        System.out.println("任務執行第 " + i + " 次");
         if (followChannelSet) {
+            i++;
+            // long start_time = System.currentTimeMillis();
+            System.out.println("任務執行第 " + i + " 次");
             if (!isSubscribeChannel()) { // 200ms
-                long isSubscribeChannel_time = System.currentTimeMillis() - start_time;
-                System.out.println("[" + i + "]判斷用戶訂閱 " + this.userId + " 執行時間" + isSubscribeChannel_time + "ms");
+
+                
                 // 删除消息.
                 deleteMessage(chatId, messageId); // 0ms
-                long deleteMessage_time = System.currentTimeMillis() - start_time - isSubscribeChannel_time;
-                System.out.println("[" + i + "]刪除消息 " + messageId + " 執行時間" + deleteMessage_time + "ms");
                 // 发送系统消息
-                long sendSystemMessage_time = System.currentTimeMillis() -start_time - deleteMessage_time;
-                SendMessage response = new SendMessage(chatId, generate_warning_text());
-                common.executeAsync_(response);
+                // SendMessage response = new SendMessage(chatId, generate_warning_text());
+                // common.executeAsync_(response);
                 // Integer msgId = sendSystemMessage(chatId); // 800ms
-                System.out.println("[" + i + "]發送系統消息 執行時間"+sendSystemMessage_time+"ms");
                 // 删除任务
                 // long deleteMessage_time_ = System.currentTimeMillis() - start_time -sendSystemMessage_time;
                 // DeleteMessage deleteMessage = new DeleteMessage(chatId, msgId);
@@ -92,8 +87,8 @@ public class GroupMessage {
 
                 // System.out.println("[" + i + "]系統消息刪除" + msgId + " 執行時間"+deleteMessage_time_+"ms");
 
-                long end_time = System.currentTimeMillis() - start_time;
-                System.out.println("任務 ["+i+"] 完成 任務耗時" + end_time + "ms") ;
+                // long end_time = System.currentTimeMillis() - start_time;
+                // System.out.println("任務 ["+i+"] 完成 任務耗時" + end_time + "ms") ;
             } // 1s ~ 1.5s
         }
 

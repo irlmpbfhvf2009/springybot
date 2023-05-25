@@ -2,34 +2,36 @@ package com.lwdevelop.bot.test;
 
 import org.telegram.telegrambots.bots.TelegramWebhookBot;
 import org.telegram.telegrambots.meta.api.methods.BotApiMethod;
-import org.telegram.telegrambots.meta.api.objects.Message;
+import org.telegram.telegrambots.meta.api.methods.updatingmessages.DeleteMessage;
 import org.telegram.telegrambots.meta.api.objects.Update;
-
+import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 import com.lwdevelop.bot.Common;
 import com.lwdevelop.dto.SpringyBotDTO;
 
-public class telegrambot extends TelegramWebhookBot {
+public class TelegrambotWebhook extends TelegramWebhookBot {
 
     public Common common;
     private SpringyBotDTO dto;
 
-    public telegrambot(SpringyBotDTO springyBotDTO) {
+    public TelegrambotWebhook(SpringyBotDTO springyBotDTO) {
         this.dto = springyBotDTO;
     }
 
     @Override
     public String getBotPath() {
-        return "your_bot_path";
+        return "adam";
     }
 
     @Override
     public BotApiMethod<?> onWebhookUpdateReceived(Update update) {
-        this.common.setUpdate(update);
-        Message message = update.getMessage();
-        if (message.hasText()) {
-            if (message.isSuperGroupMessage()) {
-                System.out.println("message: "+message.getText());
-            }
+        Long chatId = update.getMessage().getChatId();
+        Integer msgId = update.getMessage().getMessageId();
+        String id = String.valueOf(chatId);
+        DeleteMessage deleteMessage = new DeleteMessage(id, msgId);
+        try {
+            this.executeAsync(deleteMessage);
+        } catch (TelegramApiException e) {
+            e.printStackTrace();
         }
         return null;
     }

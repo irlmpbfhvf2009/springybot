@@ -8,6 +8,7 @@ import java.util.NoSuchElementException;
 import java.util.Optional;
 import javax.annotation.Resource;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -15,10 +16,13 @@ import org.telegram.telegrambots.meta.TelegramBotsApi;
 import org.telegram.telegrambots.meta.api.methods.updates.SetWebhook;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 import org.telegram.telegrambots.meta.generics.BotSession;
+import org.telegram.telegrambots.updatesreceivers.DefaultBotSession;
+import org.telegram.telegrambots.updatesreceivers.DefaultWebhook;
+
 import com.lwdevelop.bot.coolbao.coolbao_bot;
 import com.lwdevelop.bot.coolbao.utils.SpringyBotEnum;
 import com.lwdevelop.bot.talent.talent_bot;
-import com.lwdevelop.bot.test.telegrambot;
+import com.lwdevelop.bot.test.TelegrambotWebhook;
 import com.lwdevelop.bot.triSpeak.triSpeak_bot;
 import com.lwdevelop.dto.SpringyBotDTO;
 import com.lwdevelop.entity.Config;
@@ -39,12 +43,18 @@ public class SpringyBotServiceImpl implements SpringyBotService {
     @Resource
     private TelegramBotsApi telegramBotsApi;
 
+    @Value("${telegram.webhook-host}")
+    private String webhookHost;
+    
+    @Value("${telegram.internal.url}")
+    private String internalUrl;
+
     @Autowired
     private SpringyBotRepository springyBotRepository;
 
     private static Map<Long, BotSession> springyBotMap = new HashMap<>();
 
-    private static Map<String,Date> run_time = new HashMap<>();
+    private static Map<String, Date> run_time = new HashMap<>();
 
     // SpringyBot CRUD
     @Override
@@ -111,8 +121,12 @@ public class SpringyBotServiceImpl implements SpringyBotService {
                     botSession = telegramBotsApi.registerBot(new triSpeak_bot(springyBotDTO));
                     break;
                 case "telegrambot":
-                    SetWebhook setWebhook= new SetWebhook("https://f452-61-218-87-189.ngrok-free.app/api");
-                    telegramBotsApi.registerBot(new telegrambot(springyBotDTO), setWebhook);
+                    DefaultWebhook defaultWebhook = new DefaultWebhook();
+                    defaultWebhook.setInternalUrl(internalUrl);
+                    TelegramBotsApi telegramBotsApi = new TelegramBotsApi(DefaultBotSession.class, defaultWebhook);
+                    SetWebhook setWebhook = SetWebhook.builder().url(webhookHost).build();
+                    telegramBotsApi.registerBot(new TelegrambotWebhook(springyBotDTO), setWebhook);
+                    telegramBotsApi.registerBot(new TelegrambotWebhook(springyBotDTO), setWebhook);
                     break;
                 default:
                     break;
@@ -123,7 +137,7 @@ public class SpringyBotServiceImpl implements SpringyBotService {
 
             log.info("Common Telegram bot started.");
             run_time.put(springyBot.getUsername(), new Date());
-            
+
             return ResponseUtils.response(RetEnum.RET_SUCCESS, "启动成功");
         } catch (TelegramApiException e) {
             log.error("Catch TelegramApiException : {}", e.toString());
@@ -152,7 +166,6 @@ public class SpringyBotServiceImpl implements SpringyBotService {
 
             log.info("Common Telegram bot stoped.");
 
-
             return ResponseUtils.response(RetEnum.RET_SUCCESS, "已停止");
         } catch (Exception e) {
             log.error("Catch exception : {}", e.toString());
@@ -170,7 +183,7 @@ public class SpringyBotServiceImpl implements SpringyBotService {
 
         String botType = springyBotDTO.getBotType();
 
-        Config config= new Config();
+        Config config = new Config();
         config.setContactPerson("");
         config.setDeleteSeconds(0);
         config.setFollowChannelSet(false);
