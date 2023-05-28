@@ -60,7 +60,7 @@ public class triSpeak_bot extends TelegramLongPollingBot {
                 // private
                 if (message.isUserMessage()) {
                     new PrivateMessage_(this.common).handler();
-                    log.info("[{}] Private message received fTErom {}: {}", this.common.getUsername(), userInfo,
+                    log.info("[{}] Private message received from {}: {}", this.common.getUsername(), userInfo,
                             message.getText());
 
                 }
@@ -70,8 +70,6 @@ public class triSpeak_bot extends TelegramLongPollingBot {
                     threadPool.submit(() -> {
                         new GroupMessage(this.common).handler();
                     });
-                    // log.info("[{}] Group message received from {}", common.getUsername(),
-                    // userInfo);
                 }
 
             }
@@ -92,15 +90,15 @@ public class triSpeak_bot extends TelegramLongPollingBot {
         // join group event
         try {
             if (common.hasNewChatMembers()) {
-                JoinGroup joinGroup = new JoinGroup();
-                // is robot join group
+                JoinGroup joinGroup = new JoinGroup(this.common);
+                // is join group
                 for (User member : message.getNewChatMembers()) {
                     if (common.isBot(member)) {
                         common.dealInviteLink(message.getChatId());
-                        joinGroup.isBotJoinGroup(this.common);
-                    } else {
-                        System.out.println("監聽到用戶入群 update:" + update);
-                        joinGroup.isUserJoinGroup(this.common);
+                        joinGroup.isBotJoinGroup();
+                    } 
+                    if(common.isUser(member)) {
+                        joinGroup.isUserJoinGroup();
                     }
                 }
             }
@@ -112,7 +110,7 @@ public class triSpeak_bot extends TelegramLongPollingBot {
                     leaveGroup.isBotLeave();
                 }
                 if(common.isUser_leftChat()){
-                    System.out.println("監聽到用戶退群 update:" + update);
+                    System.out.println("監聽到用戶退群" );
                     leaveGroup.isUserLeave();
                 }
             }
@@ -127,23 +125,25 @@ public class triSpeak_bot extends TelegramLongPollingBot {
                 common.setChatMemberUpdated(chatMemberUpdated);
 
                 if (common.chatTypeIsChannel(chatMemberUpdated.getChat().getType())) {
-                    JoinChannel joinChannel = new JoinChannel();
+                    JoinChannel joinChannel = new JoinChannel(common);
                     // is robot join channel
                     if (common.isBotJoinChannel(chatMemberUpdated)) {
                         common.dealInviteLink(chatMemberUpdated.getChat().getId());
-                        joinChannel.isBotJoinChannel(common);
+                        joinChannel.isBotJoinChannel();
                     }
                     if(common.isUserJoinChannel(chatMemberUpdated)){
-                        System.out.println("監聽到用戶入頻道 update:" + update);
-                        joinChannel.isUserJoinChannel(common);
+                        System.out.println("監聽到用戶入頻道" );
+                        joinChannel.isUserJoinChannel();
                     }
+
                     // leave event
+                    LeaveChannel leaveChannel= new LeaveChannel(common);
                     if (common.isBotLeftChannel(chatMemberUpdated)) {
-                        new LeaveChannel().isBotLeave(common);
+                        leaveChannel.isBotLeave();
                     }
                     if (common.isUserLeftChannel(chatMemberUpdated)) {
-                        System.out.println("監聽到用戶退出頻道 update:" + update);
-                        new LeaveChannel().isBotLeave(common);
+                        System.out.println("監聽到用戶退出頻道");
+                        leaveChannel.isBotLeave();
                     }
                 }
             }

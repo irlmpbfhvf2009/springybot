@@ -93,24 +93,23 @@ public class talent_bot extends TelegramLongPollingBot {
         // join group event
         try {
             if (common.hasNewChatMembers()) {
-                JoinGroup joinGroup = new JoinGroup();
+                JoinGroup joinGroup = new JoinGroup(this.common);
                 // is robot join group
                 for (User member : message.getNewChatMembers()) {
                     if (common.isBot(member)) {
                         common.dealInviteLink(message.getChatId());
-                        joinGroup.isBotJoinGroup(this.common);
+                        joinGroup.isBotJoinGroup();
                     } else {
-                        joinGroup.isUserJoinGroup(this.common);
+                        joinGroup.isUserJoinGroup();
                     }
                 }
             }
 
             // leave event
             if (common.hasLeftChatMember()) {
-                LeaveGroup leaveGroup = new LeaveGroup(common);
+                LeaveGroup leaveGroup = new LeaveGroup(this.common);
                 if (common.isBot_leftChat()) {
                     leaveGroup.isBotLeave();
-
                 }
             }
         } catch (Exception e) {
@@ -128,12 +127,13 @@ public class talent_bot extends TelegramLongPollingBot {
                     // is robot join channel
                     if (common.isBotJoinChannel(chatMemberUpdated)) {
                         common.dealInviteLink(chatMemberUpdated.getChat().getId());
-                        new JoinChannel().isBotJoinChannel(common);
+                        new JoinChannel(common).isBotJoinChannel();
                     }
 
                     // leave event
+                    LeaveChannel leaveChannel= new LeaveChannel(common);
                     if (common.isBotLeftChannel(chatMemberUpdated)) {
-                        new LeaveChannel().isBotLeave(common);
+                        leaveChannel.isBotLeave();
                     }
                 }
             }

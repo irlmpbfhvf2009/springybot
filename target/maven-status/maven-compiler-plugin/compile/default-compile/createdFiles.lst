@@ -11,6 +11,7 @@ com\lwdevelop\service\JobManagementService.class
 com\lwdevelop\bot\triSpeak\handler\GroupMessage.class
 com\lwdevelop\service\impl\WhiteListServiceImpl.class
 com\lwdevelop\bot\Common.class
+com\lwdevelop\bot\triSpeak\utils\MessageQueue.class
 com\lwdevelop\service\RobotGroupAndChannelManagementService.class
 com\lwdevelop\bot\talent\utils\KeyboardButton.class
 com\lwdevelop\entity\WhiteList.class
@@ -30,6 +31,7 @@ com\lwdevelop\controller\TelegramBotController.class
 com\lwdevelop\service\WhiteListService.class
 com\lwdevelop\entity\RobotChannelManagement.class
 com\lwdevelop\utils\SpringUtils.class
+com\lwdevelop\bot\test\TelegrambotWebhook.class
 com\lwdevelop\entity\Admin.class
 com\lwdevelop\service\impl\JobManagementServiceImpl.class
 com\lwdevelop\bot\default_\utils\KeyboardButton.class
@@ -97,7 +99,6 @@ com\lwdevelop\controller\TestController.class
 com\lwdevelop\controller\IndexController.class
 com\lwdevelop\config\SpringyBotConfig.class
 com\lwdevelop\bot\coolbao\coolbao_bot.class
-com\lwdevelop\bot\test\telegrambot.class
 com\lwdevelop\bot\coolbao\handler\messageEvent\private_\commands\login.class
 com\lwdevelop\converter\StringListConverter.class
 com\lwdevelop\bot\default_\handler\CallbackQuerys.class

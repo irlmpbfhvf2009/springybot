@@ -17,9 +17,9 @@ public class TelegramBotController {
 
     private TelegrambotWebhook telegrambot;
     
-    public TelegramBotController(TelegrambotWebhook telegrambot) {
-        this.telegrambot = telegrambot;
-    }
+    // public TelegramBotController(TelegrambotWebhook telegrambot) {
+    //     this.telegrambot = telegrambot;
+    // }
 
     @PostMapping("/adam")
     public void getUpdateWithDifferentUrl(@RequestBody Update update){

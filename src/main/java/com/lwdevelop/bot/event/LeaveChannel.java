@@ -19,12 +19,18 @@ public class LeaveChannel {
 
     private Long channelId;
     private Long botId;
-
-    public void isBotLeave(Common common) {
-
+    private Common common;
+    private String chatMemberUpdatedChatTitle;
+    
+    public LeaveChannel(Common common){
+        this.common = common;
         ChatMemberUpdated chatMemberUpdated = common.getChatMemberUpdated();
         this.channelId = chatMemberUpdated.getChat().getId();
         this.botId = common.getBotId();
+        this.chatMemberUpdatedChatTitle = chatMemberUpdated.getChat().getTitle();
+    }
+
+    public void isBotLeave() {
 
         SpringyBot springyBot = springyBotServiceImpl.findById(common.getSpringyBotId()).get();
         springyBot.getRobotChannelManagement().stream()
@@ -35,7 +41,7 @@ public class LeaveChannel {
             });
 
         this.springyBotServiceImpl.save(springyBot);
-        log.info("{} bot leave {} channel",common.getBot().getBotUsername(),chatMemberUpdated.getChat().getTitle());
+        log.info("{} bot leave {} channel",this.common.getBot().getBotUsername(),this.chatMemberUpdatedChatTitle);
 
 
     }

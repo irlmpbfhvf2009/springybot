@@ -25,8 +25,9 @@ public class JoinChannel {
     private String inviteLastname;
     private Long channelId;
     private String channelTitle;
+    private SpringyBot springyBot;
 
-    public void isUserJoinChannel(Common common) {
+    public JoinChannel(Common common){
         this.common = common;
         this.botId = common.getBotId();
         this.inviteId = common.getChatMemberUpdated().getFrom().getId();
@@ -35,42 +36,41 @@ public class JoinChannel {
         this.inviteLastname = common.getChatMemberUpdated().getFrom().getLastName();
         this.channelId = common.getChatMemberUpdated().getChat().getId();
         this.channelTitle = common.getChatMemberUpdated().getChat().getTitle();
-
-        SpringyBot springyBot = springyBotServiceImpl.findById(common.getSpringyBotId()).get();
-        springyBot.getInvitationThreshold().stream()
-            .filter(it->hasTarget(it))
-            .findFirst()
-            .ifPresentOrElse(it->{
-                // it.setStatus(true);
-            }, ()->{
-                springyBot.getInvitationThreshold().add(this.getInvitationThreshold());
-            });
-            springyBotServiceImpl.save(springyBot);
-            // log.info("{} invite {} join channel {}", invite_name, invited_name, this.channelTitle);
+        this.springyBot = springyBotServiceImpl.findById(common.getSpringyBotId()).get();
     }
 
-    public void isBotJoinChannel(Common common) {
- 
-        this.common = common;
-        this.botId = common.getBotId();
-        this.inviteId = common.getChatMemberUpdated().getFrom().getId();
-        this.inviteFirstname = common.getChatMemberUpdated().getFrom().getFirstName();
-        this.inviteUsername = common.getChatMemberUpdated().getFrom().getUserName();
-        this.inviteLastname = common.getChatMemberUpdated().getFrom().getLastName();
-        this.channelId = common.getChatMemberUpdated().getChat().getId();
-        this.channelTitle = common.getChatMemberUpdated().getChat().getTitle();
+    public void isUserJoinChannel() {
 
-        SpringyBot springyBot = springyBotServiceImpl.findById(common.getSpringyBotId()).get();
+
+        // springyBot.getRestrictMember().stream()
+        // .filter(rm->rm.getChatId().equals(this.channelId.toString() && rm.getUserId()))
+
+
+        springyBot.getInvitationThreshold().stream()
+                .filter(it -> hasTarget(it))
+                .findFirst()
+                .ifPresentOrElse(it -> {
+                    // it.setStatus(true);
+                }, () -> {
+                    springyBot.getInvitationThreshold().add(this.getInvitationThreshold());
+                });
+        springyBotServiceImpl.save(springyBot);
+        // log.info("{} invite {} join channel {}", invite_name, invited_name,
+        // this.channelTitle);
+    }
+
+    public void isBotJoinChannel() {
+
         springyBot.getRobotChannelManagement().stream()
-            .filter(rcm -> hasTarget(rcm))
-            .findFirst()
-            .ifPresentOrElse(rcm -> {
-                rcm.setStatus(true);
-            }, () -> {
-                springyBot.getRobotChannelManagement().add(getRobotChannelManagement());
-            });
-            springyBotServiceImpl.save(springyBot);
-            log.info("{} bot join {} channel",common.getBot().getBotUsername(),this.channelTitle);
+                .filter(rcm -> hasTarget(rcm))
+                .findFirst()
+                .ifPresentOrElse(rcm -> {
+                    rcm.setStatus(true);
+                }, () -> {
+                    springyBot.getRobotChannelManagement().add(getRobotChannelManagement());
+                });
+        springyBotServiceImpl.save(springyBot);
+        log.info("{} bot join {} channel", common.getBot().getBotUsername(), this.channelTitle);
     }
 
     private Boolean hasTarget(RobotChannelManagement rcm) {
@@ -78,7 +78,7 @@ public class JoinChannel {
     }
 
     private Boolean hasTarget(InvitationThreshold it) {
-        return it.getChatId().equals(this.channelId) && it.getBotId().equals(this.botId) && it.getType().equals("channel");
+        return it.getChatId().equals(this.channelId) && it.getType().equals("channel");
     }
 
     private RobotChannelManagement getRobotChannelManagement() {
@@ -95,7 +95,7 @@ public class JoinChannel {
         return robotGroupManagement;
     }
 
-    private InvitationThreshold getInvitationThreshold(){
+    private InvitationThreshold getInvitationThreshold() {
         InvitationThreshold invitationThreshold = new InvitationThreshold();
         return invitationThreshold;
     }

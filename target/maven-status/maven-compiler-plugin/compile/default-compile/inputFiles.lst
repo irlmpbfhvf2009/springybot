@@ -43,6 +43,7 @@ D:\酷寶\開發\tgbot\SpringyBot\src\main\java\com\lwdevelop\bot\triSpeak\handler\G
 D:\酷寶\開發\tgbot\SpringyBot\src\main\java\com\lwdevelop\entity\InvitationThreshold.java
 D:\酷寶\開發\tgbot\SpringyBot\src\main\java\com\lwdevelop\bot\coolbao\utils\SpringyBotEnum.java
 D:\酷寶\開發\tgbot\SpringyBot\src\main\java\com\lwdevelop\entity\JobPosting.java
+D:\酷寶\開發\tgbot\SpringyBot\src\main\java\com\lwdevelop\bot\triSpeak\utils\MessageQueue.java
 D:\酷寶\開發\tgbot\SpringyBot\src\main\java\com\lwdevelop\service\JobManagementService.java
 D:\酷寶\開發\tgbot\SpringyBot\src\main\java\com\lwdevelop\config\WebSocketConfig.java
 D:\酷寶\開發\tgbot\SpringyBot\src\main\java\com\lwdevelop\bot\triSpeak\handler\PrivateMessage_.java
@@ -68,7 +69,6 @@ D:\酷寶\開發\tgbot\SpringyBot\src\main\java\com\lwdevelop\entity\RobotChannelMan
 D:\酷寶\開發\tgbot\SpringyBot\src\main\java\com\lwdevelop\utils\CryptoUtil.java
 D:\酷寶\開發\tgbot\SpringyBot\src\main\java\com\lwdevelop\service\impl\WhiteListServiceImpl.java
 D:\酷寶\開發\tgbot\SpringyBot\src\main\java\com\lwdevelop\bot\talent\handler\GroupMessage.java
-D:\酷寶\開發\tgbot\SpringyBot\src\main\java\com\lwdevelop\bot\test\telegrambot.java
 D:\酷寶\開發\tgbot\SpringyBot\src\main\java\com\lwdevelop\bot\triSpeak\handler\CallbackQuerys.java
 D:\酷寶\開發\tgbot\SpringyBot\src\main\java\com\lwdevelop\controller\RedisController.java
 D:\酷寶\開發\tgbot\SpringyBot\src\main\java\com\lwdevelop\entity\GroupMessageIdPostCounts.java
@@ -87,6 +87,7 @@ D:\酷寶\開發\tgbot\SpringyBot\src\main\java\com\lwdevelop\entity\JobSeeker.java
 D:\酷寶\開發\tgbot\SpringyBot\src\main\java\com\lwdevelop\service\impl\JobManagementServiceImpl.java
 D:\酷寶\開發\tgbot\SpringyBot\src\main\java\com\lwdevelop\repository\AdminRepository.java
 D:\酷寶\開發\tgbot\SpringyBot\src\main\java\com\lwdevelop\bot\coolbao\handler\messageEvent\private_\state\enter_name.java
+D:\酷寶\開發\tgbot\SpringyBot\src\main\java\com\lwdevelop\bot\test\TelegrambotWebhook.java
 D:\酷寶\開發\tgbot\SpringyBot\src\main\java\com\lwdevelop\service\RobotGroupAndChannelManagementService.java
 D:\酷寶\開發\tgbot\SpringyBot\src\main\java\com\lwdevelop\controller\TelegramBotController.java
 D:\酷寶\開發\tgbot\SpringyBot\src\main\java\com\lwdevelop\repository\ChannelMessageIdPostCountsRepository.java

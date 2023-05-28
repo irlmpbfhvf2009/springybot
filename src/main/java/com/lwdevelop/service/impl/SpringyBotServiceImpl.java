@@ -18,7 +18,6 @@ import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 import org.telegram.telegrambots.meta.generics.BotSession;
 import org.telegram.telegrambots.updatesreceivers.DefaultBotSession;
 import org.telegram.telegrambots.updatesreceivers.DefaultWebhook;
-
 import com.lwdevelop.bot.coolbao.coolbao_bot;
 import com.lwdevelop.bot.coolbao.utils.SpringyBotEnum;
 import com.lwdevelop.bot.talent.talent_bot;
@@ -109,7 +108,6 @@ public class SpringyBotServiceImpl implements SpringyBotService {
             BotSession botSession = null;
             
             String botType = springyBot.getBotType();
-
             switch (botType) {
                 case "talent":
                     botSession = telegramBotsApi.registerBot(new talent_bot(springyBotDTO));
@@ -125,7 +123,6 @@ public class SpringyBotServiceImpl implements SpringyBotService {
                     defaultWebhook.setInternalUrl(internalUrl);
                     TelegramBotsApi telegramBotsApi = new TelegramBotsApi(DefaultBotSession.class, defaultWebhook);
                     SetWebhook setWebhook = SetWebhook.builder().url(webhookHost).build();
-                    telegramBotsApi.registerBot(new TelegrambotWebhook(springyBotDTO), setWebhook);
                     telegramBotsApi.registerBot(new TelegrambotWebhook(springyBotDTO), setWebhook);
                     break;
                 default:

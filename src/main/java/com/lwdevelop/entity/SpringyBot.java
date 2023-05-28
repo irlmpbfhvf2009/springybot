@@ -46,12 +46,16 @@ public class SpringyBot {
     private Set<RobotChannelManagement> robotChannelManagement;
     
     // 群組發言(邀請人數)門檻
-    @OneToMany(cascade = CascadeType.ALL)
+    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JsonIgnore
     private Set<InvitationThreshold> invitationThreshold;
 
     @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JsonIgnore
     private  Set<JobUser> jobUser;
+
+    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @JsonIgnore
+    private  Set<RestrictMember> restrictMember;
 
 }

@@ -1,14 +1,21 @@
 package com.lwdevelop.bot.triSpeak.handler;
 
+import java.util.Calendar;
 import java.util.HashMap;
+import java.util.Optional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Async;
 import org.telegram.telegrambots.meta.api.methods.groupadministration.GetChatMember;
+import org.telegram.telegrambots.meta.api.methods.groupadministration.RestrictChatMember;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.methods.updatingmessages.DeleteMessage;
+import org.telegram.telegrambots.meta.api.objects.ChatPermissions;
+
 import com.lwdevelop.bot.Common;
 import com.lwdevelop.bot.triSpeak.utils.SpringyBotEnum;
 import com.lwdevelop.dto.ConfigDTO;
+import com.lwdevelop.entity.RestrictMember;
 import com.lwdevelop.entity.SpringyBot;
 import com.lwdevelop.service.impl.SpringyBotServiceImpl;
 import com.lwdevelop.utils.SpringUtils;
@@ -26,6 +33,7 @@ public class GroupMessage {
     private String username;
     private String firstname;
     private String lastname;
+    // private static MessageQueue messageQueue = new MessageQueue();
 
     @Autowired
     private SpringyBotServiceImpl springyBotServiceImpl = SpringUtils.getApplicationContext()
@@ -42,8 +50,6 @@ public class GroupMessage {
     }
 
     // private static List<DeleteMessage> deleteSystemMessages = new ArrayList<>();
-
-    private static int i = 0;
 
     public void handler() {
         HashMap<Long, ConfigDTO> configDTO_map = this.common.getConfigDTO_map();
@@ -67,29 +73,46 @@ public class GroupMessage {
         }
 
         if (followChannelSet) {
-            i++;
-            // long start_time = System.currentTimeMillis();
-            System.out.println("任務執行第 " + i + " 次");
             if (!isSubscribeChannel()) { // 200ms
-
+                Calendar calendar = Calendar.getInstance();
+                ChatPermissions chatPermissions = new ChatPermissions();
+                chatPermissions.setCanSendMessages(false);
+                chatPermissions.setCanChangeInfo(false);
+                chatPermissions.setCanInviteUsers(true);
+                chatPermissions.setCanPinMessages(false);
+                chatPermissions.setCanSendMediaMessages(false);
+                chatPermissions.setCanAddWebPagePreviews(false);
+                chatPermissions.setCanSendOtherMessages(false);
+                chatPermissions.setCanSendPolls(false);
+                calendar.add(Calendar.MINUTE, 20);
+                int untilDate = (int) (calendar.getTimeInMillis() / 1000);
+                RestrictChatMember restrictChatMember = new RestrictChatMember(this.chatId, this.userId,
+                        chatPermissions, untilDate);
+                common.executeAsync(restrictChatMember);
                 
-                // 删除消息.
+                SpringyBot springyBot = springyBotServiceImpl.findById(common.getSpringyBotId()).get();
+                Optional<RestrictMember> optionalRestrictMember = springyBot.getRestrictMember().stream()
+                        .filter(rm -> rm.getChatId().equals(this.chatId) && rm.getUserId().equals(this.userId))
+                        .findAny();
+
+                if (!optionalRestrictMember.isPresent()) {
+                    RestrictMember restrictMember = new RestrictMember();
+                    restrictMember.setChatId(this.chatId);
+                    restrictMember.setUserId(this.userId);
+                    restrictMember.setStatus(true);
+                    springyBot.getRestrictMember().add(restrictMember);
+                } else {
+                    optionalRestrictMember.get().setStatus(true);
+                }
+                springyBotServiceImpl.save(springyBot);
+                // 删除消息
                 deleteMessage(chatId, messageId); // 0ms
                 // 发送系统消息
-                // SendMessage response = new SendMessage(chatId, generate_warning_text());
-                // common.executeAsync_(response);
-                // Integer msgId = sendSystemMessage(chatId); // 800ms
-                // 删除任务
-                // long deleteMessage_time_ = System.currentTimeMillis() - start_time -sendSystemMessage_time;
-                // DeleteMessage deleteMessage = new DeleteMessage(chatId, msgId);
-                // common.deleteMessageTask(deleteMessage, deleteSeconds);
-                // processDeleteSystemMessage(msgId); // 0ms
-
-                // System.out.println("[" + i + "]系統消息刪除" + msgId + " 執行時間"+deleteMessage_time_+"ms");
-
-                // long end_time = System.currentTimeMillis() - start_time;
-                // System.out.println("任務 ["+i+"] 完成 任務耗時" + end_time + "ms") ;
-            } // 1s ~ 1.5s
+                SendMessage response = new SendMessage(chatId, generate_warning_text());
+                Integer msgId = common.executeAsync(response);
+                DeleteMessage deleteMessage = new DeleteMessage(chatId, msgId);
+                common.deleteMessageTask(deleteMessage, this.deleteSeconds);
+            }
         }
 
     }
@@ -123,7 +146,6 @@ public class GroupMessage {
         String parseId = String.valueOf(this.channel_id);
         GetChatMember getChatMember = new GetChatMember(parseId, this.userId);
         boolean status = this.common.executeAsync(getChatMember).equals("left") ? false : true;
-
         return status;
     }
 

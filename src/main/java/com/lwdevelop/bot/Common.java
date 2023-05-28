@@ -4,11 +4,14 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
+import java.util.concurrent.ExecutionException;
+
 import org.springframework.scheduling.annotation.Async;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.meta.api.methods.groupadministration.ExportChatInviteLink;
 import org.telegram.telegrambots.meta.api.methods.groupadministration.GetChat;
 import org.telegram.telegrambots.meta.api.methods.groupadministration.GetChatMember;
+import org.telegram.telegrambots.meta.api.methods.groupadministration.RestrictChatMember;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.methods.send.SendPhoto;
 import org.telegram.telegrambots.meta.api.methods.updatingmessages.DeleteMessage;
@@ -87,7 +90,8 @@ public class Common {
     @Async
     @SneakyThrows
     public void executeAsync_(SendMessage sendMessage) {
-        this.bot.executeAsync(sendMessage);
+        this.bot.execute(sendMessage);
+        // this.bot.executeAsync(sendMessage);
     }
 
     @Async
@@ -109,15 +113,33 @@ public class Common {
     }
 
     @Async
-    @SneakyThrows
     public String executeAsync(GetChatMember getChatMember) {
-        return this.bot.executeAsync(getChatMember).get().getStatus();
+        try {
+            return this.bot.executeAsync(getChatMember).get().getStatus();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+        } catch (TelegramApiException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 
     @Async
     @SneakyThrows
     public Chat executeAsync(GetChat getChat) {
         return this.bot.executeAsync(getChat).get();
+    }
+
+    @Async
+    // @SneakyThrows
+    public void executeAsync(RestrictChatMember restrictChatMember) {
+        try {
+            this.bot.executeAsync(restrictChatMember);
+        } catch (TelegramApiException e) {
+            e.printStackTrace();
+        }
     }
 
     public Boolean hasNewChatMembers() {
@@ -128,6 +150,9 @@ public class Common {
     public Boolean isBot(User member) {
         return member.getUserName().equals(getUsername()) && member.getIsBot();
     }
+    public Boolean isUser(User member) {
+        return !member.getIsBot();
+    }
 
     public Boolean isBot_leftChat() {
         Message message = this.update.getMessage();
@@ -137,8 +162,7 @@ public class Common {
 
     public Boolean isUser_leftChat() {
         Message message = this.update.getMessage();
-        return !message.getLeftChatMember().getIsBot()
-                && message.getLeftChatMember().getUserName().equals(getUsername());
+        return !message.getLeftChatMember().getIsBot();
     }
 
     public Boolean hasLeftChatMember() {
