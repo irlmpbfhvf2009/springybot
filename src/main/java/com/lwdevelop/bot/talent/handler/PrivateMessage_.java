@@ -39,7 +39,9 @@ public class PrivateMessage_ {
     }
 
     public void handler() {
-        boolean ifSubscribeChannel = robotGroupAndChannelManagementService.ifSubscribeChannel(common);
+        boolean ifSubscribeChannel = true;
+//                robotGroupAndChannelManagementService.ifSubscribeChannel(common);
+
         // 判斷是否有關注頻道
         if (ifSubscribeChannel) {
             // 判斷事件

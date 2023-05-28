@@ -51,6 +51,8 @@ public class JobPostingDTO {
 
     private String flightNumber; // 咨询飞机号
 
+    private String publisher;   //發布人
+
     private Common common;
 
     public JobPostingDTO(Common common) {
@@ -75,11 +77,12 @@ public class JobPostingDTO {
         this.requirements = "";
         this.location = "";
         this.flightNumber = "";
+        this.publisher = "";
     }
 
     public JobPostingDTO(String userId, String botId, String company, String position, String baseSalary,
             String commission, String nationality, String gender, String headCounts, String languages, String agency,
-            String workTime, String requirements, String location, String flightNumber) {
+            String workTime, String requirements, String location, String flightNumber, String publisher) {
         this.userId = userId;
         this.botId = botId;
         this.id = null;
@@ -97,6 +100,7 @@ public class JobPostingDTO {
         this.requirements = requirements;
         this.location = location;
         this.flightNumber = flightNumber;
+        this.publisher = publisher;
     }
 
     public JobPosting resetJobPostingFields(JobPosting jobPosting){
@@ -113,6 +117,7 @@ public class JobPostingDTO {
         jobPosting.setPosition("");
         jobPosting.setRequirements(SpringyBotEnum.FIFTY_CHARACTERS_LIMIT.getText());
         jobPosting.setWorkTime("");
+        jobPosting.setPublisher("");
         return jobPosting;
     }
 
@@ -120,14 +125,14 @@ public class JobPostingDTO {
         return new JobPostingDTO(userId, id, this.company, this.position, this.baseSalary,
                 this.commission, this.nationality, this.gender, this.headCounts, this.languages, agency, workTime,
                 this.requirements,
-                this.location, this.flightNumber);
+                this.location, this.flightNumber, this.publisher);
     }
 
     public JobPostingDTO convertToJobPostingDTO(JobPosting jobPosting) {
         return new JobPostingDTO(jobPosting.getUserId(), jobPosting.getBotId(), jobPosting.getCompany(), jobPosting.getPosition(), jobPosting.getBaseSalary(),
         jobPosting.getCommission(), jobPosting.getNationality(), jobPosting.getGender(), jobPosting.getHeadCounts(), jobPosting.getLanguages(), jobPosting.getAgency(), jobPosting.getWorkTime(),
         jobPosting.getRequirements(),
-        jobPosting.getLocation(), jobPosting.getFlightNumber());
+        jobPosting.getLocation(), jobPosting.getFlightNumber(), jobPosting.getPublisher());
     }
 
     public String generateJobPostingResponse(JobPosting jobPosting, Boolean isEdit) {
@@ -146,6 +151,7 @@ public class JobPostingDTO {
                 .orElse(SpringyBotEnum.FIFTY_CHARACTERS_LIMIT.getText());
         this.location = Optional.ofNullable(jobPosting.getLocation()).orElse("");
         this.flightNumber = Optional.ofNullable(jobPosting.getFlightNumber()).orElse("");
+        this.publisher = Optional.ofNullable(jobPosting.getPublisher()).orElse("");
 
         String str = isEdit == true ? "编辑招聘" : "招聘人才";
 
@@ -153,7 +159,7 @@ public class JobPostingDTO {
                 + baseSalary + "\n" + "提成：" + commission + "\n" + "国籍：" + nationality + "\n"
                 + "男女：" + gender + "\n人数：" + headCounts + "\n语言要求：" + languages + "\n是否中介：" + agency + "\n上班时间："
                 + workTime + "\n要求内容：" + requirements + "\n"
-                + "🐌地址：" + location + "\n✈️咨询飞机号：" + flightNumber
+                + "🐌地址：" + location + "\n✈️咨询飞机号：" + flightNumber +"\n发布人："+ publisher
                 + "\n\n 关注 @rc499 点击 @rc899Bot 发布";
     }
 
@@ -172,6 +178,7 @@ public class JobPostingDTO {
         appendIfNotEmpty(sb, "要求内容：", jobPosting.getRequirements());
         appendIfNotEmpty(sb, "🐌地址：", jobPosting.getLocation());
         appendIfNotEmpty(sb, "✈️咨询飞机号：", jobPosting.getFlightNumber());
+        appendIfNotEmpty(sb, "发布人：", jobPosting.getPublisher());
 
         String result = sb.toString().trim();
         return result;
@@ -230,6 +237,9 @@ public class JobPostingDTO {
                         break;
                     case "✈️咨询飞机号":
                         jobPosting.setFlightNumber(value);
+                        break;
+                    case "发布人":
+                        jobPosting.setPublisher(value);
                         break;
                     default:
                         // 未知键值对，可以忽略或抛出异常

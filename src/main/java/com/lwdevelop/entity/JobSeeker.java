@@ -61,6 +61,8 @@ public class JobSeeker {
     private String selfIntroduction; // 自我介绍
 
     private String flightNumber; // 咨询飞机号
+
+    private String publisher;   //發布人
     
     private Integer lastMessageId;
 
