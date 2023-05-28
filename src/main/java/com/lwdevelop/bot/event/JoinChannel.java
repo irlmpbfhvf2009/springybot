@@ -26,8 +26,9 @@ public class JoinChannel {
     private Long channelId;
     private String channelTitle;
     private SpringyBot springyBot;
+    private Long userId;
 
-    public JoinChannel(Common common){
+    public JoinChannel(Common common) {
         this.common = common;
         this.botId = common.getBotId();
         this.inviteId = common.getChatMemberUpdated().getFrom().getId();
@@ -37,14 +38,17 @@ public class JoinChannel {
         this.channelId = common.getChatMemberUpdated().getChat().getId();
         this.channelTitle = common.getChatMemberUpdated().getChat().getTitle();
         this.springyBot = springyBotServiceImpl.findById(common.getSpringyBotId()).get();
+        this.userId = common.getChatMemberUpdated().getNewChatMember().getUser().getId();
     }
 
     public void isUserJoinChannel() {
-
-
-        // springyBot.getRestrictMember().stream()
-        // .filter(rm->rm.getChatId().equals(this.channelId.toString() && rm.getUserId()))
-
+        String paresChannelId = String.valueOf(this.channelId);
+        springyBot.getRestrictMember().stream()
+                .filter(rm -> rm.getChatId().equals(paresChannelId) && rm.getUserId().equals(this.userId))
+                .findAny()
+                .ifPresent(rm -> {
+                    rm.get
+                });
 
         springyBot.getInvitationThreshold().stream()
                 .filter(it -> hasTarget(it))

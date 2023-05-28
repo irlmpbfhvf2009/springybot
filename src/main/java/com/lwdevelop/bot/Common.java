@@ -179,8 +179,7 @@ public class Common {
                 && chatMemberUpdated.getNewChatMember().getStatus().equals("administrator");
     }
     public Boolean isUserJoinChannel(ChatMemberUpdated chatMemberUpdated) {
-        return !chatMemberUpdated.getNewChatMember().getUser().getIsBot()
-                && chatMemberUpdated.getNewChatMember().getStatus().equals("administrator");
+        return !chatMemberUpdated.getNewChatMember().getUser().getIsBot();
     }
 
     public Boolean isBotLeftChannel(ChatMemberUpdated chatMemberUpdated) {

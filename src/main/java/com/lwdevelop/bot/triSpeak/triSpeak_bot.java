@@ -125,6 +125,7 @@ public class triSpeak_bot extends TelegramLongPollingBot {
                 common.setChatMemberUpdated(chatMemberUpdated);
 
                 if (common.chatTypeIsChannel(chatMemberUpdated.getChat().getType())) {
+                    System.out.println(update);
                     JoinChannel joinChannel = new JoinChannel(common);
                     // is robot join channel
                     if (common.isBotJoinChannel(chatMemberUpdated)) {
