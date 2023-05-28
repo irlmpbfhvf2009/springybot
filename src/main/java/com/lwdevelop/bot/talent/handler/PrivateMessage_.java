@@ -1,12 +1,8 @@
 package com.lwdevelop.bot.talent.handler;
 
-import com.lwdevelop.service.impl.RobotGroupAndChannelManagementServiceImpl;
-import com.lwdevelop.utils.SpringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
-
 import com.lwdevelop.bot.Common;
 import com.lwdevelop.bot.talent.handler.commands.Job;
 import com.lwdevelop.bot.talent.utils.KeyboardButton;
@@ -22,10 +18,10 @@ public class PrivateMessage_ {
     private SendMessage response;
     private Job job;
 
-    @Autowired
-    private RobotGroupAndChannelManagementServiceImpl robotGroupAndChannelManagementService = SpringUtils
-            .getApplicationContext()
-            .getBean(RobotGroupAndChannelManagementServiceImpl.class);
+    // @Autowired
+    // private RobotGroupAndChannelManagementServiceImpl robotGroupAndChannelManagementService = SpringUtils
+    //         .getApplicationContext()
+    //         .getBean(RobotGroupAndChannelManagementServiceImpl.class);
 
     public PrivateMessage_(Common common){
         this.message = common.getUpdate().getMessage();
