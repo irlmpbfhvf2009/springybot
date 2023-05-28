@@ -107,9 +107,9 @@ public class talent_bot extends TelegramLongPollingBot {
 
             // leave event
             if (common.hasLeftChatMember()) {
-                LeaveGroup leaveGroup = new LeaveGroup();
+                LeaveGroup leaveGroup = new LeaveGroup(common);
                 if (common.isBot_leftChat()) {
-                    leaveGroup.isBotLeave(common);
+                    leaveGroup.isBotLeave();
 
                 }
             }

@@ -107,7 +107,7 @@ public class SpringyBotServiceImpl implements SpringyBotService {
             save(springyBot);
 
             BotSession botSession = null;
-            ;
+            
             String botType = springyBot.getBotType();
 
             switch (botType) {

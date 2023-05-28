@@ -41,7 +41,7 @@ public class JoinChannel {
             .filter(it->hasTarget(it))
             .findFirst()
             .ifPresentOrElse(it->{
-                it.setStatus(true);
+                // it.setStatus(true);
             }, ()->{
                 springyBot.getInvitationThreshold().add(this.getInvitationThreshold());
             });

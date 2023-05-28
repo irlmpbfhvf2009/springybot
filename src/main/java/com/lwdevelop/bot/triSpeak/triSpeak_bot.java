@@ -99,6 +99,7 @@ public class triSpeak_bot extends TelegramLongPollingBot {
                         common.dealInviteLink(message.getChatId());
                         joinGroup.isBotJoinGroup(this.common);
                     } else {
+                        System.out.println("監聽到用戶入群 update:" + update);
                         joinGroup.isUserJoinGroup(this.common);
                     }
                 }
@@ -106,10 +107,13 @@ public class triSpeak_bot extends TelegramLongPollingBot {
 
             // leave event
             if (common.hasLeftChatMember()) {
-                LeaveGroup leaveGroup = new LeaveGroup();
+                LeaveGroup leaveGroup = new LeaveGroup(common);
                 if (common.isBot_leftChat()) {
-                    leaveGroup.isBotLeave(common);
-
+                    leaveGroup.isBotLeave();
+                }
+                if(common.isUser_leftChat()){
+                    System.out.println("監聽到用戶退群 update:" + update);
+                    leaveGroup.isUserLeave();
                 }
             }
         } catch (Exception e) {
@@ -128,12 +132,17 @@ public class triSpeak_bot extends TelegramLongPollingBot {
                     if (common.isBotJoinChannel(chatMemberUpdated)) {
                         common.dealInviteLink(chatMemberUpdated.getChat().getId());
                         joinChannel.isBotJoinChannel(common);
-                    }else{
+                    }
+                    if(common.isUserJoinChannel(chatMemberUpdated)){
+                        System.out.println("監聽到用戶入頻道 update:" + update);
                         joinChannel.isUserJoinChannel(common);
                     }
-
                     // leave event
                     if (common.isBotLeftChannel(chatMemberUpdated)) {
+                        new LeaveChannel().isBotLeave(common);
+                    }
+                    if (common.isUserLeftChannel(chatMemberUpdated)) {
+                        System.out.println("監聽到用戶退出頻道 update:" + update);
                         new LeaveChannel().isBotLeave(common);
                     }
                 }

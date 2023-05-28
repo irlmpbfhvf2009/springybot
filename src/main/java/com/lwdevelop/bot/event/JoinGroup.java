@@ -56,13 +56,12 @@ public class JoinGroup {
                     + this.invitedUsername
                     + this.invitedLastname;
                     
-            // bot join group
             if (isUserInviteEvent(member)) {
                 springyBot.getInvitationThreshold().stream()
                         .filter(it -> hasTarget(it))
                         .findFirst()
                         .ifPresentOrElse(it -> {
-                            it.setStatus(true);
+                            // it.setStatus(true);
                         }, () -> {
                             springyBot.getInvitationThreshold().add(this.getInvitationThreshold());
                         });
@@ -138,7 +137,6 @@ public class JoinGroup {
         invitationThreshold.setChatTitle(this.groupTitle);
         invitationThreshold.setInviteId(this.inviteId);
         invitationThreshold.setInviteFirstname(this.inviteFirstname);
-        ;
         invitationThreshold.setInviteUsername(this.inviteUsername);
         invitationThreshold.setInviteLastname(this.inviteLastname);
         invitationThreshold.setInvitedId(this.invitedId);
@@ -146,7 +144,7 @@ public class JoinGroup {
         invitationThreshold.setInvitedUsername(this.invitedUsername);
         invitationThreshold.setInvitedLastname(this.invitedLastname);
         invitationThreshold.setType("group");
-        invitationThreshold.setStatus(true);
+        // invitationThreshold.setStatus(true);
         return invitationThreshold;
     }
 

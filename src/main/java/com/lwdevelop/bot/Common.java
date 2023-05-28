@@ -135,6 +135,12 @@ public class Common {
                 && message.getLeftChatMember().getUserName().equals(getUsername());
     }
 
+    public Boolean isUser_leftChat() {
+        Message message = this.update.getMessage();
+        return !message.getLeftChatMember().getIsBot()
+                && message.getLeftChatMember().getUserName().equals(getUsername());
+    }
+
     public Boolean hasLeftChatMember() {
         Message message = this.update.getMessage();
         return message.getLeftChatMember() != null;
@@ -148,9 +154,17 @@ public class Common {
         return chatMemberUpdated.getNewChatMember().getUser().getIsBot()
                 && chatMemberUpdated.getNewChatMember().getStatus().equals("administrator");
     }
+    public Boolean isUserJoinChannel(ChatMemberUpdated chatMemberUpdated) {
+        return !chatMemberUpdated.getNewChatMember().getUser().getIsBot()
+                && chatMemberUpdated.getNewChatMember().getStatus().equals("administrator");
+    }
 
     public Boolean isBotLeftChannel(ChatMemberUpdated chatMemberUpdated) {
         return chatMemberUpdated.getNewChatMember().getUser().getIsBot()
+                && chatMemberUpdated.getNewChatMember().getStatus().equals("left");
+    }
+    public Boolean isUserLeftChannel(ChatMemberUpdated chatMemberUpdated) {
+        return !chatMemberUpdated.getNewChatMember().getUser().getIsBot()
                 && chatMemberUpdated.getNewChatMember().getStatus().equals("left");
     }
 

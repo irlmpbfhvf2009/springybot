@@ -32,6 +32,8 @@ public class InvitationThreshold {
 
     private String inviteLastname;
 
+    private Boolean inviteStatus;
+
     private Long invitedId;
 
     private String invitedFirstname;
@@ -40,13 +42,13 @@ public class InvitationThreshold {
 
     private String invitedLastname;
 
+    private Boolean invitedStatus;
+
     private Long chatId;
 
     private String chatTitle;
 
     private String type; // channel or group
-
-    private Boolean status;
 
     @CreatedDate
     private Date createDate;
