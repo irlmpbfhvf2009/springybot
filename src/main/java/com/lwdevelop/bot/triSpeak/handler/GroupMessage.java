@@ -1,7 +1,9 @@
 package com.lwdevelop.bot.triSpeak.handler;
 
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,6 +25,7 @@ import com.lwdevelop.utils.SpringUtils;
 public class GroupMessage {
 
     private Common common;
+    private Long chatId_long;
     private String chatId;
     private Long userId;
     private Integer messageId;
@@ -33,6 +36,7 @@ public class GroupMessage {
     private String username;
     private String firstname;
     private String lastname;
+    private HashMap<Long, List<String>> groupMessageMap;
     // private static MessageQueue messageQueue = new MessageQueue();
 
     @Autowired
@@ -42,11 +46,13 @@ public class GroupMessage {
     public GroupMessage(Common common) {
         this.common = common;
         this.chatId = String.valueOf(common.getUpdate().getMessage().getChatId());
+        this.chatId_long = common.getUpdate().getMessage().getChatId();
         this.userId = common.getUpdate().getMessage().getFrom().getId();
         this.messageId = common.getUpdate().getMessage().getMessageId();
         this.username = common.getUpdate().getMessage().getFrom().getUserName();
         this.firstname = common.getUpdate().getMessage().getFrom().getFirstName();
         this.lastname = common.getUpdate().getMessage().getFrom().getLastName();
+        this.groupMessageMap = common.getGroupMessageMap();
     }
 
     // private static List<DeleteMessage> deleteSystemMessages = new ArrayList<>();
@@ -74,22 +80,12 @@ public class GroupMessage {
 
         if (followChannelSet) {
             if (!isSubscribeChannel()) { // 200ms
-                Calendar calendar = Calendar.getInstance();
-                ChatPermissions chatPermissions = new ChatPermissions();
-                chatPermissions.setCanSendMessages(false);
-                chatPermissions.setCanChangeInfo(false);
-                chatPermissions.setCanInviteUsers(true);
-                chatPermissions.setCanPinMessages(false);
-                chatPermissions.setCanSendMediaMessages(false);
-                chatPermissions.setCanAddWebPagePreviews(false);
-                chatPermissions.setCanSendOtherMessages(false);
-                chatPermissions.setCanSendPolls(false);
-                calendar.add(Calendar.MINUTE, 20);
-                int untilDate = (int) (calendar.getTimeInMillis() / 1000);
+                ChatPermissions chatPermissions = setChatPermissions_false();
+                int untilDate = setUntilDate_minute(20);
                 RestrictChatMember restrictChatMember = new RestrictChatMember(this.chatId, this.userId,
                         chatPermissions, untilDate);
                 common.executeAsync(restrictChatMember);
-                
+
                 SpringyBot springyBot = springyBotServiceImpl.findById(common.getSpringyBotId()).get();
                 Optional<RestrictMember> optionalRestrictMember = springyBot.getRestrictMember().stream()
                         .filter(rm -> rm.getChatId().equals(this.chatId) && rm.getUserId().equals(this.userId))
@@ -107,14 +103,67 @@ public class GroupMessage {
                 springyBotServiceImpl.save(springyBot);
                 // 删除消息
                 deleteMessage(chatId, messageId); // 0ms
+
                 // 发送系统消息
-                SendMessage response = new SendMessage(chatId, generate_warning_text());
-                Integer msgId = common.executeAsync(response);
-                DeleteMessage deleteMessage = new DeleteMessage(chatId, msgId);
-                common.deleteMessageTask(deleteMessage, this.deleteSeconds);
+                this.executeOperation();
+                // SendMessage response = new SendMessage(chatId, generate_warning_text());
+                // Integer msgId = common.executeAsync(response);
+                // DeleteMessage deleteMessage = new DeleteMessage(chatId, msgId);
+                // common.deleteMessageTask(deleteMessage, this.deleteSeconds);
             }
         }
 
+    }
+
+    private void executeOperation() {
+
+        List<String> message;
+        String username = generate_warning_text();
+    
+        message = this.groupMessageMap.getOrDefault(this.chatId_long, new ArrayList<>());
+        message.add(username);
+    
+        this.groupMessageMap.put(this.chatId_long, message);
+        this.common.setGroupMessageMap(groupMessageMap);
+    
+        int messageSize = message.size();
+    
+        if (messageSize >= 5) {
+            StringBuilder textBuilder = new StringBuilder();
+            for (String msg : message) {
+                textBuilder.append(msg).append("\n");
+            }
+            message.clear();
+            SendMessage response = new SendMessage(chatId, textBuilder.toString());
+            Integer msgId = common.executeAsync(response);
+            DeleteMessage deleteMessage = new DeleteMessage(chatId, msgId);
+            common.deleteMessageTask(deleteMessage, this.deleteSeconds);
+        } else {
+            if (message.stream().noneMatch(gmm -> gmm.equals(username))) {
+                message.add(username);
+                this.common.setGroupMessageMap(groupMessageMap);
+            }
+        }
+    }
+    
+    private ChatPermissions setChatPermissions_false() {
+        ChatPermissions chatPermissions = new ChatPermissions();
+        chatPermissions.setCanSendMessages(false);
+        chatPermissions.setCanChangeInfo(false);
+        chatPermissions.setCanInviteUsers(true);
+        chatPermissions.setCanPinMessages(false);
+        chatPermissions.setCanSendMediaMessages(false);
+        chatPermissions.setCanAddWebPagePreviews(false);
+        chatPermissions.setCanSendOtherMessages(false);
+        chatPermissions.setCanSendPolls(false);
+        return chatPermissions;
+    }
+
+    private int setUntilDate_minute(int minute) {
+        Calendar calendar = Calendar.getInstance();
+        calendar.add(Calendar.MINUTE, minute);
+        int untilDate = (int) (calendar.getTimeInMillis() / 1000);
+        return untilDate;
     }
 
     @Async

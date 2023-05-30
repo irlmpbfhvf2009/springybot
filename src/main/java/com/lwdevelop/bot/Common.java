@@ -51,11 +51,14 @@ public class Common {
 
     private HashMap<Long, ConfigDTO> configDTO_map;
 
+    private HashMap<Long,List<String>> groupMessageMap;
+
     public Common(Long springyBotId, Long botId, String username) {
         this.springyBotId = springyBotId;
         this.botId = botId;
         this.username = username;
     }
+
 
     @Async
     public void deleteMessageTask(List<DeleteMessage> deleteSystemMessages, int second) {

@@ -1,7 +1,8 @@
 package com.lwdevelop.bot.event;
 
 import org.springframework.beans.factory.annotation.Autowired;
-
+import org.telegram.telegrambots.meta.api.methods.groupadministration.RestrictChatMember;
+import org.telegram.telegrambots.meta.api.objects.ChatPermissions;
 import com.lwdevelop.bot.Common;
 import com.lwdevelop.entity.InvitationThreshold;
 import com.lwdevelop.entity.RobotChannelManagement;
@@ -42,12 +43,30 @@ public class JoinChannel {
     }
 
     public void isUserJoinChannel() {
+        System.out.println("aaa");
+        System.out.println(this.channelId);
+        System.out.println(this.userId);
         String paresChannelId = String.valueOf(this.channelId);
         springyBot.getRestrictMember().stream()
-                .filter(rm -> rm.getChatId().equals(paresChannelId) && rm.getUserId().equals(this.userId))
+                .filter(rm -> rm.getChatId().equals(paresChannelId) && rm.getUserId().equals(this.userId)
+                        && rm.getStatus())
                 .findAny()
                 .ifPresent(rm -> {
-                    rm.get
+                    rm.setStatus(false);
+                    ChatPermissions chatPermissions = new ChatPermissions();
+                    chatPermissions.setCanSendMessages(true);
+                    chatPermissions.setCanChangeInfo(true);
+                    chatPermissions.setCanInviteUsers(true);
+                    chatPermissions.setCanPinMessages(true);
+                    chatPermissions.setCanSendMediaMessages(true);
+                    chatPermissions.setCanAddWebPagePreviews(true);
+                    chatPermissions.setCanSendOtherMessages(true);
+                    chatPermissions.setCanSendPolls(true);
+
+                    RestrictChatMember restrictChatMember = new RestrictChatMember(rm.getChatId(), this.userId,
+                            chatPermissions, 0); // 将 untilDate 设置为 0 表示立即解除限制
+                    common.executeAsync(restrictChatMember);
+
                 });
 
         springyBot.getInvitationThreshold().stream()

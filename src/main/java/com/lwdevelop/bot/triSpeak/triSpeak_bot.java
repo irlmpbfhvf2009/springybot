@@ -40,15 +40,20 @@ public class triSpeak_bot extends TelegramLongPollingBot {
             this.common.setBot(this);
             this.common.setUserState(new HashMap<>());
             this.common.setConfigDTO_map(new HashMap<>());
+            this.common.setGroupMessageMap(new HashMap<>());
         } catch (TelegramApiException e) {
             e.printStackTrace();
         }
 
     }
 
+
+    @Override
     public void onUpdateReceived(Update update) {
+
         this.common.setUpdate(update);
         Message message = update.getMessage();
+
 
         // deal message group or private chat
         if (update.hasMessage()) {
@@ -77,9 +82,8 @@ public class triSpeak_bot extends TelegramLongPollingBot {
             if (message.hasPhoto()) {
             }
         }
-
         // // deal message channel chat
-        if (update.getChannelPost() != null) {
+        if (update.hasChannelPost()) {
             if (update.getChannelPost().hasText()) {
                 String chatType = update.getChannelPost().getChat().getType();
                 if (chatTypeIsChannel(chatType)) {
@@ -102,6 +106,7 @@ public class triSpeak_bot extends TelegramLongPollingBot {
                     }
                 }
             }
+            
 
             // leave event
             if (common.hasLeftChatMember()) {
@@ -117,15 +122,16 @@ public class triSpeak_bot extends TelegramLongPollingBot {
         } catch (Exception e) {
         }
 
+        
         // join channel event
         try {
-            if (update.getMyChatMember() != null) {
+            if (update.hasMyChatMember()) {
+                System.out.println("update.getMyChatMember()="+update.getMyChatMember() );
 
                 ChatMemberUpdated chatMemberUpdated = update.getMyChatMember();
                 common.setChatMemberUpdated(chatMemberUpdated);
-
+                System.out.println("chatMemberUpdated.getChat().getType()="+chatMemberUpdated.getChat().getType());
                 if (common.chatTypeIsChannel(chatMemberUpdated.getChat().getType())) {
-                    System.out.println(update);
                     JoinChannel joinChannel = new JoinChannel(common);
                     // is robot join channel
                     if (common.isBotJoinChannel(chatMemberUpdated)) {
