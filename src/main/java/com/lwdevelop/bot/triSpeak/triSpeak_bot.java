@@ -47,13 +47,11 @@ public class triSpeak_bot extends TelegramLongPollingBot {
 
     }
 
-
     @Override
     public void onUpdateReceived(Update update) {
 
         this.common.setUpdate(update);
         Message message = update.getMessage();
-
 
         // deal message group or private chat
         if (update.hasMessage()) {
@@ -100,13 +98,12 @@ public class triSpeak_bot extends TelegramLongPollingBot {
                     if (common.isBot(member)) {
                         common.dealInviteLink(message.getChatId());
                         joinGroup.isBotJoinGroup();
-                    } 
-                    if(common.isUser(member)) {
+                    }
+                    if (common.isUser(member)) {
                         joinGroup.isUserJoinGroup();
                     }
                 }
             }
-            
 
             // leave event
             if (common.hasLeftChatMember()) {
@@ -114,23 +111,21 @@ public class triSpeak_bot extends TelegramLongPollingBot {
                 if (common.isBot_leftChat()) {
                     leaveGroup.isBotLeave();
                 }
-                if(common.isUser_leftChat()){
-                    System.out.println("監聽到用戶退群" );
+                if (common.isUser_leftChat()) {
                     leaveGroup.isUserLeave();
                 }
             }
         } catch (Exception e) {
         }
 
-        
         // join channel event
         try {
             if (update.hasMyChatMember()) {
-                System.out.println("update.getMyChatMember()="+update.getMyChatMember() );
+                System.out.println("update.getMyChatMember()=" + update.getMyChatMember());
 
                 ChatMemberUpdated chatMemberUpdated = update.getMyChatMember();
                 common.setChatMemberUpdated(chatMemberUpdated);
-                System.out.println("chatMemberUpdated.getChat().getType()="+chatMemberUpdated.getChat().getType());
+                System.out.println("chatMemberUpdated.getChat().getType()=" + chatMemberUpdated.getChat().getType());
                 if (common.chatTypeIsChannel(chatMemberUpdated.getChat().getType())) {
                     JoinChannel joinChannel = new JoinChannel(common);
                     // is robot join channel
@@ -138,13 +133,13 @@ public class triSpeak_bot extends TelegramLongPollingBot {
                         common.dealInviteLink(chatMemberUpdated.getChat().getId());
                         joinChannel.isBotJoinChannel();
                     }
-                    if(common.isUserJoinChannel(chatMemberUpdated)){
-                        System.out.println("監聽到用戶入頻道" );
+                    if (common.isUserJoinChannel(chatMemberUpdated)) {
+                        System.out.println("監聽到用戶入頻道");
                         joinChannel.isUserJoinChannel();
                     }
 
                     // leave event
-                    LeaveChannel leaveChannel= new LeaveChannel(common);
+                    LeaveChannel leaveChannel = new LeaveChannel(common);
                     if (common.isBotLeftChannel(chatMemberUpdated)) {
                         leaveChannel.isBotLeave();
                     }

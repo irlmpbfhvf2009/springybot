@@ -79,30 +79,13 @@ public class GroupMessage {
         }
 
         if (followChannelSet) {
-            if (!isSubscribeChannel()) { // 200ms
-                ChatPermissions chatPermissions = setChatPermissions_false();
-                int untilDate = setUntilDate_minute(20);
-                RestrictChatMember restrictChatMember = new RestrictChatMember(this.chatId, this.userId,
-                        chatPermissions, untilDate);
-                common.executeAsync(restrictChatMember);
+            if (!isSubscribeChannel()) { 
 
-                SpringyBot springyBot = springyBotServiceImpl.findById(common.getSpringyBotId()).get();
-                Optional<RestrictMember> optionalRestrictMember = springyBot.getRestrictMember().stream()
-                        .filter(rm -> rm.getChatId().equals(this.chatId) && rm.getUserId().equals(this.userId))
-                        .findAny();
+                // telegram 系統限制用戶3分鐘
+                this.executeRestrictChatMember(3);
 
-                if (!optionalRestrictMember.isPresent()) {
-                    RestrictMember restrictMember = new RestrictMember();
-                    restrictMember.setChatId(this.chatId);
-                    restrictMember.setUserId(this.userId);
-                    restrictMember.setStatus(true);
-                    springyBot.getRestrictMember().add(restrictMember);
-                } else {
-                    optionalRestrictMember.get().setStatus(true);
-                }
-                springyBotServiceImpl.save(springyBot);
                 // 删除消息
-                deleteMessage(chatId, messageId); // 0ms
+                this.deleteMessage(chatId, messageId); 
 
                 // 发送系统消息
                 this.executeOperation();
@@ -115,36 +98,61 @@ public class GroupMessage {
 
     }
 
+    private void executeRestrictChatMember(int minute){
+        ChatPermissions chatPermissions = setChatPermissions_false();
+        int untilDate = setUntilDate_minute(minute);
+        RestrictChatMember restrictChatMember = new RestrictChatMember(this.chatId, this.userId,
+                chatPermissions, untilDate);
+        common.executeAsync(restrictChatMember);
+
+        SpringyBot springyBot = springyBotServiceImpl.findById(common.getSpringyBotId()).get();
+        Optional<RestrictMember> optionalRestrictMember = springyBot.getRestrictMember().stream()
+                .filter(rm -> rm.getChatId().equals(this.chatId) && rm.getUserId().equals(this.userId))
+                .findAny();
+
+        if (!optionalRestrictMember.isPresent()) {
+            RestrictMember restrictMember = new RestrictMember();
+            restrictMember.setChatId(this.chatId);
+            restrictMember.setUserId(this.userId);
+            restrictMember.setStatus(true);
+            springyBot.getRestrictMember().add(restrictMember);
+        } else {
+            optionalRestrictMember.get().setStatus(true);
+        }
+        springyBotServiceImpl.save(springyBot);
+    }
+
     private void executeOperation() {
 
         List<String> message;
-        String username = generate_warning_text();
-    
+        String username = generate_username();
+        String warn_text = generate_warning_text();
+        
         message = this.groupMessageMap.getOrDefault(this.chatId_long, new ArrayList<>());
-        message.add(username);
-    
+        
+        if (!message.contains(username)) {
+            message.add(username);
+        }
+        
         this.groupMessageMap.put(this.chatId_long, message);
         this.common.setGroupMessageMap(groupMessageMap);
-    
+        
         int messageSize = message.size();
-    
+        
         if (messageSize >= 5) {
             StringBuilder textBuilder = new StringBuilder();
             for (String msg : message) {
                 textBuilder.append(msg).append("\n");
             }
+            textBuilder.append(warn_text);
             message.clear();
             SendMessage response = new SendMessage(chatId, textBuilder.toString());
             Integer msgId = common.executeAsync(response);
             DeleteMessage deleteMessage = new DeleteMessage(chatId, msgId);
             common.deleteMessageTask(deleteMessage, this.deleteSeconds);
-        } else {
-            if (message.stream().noneMatch(gmm -> gmm.equals(username))) {
-                message.add(username);
-                this.common.setGroupMessageMap(groupMessageMap);
-            }
         }
     }
+    
     
     private ChatPermissions setChatPermissions_false() {
         ChatPermissions chatPermissions = new ChatPermissions();
@@ -172,12 +180,12 @@ public class GroupMessage {
         common.executeAsync(deleteMessage);
     }
 
-    @Async
-    private Integer sendSystemMessage(String chatId) {
-        SendMessage response = new SendMessage(chatId, generate_warning_text());
-        Integer msgId = common.executeAsync(response);
-        return msgId;
-    }
+    // @Async
+    // private Integer sendSystemMessage(String chatId) {
+    //     SendMessage response = new SendMessage(chatId, generate_warning_text());
+    //     Integer msgId = common.executeAsync(response);
+    //     return msgId;
+    // }
     // @Async
     // private void processDeleteSystemMessage(Integer msgId){
     // DeleteMessage deleteSystemMessage = new DeleteMessage(chatId, msgId);
@@ -198,8 +206,23 @@ public class GroupMessage {
         return status;
     }
 
-    private String generate_warning_text() {
+    // private String generate_warning_text() {
 
+    //     if (this.username == null) {
+    //         this.firstname = this.firstname == null ? "" : this.firstname;
+    //         this.lastname = this.lastname == null ? "" : this.lastname;
+    //         this.username = this.firstname + this.lastname;
+    //     } else {
+    //         this.username = "@" + this.username;
+    //     }
+
+    //     return SpringyBotEnum.warning_text(this.username, this.channel_title);
+    // }
+    private String generate_warning_text() {
+        return SpringyBotEnum.warning_text(this.channel_title);
+    }
+
+    private String generate_username() {
         if (this.username == null) {
             this.firstname = this.firstname == null ? "" : this.firstname;
             this.lastname = this.lastname == null ? "" : this.lastname;
@@ -208,7 +231,7 @@ public class GroupMessage {
             this.username = "@" + this.username;
         }
 
-        return SpringyBotEnum.warning_text(this.username, this.channel_title);
+        return this.username;
     }
 
 }

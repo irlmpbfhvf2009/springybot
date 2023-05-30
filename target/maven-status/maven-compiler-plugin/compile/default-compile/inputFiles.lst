@@ -64,6 +64,7 @@ D:\酷寶\開發\tgbot\SpringyBot\src\main\java\com\lwdevelop\bot\talent\handler\Cal
 D:\酷寶\開發\tgbot\SpringyBot\src\main\java\com\lwdevelop\bot\triSpeak\handler\ChannelMessage.java
 D:\酷寶\開發\tgbot\SpringyBot\src\main\java\com\lwdevelop\converter\StringListConverter.java
 D:\酷寶\開發\tgbot\SpringyBot\src\main\java\com\lwdevelop\service\impl\SpringyBotServiceImpl.java
+D:\酷寶\開發\tgbot\SpringyBot\src\main\java\com\lwdevelop\entity\RestrictMember.java
 D:\酷寶\開發\tgbot\SpringyBot\src\main\java\com\lwdevelop\entity\SpringyBot.java
 D:\酷寶\開發\tgbot\SpringyBot\src\main\java\com\lwdevelop\entity\RobotChannelManagement.java
 D:\酷寶\開發\tgbot\SpringyBot\src\main\java\com\lwdevelop\utils\CryptoUtil.java
@@ -105,6 +106,7 @@ D:\酷寶\開發\tgbot\SpringyBot\src\main\java\com\lwdevelop\service\SpringyBotServ
 D:\酷寶\開發\tgbot\SpringyBot\src\main\java\com\lwdevelop\config\SwaggerConfig.java
 D:\酷寶\開發\tgbot\SpringyBot\src\main\java\com\lwdevelop\service\impl\RobotGroupAndChannelManagementServiceImpl.java
 D:\酷寶\開發\tgbot\SpringyBot\src\main\java\com\lwdevelop\dto\JobUserDTO.java
+D:\酷寶\開發\tgbot\SpringyBot\src\main\java\com\lwdevelop\repository\RestrictMemberRepository.java
 D:\酷寶\開發\tgbot\SpringyBot\src\main\java\com\lwdevelop\bot\triSpeak\triSpeak_bot.java
 D:\酷寶\開發\tgbot\SpringyBot\src\main\java\com\lwdevelop\controller\IndexController.java
 D:\酷寶\開發\tgbot\SpringyBot\src\main\java\com\lwdevelop\bot\Common.java

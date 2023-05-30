@@ -1,5 +1,6 @@
 com\lwdevelop\repository\SpringyBotRepository.class
 com\lwdevelop\entity\InvitationThreshold.class
+com\lwdevelop\repository\RestrictMemberRepository.class
 com\lwdevelop\bot\triSpeak\handler\ChannelMessage.class
 com\lwdevelop\bot\default_\handler\GroupMessage.class
 com\lwdevelop\bot\event\JoinChannel.class
@@ -20,6 +21,7 @@ com\lwdevelop\utils\ResponseUtils$ResponseData.class
 com\lwdevelop\bot\event\JoinGroup.class
 com\lwdevelop\repository\JobPostingRepository.class
 com\lwdevelop\controller\AdminPanelController.class
+com\lwdevelop\entity\RestrictMember.class
 com\lwdevelop\utils\RetEnum.class
 com\lwdevelop\dto\JobUserDTO.class
 com\lwdevelop\bot\default_\handler\ChannelMessage.class
