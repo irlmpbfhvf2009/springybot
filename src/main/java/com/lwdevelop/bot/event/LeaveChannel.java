@@ -43,12 +43,6 @@ public class LeaveChannel {
                 .ifPresent(c -> {
                     c.setStatus(false);
                 });
-        this.springyBot.getRecordChannelUsers().stream()
-        .filter(rcu->rcu.getUserId().equals(this.userId))
-        .findAny()
-        .ifPresentOrElse(rcu->{
-            
-        }, null);
 
         this.springyBotServiceImpl.save(springyBot);
         log.info("{} bot leave {} channel", this.common.getBot().getBotUsername(), this.chatMemberUpdatedChatTitle);
@@ -63,6 +57,14 @@ public class LeaveChannel {
                     .ifPresent(it -> {
                         it.setInvitedStatus(false);
                     });
+
+            this.springyBot.getRecordChannelUsers().stream()
+                    .filter(rcu -> rcu.getUserId().equals(this.userId))
+                    .findAny()
+                    .ifPresent(rcu -> {
+                        rcu.setStatus(false);
+                    });
+                    
             springyBotServiceImpl.save(this.springyBot);
             log.info("user [{}] leave channel {}", this.userId, this.channelTitle);
         }
@@ -73,7 +75,8 @@ public class LeaveChannel {
     }
 
     private Boolean hasTarget(InvitationThreshold it) {
-        return it.getChatId().equals(this.channelId) && it.getType().equals("channel") && it.getInvitedId().equals(this.userId);
+        return it.getChatId().equals(this.channelId) && it.getType().equals("channel")
+                && it.getInvitedId().equals(this.userId);
     }
 
 }

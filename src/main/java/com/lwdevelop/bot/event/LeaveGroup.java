@@ -58,6 +58,10 @@ public class LeaveGroup {
                 }
             });
     
+            System.out.println(this.message);
+        // this.springyBot.getRecordGroupUsers().stream()
+        // .filter(rgu->rgu.getUserId().equals(this.user))
+
         this.springyBotServiceImpl.save(springyBot);
         log.info("{} user leave {} group");
 
