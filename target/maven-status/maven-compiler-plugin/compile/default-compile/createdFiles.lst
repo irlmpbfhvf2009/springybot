@@ -68,6 +68,7 @@ com\lwdevelop\entity\GroupMessageIdPostCounts.class
 com\lwdevelop\bot\Common$1.class
 com\lwdevelop\service\impl\RobotGroupAndChannelManagementServiceImpl.class
 com\lwdevelop\utils\FileUtil.class
+com\lwdevelop\bot\triSpeak\handler\GroupMessage$1.class
 com\lwdevelop\repository\GroupMessageIdPostCountsRepository.class
 com\lwdevelop\entity\JobPosting.class
 com\lwdevelop\utils\CommUtils.class

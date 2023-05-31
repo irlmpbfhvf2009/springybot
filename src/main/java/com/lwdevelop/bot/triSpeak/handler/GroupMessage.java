@@ -5,6 +5,8 @@ import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Async;
@@ -13,7 +15,6 @@ import org.telegram.telegrambots.meta.api.methods.groupadministration.RestrictCh
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.methods.updatingmessages.DeleteMessage;
 import org.telegram.telegrambots.meta.api.objects.ChatPermissions;
-
 import com.lwdevelop.bot.Common;
 import com.lwdevelop.bot.triSpeak.utils.SpringyBotEnum;
 import com.lwdevelop.dto.ConfigDTO;
@@ -37,7 +38,8 @@ public class GroupMessage {
     private String firstname;
     private String lastname;
     private HashMap<Long, List<String>> groupMessageMap;
-    // private static MessageQueue messageQueue = new MessageQueue();
+    private static TimerTask currentTask;
+    private static Timer timer;
 
     @Autowired
     private SpringyBotServiceImpl springyBotServiceImpl = SpringUtils.getApplicationContext()
@@ -79,7 +81,7 @@ public class GroupMessage {
         }
 
         if (followChannelSet) {
-            if (!isSubscribeChannel()) { 
+            if (!isSubscribeChannel()) {
 
                 // telegram 系統限制用戶3分鐘
                 this.executeRestrictChatMember(3);
@@ -99,7 +101,7 @@ public class GroupMessage {
 
     }
 
-    private void executeRestrictChatMember(int minute){
+    private void executeRestrictChatMember(int minute) {
 
         ChatPermissions chatPermissions = new ChatPermissions();
         chatPermissions.setCanSendMessages(false);
@@ -114,7 +116,8 @@ public class GroupMessage {
         Calendar calendar = Calendar.getInstance();
         calendar.add(Calendar.MINUTE, minute);
         int untilDate = (int) (calendar.getTimeInMillis() / 1000);
-        RestrictChatMember restrictChatMember = new RestrictChatMember(this.chatId, this.userId, chatPermissions, untilDate);
+        RestrictChatMember restrictChatMember = new RestrictChatMember(this.chatId, this.userId, chatPermissions,
+                untilDate);
         this.common.executeAsync(restrictChatMember);
 
         SpringyBot springyBot = springyBotServiceImpl.findById(common.getSpringyBotId()).get();
@@ -139,18 +142,18 @@ public class GroupMessage {
         List<String> message;
         String username = generate_username();
         String warn_text = generate_warning_text();
-        
+
         message = this.groupMessageMap.getOrDefault(this.chatId_long, new ArrayList<>());
-        
+
         if (!message.contains(username)) {
             message.add(username);
         }
-        
+
         this.groupMessageMap.put(this.chatId_long, message);
         this.common.setGroupMessageMap(groupMessageMap);
-        
+
         int messageSize = message.size();
-        
+
         if (messageSize >= 5) {
             StringBuilder textBuilder = new StringBuilder();
             for (String msg : message) {
@@ -158,19 +161,52 @@ public class GroupMessage {
             }
             textBuilder.append(warn_text);
             message.clear();
-            SendMessage response = new SendMessage(chatId, textBuilder.toString());
+            SendMessage response = new SendMessage(this.chatId, textBuilder.toString());
             Integer msgId = common.executeAsync(response);
-            DeleteMessage deleteMessage = new DeleteMessage(chatId, msgId);
+            DeleteMessage deleteMessage = new DeleteMessage(this.chatId, msgId);
             common.deleteMessageTask(deleteMessage, this.deleteSeconds);
+            
+        } else{
+            if(currentTask!=null){
+                currentTask.cancel();
+            }
+            TimerTask task = new TimerTask() {
+                public void run() {
+                    executeTaskIfSizeNotMet(warn_text);
+                }
+            };
+            
+            timer = new Timer();
+            timer.schedule(task, 10000); // 延迟5秒后执行任务
+            currentTask = task;
         }
     }
-    
+
+    private void executeTaskIfSizeNotMet(String warn_text) {
+        List<String> message = this.groupMessageMap.getOrDefault(this.chatId_long, new ArrayList<>());
+        int messageSize = message.size();
+        
+        if (messageSize >= 5) {
+            return; // 已经达到条件，不需要执行任务
+        }
+        
+        StringBuilder textBuilder = new StringBuilder();
+        for (String msg : message) {
+            textBuilder.append(msg).append("\n");
+        }
+        textBuilder.append(warn_text);
+        message.clear();
+        SendMessage response = new SendMessage(this.chatId, textBuilder.toString());
+        Integer msgId = common.executeAsync(response);
+        DeleteMessage deleteMessage = new DeleteMessage(this.chatId, msgId);
+        common.deleteMessageTask(deleteMessage, this.deleteSeconds);
+    }
 
     // @Async
     // private Integer sendSystemMessage(String chatId) {
-    //     SendMessage response = new SendMessage(chatId, generate_warning_text());
-    //     Integer msgId = common.executeAsync(response);
-    //     return msgId;
+    // SendMessage response = new SendMessage(chatId, generate_warning_text());
+    // Integer msgId = common.executeAsync(response);
+    // return msgId;
     // }
     // @Async
     // private void processDeleteSystemMessage(Integer msgId){
@@ -194,15 +230,15 @@ public class GroupMessage {
 
     // private String generate_warning_text() {
 
-    //     if (this.username == null) {
-    //         this.firstname = this.firstname == null ? "" : this.firstname;
-    //         this.lastname = this.lastname == null ? "" : this.lastname;
-    //         this.username = this.firstname + this.lastname;
-    //     } else {
-    //         this.username = "@" + this.username;
-    //     }
+    // if (this.username == null) {
+    // this.firstname = this.firstname == null ? "" : this.firstname;
+    // this.lastname = this.lastname == null ? "" : this.lastname;
+    // this.username = this.firstname + this.lastname;
+    // } else {
+    // this.username = "@" + this.username;
+    // }
 
-    //     return SpringyBotEnum.warning_text(this.username, this.channel_title);
+    // return SpringyBotEnum.warning_text(this.username, this.channel_title);
     // }
     private String generate_warning_text() {
         return SpringyBotEnum.warning_text(this.channel_title);
