@@ -212,7 +212,7 @@ public class GroupMessage {
         if (this.username == null) {
             this.firstname = this.firstname == null ? "" : this.firstname;
             this.lastname = this.lastname == null ? "" : this.lastname;
-            this.username = this.firstname + this.lastname;
+            this.username = "@" + this.firstname + this.lastname;
         } else {
             this.username = "@" + this.username;
         }
