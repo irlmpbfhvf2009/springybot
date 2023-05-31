@@ -6,6 +6,7 @@ import org.telegram.telegrambots.meta.api.objects.User;
 
 import com.lwdevelop.bot.Common;
 import com.lwdevelop.entity.InvitationThreshold;
+import com.lwdevelop.entity.RecordGroupUsers;
 import com.lwdevelop.entity.RobotGroupManagement;
 import com.lwdevelop.entity.SpringyBot;
 import com.lwdevelop.service.impl.SpringyBotServiceImpl;
@@ -59,11 +60,13 @@ public class JoinGroup {
     public void isUserJoinGroup() {
 
         String invite_name = "[" + String.valueOf(this.inviteId) + "]" + this.inviteFirstname + this.inviteUsername
-                + this.inviteLastname;
-
+        + this.inviteLastname;
+        
         String invited_name = "[" + String.valueOf(this.invitedId) + "]" + this.invitedFirstname
-                + this.invitedUsername
-                + this.invitedLastname;
+        + this.invitedUsername
+        + this.invitedLastname;
+
+        log.info("{} invite {} join group {}", invite_name, invited_name, this.groupTitle);
 
         if (!this.isBot) {
             this.springyBot.getInvitationThreshold().stream()
@@ -75,7 +78,16 @@ public class JoinGroup {
                     }, () -> {
                         this.springyBot.getInvitationThreshold().add(this.getInvitationThreshold());
                     });
-            log.info("{} invite {} join group {}", invite_name, invited_name, this.groupTitle);
+
+            this.springyBot.getRecordGroupUsers().stream()
+            .filter(rgu->rgu.getUserId().equals(this.invitedId))
+            .findAny()
+            .ifPresentOrElse(rgu->{
+                rgu.setStatus(true);
+            }, ()->{
+                this.springyBot.getRecordGroupUsers().add(this.getRecordGroupUsers());
+            });
+            
             springyBotServiceImpl.save(springyBot);
         }
 
@@ -143,6 +155,18 @@ public class JoinGroup {
         invitationThreshold.setInviteStatus(true);
         invitationThreshold.setInvitedStatus(true);
         return invitationThreshold;
+    }
+
+    private RecordGroupUsers getRecordGroupUsers() {
+        RecordGroupUsers recordGroupUsers = new RecordGroupUsers();
+        recordGroupUsers.setGroupId(this.groupId);
+        recordGroupUsers.setGroupTitle(this.groupTitle);
+        recordGroupUsers.setFirstname(this.invitedFirstname);
+        recordGroupUsers.setLastname(this.invitedLastname);
+        recordGroupUsers.setStatus(true);
+        recordGroupUsers.setUserId(this.invitedId);
+        recordGroupUsers.setUsername(this.invitedUsername);
+        return recordGroupUsers;
     }
 
 }

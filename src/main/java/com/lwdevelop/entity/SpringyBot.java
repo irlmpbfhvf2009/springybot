@@ -1,5 +1,6 @@
 package com.lwdevelop.entity;
 
+import java.util.Date;
 import java.util.Set;
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
@@ -9,6 +10,9 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
+
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedDate;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
@@ -57,5 +61,19 @@ public class SpringyBot {
     @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JsonIgnore
     private  Set<RestrictMember> restrictMember;
+
+    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @JsonIgnore
+    private  Set<RecordChannelUsers> recordChannelUsers;
+
+    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @JsonIgnore
+    private  Set<RecordGroupUsers> recordGroupUsers;
+
+    @CreatedDate
+    private Date createTime;
+
+    @LastModifiedDate
+    private Date updateTime;
 
 }

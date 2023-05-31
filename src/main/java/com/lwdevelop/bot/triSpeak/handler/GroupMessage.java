@@ -32,6 +32,9 @@ public class GroupMessage {
     private Integer messageId;
     private Boolean followChannelSet;
     private int deleteSeconds;
+    private Boolean inviteFriendsSet;
+    private int inviteFriendsQuantity;
+    private int inviteFriendsAutoClearTime;
     private Long channel_id;
     private String channel_title;
     private String username;
@@ -67,20 +70,35 @@ public class GroupMessage {
             this.channel_id = springyBot.getConfig().getFollowChannelSet_chatId();
             this.channel_title = springyBot.getConfig().getFollowChannelSet_chatTitle();
             this.deleteSeconds = springyBot.getConfig().getDeleteSeconds();
+
             ConfigDTO configDTO = new ConfigDTO();
+            // 關注頻道限制發言相關參數
             configDTO.setFollowChannelSet(this.followChannelSet);
             configDTO.setFollowChannelSet_chatTitle(this.channel_title);
             configDTO.setFollowChannelSet_chatId(this.channel_id);
             configDTO.setDeleteSeconds(this.deleteSeconds);
+
+            // 邀請好友限制發言相關參數
+            configDTO.setInviteFriendsSet(this.inviteFriendsSet);
+            configDTO.setInviteFriendsQuantity(this.inviteFriendsQuantity);
+            configDTO.setInviteFriendsAutoClearTime(this.inviteFriendsAutoClearTime);
+
             configDTO_map.put(common.getSpringyBotId(), configDTO);
         } else {
+            // 關注頻道限制發言相關參數
             this.followChannelSet = configDTO_map.get(common.getSpringyBotId()).getFollowChannelSet();
             this.deleteSeconds = configDTO_map.get(common.getSpringyBotId()).getDeleteSeconds();
             this.channel_id = configDTO_map.get(common.getSpringyBotId()).getFollowChannelSet_chatId();
             this.channel_title = configDTO_map.get(common.getSpringyBotId()).getFollowChannelSet_chatTitle();
+
+            // 邀請好友限制發言相關參數
+            this.inviteFriendsSet = configDTO_map.get(common.getSpringyBotId()).getInviteFriendsSet();
+            this.inviteFriendsQuantity = configDTO_map.get(common.getSpringyBotId()).getInviteFriendsQuantity();
+            this.inviteFriendsAutoClearTime = configDTO_map.get(common.getSpringyBotId())
+                    .getInviteFriendsAutoClearTime();
         }
 
-        if (followChannelSet) {
+        if (this.followChannelSet) {
             if (!isSubscribeChannel()) {
 
                 // telegram 系統限制用戶3分鐘
@@ -98,6 +116,13 @@ public class GroupMessage {
                 // common.deleteMessageTask(deleteMessage, this.deleteSeconds);
             }
         }
+
+        // if (this.inviteFriendsSet) {
+        //     // 删除消息
+        //     DeleteMessage deleteMessage = new DeleteMessage(chatId, messageId);
+        //     this.common.executeAsync(deleteMessage);
+        //     // 发送系统消息
+        // }
 
     }
 
@@ -165,9 +190,9 @@ public class GroupMessage {
             Integer msgId = common.executeAsync(response);
             DeleteMessage deleteMessage = new DeleteMessage(this.chatId, msgId);
             common.deleteMessageTask(deleteMessage, this.deleteSeconds);
-            
-        } else{
-            if(currentTask!=null){
+
+        } else {
+            if (currentTask != null) {
                 currentTask.cancel();
             }
             TimerTask task = new TimerTask() {
@@ -175,7 +200,7 @@ public class GroupMessage {
                     executeTaskIfSizeNotMet(warn_text);
                 }
             };
-            
+
             timer = new Timer();
             timer.schedule(task, 10000); // 延迟5秒后执行任务
             currentTask = task;
@@ -185,11 +210,11 @@ public class GroupMessage {
     private void executeTaskIfSizeNotMet(String warn_text) {
         List<String> message = this.groupMessageMap.getOrDefault(this.chatId_long, new ArrayList<>());
         int messageSize = message.size();
-        
+
         if (messageSize >= 5) {
             return; // 已经达到条件，不需要执行任务
         }
-        
+
         StringBuilder textBuilder = new StringBuilder();
         for (String msg : message) {
             textBuilder.append(msg).append("\n");

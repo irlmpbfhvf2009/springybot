@@ -43,6 +43,12 @@ public class LeaveChannel {
                 .ifPresent(c -> {
                     c.setStatus(false);
                 });
+        this.springyBot.getRecordChannelUsers().stream()
+        .filter(rcu->rcu.getUserId().equals(this.userId))
+        .findAny()
+        .ifPresentOrElse(rcu->{
+            
+        }, null);
 
         this.springyBotServiceImpl.save(springyBot);
         log.info("{} bot leave {} channel", this.common.getBot().getBotUsername(), this.chatMemberUpdatedChatTitle);

@@ -9,6 +9,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 
 import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import lombok.Data;
@@ -51,5 +52,9 @@ public class InvitationThreshold {
     private String type; // channel or group
 
     @CreatedDate
-    private Date createDate;
+    private Date createTime;
+
+    @LastModifiedDate
+    private Date updateTime;
+
 }
