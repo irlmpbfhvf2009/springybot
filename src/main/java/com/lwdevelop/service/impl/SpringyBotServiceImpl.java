@@ -1,5 +1,6 @@
 package com.lwdevelop.service.impl;
 
+import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -116,7 +117,11 @@ public class SpringyBotServiceImpl implements SpringyBotService {
                     botSession = telegramBotsApi.registerBot(new coolbao_bot(springyBotDTO));
                     break;
                 case "triSpeak":
-                    botSession = telegramBotsApi.registerBot(new triSpeak_bot(springyBotDTO));
+                    triSpeak_bot bot = new triSpeak_bot(springyBotDTO);
+                    List<String> allowedUpdates = Arrays.asList("update_id", "message", "edited_message", "channel_post", "edited_channel_post", "inline_query", "chosen_inline_result", "callback_query", "shipping_query", "pre_checkout_query", "poll", "poll_answer", "my_chat_member", "chat_member");
+                    bot.getOptions().setAllowedUpdates(allowedUpdates);
+                    botSession = telegramBotsApi.registerBot(bot);
+                    // botSession = telegramBotsApi.registerBot(new triSpeak_bot(springyBotDTO));
                     break;
                 case "telegrambot":
                     DefaultWebhook defaultWebhook = new DefaultWebhook();

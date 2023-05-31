@@ -82,10 +82,11 @@ public class GroupMessage {
             if (!isSubscribeChannel()) { 
 
                 // telegram 系統限制用戶3分鐘
-                this.executeRestrictChatMember(3);
+                this.executeRestrictChatMember(5);
 
                 // 删除消息
-                this.deleteMessage(chatId, messageId); 
+                DeleteMessage deleteMessage = new DeleteMessage(chatId, messageId);
+                this.common.executeAsync(deleteMessage);
 
                 // 发送系统消息
                 this.executeOperation();
@@ -99,11 +100,22 @@ public class GroupMessage {
     }
 
     private void executeRestrictChatMember(int minute){
-        ChatPermissions chatPermissions = setChatPermissions_false();
-        int untilDate = setUntilDate_minute(minute);
-        RestrictChatMember restrictChatMember = new RestrictChatMember(this.chatId, this.userId,
-                chatPermissions, untilDate);
-        common.executeAsync(restrictChatMember);
+
+        ChatPermissions chatPermissions = new ChatPermissions();
+        chatPermissions.setCanSendMessages(false);
+        chatPermissions.setCanChangeInfo(false);
+        chatPermissions.setCanInviteUsers(true);
+        chatPermissions.setCanPinMessages(false);
+        chatPermissions.setCanSendMediaMessages(false);
+        chatPermissions.setCanAddWebPagePreviews(false);
+        chatPermissions.setCanSendOtherMessages(false);
+        chatPermissions.setCanSendPolls(false);
+
+        Calendar calendar = Calendar.getInstance();
+        calendar.add(Calendar.MINUTE, minute);
+        int untilDate = (int) (calendar.getTimeInMillis() / 1000);
+        RestrictChatMember restrictChatMember = new RestrictChatMember(this.chatId, this.userId, chatPermissions, untilDate);
+        this.common.executeAsync(restrictChatMember);
 
         SpringyBot springyBot = springyBotServiceImpl.findById(common.getSpringyBotId()).get();
         Optional<RestrictMember> optionalRestrictMember = springyBot.getRestrictMember().stream()
@@ -153,32 +165,6 @@ public class GroupMessage {
         }
     }
     
-    
-    private ChatPermissions setChatPermissions_false() {
-        ChatPermissions chatPermissions = new ChatPermissions();
-        chatPermissions.setCanSendMessages(false);
-        chatPermissions.setCanChangeInfo(false);
-        chatPermissions.setCanInviteUsers(true);
-        chatPermissions.setCanPinMessages(false);
-        chatPermissions.setCanSendMediaMessages(false);
-        chatPermissions.setCanAddWebPagePreviews(false);
-        chatPermissions.setCanSendOtherMessages(false);
-        chatPermissions.setCanSendPolls(false);
-        return chatPermissions;
-    }
-
-    private int setUntilDate_minute(int minute) {
-        Calendar calendar = Calendar.getInstance();
-        calendar.add(Calendar.MINUTE, minute);
-        int untilDate = (int) (calendar.getTimeInMillis() / 1000);
-        return untilDate;
-    }
-
-    @Async
-    private void deleteMessage(String chatId, Integer messageId) {
-        DeleteMessage deleteMessage = new DeleteMessage(chatId, messageId);
-        common.executeAsync(deleteMessage);
-    }
 
     // @Async
     // private Integer sendSystemMessage(String chatId) {

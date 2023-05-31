@@ -133,7 +133,7 @@ public class talent_bot extends TelegramLongPollingBot {
                     // leave event
                     LeaveChannel leaveChannel= new LeaveChannel(common);
                     if (common.isBotLeftChannel(chatMemberUpdated)) {
-                        leaveChannel.isBotLeave();
+                        leaveChannel.isBotLeaveChannel();
                     }
                 }
             }

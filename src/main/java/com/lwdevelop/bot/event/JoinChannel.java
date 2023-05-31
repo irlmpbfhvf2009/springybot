@@ -32,24 +32,22 @@ public class JoinChannel {
     public JoinChannel(Common common) {
         this.common = common;
         this.botId = common.getBotId();
-        this.inviteId = common.getChatMemberUpdated().getFrom().getId();
-        this.inviteFirstname = common.getChatMemberUpdated().getFrom().getFirstName();
-        this.inviteUsername = common.getChatMemberUpdated().getFrom().getUserName();
-        this.inviteLastname = common.getChatMemberUpdated().getFrom().getLastName();
-        this.channelId = common.getChatMemberUpdated().getChat().getId();
-        this.channelTitle = common.getChatMemberUpdated().getChat().getTitle();
+        // this.inviteId = common.getChatMemberUpdated().getFrom().getId();
+        // this.inviteFirstname = common.getChatMemberUpdated().getFrom().getFirstName();
+        // this.inviteUsername = common.getChatMemberUpdated().getFrom().getUserName();
+        // this.inviteLastname = common.getChatMemberUpdated().getFrom().getLastName();
+        this.channelId = common.getUpdate().getChatMember().getChat().getId();
+        this.channelTitle = common.getUpdate().getChatMember().getChat().getTitle();
         this.springyBot = springyBotServiceImpl.findById(common.getSpringyBotId()).get();
-        this.userId = common.getChatMemberUpdated().getNewChatMember().getUser().getId();
+        this.userId = common.getUpdate().getChatMember().getNewChatMember().getUser().getId();
+        
     }
 
     public void isUserJoinChannel() {
-        System.out.println("aaa");
-        System.out.println(this.channelId);
-        System.out.println(this.userId);
-        String paresChannelId = String.valueOf(this.channelId);
+
+
         springyBot.getRestrictMember().stream()
-                .filter(rm -> rm.getChatId().equals(paresChannelId) && rm.getUserId().equals(this.userId)
-                        && rm.getStatus())
+                .filter(rm -> rm.getUserId().equals(this.userId)&& rm.getStatus())
                 .findAny()
                 .ifPresent(rm -> {
                     rm.setStatus(false);
@@ -62,10 +60,9 @@ public class JoinChannel {
                     chatPermissions.setCanAddWebPagePreviews(true);
                     chatPermissions.setCanSendOtherMessages(true);
                     chatPermissions.setCanSendPolls(true);
-
-                    RestrictChatMember restrictChatMember = new RestrictChatMember(rm.getChatId(), this.userId,
-                            chatPermissions, 0); // 将 untilDate 设置为 0 表示立即解除限制
-                    common.executeAsync(restrictChatMember);
+                    int untilDate = (int) (System.currentTimeMillis() / 1000) + 1;
+                    RestrictChatMember restrictChatMember = new RestrictChatMember(rm.getChatId(), this.userId , chatPermissions,untilDate);
+                    this.common.executeAsync(restrictChatMember);
 
                 });
 

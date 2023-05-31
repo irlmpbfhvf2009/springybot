@@ -9,7 +9,7 @@ public class PrivateMessage_ {
     private Common common;
     private String text;
 
-    public PrivateMessage_(Common common){
+    public PrivateMessage_(Common common) {
         this.common = common;
         this.text = common.getUpdate().getMessage().getText();
     }
@@ -23,11 +23,11 @@ public class PrivateMessage_ {
             case "/reset_config":
                 this.common.setConfigDTO_map(new HashMap<>());
                 break;
-        
+
             default:
                 break;
         }
-        
+
     }
-    
+
 }

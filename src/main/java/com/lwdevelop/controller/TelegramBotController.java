@@ -26,6 +26,5 @@ public class TelegramBotController {
         log.info("some update recieved ");
 
         telegrambot.onWebhookUpdateReceived(update);
-
     }
 }

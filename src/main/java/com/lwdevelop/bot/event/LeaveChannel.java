@@ -1,8 +1,6 @@
 package com.lwdevelop.bot.event;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.telegram.telegrambots.meta.api.objects.ChatMemberUpdated;
-
 import com.lwdevelop.bot.Common;
 import com.lwdevelop.entity.RobotChannelManagement;
 import com.lwdevelop.entity.SpringyBot;
@@ -21,19 +19,18 @@ public class LeaveChannel {
     private Long botId;
     private Common common;
     private String chatMemberUpdatedChatTitle;
+    private SpringyBot springyBot;
     
     public LeaveChannel(Common common){
         this.common = common;
-        ChatMemberUpdated chatMemberUpdated = common.getChatMemberUpdated();
-        this.channelId = chatMemberUpdated.getChat().getId();
+        this.channelId = common.getUpdate().getChatMember().getChat().getId();
         this.botId = common.getBotId();
-        this.chatMemberUpdatedChatTitle = chatMemberUpdated.getChat().getTitle();
+        this.springyBot = springyBotServiceImpl.findById(common.getSpringyBotId()).get();
     }
 
-    public void isBotLeave() {
+    public void isBotLeaveChannel() {
 
-        SpringyBot springyBot = springyBotServiceImpl.findById(common.getSpringyBotId()).get();
-        springyBot.getRobotChannelManagement().stream()
+        this.springyBot.getRobotChannelManagement().stream()
             .filter(rgm -> hasTarget(rgm))
             .findFirst()
             .ifPresent(c -> {
@@ -45,6 +42,10 @@ public class LeaveChannel {
 
 
     }
+    public void isUserLeaveChannel(){
+
+    }
+
 
     private Boolean hasTarget(RobotChannelManagement rcm) {
         return rcm.getBotId().equals(this.botId) && rcm.getChannelId().equals(this.channelId);

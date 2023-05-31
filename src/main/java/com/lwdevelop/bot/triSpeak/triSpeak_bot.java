@@ -5,7 +5,6 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import org.telegram.telegrambots.bots.DefaultBotOptions;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
-import org.telegram.telegrambots.meta.api.objects.ChatMemberUpdated;
 import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.api.objects.User;
@@ -32,6 +31,7 @@ public class triSpeak_bot extends TelegramLongPollingBot {
 
     public triSpeak_bot(SpringyBotDTO springyBotDTO) {
         super(new DefaultBotOptions());
+        
         this.dto = springyBotDTO;
         threadPool = Executors.newFixedThreadPool(10); // 指定執行緒池的大小
 
@@ -118,41 +118,62 @@ public class triSpeak_bot extends TelegramLongPollingBot {
         } catch (Exception e) {
         }
 
-        // join channel event
-        try {
-            if (update.hasMyChatMember()) {
-                System.out.println("update.getMyChatMember()=" + update.getMyChatMember());
+       
+// ChatMemberMember(status=member, user=User(id=5895915615, firstName=ddbpay服?支持, isBot=false, lastName=null, userName=ddbpay99, languageCode=zh-hant, canJoinGroups=null, canReadAllGroupMessages=null, supportInlineQueries=null))
 
-                ChatMemberUpdated chatMemberUpdated = update.getMyChatMember();
-                common.setChatMemberUpdated(chatMemberUpdated);
-                System.out.println("chatMemberUpdated.getChat().getType()=" + chatMemberUpdated.getChat().getType());
-                if (common.chatTypeIsChannel(chatMemberUpdated.getChat().getType())) {
-                    JoinChannel joinChannel = new JoinChannel(common);
-                    // is robot join channel
-                    if (common.isBotJoinChannel(chatMemberUpdated)) {
-                        common.dealInviteLink(chatMemberUpdated.getChat().getId());
+        if(update.hasChatMember()){
+            if(update.getChatMember().getChat().getType().equals("channel")){
+                Boolean isBot = update.getChatMember().getNewChatMember().getUser().getIsBot();
+                JoinChannel joinChannel = new JoinChannel(common);
+                LeaveChannel leaveChannel = new LeaveChannel(common);
+                 // join channel event
+                if(!update.getChatMember().getNewChatMember().getStatus().equals("left")){
+                    if(isBot){
                         joinChannel.isBotJoinChannel();
-                    }
-                    if (common.isUserJoinChannel(chatMemberUpdated)) {
-                        System.out.println("監聽到用戶入頻道");
+                    }else{
                         joinChannel.isUserJoinChannel();
                     }
 
-                    // leave event
-                    LeaveChannel leaveChannel = new LeaveChannel(common);
-                    if (common.isBotLeftChannel(chatMemberUpdated)) {
-                        leaveChannel.isBotLeave();
-                    }
-                    if (common.isUserLeftChannel(chatMemberUpdated)) {
-                        System.out.println("監聽到用戶退出頻道");
-                        leaveChannel.isBotLeave();
+                } else {
+                // left channel event
+                    if(isBot){
+                        leaveChannel.isBotLeaveChannel();
+                    }else{
+                        leaveChannel.isUserLeaveChannel();
                     }
                 }
-            }
 
-        } catch (Exception e) {
-            log.error(e.toString());
+            }
         }
+        // try {
+        //     if (update.hasMyChatMember()) {
+        //         ChatMemberUpdated chatMemberUpdated = update.getMyChatMember();
+        //         common.setChatMemberUpdated(chatMemberUpdated);
+        //         if (common.chatTypeIsChannel(chatMemberUpdated.getChat().getType())) {
+        //             JoinChannel joinChannel = new JoinChannel(common);
+        //             // is robot join channel
+        //             if (common.isBotJoinChannel(chatMemberUpdated)) {
+        //                 common.dealInviteLink(chatMemberUpdated.getChat().getId());
+        //                 joinChannel.isBotJoinChannel();
+        //             }
+        //             if (common.isUserJoinChannel(chatMemberUpdated)) {
+        //                 joinChannel.isUserJoinChannel();
+        //             }
+
+        //             // leave event
+        //             LeaveChannel leaveChannel = new LeaveChannel(common);
+        //             if (common.isBotLeftChannel(chatMemberUpdated)) {
+        //                 leaveChannel.isBotLeave();
+        //             }
+        //             if (common.isUserLeftChannel(chatMemberUpdated)) {
+        //                 leaveChannel.isBotLeave();
+        //             }
+        //         }
+        //     }
+
+        // } catch (Exception e) {
+        //     log.error(e.toString());
+        // }
         if (update.hasCallbackQuery()) {
 
             new CallbackQuerys(this.common).handler();
