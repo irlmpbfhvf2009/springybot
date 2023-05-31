@@ -20,10 +20,10 @@ public class JoinChannel {
 
     private Common common;
     private Long botId;
-    private Long inviteId;
-    private String inviteFirstname;
-    private String inviteUsername;
-    private String inviteLastname;
+    private Long invitedId;
+    private String invitedFirstname;
+    private String invitedUsername;
+    private String invitedLastname;
     private Long channelId;
     private String channelTitle;
     private SpringyBot springyBot;
@@ -32,51 +32,51 @@ public class JoinChannel {
     public JoinChannel(Common common) {
         this.common = common;
         this.botId = common.getBotId();
-        // this.inviteId = common.getChatMemberUpdated().getFrom().getId();
-        // this.inviteFirstname = common.getChatMemberUpdated().getFrom().getFirstName();
-        // this.inviteUsername = common.getChatMemberUpdated().getFrom().getUserName();
-        // this.inviteLastname = common.getChatMemberUpdated().getFrom().getLastName();
         this.channelId = common.getUpdate().getChatMember().getChat().getId();
         this.channelTitle = common.getUpdate().getChatMember().getChat().getTitle();
         this.springyBot = springyBotServiceImpl.findById(common.getSpringyBotId()).get();
-        this.userId = common.getUpdate().getChatMember().getNewChatMember().getUser().getId();
-        
+        this.invitedId = common.getUpdate().getChatMember().getFrom().getId();
+        this.invitedFirstname = common.getUpdate().getChatMember().getFrom().getFirstName();
+        this.invitedUsername = common.getUpdate().getChatMember().getFrom().getUserName();
+        this.invitedLastname = common.getUpdate().getChatMember().getFrom().getLastName();
     }
 
     public void isUserJoinChannel() {
+        System.out.println(common.getUpdate().getChatMember().getFrom());
+        if (this.invitedId != null) {
+            this.springyBot.getRestrictMember().stream()
+                    .filter(rm -> rm.getUserId().equals(this.userId) && rm.getStatus())
+                    .findAny()
+                    .ifPresent(rm -> {
+                        rm.setStatus(false);
+                        ChatPermissions chatPermissions = new ChatPermissions();
+                        chatPermissions.setCanSendMessages(true);
+                        chatPermissions.setCanChangeInfo(true);
+                        chatPermissions.setCanInviteUsers(true);
+                        chatPermissions.setCanPinMessages(true);
+                        chatPermissions.setCanSendMediaMessages(true);
+                        chatPermissions.setCanAddWebPagePreviews(true);
+                        chatPermissions.setCanSendOtherMessages(true);
+                        chatPermissions.setCanSendPolls(true);
+                        int untilDate = (int) (System.currentTimeMillis() / 1000) + 1;
+                        RestrictChatMember restrictChatMember = new RestrictChatMember(rm.getChatId(), this.userId,
+                                chatPermissions, untilDate);
+                        this.common.executeAsync(restrictChatMember);
 
+                    });
 
-        springyBot.getRestrictMember().stream()
-                .filter(rm -> rm.getUserId().equals(this.userId)&& rm.getStatus())
-                .findAny()
-                .ifPresent(rm -> {
-                    rm.setStatus(false);
-                    ChatPermissions chatPermissions = new ChatPermissions();
-                    chatPermissions.setCanSendMessages(true);
-                    chatPermissions.setCanChangeInfo(true);
-                    chatPermissions.setCanInviteUsers(true);
-                    chatPermissions.setCanPinMessages(true);
-                    chatPermissions.setCanSendMediaMessages(true);
-                    chatPermissions.setCanAddWebPagePreviews(true);
-                    chatPermissions.setCanSendOtherMessages(true);
-                    chatPermissions.setCanSendPolls(true);
-                    int untilDate = (int) (System.currentTimeMillis() / 1000) + 1;
-                    RestrictChatMember restrictChatMember = new RestrictChatMember(rm.getChatId(), this.userId , chatPermissions,untilDate);
-                    this.common.executeAsync(restrictChatMember);
+            this.springyBot.getInvitationThreshold().stream()
+                    .filter(it -> hasTarget(it))
+                    .findFirst()
+                    .ifPresentOrElse(it -> {
+                        it.setInvitedStatus(true);
+                    }, () -> {
+                        this.springyBot.getInvitationThreshold().add(this.getInvitationThreshold());
+                    });
+            springyBotServiceImpl.save(this.springyBot);
+            log.info("user [{}] join channel {}", this.invitedId, this.channelTitle);
 
-                });
-
-        springyBot.getInvitationThreshold().stream()
-                .filter(it -> hasTarget(it))
-                .findFirst()
-                .ifPresentOrElse(it -> {
-                    // it.setStatus(true);
-                }, () -> {
-                    springyBot.getInvitationThreshold().add(this.getInvitationThreshold());
-                });
-        springyBotServiceImpl.save(springyBot);
-        // log.info("{} invite {} join channel {}", invite_name, invited_name,
-        // this.channelTitle);
+        }
     }
 
     public void isBotJoinChannel() {
@@ -98,16 +98,16 @@ public class JoinChannel {
     }
 
     private Boolean hasTarget(InvitationThreshold it) {
-        return it.getChatId().equals(this.channelId) && it.getType().equals("channel");
+        return it.getChatId().equals(this.channelId) && it.getType().equals("channel") && it.getInvitedId().equals(this.invitedId);
     }
 
     private RobotChannelManagement getRobotChannelManagement() {
         RobotChannelManagement robotGroupManagement = new RobotChannelManagement();
         robotGroupManagement.setBotId(this.botId);
-        robotGroupManagement.setInviteId(this.inviteId);
-        robotGroupManagement.setInviteFirstname(this.inviteFirstname);
-        robotGroupManagement.setInviteUsername(this.inviteUsername);
-        robotGroupManagement.setInviteLastname(this.inviteLastname);
+        robotGroupManagement.setInviteId(this.invitedId);
+        robotGroupManagement.setInviteFirstname(this.invitedFirstname);
+        robotGroupManagement.setInviteUsername(this.invitedUsername);
+        robotGroupManagement.setInviteLastname(this.invitedLastname);
         robotGroupManagement.setChannelId(this.channelId);
         robotGroupManagement.setChannelTitle(this.channelTitle);
         robotGroupManagement.setLink(this.common.getInviteLink());
@@ -117,6 +117,15 @@ public class JoinChannel {
 
     private InvitationThreshold getInvitationThreshold() {
         InvitationThreshold invitationThreshold = new InvitationThreshold();
+        invitationThreshold.setBotId(this.botId);
+        invitationThreshold.setChatId(this.channelId);
+        invitationThreshold.setChatTitle(this.channelTitle);
+        invitationThreshold.setInvitedId(this.invitedId);
+        invitationThreshold.setInvitedFirstname(this.invitedFirstname);
+        invitationThreshold.setInvitedUsername(this.invitedUsername);
+        invitationThreshold.setInvitedLastname(this.invitedLastname);
+        invitationThreshold.setInvitedStatus(true);
+        invitationThreshold.setType("channel");
         return invitationThreshold;
     }
 

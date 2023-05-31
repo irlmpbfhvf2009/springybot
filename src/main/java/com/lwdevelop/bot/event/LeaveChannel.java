@@ -2,6 +2,7 @@ package com.lwdevelop.bot.event;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import com.lwdevelop.bot.Common;
+import com.lwdevelop.entity.InvitationThreshold;
 import com.lwdevelop.entity.RobotChannelManagement;
 import com.lwdevelop.entity.SpringyBot;
 import com.lwdevelop.service.impl.SpringyBotServiceImpl;
@@ -16,38 +17,57 @@ public class LeaveChannel {
             .getBean(SpringyBotServiceImpl.class);
 
     private Long channelId;
+    private String channelTitle;
     private Long botId;
     private Common common;
     private String chatMemberUpdatedChatTitle;
     private SpringyBot springyBot;
-    
-    public LeaveChannel(Common common){
+    private Boolean isLeft;
+    private Long userId;
+
+    public LeaveChannel(Common common) {
         this.common = common;
         this.channelId = common.getUpdate().getChatMember().getChat().getId();
+        this.channelTitle = common.getUpdate().getChatMember().getChat().getTitle();
         this.botId = common.getBotId();
         this.springyBot = springyBotServiceImpl.findById(common.getSpringyBotId()).get();
+        this.isLeft = common.getUpdate().getChatMember().getNewChatMember().getStatus().equals("left") ? true : false;
+        this.userId = common.getUpdate().getChatMember().getNewChatMember().getUser().getId();
     }
 
     public void isBotLeaveChannel() {
 
         this.springyBot.getRobotChannelManagement().stream()
-            .filter(rgm -> hasTarget(rgm))
-            .findFirst()
-            .ifPresent(c -> {
-                c.setStatus(false);
-            });
+                .filter(rgm -> hasTarget(rgm))
+                .findFirst()
+                .ifPresent(c -> {
+                    c.setStatus(false);
+                });
 
         this.springyBotServiceImpl.save(springyBot);
-        log.info("{} bot leave {} channel",this.common.getBot().getBotUsername(),this.chatMemberUpdatedChatTitle);
-
-
-    }
-    public void isUserLeaveChannel(){
+        log.info("{} bot leave {} channel", this.common.getBot().getBotUsername(), this.chatMemberUpdatedChatTitle);
 
     }
 
+    public void isUserLeaveChannel() {
+        if (isLeft) {
+            this.springyBot.getInvitationThreshold().stream()
+                    .filter(it -> hasTarget(it))
+                    .findFirst()
+                    .ifPresent(it -> {
+                        it.setInvitedStatus(false);
+                    });
+            springyBotServiceImpl.save(this.springyBot);
+            log.info("user [{}] leave channel {}", this.userId, this.channelTitle);
+        }
+    }
 
     private Boolean hasTarget(RobotChannelManagement rcm) {
         return rcm.getBotId().equals(this.botId) && rcm.getChannelId().equals(this.channelId);
     }
+
+    private Boolean hasTarget(InvitationThreshold it) {
+        return it.getChatId().equals(this.channelId) && it.getType().equals("channel") && it.getInvitedId().equals(this.userId);
+    }
+
 }

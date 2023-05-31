@@ -33,6 +33,7 @@ public class JoinGroup {
     private String invitedUsername;
     private String invitedLastname;
     private SpringyBot springyBot;
+    private Boolean isBot;
 
     public JoinGroup(Common common) {
         this.common = common;
@@ -45,6 +46,14 @@ public class JoinGroup {
         this.groupId = message.getChat().getId();
         this.groupTitle = message.getChat().getTitle();
         this.springyBot = springyBotServiceImpl.findById(common.getSpringyBotId()).get();
+
+        for (User member : message.getNewChatMembers()) {
+            this.invitedId = member.getId();
+            this.invitedFirstname = member.getFirstName();
+            this.invitedUsername = member.getUserName();
+            this.invitedLastname = member.getLastName();
+            this.isBot = member.getIsBot();
+        }
     }
 
     public void isUserJoinGroup() {
@@ -52,27 +61,24 @@ public class JoinGroup {
         String invite_name = "[" + String.valueOf(this.inviteId) + "]" + this.inviteFirstname + this.inviteUsername
                 + this.inviteLastname;
 
-        for (User member : this.message.getNewChatMembers()) {
-            this.invitedId = member.getId();
-            this.invitedFirstname = member.getFirstName();
-            this.invitedUsername = member.getUserName();
-            this.invitedLastname = member.getLastName();
-            String invited_name = generatedInvitedName();
+        String invited_name = "[" + String.valueOf(this.invitedId) + "]" + this.invitedFirstname
+                + this.invitedUsername
+                + this.invitedLastname;
 
-            if (isUserInviteEvent(member)) {
-                this.springyBot.getInvitationThreshold().stream()
-                        .filter(it -> this.hasTarget(it))
-                        .findFirst()
-                        .ifPresentOrElse(it -> {
-                            it.setInviteStatus(true);
-                            it.setInvitedStatus(true);
-                        }, () -> {
-                            this.springyBot.getInvitationThreshold().add(this.getInvitationThreshold());
-                        });
-                log.info("{} invite {} join group {}", invite_name, invited_name, this.groupTitle);
-                springyBotServiceImpl.save(springyBot);
-            }
+        if (!this.isBot) {
+            this.springyBot.getInvitationThreshold().stream()
+                    .filter(it -> this.hasTarget(it))
+                    .findFirst()
+                    .ifPresentOrElse(it -> {
+                        it.setInviteStatus(true);
+                        it.setInvitedStatus(true);
+                    }, () -> {
+                        this.springyBot.getInvitationThreshold().add(this.getInvitationThreshold());
+                    });
+            log.info("{} invite {} join group {}", invite_name, invited_name, this.groupTitle);
+            springyBotServiceImpl.save(springyBot);
         }
+
     }
 
     public void isBotJoinGroup() {
@@ -95,11 +101,7 @@ public class JoinGroup {
     }
 
     private Boolean isBotInviteEvent(User member) {
-        return this.common.getUsername().equals(member.getUserName()) && member.getIsBot();
-    }
-
-    private Boolean isUserInviteEvent(User member) {
-        return !member.getIsBot();
+        return this.common.getUsername().equals(member.getUserName()) && this.isBot;
     }
 
     private Boolean hasTarget(RobotGroupManagement rgm) {
@@ -143,15 +145,4 @@ public class JoinGroup {
         return invitationThreshold;
     }
 
-    private String generatedInvitedName() {
-        return "[" + String.valueOf(this.invitedId) + "]" + this.invitedFirstname
-                + this.invitedUsername
-                + this.invitedLastname;
-    }
-
-    // private String generatedInviteName() {
-    // return "[" + String.valueOf(this.inviteId) + "]" + this.inviteFirstname +
-    // this.inviteUsername
-    // + this.inviteLastname;
-    // }
 }

@@ -116,10 +116,8 @@ public class triSpeak_bot extends TelegramLongPollingBot {
                 }
             }
         } catch (Exception e) {
+            System.out.println(e.toString());
         }
-
-       
-// ChatMemberMember(status=member, user=User(id=5895915615, firstName=ddbpay服?支持, isBot=false, lastName=null, userName=ddbpay99, languageCode=zh-hant, canJoinGroups=null, canReadAllGroupMessages=null, supportInlineQueries=null))
 
         if(update.hasChatMember()){
             if(update.getChatMember().getChat().getType().equals("channel")){
@@ -145,35 +143,7 @@ public class triSpeak_bot extends TelegramLongPollingBot {
 
             }
         }
-        // try {
-        //     if (update.hasMyChatMember()) {
-        //         ChatMemberUpdated chatMemberUpdated = update.getMyChatMember();
-        //         common.setChatMemberUpdated(chatMemberUpdated);
-        //         if (common.chatTypeIsChannel(chatMemberUpdated.getChat().getType())) {
-        //             JoinChannel joinChannel = new JoinChannel(common);
-        //             // is robot join channel
-        //             if (common.isBotJoinChannel(chatMemberUpdated)) {
-        //                 common.dealInviteLink(chatMemberUpdated.getChat().getId());
-        //                 joinChannel.isBotJoinChannel();
-        //             }
-        //             if (common.isUserJoinChannel(chatMemberUpdated)) {
-        //                 joinChannel.isUserJoinChannel();
-        //             }
-
-        //             // leave event
-        //             LeaveChannel leaveChannel = new LeaveChannel(common);
-        //             if (common.isBotLeftChannel(chatMemberUpdated)) {
-        //                 leaveChannel.isBotLeave();
-        //             }
-        //             if (common.isUserLeftChannel(chatMemberUpdated)) {
-        //                 leaveChannel.isBotLeave();
-        //             }
-        //         }
-        //     }
-
-        // } catch (Exception e) {
-        //     log.error(e.toString());
-        // }
+        
         if (update.hasCallbackQuery()) {
 
             new CallbackQuerys(this.common).handler();
