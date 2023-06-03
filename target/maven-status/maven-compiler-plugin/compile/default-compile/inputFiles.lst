@@ -58,6 +58,7 @@ D:\酷寶\開發\tgbot\SpringyBot\src\main\java\com\lwdevelop\bot\default_\utils\Key
 D:\酷寶\開發\tgbot\SpringyBot\src\main\java\com\lwdevelop\bot\event\LeaveChannel.java
 D:\酷寶\開發\tgbot\SpringyBot\src\main\java\com\lwdevelop\dto\GroupAndChannelTreeDTO.java
 D:\酷寶\開發\tgbot\SpringyBot\src\main\java\com\lwdevelop\bot\coolbao\handler\messageEvent\private_\state\enter_password.java
+D:\酷寶\開發\tgbot\SpringyBot\src\main\java\com\lwdevelop\entity\RecordGroupUsers.java
 D:\酷寶\開發\tgbot\SpringyBot\src\main\java\com\lwdevelop\controller\JobManagementController.java
 D:\酷寶\開發\tgbot\SpringyBot\src\main\java\com\lwdevelop\bot\talent\handler\PrivateMessage_.java
 D:\酷寶\開發\tgbot\SpringyBot\src\main\java\com\lwdevelop\bot\talent\handler\CallbackQuerys.java
@@ -97,6 +98,7 @@ D:\酷寶\開發\tgbot\SpringyBot\src\main\java\com\lwdevelop\bot\default_\handler\P
 D:\酷寶\開發\tgbot\SpringyBot\src\main\java\com\lwdevelop\bot\default_\utils\SpringyBotEnum.java
 D:\酷寶\開發\tgbot\SpringyBot\src\main\java\com\lwdevelop\utils\SpringUtils.java
 D:\酷寶\開發\tgbot\SpringyBot\src\main\java\com\lwdevelop\dto\JobPostingDTO.java
+D:\酷寶\開發\tgbot\SpringyBot\src\main\java\com\lwdevelop\entity\RecordChannelUsers.java
 D:\酷寶\開發\tgbot\SpringyBot\src\main\java\com\lwdevelop\bot\talent\handler\commands\Job.java
 D:\酷寶\開發\tgbot\SpringyBot\src\main\java\com\lwdevelop\dto\JobSeekerDTO.java
 D:\酷寶\開發\tgbot\SpringyBot\src\main\java\com\lwdevelop\repository\SpringyBotRepository.java

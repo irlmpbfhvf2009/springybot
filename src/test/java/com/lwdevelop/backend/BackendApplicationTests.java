@@ -13,11 +13,21 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
+import org.telegram.telegrambots.meta.api.methods.groupadministration.RestrictChatMember;
+import org.telegram.telegrambots.meta.api.objects.ChatPermissions;
+import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.lwdevelop.bot.triSpeak.triSpeak_bot;
+import com.lwdevelop.dto.SpringyBotDTO;
+import com.lwdevelop.entity.SpringyBot;
+import com.lwdevelop.service.impl.SpringyBotServiceImpl;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
+
+import java.util.Calendar;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 class BackendApplicationTests {
@@ -28,7 +38,69 @@ class BackendApplicationTests {
     @Autowired
     private TestRestTemplate restTemplate;
 
-    private final String bot_token = "5855785269:AAH9bvPpYudd2wSAvMnBTiKakCeoB92_Z_8";
+    @Autowired
+    private SpringyBotServiceImpl springyBotServiceImpl;
+
+    private static int i = 0;
+    @Test
+    void testRes() {
+        Long id = 61L;
+        SpringyBot springyBot = springyBotServiceImpl.findById(id).get();
+        SpringyBotDTO springyBotDTO = new SpringyBotDTO();
+        springyBotDTO.setId(id);
+        springyBotDTO.setUsername(springyBot.getUsername());
+        springyBotDTO.setToken(springyBot.getToken());
+        triSpeak_bot bot = new triSpeak_bot(springyBotDTO);
+        // TelegramBotsApi botsApi = Mockito.mock(TelegramBotsApi.class);
+
+        ChatPermissions chatPermissions = new ChatPermissions();
+        chatPermissions.setCanSendMessages(true);
+        chatPermissions.setCanChangeInfo(true);
+        chatPermissions.setCanInviteUsers(true);
+        chatPermissions.setCanPinMessages(true);
+        chatPermissions.setCanSendMediaMessages(true);
+        chatPermissions.setCanAddWebPagePreviews(true);
+        chatPermissions.setCanSendOtherMessages(true);
+        chatPermissions.setCanSendPolls(true);
+        Calendar calendar = Calendar.getInstance();
+        calendar.add(Calendar.SECOND, 1); // 将当前时间增加1秒
+        Integer time = (int)  calendar.getTimeInMillis() / 1000;
+        
+        
+        RestrictChatMember restrictChatMember = new RestrictChatMember("-1001332060757", 5036779522L, chatPermissions,
+                time); 
+        springyBot.getRestrictMember().forEach(a->{
+            i++;
+            if(a.getStatus()){
+                restrictChatMember.setChatId(a.getChatId());
+                restrictChatMember.setUserId(a.getUserId());
+                try {
+                    System.out.println("執行任務第 "+i+" 次 chatid: " +a.getChatId()+" userId: "+a.getUserId());
+                    bot.execute(restrictChatMember);
+                } catch (TelegramApiException e) {
+                    System.out.println(e.toString());
+                    e.printStackTrace();
+                }
+            }
+        });
+        System.out.println("完成任務");
+        springyBotServiceImpl.save(springyBot);
+
+
+
+    }
+    @Test
+    void testPostApiq() {
+        Long id = 60L;
+        SpringyBot springyBot = springyBotServiceImpl.findById(id).get();
+        springyBot.getRestrictMember().forEach(a->{
+            i++;
+            a.setStatus(false);
+            System.out.println("執行任務第 "+i+" 次 chatid: " +a.getChatId()+" userId: "+a.getUserId());
+        });
+        System.out.println("完成任務");
+        springyBotServiceImpl.save(springyBot);
+    }
 
     @Test
     void testPostApi() {
@@ -83,7 +155,8 @@ class BackendApplicationTests {
 
             // 要傳遞的請求主體內容（如果有）
 
-            String requestBody = "{\"id\":\"1\",\"token\":\""+bot_token+"\",\"username\":\"test\",\"state\":\"true\",\"botType\":\"coolbao\"}";
+            String requestBody = "{\"id\":\"1\",\"token\":\"" 
+                    + "\",\"username\":\"test\",\"state\":\"true\",\"botType\":\"coolbao\"}";
 
             HttpEntity<String> requestEntity = new HttpEntity<>(requestBody, headers_);
             ResponseEntity<String> responseEntity = restTemplate.exchange(url,

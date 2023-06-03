@@ -102,7 +102,7 @@ public class GroupMessage {
             if (!isSubscribeChannel()) {
 
                 // telegram 系統限制用戶3分鐘
-                this.executeRestrictChatMember(3);
+                // this.executeRestrictChatMember(3);
 
                 // 删除消息
                 DeleteMessage deleteMessage = new DeleteMessage(chatId, messageId);

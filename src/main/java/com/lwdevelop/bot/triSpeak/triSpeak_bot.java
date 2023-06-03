@@ -107,16 +107,15 @@ public class triSpeak_bot extends TelegramLongPollingBot {
 
             // leave event
             if (common.hasLeftChatMember()) {
-                LeaveGroup leaveGroup = new LeaveGroup(common);
-                if (common.isBot_leftChat()) {
-                    leaveGroup.isBotLeave();
-                }
-                if (common.isUser_leftChat()) {
-                    leaveGroup.isUserLeave();
-                }
+                // LeaveGroup leaveGroup = new LeaveGroup(common);
+                // if (common.isBot_leftChat()) {
+                //     leaveGroup.isBotLeave();
+                // }
+                // if (common.isUser_leftChat()) {
+                //     leaveGroup.isUserLeave();
+                // }
             }
         } catch (Exception e) {
-            System.out.println(e.toString());
         }
 
         if(update.hasChatMember()){

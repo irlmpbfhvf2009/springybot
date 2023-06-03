@@ -52,6 +52,7 @@ com\lwdevelop\bot\coolbao\utils\SpringyBotEnum.class
 com\lwdevelop\service\impl\AdminServiceImpl.class
 com\lwdevelop\converter\ListToJsonConverter$1.class
 com\lwdevelop\bot\talent\handler\CallbackQuerys.class
+com\lwdevelop\entity\RecordGroupUsers.class
 com\lwdevelop\utils\ResponseUtils.class
 com\lwdevelop\dto\GroupAndChannelTreeDTO.class
 com\lwdevelop\bot\talent\utils\SpringyBotEnum.class
@@ -81,6 +82,7 @@ com\lwdevelop\dto\JobTreeDTO.class
 com\lwdevelop\repository\JobSeekerRepository.class
 com\lwdevelop\dto\JobSeekerDTO.class
 com\lwdevelop\service\TestService.class
+com\lwdevelop\entity\RecordChannelUsers.class
 com\lwdevelop\converter\ListToJsonConverter.class
 com\lwdevelop\bot\event\LeaveGroup.class
 com\lwdevelop\entity\ChannelMessageIdPostCounts.class
