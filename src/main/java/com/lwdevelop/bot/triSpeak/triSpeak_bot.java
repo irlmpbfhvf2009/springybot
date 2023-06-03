@@ -3,6 +3,7 @@ package com.lwdevelop.bot.triSpeak;
 import java.util.HashMap;
 import org.telegram.telegrambots.bots.DefaultBotOptions;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
+import org.telegram.telegrambots.meta.api.objects.ChatMemberUpdated;
 import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.api.objects.User;
@@ -29,7 +30,7 @@ public class triSpeak_bot extends TelegramLongPollingBot {
 
     public triSpeak_bot(SpringyBotDTO springyBotDTO) {
         super(new DefaultBotOptions());
-        
+
         this.dto = springyBotDTO;
         // threadPool = Executors.newFixedThreadPool(3); // 指定執行緒池的大小
 
@@ -39,6 +40,7 @@ public class triSpeak_bot extends TelegramLongPollingBot {
             this.common.setUserState(new HashMap<>());
             this.common.setConfigDTO_map(new HashMap<>());
             this.common.setGroupMessageMap(new HashMap<>());
+            System.out.println(common.getBotId());
         } catch (TelegramApiException e) {
             e.printStackTrace();
         }
@@ -67,9 +69,9 @@ public class triSpeak_bot extends TelegramLongPollingBot {
                 }
 
                 // group
-                if (message.isSuperGroupMessage()) {
+                if (message.isSuperGroupMessage() || message.isGroupMessage()) {
                     // threadPool.submit(() -> {
-                        new GroupMessage(this.common).handler();
+                    new GroupMessage(this.common).handler();
                     // });
                 }
 
@@ -116,31 +118,49 @@ public class triSpeak_bot extends TelegramLongPollingBot {
         } catch (Exception e) {
         }
 
-        if(update.hasChatMember()){
-            if(update.getChatMember().getChat().getType().equals("channel")){
+        if (update.hasChatMember()) {
+            if (update.getChatMember().getChat().getType().equals("channel")) {
                 Boolean isBot = update.getChatMember().getNewChatMember().getUser().getIsBot();
                 JoinChannel joinChannel = new JoinChannel(common);
                 LeaveChannel leaveChannel = new LeaveChannel(common);
-                 // join channel event
-                if(!update.getChatMember().getNewChatMember().getStatus().equals("left")){
-                    if(isBot){
-                        joinChannel.isBotJoinChannel();
-                    }else{
+                // join channel event
+                if (!update.getChatMember().getNewChatMember().getStatus().equals("left")) {
+                    if (!isBot) {
                         joinChannel.isUserJoinChannel();
                     }
-
                 } else {
-                // left channel event
-                    if(isBot){
-                        leaveChannel.isBotLeaveChannel();
-                    }else{
+                    // left channel event
+                    if (!isBot) {
                         leaveChannel.isUserLeaveChannel();
                     }
                 }
 
             }
         }
-        
+
+        if (update.hasMyChatMember()) {
+            System.out.println("1");
+            System.out.println(update.getMyChatMember());
+            System.out.println("1");
+            ChatMemberUpdated chatMemberUpdated = update.getMyChatMember();
+            common.setChatMemberUpdated(chatMemberUpdated);
+
+            if (common.chatTypeIsChannel("channel")) {
+
+                // is robot join channel
+                JoinChannel joinChannel = new JoinChannel(common);
+                if (common.isBotJoinChannel(chatMemberUpdated)) {
+                    joinChannel.isBotJoinChannel();
+                }
+
+                // leave event
+                LeaveChannel leaveChannel = new LeaveChannel(common);
+                if (common.isBotLeftChannel(chatMemberUpdated)) {
+                    leaveChannel.isBotLeaveChannel();
+                }
+            }
+        }
+
         if (update.hasCallbackQuery()) {
 
             new CallbackQuerys(this.common).handler();

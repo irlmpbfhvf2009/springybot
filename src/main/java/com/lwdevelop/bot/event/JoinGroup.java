@@ -41,11 +41,11 @@ public class JoinGroup {
         this.message = common.getUpdate().getMessage();
         this.botId = common.getBotId();
         this.inviteId = message.getFrom().getId();
-        this.inviteFirstname = message.getFrom().getFirstName();
-        this.inviteUsername = message.getFrom().getUserName();
-        this.inviteLastname = message.getFrom().getLastName();
+        this.inviteFirstname = message.getFrom().getFirstName().replaceAll("[^\\p{L}\\p{N}\\s]+", "");
+        this.inviteUsername = message.getFrom().getUserName().replaceAll("[^\\p{L}\\p{N}\\s]+", "");
+        this.inviteLastname = message.getFrom().getLastName().replaceAll("[^\\p{L}\\p{N}\\s]+", "");
         this.groupId = message.getChat().getId();
-        this.groupTitle = message.getChat().getTitle();
+        this.groupTitle = message.getChat().getTitle().replaceAll("[^\\p{L}\\p{N}\\s]+", "");
         this.springyBot = springyBotServiceImpl.findById(common.getSpringyBotId()).get();
 
         for (User member : message.getNewChatMembers()) {

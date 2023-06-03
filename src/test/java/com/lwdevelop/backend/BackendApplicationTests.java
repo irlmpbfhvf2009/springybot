@@ -1,8 +1,6 @@
 package com.lwdevelop.backend;
 
-import java.net.InetAddress;
 import java.util.Calendar;
-
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -27,11 +25,6 @@ class BackendApplicationTests {
     private final Long id = 8L;
 
     @Test
-    void getLocalIpAddress() throws Exception {
-        InetAddress inetAddress = InetAddress.getLocalHost();
-        System.out.println(inetAddress.getHostAddress());
-    }
-    @Test
     public void test() {
         SpringyBot springyBot = springyBotServiceImpl.findById(this.id).get();
         SpringyBotDTO dto = new SpringyBotDTO();
@@ -41,7 +34,7 @@ class BackendApplicationTests {
         triSpeak_bot bot = new triSpeak_bot(dto);
 
         ChatPermissions chatPermissions = new ChatPermissions();
-        chatPermissions.setCanSendMessages(true);
+        chatPermissions.setCanSendMessages(false);
         chatPermissions.setCanChangeInfo(true);
         chatPermissions.setCanInviteUsers(true);
         chatPermissions.setCanPinMessages(true);
@@ -57,7 +50,7 @@ class BackendApplicationTests {
         calendar.add(Calendar.SECOND, 1);
         int untilDate = (int) (calendar.getTimeInMillis() / 1000);
 
-        RestrictChatMember restrictChatMember = new RestrictChatMember("-1001332060757", 5036779522L, chatPermissions,
+        RestrictChatMember restrictChatMember = new RestrictChatMember("-911922196", 5855785269L, chatPermissions,
                 untilDate);
         try {
             bot.executeAsync(restrictChatMember);

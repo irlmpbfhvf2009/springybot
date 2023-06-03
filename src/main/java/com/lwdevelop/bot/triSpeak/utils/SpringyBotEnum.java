@@ -18,6 +18,6 @@ public enum SpringyBotEnum {
     }
 
     public static String warning_text(String channel_title){
-        return "以上用户需要关注频道 "+channel_title+" 后才能发言";
+        return "\n————————————\n以上用户需要关注频道👇 "+channel_title+" 后才能发言\n————————————";
     }
 }

@@ -27,15 +27,13 @@ public class LeaveChannel {
 
     public LeaveChannel(Common common) {
         this.common = common;
-        this.channelId = common.getUpdate().getChatMember().getChat().getId();
-        this.channelTitle = common.getUpdate().getChatMember().getChat().getTitle();
         this.botId = common.getBotId();
         this.springyBot = springyBotServiceImpl.findById(common.getSpringyBotId()).get();
-        this.isLeft = common.getUpdate().getChatMember().getNewChatMember().getStatus().equals("left") ? true : false;
-        this.userId = common.getUpdate().getChatMember().getNewChatMember().getUser().getId();
+
     }
 
     public void isBotLeaveChannel() {
+        this.channelTitle = common.getUpdate().getMyChatMember().getChat().getTitle();
 
         this.springyBot.getRobotChannelManagement().stream()
                 .filter(rgm -> hasTarget(rgm))
@@ -50,6 +48,11 @@ public class LeaveChannel {
     }
 
     public void isUserLeaveChannel() {
+        this.channelId = common.getUpdate().getChatMember().getChat().getId();
+        this.channelTitle = common.getUpdate().getChatMember().getChat().getTitle();
+        this.isLeft = common.getUpdate().getChatMember().getNewChatMember().getStatus().equals("left") ? true : false;
+        this.userId = common.getUpdate().getChatMember().getNewChatMember().getUser().getId();
+
         if (isLeft) {
             this.springyBot.getInvitationThreshold().stream()
                     .filter(it -> hasTarget(it))

@@ -35,17 +35,17 @@ public class JoinChannel {
     public JoinChannel(Common common) {
         this.common = common;
         this.botId = common.getBotId();
-        this.channelId = common.getUpdate().getChatMember().getChat().getId();
-        this.channelTitle = common.getUpdate().getChatMember().getChat().getTitle();
         this.springyBot = springyBotServiceImpl.findById(common.getSpringyBotId()).get();
-        this.invitedId = common.getUpdate().getChatMember().getFrom().getId();
-        this.invitedFirstname = common.getUpdate().getChatMember().getFrom().getFirstName();
-        this.invitedUsername = common.getUpdate().getChatMember().getFrom().getUserName();
-        this.invitedLastname = common.getUpdate().getChatMember().getFrom().getLastName();
     }
 
     public void isUserJoinChannel() {
-        
+        this.channelId = common.getUpdate().getChatMember().getChat().getId();
+        this.channelTitle = common.getUpdate().getChatMember().getChat().getTitle().replaceAll("[^\\p{L}\\p{N}\\s]+", "");
+        this.invitedId = common.getUpdate().getChatMember().getFrom().getId();
+        this.invitedFirstname = common.getUpdate().getChatMember().getFrom().getFirstName().replaceAll("[^\\p{L}\\p{N}\\s]+", "");
+        this.invitedUsername = common.getUpdate().getChatMember().getFrom().getUserName().replaceAll("[^\\p{L}\\p{N}\\s]+", "");
+        this.invitedLastname = common.getUpdate().getChatMember().getFrom().getLastName().replaceAll("[^\\p{L}\\p{N}\\s]+", "");
+
         log.info("user [{}] join channel {}", this.invitedId, this.channelTitle);
 
         // 監測訂閱頻道後解除限制
@@ -97,7 +97,12 @@ public class JoinChannel {
     }
 
     public void isBotJoinChannel() {
-
+        this.channelTitle = common.getUpdate().getMyChatMember().getChat().getTitle();
+        this.channelId = common.getUpdate().getMyChatMember().getChat().getId();
+        this.invitedId=common.getUpdate().getMyChatMember().getFrom().getId();
+        this.invitedFirstname=common.getUpdate().getMyChatMember().getFrom().getFirstName();
+        this.invitedUsername=common.getUpdate().getMyChatMember().getFrom().getUserName();
+        this.invitedLastname= common.getUpdate().getMyChatMember().getFrom().getLastName();
         springyBot.getRobotChannelManagement().stream()
                 .filter(rcm -> hasTarget(rcm))
                 .findFirst()
