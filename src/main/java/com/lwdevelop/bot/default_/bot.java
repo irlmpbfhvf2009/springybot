@@ -58,7 +58,7 @@ public class bot extends TelegramLongPollingBot {
                 // group
                 if (this.message.isSuperGroupMessage()) {
                     new GroupMessage().handler(this.common);
-                    log.info("[{}] Group message received from {}", common.getUsername(), userInfo);
+                    // log.info("[{}] Group message received from {}", common.getUsername(), userInfo);
                     // log.info("[{}] Group message received from {}: {}",
                     // common.getUsername(),userInfo, this.message.getText());
                 }

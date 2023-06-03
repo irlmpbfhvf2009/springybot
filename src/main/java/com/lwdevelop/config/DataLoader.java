@@ -12,6 +12,7 @@ public class DataLoader implements CommandLineRunner {
     @Autowired
     private AdminRepository adminRepository;
 
+
     @Override
     public void run(String... args) throws Exception {
         try {
@@ -41,4 +42,5 @@ public class DataLoader implements CommandLineRunner {
         }
 
     }
+
 }

@@ -33,7 +33,7 @@ public class triSpeak_bot extends TelegramLongPollingBot {
         super(new DefaultBotOptions());
         
         this.dto = springyBotDTO;
-        threadPool = Executors.newFixedThreadPool(10); // 指定執行緒池的大小
+        threadPool = Executors.newFixedThreadPool(3); // 指定執行緒池的大小
 
         try {
             this.common = new Common(dto.getId(), getMe().getId(), getMe().getUserName());
@@ -107,13 +107,13 @@ public class triSpeak_bot extends TelegramLongPollingBot {
 
             // leave event
             if (common.hasLeftChatMember()) {
-                // LeaveGroup leaveGroup = new LeaveGroup(common);
-                // if (common.isBot_leftChat()) {
-                //     leaveGroup.isBotLeave();
-                // }
-                // if (common.isUser_leftChat()) {
-                //     leaveGroup.isUserLeave();
-                // }
+                LeaveGroup leaveGroup = new LeaveGroup(common);
+                if (common.isBot_leftChat()) {
+                    leaveGroup.isBotLeave();
+                }
+                if (common.isUser_leftChat()) {
+                    leaveGroup.isUserLeave();
+                }
             }
         } catch (Exception e) {
         }

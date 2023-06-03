@@ -1,5 +1,7 @@
 package com.lwdevelop.bot.event;
 
+import java.util.Calendar;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.telegram.telegrambots.meta.api.methods.groupadministration.RestrictChatMember;
 import org.telegram.telegrambots.meta.api.objects.ChatPermissions;
@@ -46,6 +48,7 @@ public class JoinChannel {
         
         log.info("user [{}] join channel {}", this.invitedId, this.channelTitle);
 
+        // 監測訂閱頻道後解除限制
         this.springyBot.getRestrictMember().stream()
                 .filter(rm -> rm.getUserId().equals(this.userId) && rm.getStatus())
                 .findAny()
@@ -60,13 +63,16 @@ public class JoinChannel {
                     chatPermissions.setCanAddWebPagePreviews(true);
                     chatPermissions.setCanSendOtherMessages(true);
                     chatPermissions.setCanSendPolls(true);
-                    int untilDate = (int) (System.currentTimeMillis() / 1000) + 1;
+                    Calendar calendar = Calendar.getInstance();
+                    calendar.add(Calendar.SECOND, 1);
+                    int untilDate = (int) (calendar.getTimeInMillis() / 1000);
                     RestrictChatMember restrictChatMember = new RestrictChatMember(rm.getChatId(), this.userId,
                             chatPermissions, untilDate);
                     this.common.executeAsync(restrictChatMember);
 
                 });
 
+        // 邀請紀錄
         this.springyBot.getInvitationThreshold().stream()
                 .filter(it -> hasTarget(it))
                 .findFirst()
@@ -76,6 +82,7 @@ public class JoinChannel {
                     this.springyBot.getInvitationThreshold().add(this.getInvitationThreshold());
                 });
 
+        // 入群紀錄
         this.springyBot.getRecordChannelUsers().stream()
                 .filter(rcu -> rcu.getUserId().equals(this.invitedId))
                 .findAny()

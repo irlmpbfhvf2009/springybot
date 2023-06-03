@@ -74,7 +74,7 @@ public class talent_bot extends TelegramLongPollingBot {
                 // group
                 if (message.isSuperGroupMessage()) {
                     new GroupMessage(this.common).handler();
-                    log.info("[{}] Group message received from {}", common.getUsername(),userInfo);
+                    // log.info("[{}] Group message received from {}", common.getUsername(),userInfo);
                 }
             }
         }
