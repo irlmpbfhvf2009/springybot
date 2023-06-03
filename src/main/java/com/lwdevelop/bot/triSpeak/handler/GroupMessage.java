@@ -37,6 +37,7 @@ public class GroupMessage {
     private HashMap<Long, List<String>> groupMessageMap;
     private static TimerTask currentTask = null;
     private static Timer timer;
+    // private ExecutorService threadPool = null;
 
     @Autowired
     private SpringyBotServiceImpl springyBotServiceImpl = SpringUtils.getApplicationContext()
@@ -53,23 +54,15 @@ public class GroupMessage {
         this.lastname = common.getUpdate().getMessage().getFrom().getLastName();
         this.groupMessageMap = common.getGroupMessageMap();
 
-        List<String> message;
-        String username = generate_username();
-        message = this.groupMessageMap.getOrDefault(this.chatId_long, new ArrayList<>());
+        this.loadConfig();
+        // if (threadPool == null) {
+        // threadPool = Executors.newFixedThreadPool(3);
+        // }
 
-        if (!message.contains(username)) {
-            message.add(username);
-        }
-        this.groupMessageMap.put(this.chatId_long, message);
-        this.common.setGroupMessageMap(groupMessageMap);
-
-        initSystemMessageTask(); // 初始化系统消息任务
     }
 
     // 關注頻道、邀請限制發言開關, 累積獎金開關
     public void handler() {
-
-        this.loadConfig();
 
         // 關注頻道系統
         if (this.followChannelSet) {
@@ -79,11 +72,13 @@ public class GroupMessage {
                 // this.executeRestrictChatMember(10);
 
                 // 删除消息
+                // threadPool.submit(() -> {
                 DeleteMessage deleteMessage = new DeleteMessage(chatId, messageId);
                 this.common.executeAsync(deleteMessage);
+                // });
 
                 // 发送系统消息
-                // this.executeOperation();
+                this.executeOperation();
             }
         }
 
@@ -128,21 +123,21 @@ public class GroupMessage {
 
     }
 
-    private void initSystemMessageTask() {
-        String warn_text = generate_warning_text();
+    // private void initSystemMessageTask() {
+    // String warn_text = generate_warning_text();
 
-        if (currentTask == null) {
-            TimerTask systemMessageTask = new TimerTask() {
-                public void run() {
-                    executeTaskIfSizeNotMet(warn_text); // 发送系统消息的逻辑
-                }
-            };
-            currentTask = systemMessageTask;
-            timer = new Timer();
-            timer.scheduleAtFixedRate(systemMessageTask, 0, 5000); // 每n秒执行一次
-        }
+    // if (currentTask == null) {
+    // TimerTask systemMessageTask = new TimerTask() {
+    // public void run() {
+    // executeTaskIfSizeNotMet(warn_text); // 发送系统消息的逻辑
+    // }
+    // };
+    // currentTask = systemMessageTask;
+    // timer = new Timer();
+    // timer.scheduleAtFixedRate(systemMessageTask, 0, 5000); // 每n秒执行一次
+    // }
 
-    }
+    // }
 
     // private void executeRestrictChatMember(int minute) {
 
@@ -185,49 +180,77 @@ public class GroupMessage {
     // }
 
     private void executeOperation() {
-
-        List<String> message;
+        List<String> message = this.groupMessageMap.getOrDefault(this.chatId_long, new ArrayList<>());
+        ;
         String username = generate_username();
-        String warn_text = generate_warning_text();
-
-        message = this.groupMessageMap.getOrDefault(this.chatId_long, new ArrayList<>());
 
         if (!message.contains(username)) {
             message.add(username);
         }
 
         this.groupMessageMap.put(this.chatId_long, message);
-        this.common.setGroupMessageMap(groupMessageMap);
-        executeTaskIfSizeNotMet(warn_text);
-        // int messageSize = message.size();
+        this.common.setGroupMessageMap(this.groupMessageMap);
 
-        // if (messageSize >= 5) {
-        // StringBuilder textBuilder = new StringBuilder();
-        // for (String msg : message) {
-        // textBuilder.append(msg).append("\n");
-        // }
-        // textBuilder.append(warn_text);
-        // message.clear();
-        // SendMessage response = new SendMessage(this.chatId, textBuilder.toString());
-        // Integer msgId = common.executeAsync(response);
-        // DeleteMessage deleteMessage = new DeleteMessage(this.chatId, msgId);
-        // common.deleteMessageTask(deleteMessage, this.deleteSeconds);
+        // 初始化系统消息任务
+        String warn_text = generate_warning_text();
 
-        // } else {
-        // if (currentTask != null) {
-        // currentTask.cancel();
-        // }
-        // TimerTask task = new TimerTask() {
-        // public void run() {
-        // executeTaskIfSizeNotMet(warn_text);
-        // }
-        // };
+        if (currentTask == null) {
+            TimerTask systemMessageTask = new TimerTask() {
+                public void run() {
+                    executeTaskIfSizeNotMet(warn_text); // 发送系统消息的逻辑
+                }
+            };
+            currentTask = systemMessageTask;
+            timer = new Timer();
+            timer.scheduleAtFixedRate(systemMessageTask, 0, 5000); // 每n秒执行一次
+        }
 
-        // timer = new Timer();
-        // timer.schedule(task, 3000); // 延迟n秒后执行任务
-        // currentTask = task;
-        // }
     }
+    // private void executeOperation() {
+
+    // List<String> message;
+    // String username = generate_username();
+    // String warn_text = generate_warning_text();
+
+    // message = this.groupMessageMap.getOrDefault(this.chatId_long, new
+    // ArrayList<>());
+
+    // if (!message.contains(username)) {
+    // message.add(username);
+    // }
+
+    // this.groupMessageMap.put(this.chatId_long, message);
+    // this.common.setGroupMessageMap(groupMessageMap);
+    // executeTaskIfSizeNotMet(warn_text);
+    // int messageSize = message.size();
+
+    // if (messageSize >= 5) {
+    // StringBuilder textBuilder = new StringBuilder();
+    // for (String msg : message) {
+    // textBuilder.append(msg).append("\n");
+    // }
+    // textBuilder.append(warn_text);
+    // message.clear();
+    // SendMessage response = new SendMessage(this.chatId, textBuilder.toString());
+    // Integer msgId = common.executeAsync(response);
+    // DeleteMessage deleteMessage = new DeleteMessage(this.chatId, msgId);
+    // common.deleteMessageTask(deleteMessage, this.deleteSeconds);
+
+    // } else {
+    // if (currentTask != null) {
+    // currentTask.cancel();
+    // }
+    // TimerTask task = new TimerTask() {
+    // public void run() {
+    // executeTaskIfSizeNotMet(warn_text);
+    // }
+    // };
+
+    // timer = new Timer();
+    // timer.schedule(task, 3000); // 延迟n秒后执行任务
+    // currentTask = task;
+    // }
+    // }
 
     private void executeTaskIfSizeNotMet(String warn_text) {
         List<String> message = this.groupMessageMap.getOrDefault(this.chatId_long, new ArrayList<>());
@@ -252,13 +275,18 @@ public class GroupMessage {
 
     @Async
     private boolean isSubscribeChannel() {
-        String parseId = String.valueOf(this.channel_id);
-        GetChatMember getChatMember = new GetChatMember(parseId, this.userId);
-        String status = this.common.executeAsync(getChatMember);
-        if (status.equals("administrator")) {
-            return true;
+        try {
+            String parseId = String.valueOf(this.channel_id);
+            GetChatMember getChatMember = new GetChatMember(parseId, this.userId);
+            String status = this.common.executeAsync(getChatMember);
+            if (status.equals("administrator")) {
+                return true;
+            }
+            return status.equals("left") ? false : true;
+        } catch (NullPointerException e) {
+            System.out.println(e.toString());
         }
-        return status.equals("left") ? false : true;
+        return true;
     }
 
     private String generate_warning_text() {

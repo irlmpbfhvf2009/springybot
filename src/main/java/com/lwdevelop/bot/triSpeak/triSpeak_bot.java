@@ -1,8 +1,6 @@
 package com.lwdevelop.bot.triSpeak;
 
 import java.util.HashMap;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 import org.telegram.telegrambots.bots.DefaultBotOptions;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.meta.api.objects.Message;
@@ -27,13 +25,13 @@ public class triSpeak_bot extends TelegramLongPollingBot {
 
     public Common common;
     private SpringyBotDTO dto;
-    private ExecutorService threadPool;
+    // private ExecutorService threadPool;
 
     public triSpeak_bot(SpringyBotDTO springyBotDTO) {
         super(new DefaultBotOptions());
         
         this.dto = springyBotDTO;
-        threadPool = Executors.newFixedThreadPool(3); // 指定執行緒池的大小
+        // threadPool = Executors.newFixedThreadPool(3); // 指定執行緒池的大小
 
         try {
             this.common = new Common(dto.getId(), getMe().getId(), getMe().getUserName());
@@ -70,9 +68,9 @@ public class triSpeak_bot extends TelegramLongPollingBot {
 
                 // group
                 if (message.isSuperGroupMessage()) {
-                    threadPool.submit(() -> {
+                    // threadPool.submit(() -> {
                         new GroupMessage(this.common).handler();
-                    });
+                    // });
                 }
 
             }

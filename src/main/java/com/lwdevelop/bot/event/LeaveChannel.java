@@ -59,7 +59,7 @@ public class LeaveChannel {
                     });
 
             this.springyBot.getRecordChannelUsers().stream()
-                    .filter(rcu -> rcu.getUserId().equals(this.userId))
+                    .filter(rcu -> rcu.getUserId() == this.userId)
                     .findAny()
                     .ifPresent(rcu -> {
                         rcu.setStatus(false);

@@ -84,7 +84,7 @@ public class JoinChannel {
 
         // 入群紀錄
         this.springyBot.getRecordChannelUsers().stream()
-                .filter(rcu -> rcu.getUserId().equals(this.invitedId))
+                .filter(rcu -> rcu.getUserId() == this.invitedId)
                 .findAny()
                 .ifPresentOrElse(rcu->{
                         rcu.setStatus(true);
