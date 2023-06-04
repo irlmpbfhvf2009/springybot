@@ -40,6 +40,9 @@ public class JoinGroup {
         this.common = common;
         this.message = common.getUpdate().getMessage();
         this.botId = common.getBotId();
+        System.out.println(common.getUpdate());
+
+        System.out.println(common.getUpdate().getMyChatMember());
         this.inviteId = message.getFrom().getId();
         this.inviteFirstname = message.getFrom().getFirstName().replaceAll("[^\\p{L}\\p{N}\\s]+", "");
         this.inviteUsername = message.getFrom().getUserName().replaceAll("[^\\p{L}\\p{N}\\s]+", "");
@@ -109,60 +112,6 @@ public class JoinGroup {
         }
     }
 
-    public void isUserJoinGroup() {
-
-        String invite_name = "[" + String.valueOf(this.inviteId) + "]" + this.inviteFirstname + this.inviteUsername
-                + this.inviteLastname;
-
-        String invited_name = "[" + String.valueOf(this.invitedId) + "]" + this.invitedFirstname
-                + this.invitedUsername
-                + this.invitedLastname;
-
-        log.info("{} invite {} join group {}", invite_name, invited_name, this.groupTitle);
-
-        if (!this.isBot) {
-            this.springyBot.getInvitationThreshold().stream()
-                    .filter(it -> this.hasTarget(it))
-                    .findFirst()
-                    .ifPresentOrElse(it -> {
-                        it.setInviteStatus(true);
-                        it.setInvitedStatus(true);
-                    }, () -> {
-                        this.springyBot.getInvitationThreshold().add(this.getInvitationThreshold());
-                    });
-
-            this.springyBot.getRecordGroupUsers().stream()
-                    .filter(rgu -> rgu.getUserId().equals(this.invitedId))
-                    .findAny()
-                    .ifPresentOrElse(rgu -> {
-                        rgu.setStatus(true);
-                    }, () -> {
-                        this.springyBot.getRecordGroupUsers().add(this.getRecordGroupUsers());
-                    });
-
-            springyBotServiceImpl.save(springyBot);
-        }
-
-    }
-
-    public void isBotJoinGroup() {
-
-        for (User member : this.message.getNewChatMembers()) {
-            // bot join group
-            if (isBotInviteEvent(member)) {
-                this.springyBot.getRobotGroupManagement().stream()
-                        .filter(rgm -> hasTarget(rgm))
-                        .findFirst()
-                        .ifPresentOrElse(rgm -> {
-                            rgm.setStatus(true);
-                        }, () -> {
-                            springyBot.getRobotGroupManagement().add(this.getRobotGroupManagement());
-                        });
-                springyBotServiceImpl.save(springyBot);
-                log.info("{} bot join {} group", member.getUserName(), this.groupTitle);
-            }
-        }
-    }
 
     private Boolean isBotInviteEvent(User member) {
         return this.common.getUsername().equals(member.getUserName()) && this.isBot;

@@ -16,7 +16,6 @@ import org.telegram.telegrambots.meta.api.methods.send.SendPhoto;
 import org.telegram.telegrambots.meta.api.methods.updatingmessages.DeleteMessage;
 import org.telegram.telegrambots.meta.api.methods.updatingmessages.EditMessageText;
 import org.telegram.telegrambots.meta.api.objects.Chat;
-import org.telegram.telegrambots.meta.api.objects.ChatMemberUpdated;
 import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.api.objects.User;
@@ -43,21 +42,18 @@ public class Common {
 
     private TelegramLongPollingBot bot;
 
-    private ChatMemberUpdated chatMemberUpdated;
-
     // 用来存储用户的状态(会话)
     private HashMap<Long, String> userState;
 
     private HashMap<Long, ConfigDTO> configDTO_map;
 
-    private HashMap<Long,List<String>> groupMessageMap;
+    private HashMap<Long, List<String>> groupMessageMap;
 
     public Common(Long springyBotId, Long botId, String username) {
         this.springyBotId = springyBotId;
         this.botId = botId;
         this.username = username;
     }
-
 
     @Async
     public void deleteMessageTask(List<DeleteMessage> deleteSystemMessages, int second) {
@@ -93,7 +89,6 @@ public class Common {
     @SneakyThrows
     public void executeAsync_(SendMessage sendMessage) {
         this.bot.execute(sendMessage);
-        // this.bot.executeAsync(sendMessage);
     }
 
     @Async
@@ -144,49 +139,17 @@ public class Common {
         }
     }
 
-    public Boolean hasNewChatMembers() {
-        Message message = this.update.getMessage();
-        return message.getNewChatMembers() != null && message.getNewChatMembers().size() != 0;
+    public String formatBot(){
+        return "["+this.botId+"] "+this.username;
     }
 
-
-    public Boolean isBot_leftChat() {
-        Message message = this.update.getMessage();
-        return message.getLeftChatMember().getIsBot()
-                && message.getLeftChatMember().getUserName().equals(getUsername());
+    public String formatUser(User user) {
+        String firstname = user.getFirstName() == null ? "" : user.getFirstName();
+        String username = user.getUserName() == null ? "" : user.getUserName();
+        String lastname = user.getLastName() == null ? "" : user.getLastName();
+        String name = username == null ? firstname + lastname : username;
+        return "[" + user.getId() + "] " + name;
     }
-
-    public Boolean isUser_leftChat() {
-        Message message = this.update.getMessage();
-        return !message.getLeftChatMember().getIsBot();
-    }
-
-    public Boolean hasLeftChatMember() {
-        Message message = this.update.getMessage();
-        return message.getLeftChatMember() != null;
-    }
-
-    public Boolean chatTypeIsChannel(String type) {
-        return type.equals("channel") ? true : false;
-    }
-
-    public Boolean isBotJoinChannel(ChatMemberUpdated chatMemberUpdated) {
-        return chatMemberUpdated.getNewChatMember().getUser().getIsBot()
-                && chatMemberUpdated.getNewChatMember().getStatus().equals("administrator");
-    }
-    public Boolean isUserJoinChannel(ChatMemberUpdated chatMemberUpdated) {
-        return !chatMemberUpdated.getNewChatMember().getUser().getIsBot();
-    }
-
-    public Boolean isBotLeftChannel(ChatMemberUpdated chatMemberUpdated) {
-        return chatMemberUpdated.getNewChatMember().getUser().getIsBot()
-                && chatMemberUpdated.getNewChatMember().getStatus().equals("left");
-    }
-    public Boolean isUserLeftChannel(ChatMemberUpdated chatMemberUpdated) {
-        return !chatMemberUpdated.getNewChatMember().getUser().getIsBot()
-                && chatMemberUpdated.getNewChatMember().getStatus().equals("left");
-    }
-
 
     public void dealInviteLink(Long chatId) {
         try {

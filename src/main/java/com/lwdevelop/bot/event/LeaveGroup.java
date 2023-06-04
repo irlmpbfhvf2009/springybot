@@ -1,7 +1,11 @@
 package com.lwdevelop.bot.event;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.telegram.telegrambots.meta.api.objects.ChatMemberUpdated;
 import org.telegram.telegrambots.meta.api.objects.Message;
+import org.telegram.telegrambots.meta.api.objects.User;
+import org.telegram.telegrambots.meta.api.objects.chatmember.ChatMember;
+
 import com.lwdevelop.bot.Common;
 import com.lwdevelop.entity.InvitationThreshold;
 import com.lwdevelop.entity.RobotGroupManagement;
@@ -17,22 +21,32 @@ public class LeaveGroup {
     private SpringyBotServiceImpl springyBotServiceImpl = SpringUtils.getApplicationContext()
             .getBean(SpringyBotServiceImpl.class);
 
-    private Long groupId;
-    private Long botId;
-    private Common common;
     private SpringyBot springyBot;
-    private Message message;
-    // private Long left_id;
+    private Common common;
+    private Long botId;
+    private Long userId;
+    private Long chatId;
+    private String chatTitle;
+    private User user;
 
     public LeaveGroup(Common common) {
         this.common = common;
-        this.groupId = common.getUpdate().getMessage().getChat().getId();
         this.botId = common.getBotId();
+        ChatMemberUpdated chatMemberUpdated = common.getUpdate().getMyChatMember();
+        ChatMember chatMember = common.getUpdate().getMyChatMember().getNewChatMember();
+        this.chatId = chatMemberUpdated.getChat().getId();
         this.springyBot = springyBotServiceImpl.findById(common.getSpringyBotId()).get();
-        this.message = this.common.getUpdate().getMessage();
+        this.chatTitle = chatMemberUpdated.getChat().getTitle();
+        this.userId = chatMember.getUser().getId();
+        this.user = chatMember.getUser();
     }
 
     public void handler(Boolean isBot) {
+        String formatChat = "[" + this.chatId + "] " + this.chatTitle;
+        String formatBot = common.formatBot();
+        String formatUser  = common.formatUser(this.user);
+
+
         if (isBot) {
             this.springyBot.getRobotGroupManagement().stream()
                     .filter(rgm -> hasTarget(rgm))
@@ -41,71 +55,37 @@ public class LeaveGroup {
                         g.setStatus(false);
                     });
             this.springyBotServiceImpl.save(springyBot);
-            log.info("{} bot leave {} group", common.getBot().getBotUsername(), this.message.getChat().getTitle());
+            log.info("{} -> {} user leave {} group", formatBot, formatUser, formatChat);
+
 
         } else {
-            Long userId = common.getUpdate().getMessage().getLeftChatMember().getId();
             this.springyBot.getInvitationThreshold().stream()
-                    .filter(it -> invite_hasTarget(it, userId) || invited_hasTarget(it, userId))
+                    .filter(it -> invite_hasTarget(it) || invited_hasTarget(it))
                     .findFirst()
                     .ifPresent(g -> {
-                        if (invite_hasTarget(g, userId)) {
+                        if (invite_hasTarget(g)) {
                             g.setInviteStatus(false);
                         }
-                        if (invited_hasTarget(g, userId)) {
+                        if (invited_hasTarget(g)) {
                             g.setInvitedStatus(false);
                         }
                     });
-    
+
             this.springyBotServiceImpl.save(springyBot);
-            log.info("{} user leave {} group");
+            log.info("{} -> {} user leave {} group", formatBot, formatUser formatChat);
         }
-    }
-
-    public void isBotLeave() {
-        this.springyBot.getRobotGroupManagement().stream()
-                .filter(rgm -> hasTarget(rgm))
-                .findFirst()
-                .ifPresent(g -> {
-                    g.setStatus(false);
-                });
-        this.springyBotServiceImpl.save(springyBot);
-        log.info("{} bot leave {} group", common.getBot().getBotUsername(), this.message.getChat().getTitle());
-
-    }
-
-    public void isUserLeave() {
-        Long userId = common.getUpdate().getMessage().getLeftChatMember().getId();
-        this.springyBot.getInvitationThreshold().stream()
-                .filter(it -> invite_hasTarget(it, userId) || invited_hasTarget(it, userId))
-                .findFirst()
-                .ifPresent(g -> {
-                    if (invite_hasTarget(g, userId)) {
-                        g.setInviteStatus(false);
-                    }
-                    if (invited_hasTarget(g, userId)) {
-                        g.setInvitedStatus(false);
-                    }
-                });
-
-        System.out.println(this.message);
-        // this.springyBot.getRecordGroupUsers().stream()
-        // .filter(rgu->rgu.getUserId().equals(this.user))
-
-        this.springyBotServiceImpl.save(springyBot);
-        log.info("{} user leave {} group");
 
     }
 
     private Boolean hasTarget(RobotGroupManagement rgm) {
-        return rgm.getBotId().equals(this.botId) && rgm.getGroupId().equals(this.groupId);
+        return rgm.getBotId().equals(this.botId) && rgm.getGroupId().equals(this.chatId);
     }
 
-    private Boolean invite_hasTarget(InvitationThreshold it, Long userId) {
-        return it.getInviteId().equals(userId);
+    private Boolean invite_hasTarget(InvitationThreshold it) {
+        return it.getInviteId().equals(this.userId);
     }
 
-    private Boolean invited_hasTarget(InvitationThreshold it, Long userId) {
-        return it.getInvitedId().equals(userId);
+    private Boolean invited_hasTarget(InvitationThreshold it) {
+        return it.getInvitedId().equals(this.userId);
     }
 }

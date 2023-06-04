@@ -22,7 +22,6 @@ public class LeaveChannel {
     private Common common;
     private String chatMemberUpdatedChatTitle;
     private SpringyBot springyBot;
-    private Boolean isLeft;
     private Long userId;
 
     public LeaveChannel(Common common) {
@@ -43,7 +42,7 @@ public class LeaveChannel {
                     });
     
             this.springyBotServiceImpl.save(springyBot);
-            log.info("{} bot leave {} channel", this.common.getBot().getBotUsername(), this.chatMemberUpdatedChatTitle)
+            log.info("{} bot leave {} channel", this.common.getBot().getBotUsername(), this.chatMemberUpdatedChatTitle);
         }else{
             this.channelId = common.getUpdate().getChatMember().getChat().getId();
             this.channelTitle = common.getUpdate().getChatMember().getChat().getTitle();
@@ -66,47 +65,6 @@ public class LeaveChannel {
                 springyBotServiceImpl.save(this.springyBot);
                 log.info("user [{}] leave channel {}", this.userId, this.channelTitle);
             
-        }
-    }
-
-    public void isBotLeaveChannel() {
-        this.channelTitle = common.getUpdate().getMyChatMember().getChat().getTitle();
-
-        this.springyBot.getRobotChannelManagement().stream()
-                .filter(rgm -> hasTarget(rgm))
-                .findFirst()
-                .ifPresent(c -> {
-                    c.setStatus(false);
-                });
-
-        this.springyBotServiceImpl.save(springyBot);
-        log.info("{} bot leave {} channel", this.common.getBot().getBotUsername(), this.chatMemberUpdatedChatTitle);
-
-    }
-
-    public void isUserLeaveChannel() {
-        this.channelId = common.getUpdate().getChatMember().getChat().getId();
-        this.channelTitle = common.getUpdate().getChatMember().getChat().getTitle();
-        this.isLeft = common.getUpdate().getChatMember().getNewChatMember().getStatus().equals("left") ? true : false;
-        this.userId = common.getUpdate().getChatMember().getNewChatMember().getUser().getId();
-
-        if (isLeft) {
-            this.springyBot.getInvitationThreshold().stream()
-                    .filter(it -> hasTarget(it))
-                    .findFirst()
-                    .ifPresent(it -> {
-                        it.setInvitedStatus(false);
-                    });
-
-            this.springyBot.getRecordChannelUsers().stream()
-                    .filter(rcu -> rcu.getUserId() == this.userId)
-                    .findAny()
-                    .ifPresent(rcu -> {
-                        rcu.setStatus(false);
-                    });
-
-            springyBotServiceImpl.save(this.springyBot);
-            log.info("user [{}] leave channel {}", this.userId, this.channelTitle);
         }
     }
 

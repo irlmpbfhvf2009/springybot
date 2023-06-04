@@ -38,89 +38,84 @@ public class JoinChannel {
         this.springyBot = springyBotServiceImpl.findById(common.getSpringyBotId()).get();
     }
 
-    public void handler(Boolean isBot){
-        if(isBot){
+    public void handler(Boolean isBot) {
+        if (isBot) {
+            this.channelId = common.getUpdate().getChatMember().getChat().getId();
+            this.channelTitle = common.getUpdate().getChatMember().getChat().getTitle()
+                    .replaceAll("[^\\p{L}\\p{N}\\s]+", "");
+            this.invitedId = common.getUpdate().getChatMember().getFrom().getId();
+            this.invitedFirstname = common.getUpdate().getChatMember().getFrom().getFirstName()
+                    .replaceAll("[^\\p{L}\\p{N}\\s]+", "");
+            this.invitedUsername = common.getUpdate().getChatMember().getFrom().getUserName()
+                    .replaceAll("[^\\p{L}\\p{N}\\s]+", "");
+            this.invitedLastname = common.getUpdate().getChatMember().getFrom().getLastName()
+                    .replaceAll("[^\\p{L}\\p{N}\\s]+", "");
 
-        }else{
+            log.info("user [{}] join channel {}", this.invitedId, this.channelTitle);
 
-        }
-    }
+            // 監測訂閱頻道後解除限制
+            this.springyBot.getRestrictMember().stream()
+                    .filter(rm -> rm.getUserId().equals(this.userId) && rm.getStatus())
+                    .findAny()
+                    .ifPresent(rm -> {
+                        rm.setStatus(false);
+                        ChatPermissions chatPermissions = new ChatPermissions();
+                        chatPermissions.setCanSendMessages(true);
+                        chatPermissions.setCanChangeInfo(true);
+                        chatPermissions.setCanInviteUsers(true);
+                        chatPermissions.setCanPinMessages(true);
+                        chatPermissions.setCanSendMediaMessages(true);
+                        chatPermissions.setCanAddWebPagePreviews(true);
+                        chatPermissions.setCanSendOtherMessages(true);
+                        chatPermissions.setCanSendPolls(true);
+                        Calendar calendar = Calendar.getInstance();
+                        calendar.add(Calendar.SECOND, 1);
+                        int untilDate = (int) (calendar.getTimeInMillis() / 1000);
+                        RestrictChatMember restrictChatMember = new RestrictChatMember(rm.getChatId(), this.userId,
+                                chatPermissions, untilDate);
+                        this.common.executeAsync(restrictChatMember);
 
-    public void isUserJoinChannel() {
-        this.channelId = common.getUpdate().getChatMember().getChat().getId();
-        this.channelTitle = common.getUpdate().getChatMember().getChat().getTitle().replaceAll("[^\\p{L}\\p{N}\\s]+", "");
-        this.invitedId = common.getUpdate().getChatMember().getFrom().getId();
-        this.invitedFirstname = common.getUpdate().getChatMember().getFrom().getFirstName().replaceAll("[^\\p{L}\\p{N}\\s]+", "");
-        this.invitedUsername = common.getUpdate().getChatMember().getFrom().getUserName().replaceAll("[^\\p{L}\\p{N}\\s]+", "");
-        this.invitedLastname = common.getUpdate().getChatMember().getFrom().getLastName().replaceAll("[^\\p{L}\\p{N}\\s]+", "");
+                    });
 
-        log.info("user [{}] join channel {}", this.invitedId, this.channelTitle);
+            // 邀請紀錄
+            this.springyBot.getInvitationThreshold().stream()
+                    .filter(it -> hasTarget(it))
+                    .findFirst()
+                    .ifPresentOrElse(it -> {
+                        it.setInvitedStatus(true);
+                    }, () -> {
+                        this.springyBot.getInvitationThreshold().add(this.getInvitationThreshold());
+                    });
 
-        // 監測訂閱頻道後解除限制
-        this.springyBot.getRestrictMember().stream()
-                .filter(rm -> rm.getUserId().equals(this.userId) && rm.getStatus())
-                .findAny()
-                .ifPresent(rm -> {
-                    rm.setStatus(false);
-                    ChatPermissions chatPermissions = new ChatPermissions();
-                    chatPermissions.setCanSendMessages(true);
-                    chatPermissions.setCanChangeInfo(true);
-                    chatPermissions.setCanInviteUsers(true);
-                    chatPermissions.setCanPinMessages(true);
-                    chatPermissions.setCanSendMediaMessages(true);
-                    chatPermissions.setCanAddWebPagePreviews(true);
-                    chatPermissions.setCanSendOtherMessages(true);
-                    chatPermissions.setCanSendPolls(true);
-                    Calendar calendar = Calendar.getInstance();
-                    calendar.add(Calendar.SECOND, 1);
-                    int untilDate = (int) (calendar.getTimeInMillis() / 1000);
-                    RestrictChatMember restrictChatMember = new RestrictChatMember(rm.getChatId(), this.userId,
-                            chatPermissions, untilDate);
-                    this.common.executeAsync(restrictChatMember);
-
-                });
-
-        // 邀請紀錄
-        this.springyBot.getInvitationThreshold().stream()
-                .filter(it -> hasTarget(it))
-                .findFirst()
-                .ifPresentOrElse(it -> {
-                    it.setInvitedStatus(true);
-                }, () -> {
-                    this.springyBot.getInvitationThreshold().add(this.getInvitationThreshold());
-                });
-
-        // 入群紀錄
-        this.springyBot.getRecordChannelUsers().stream()
-                .filter(rcu -> rcu.getUserId() == this.invitedId)
-                .findAny()
-                .ifPresentOrElse(rcu->{
+            // 入群紀錄
+            this.springyBot.getRecordChannelUsers().stream()
+                    .filter(rcu -> rcu.getUserId() == this.invitedId)
+                    .findAny()
+                    .ifPresentOrElse(rcu -> {
                         rcu.setStatus(true);
-                }, ()->{
-                    this.springyBot.getRecordChannelUsers().add(this.getRecordChannelUsers());
-                });
+                    }, () -> {
+                        this.springyBot.getRecordChannelUsers().add(this.getRecordChannelUsers());
+                    });
 
-        springyBotServiceImpl.save(this.springyBot);
-
-    }
-
-    public void isBotJoinChannel() {
-        this.channelTitle = common.getUpdate().getMyChatMember().getChat().getTitle();
-        this.channelId = common.getUpdate().getMyChatMember().getChat().getId();
-        this.invitedId=common.getUpdate().getMyChatMember().getFrom().getId();
-        this.invitedFirstname=common.getUpdate().getMyChatMember().getFrom().getFirstName();
-        this.invitedUsername=common.getUpdate().getMyChatMember().getFrom().getUserName();
-        this.invitedLastname= common.getUpdate().getMyChatMember().getFrom().getLastName();
-        springyBot.getRobotChannelManagement().stream()
-                .filter(rcm -> hasTarget(rcm))
-                .findFirst()
-                .ifPresentOrElse(rcm -> {
-                    rcm.setStatus(true);
-                }, () -> {
-                    springyBot.getRobotChannelManagement().add(getRobotChannelManagement());
-                });
-        springyBotServiceImpl.save(springyBot);
-        log.info("{} bot join {} channel", common.getBot().getBotUsername(), this.channelTitle);
+            springyBotServiceImpl.save(this.springyBot);
+        } else {
+            this.channelTitle = common.getUpdate().getMyChatMember().getChat().getTitle();
+            this.channelId = common.getUpdate().getMyChatMember().getChat().getId();
+            this.invitedId = common.getUpdate().getMyChatMember().getFrom().getId();
+            this.invitedFirstname = common.getUpdate().getMyChatMember().getFrom().getFirstName();
+            this.invitedUsername = common.getUpdate().getMyChatMember().getFrom().getUserName();
+            this.invitedLastname = common.getUpdate().getMyChatMember().getFrom().getLastName();
+            springyBot.getRobotChannelManagement().stream()
+                    .filter(rcm -> hasTarget(rcm))
+                    .findFirst()
+                    .ifPresentOrElse(rcm -> {
+                        rcm.setStatus(true);
+                    }, () -> {
+                        springyBot.getRobotChannelManagement().add(getRobotChannelManagement());
+                    });
+            springyBotServiceImpl.save(springyBot);
+            log.info("{} bot join {} channel", common.getBot().getBotUsername(), this.channelTitle);
+        }
     }
 
     private Boolean hasTarget(RobotChannelManagement rcm) {
