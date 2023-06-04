@@ -64,6 +64,7 @@ public class GroupMessage {
         // 關注頻道系統
         if (this.followChannelSet) {
             if (!isSubscribeChannel()) {
+                
                 // 删除消息
                 DeleteMessage deleteMessage = new DeleteMessage(chatId, messageId);
                 this.common.executeAsync(deleteMessage);
@@ -76,6 +77,7 @@ public class GroupMessage {
         }
 
     }
+
 
     private void loadConfig() {
         HashMap<Long, ConfigDTO> configDTO_map = this.common.getConfigDTO_map();
@@ -143,8 +145,11 @@ public class GroupMessage {
                         textBuilder.append(warn_text);
                         message.clear();
                         SendMessage response = new SendMessage(String.valueOf(chatId), textBuilder.toString());
-                        InlineKeyboardMarkup inlineKeyboardButton = new KeyboardButton(common).advertise();
-                        response.setReplyMarkup(inlineKeyboardButton);
+                        if (chatId_long.equals(SpringyBotEnum.DDB37_ID.getId())
+                                || chatId_long.equals(SpringyBotEnum.YUNJI_ID.getId())) {
+                            InlineKeyboardMarkup inlineKeyboardButton = new KeyboardButton(common).advertise();
+                            response.setReplyMarkup(inlineKeyboardButton);
+                        }
                         Integer msgId = common.executeAsync(response);
                         DeleteMessage deleteMessage = new DeleteMessage(String.valueOf(chatId), msgId);
                         common.deleteMessageTask(deleteMessage, deleteSeconds);

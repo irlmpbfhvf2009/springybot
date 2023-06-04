@@ -102,9 +102,14 @@ public class Common {
     }
 
     @Async
-    @SneakyThrows
+    // @SneakyThrows
     public void executeAsync(DeleteMessage deleteMessage) {
-        this.bot.executeAsync(deleteMessage);
+        try {
+            this.bot.executeAsync(deleteMessage);
+        } catch (TelegramApiException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
     }
 
     @Async
@@ -138,7 +143,7 @@ public class Common {
     }
 
     public String formatBot() {
-        return this.username + "[" + this.botId + "]" ;
+        return this.username + "[" + this.botId + "]";
     }
 
     public String formatUser(User user) {

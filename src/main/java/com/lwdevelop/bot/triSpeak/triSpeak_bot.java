@@ -39,7 +39,6 @@ public class triSpeak_bot extends TelegramLongPollingBot {
             this.common.setUserState(new HashMap<>());
             this.common.setConfigDTO_map(new HashMap<>());
             this.common.setGroupMessageMap(new HashMap<>());
-            System.out.println(common.getBotId());
         } catch (TelegramApiException e) {
             e.printStackTrace();
         }
