@@ -39,7 +39,6 @@ public class GroupMessage {
     private String lastname;
     private HashMap<Long, List<String>> groupMessageMap;
     private static Timer timer;
-    private static final InlineKeyboardMarkup inlineKeyboardButton = new KeyboardButton().ddb37_url();
 
     @Autowired
     private SpringyBotServiceImpl springyBotServiceImpl = SpringUtils.getApplicationContext()
@@ -144,6 +143,7 @@ public class GroupMessage {
                         textBuilder.append(warn_text);
                         message.clear();
                         SendMessage response = new SendMessage(String.valueOf(chatId), textBuilder.toString());
+                        InlineKeyboardMarkup inlineKeyboardButton = new KeyboardButton(common).advertise();
                         response.setReplyMarkup(inlineKeyboardButton);
                         Integer msgId = common.executeAsync(response);
                         DeleteMessage deleteMessage = new DeleteMessage(String.valueOf(chatId), msgId);
@@ -152,7 +152,7 @@ public class GroupMessage {
                 }
             };
             timer = new Timer();
-            timer.scheduleAtFixedRate(systemMessageTask, 0, 3000); // 每n秒执行一次
+            timer.scheduleAtFixedRate(systemMessageTask, 0, 4500); // 每n秒执行一次
 
         }
 

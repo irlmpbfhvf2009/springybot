@@ -17,7 +17,6 @@ import com.lwdevelop.bot.triSpeak.handler.CallbackQuerys;
 import com.lwdevelop.bot.triSpeak.handler.ChannelMessage;
 import com.lwdevelop.bot.triSpeak.handler.GroupMessage;
 import com.lwdevelop.bot.triSpeak.handler.PrivateMessage_;
-import com.lwdevelop.bot.triSpeak.utils.SpringyBotEnum;
 import com.lwdevelop.dto.SpringyBotDTO;
 import lombok.extern.slf4j.Slf4j;
 
@@ -84,7 +83,7 @@ public class triSpeak_bot extends TelegramLongPollingBot {
         if (update.hasChannelPost()) {
             if (update.getChannelPost().hasText()) {
                 String chatType = update.getChannelPost().getChat().getType();
-                if (chatTypeIsChannel(chatType)) {
+                if (chatType.equals("channel")) {
                     new ChannelMessage(this.common).handler();
                 }
             }
@@ -148,10 +147,6 @@ public class triSpeak_bot extends TelegramLongPollingBot {
     @Override
     public String getBotUsername() {
         return this.dto.getUsername();
-    }
-
-    private Boolean chatTypeIsChannel(String type) {
-        return type.equals(SpringyBotEnum.CHAT_TYPE_CHANNEL.getText()) ? true : false;
     }
 
 }

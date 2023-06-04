@@ -1,16 +1,37 @@
 package com.lwdevelop.bot.triSpeak.utils;
 
 public enum SpringyBotEnum {
-    CHAT_TYPE_CHANNEL("channel");
+    // 雲集
+    YUNJI_ID(5901295307L),
+    YUNJI_DK1("云集担保流程"),
+    YUNJI_DK2("供需资源免费发布，将开放机器人"),
+    YUNJI_URL1("https://t.me/yj5999"),
+    YUNJI_URL2("https://t.me/yunji88"),
+
+    // ddb37
+    DDB37_ID(5822751184L),
+    DDB37_DK1("四方支付开户"),
+    DDB37_DK2("im聊天系统搭建"),
+    DDB37_URL1("https://t.me/ddb37/437"),
+    DDB37_URL2("https://t.me/ddb37/437");
 
     private String text;
+    private Long id;
 
     private SpringyBotEnum(String text) {
         this.text = text;
     }
+    
+    private SpringyBotEnum(Long id) {
+        this.id = id;
+    }
 
     public String getText() {
         return this.text;
+    }
+
+    public Long getId() {
+        return this.id;
     }
 
     public static String warning_text(String username,String channel_title){
