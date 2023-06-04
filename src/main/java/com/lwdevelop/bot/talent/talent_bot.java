@@ -6,6 +6,7 @@ import org.telegram.telegrambots.meta.api.objects.ChatMemberUpdated;
 import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.api.objects.User;
+import org.telegram.telegrambots.meta.api.objects.chatmember.ChatMember;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 import com.lwdevelop.bot.Common;
 import com.lwdevelop.bot.event.JoinChannel;
@@ -74,7 +75,8 @@ public class talent_bot extends TelegramLongPollingBot {
                 // group
                 if (message.isSuperGroupMessage()) {
                     new GroupMessage(this.common).handler();
-                    // log.info("[{}] Group message received from {}", common.getUsername(),userInfo);
+                    // log.info("[{}] Group message received from {}",
+                    // common.getUsername(),userInfo);
                 }
             }
         }
@@ -85,61 +87,44 @@ public class talent_bot extends TelegramLongPollingBot {
                 String chatType = update.getChannelPost().getChat().getType();
                 if (common.chatTypeIsChannel(chatType)) {
                     new ChannelMessage(this.common).handler();
-                    log.info("[{}] Channel message received from {}",common.getUsername(), update.getChannelPost().getAuthorSignature());
+                    log.info("[{}] Channel message received from {}", common.getUsername(),
+                            update.getChannelPost().getAuthorSignature());
                 }
             }
         }
 
-        // join group event
-        try {
-            if (common.hasNewChatMembers()) {
-                JoinGroup joinGroup = new JoinGroup(this.common);
-                // is robot join group
-                for (User member : message.getNewChatMembers()) {
-                    if (common.isBot(member)) {
-                        common.dealInviteLink(message.getChatId());
-                        joinGroup.isBotJoinGroup();
-                    } else {
-                        joinGroup.isUserJoinGroup();
-                    }
+        // join or leave event
+        if (update.hasMyChatMember()) {
+            // Type of chat, can be either private, group, supergroup or channel .
+            String type = update.getMyChatMember().getChat().getType();
+            ChatMember chatMember = update.getMyChatMember().getNewChatMember();
+            Boolean isBot = chatMember.getUser().getIsBot();
+            // The member’s status in the chat. Can be ADMINISTRATOR, OWNER, BANNED, LEFT,
+            // MEMBER or RESTRICTED.
+            Boolean isJoin = chatMember.getStatus().equals("left") ? false : true;
+
+            // is robot join or leave group
+            if (type.equals("group") || type.equals("supergroup")) {
+                if (isJoin) {
+                    JoinGroup joinGroup = new JoinGroup(this.common);
+                    joinGroup.handler(isBot);
+                } else {
+                    LeaveGroup leaveGroup = new LeaveGroup(this.common);
+                    leaveGroup.handler(isBot);
                 }
             }
+            // is robot join or leave channel
+            if (type.equals("channel")) {
+                if (isJoin) {
+                    JoinChannel joinChannel = new JoinChannel(common);
+                    joinChannel.handler(isBot);
 
-            // leave event
-            if (common.hasLeftChatMember()) {
-                LeaveGroup leaveGroup = new LeaveGroup(this.common);
-                if (common.isBot_leftChat()) {
-                    leaveGroup.isBotLeave();
+                } else {
+                    LeaveChannel leaveChannel = new LeaveChannel(common);
+                    leaveChannel.handler(isBot);
                 }
+
             }
-        } catch (Exception e) {
-        }
-
-        // join channel event
-        try {
-            if (update.getMyChatMember() != null) {
-
-                ChatMemberUpdated chatMemberUpdated = update.getMyChatMember();
-                common.setChatMemberUpdated(chatMemberUpdated);
-
-                if (common.chatTypeIsChannel(chatMemberUpdated.getChat().getType())) {
-
-                    // is robot join channel
-                    if (common.isBotJoinChannel(chatMemberUpdated)) {
-                        common.dealInviteLink(chatMemberUpdated.getChat().getId());
-                        new JoinChannel(common).isBotJoinChannel();
-                    }
-
-                    // leave event
-                    LeaveChannel leaveChannel= new LeaveChannel(common);
-                    if (common.isBotLeftChannel(chatMemberUpdated)) {
-                        leaveChannel.isBotLeaveChannel();
-                    }
-                }
-            }
-
-        } catch (Exception e) {
-            log.error(e.toString());
         }
 
         if (update.hasCallbackQuery()) {

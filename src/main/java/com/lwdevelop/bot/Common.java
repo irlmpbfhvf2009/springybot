@@ -149,12 +149,6 @@ public class Common {
         return message.getNewChatMembers() != null && message.getNewChatMembers().size() != 0;
     }
 
-    public Boolean isBot(User member) {
-        return member.getUserName().equals(getUsername()) && member.getIsBot();
-    }
-    public Boolean isUser(User member) {
-        return !member.getIsBot();
-    }
 
     public Boolean isBot_leftChat() {
         Message message = this.update.getMessage();

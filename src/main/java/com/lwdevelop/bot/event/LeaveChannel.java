@@ -32,6 +32,43 @@ public class LeaveChannel {
 
     }
 
+    public void handler(Boolean isBot){
+        if(isBot){
+            this.channelTitle = common.getUpdate().getMyChatMember().getChat().getTitle();
+            this.springyBot.getRobotChannelManagement().stream()
+                    .filter(rgm -> hasTarget(rgm))
+                    .findFirst()
+                    .ifPresent(c -> {
+                        c.setStatus(false);
+                    });
+    
+            this.springyBotServiceImpl.save(springyBot);
+            log.info("{} bot leave {} channel", this.common.getBot().getBotUsername(), this.chatMemberUpdatedChatTitle)
+        }else{
+            this.channelId = common.getUpdate().getChatMember().getChat().getId();
+            this.channelTitle = common.getUpdate().getChatMember().getChat().getTitle();
+            this.userId = common.getUpdate().getChatMember().getNewChatMember().getUser().getId();
+    
+                this.springyBot.getInvitationThreshold().stream()
+                        .filter(it -> hasTarget(it))
+                        .findFirst()
+                        .ifPresent(it -> {
+                            it.setInvitedStatus(false);
+                        });
+    
+                this.springyBot.getRecordChannelUsers().stream()
+                        .filter(rcu -> rcu.getUserId() == this.userId)
+                        .findAny()
+                        .ifPresent(rcu -> {
+                            rcu.setStatus(false);
+                        });
+                        
+                springyBotServiceImpl.save(this.springyBot);
+                log.info("user [{}] leave channel {}", this.userId, this.channelTitle);
+            
+        }
+    }
+
     public void isBotLeaveChannel() {
         this.channelTitle = common.getUpdate().getMyChatMember().getChat().getTitle();
 
@@ -67,7 +104,7 @@ public class LeaveChannel {
                     .ifPresent(rcu -> {
                         rcu.setStatus(false);
                     });
-                    
+
             springyBotServiceImpl.save(this.springyBot);
             log.info("user [{}] leave channel {}", this.userId, this.channelTitle);
         }

@@ -32,6 +32,36 @@ public class LeaveGroup {
         this.message = this.common.getUpdate().getMessage();
     }
 
+    public void handler(Boolean isBot) {
+        if (isBot) {
+            this.springyBot.getRobotGroupManagement().stream()
+                    .filter(rgm -> hasTarget(rgm))
+                    .findFirst()
+                    .ifPresent(g -> {
+                        g.setStatus(false);
+                    });
+            this.springyBotServiceImpl.save(springyBot);
+            log.info("{} bot leave {} group", common.getBot().getBotUsername(), this.message.getChat().getTitle());
+
+        } else {
+            Long userId = common.getUpdate().getMessage().getLeftChatMember().getId();
+            this.springyBot.getInvitationThreshold().stream()
+                    .filter(it -> invite_hasTarget(it, userId) || invited_hasTarget(it, userId))
+                    .findFirst()
+                    .ifPresent(g -> {
+                        if (invite_hasTarget(g, userId)) {
+                            g.setInviteStatus(false);
+                        }
+                        if (invited_hasTarget(g, userId)) {
+                            g.setInvitedStatus(false);
+                        }
+                    });
+    
+            this.springyBotServiceImpl.save(springyBot);
+            log.info("{} user leave {} group");
+        }
+    }
+
     public void isBotLeave() {
         this.springyBot.getRobotGroupManagement().stream()
                 .filter(rgm -> hasTarget(rgm))
@@ -47,18 +77,18 @@ public class LeaveGroup {
     public void isUserLeave() {
         Long userId = common.getUpdate().getMessage().getLeftChatMember().getId();
         this.springyBot.getInvitationThreshold().stream()
-            .filter(it->invite_hasTarget(it,userId) || invited_hasTarget(it, userId))
-            .findFirst()
-            .ifPresent(g -> {
-                if (invite_hasTarget(g, userId)) {
-                    g.setInviteStatus(false);
-                }
-                if (invited_hasTarget(g, userId)) {
-                    g.setInvitedStatus(false);
-                }
-            });
-    
-            System.out.println(this.message);
+                .filter(it -> invite_hasTarget(it, userId) || invited_hasTarget(it, userId))
+                .findFirst()
+                .ifPresent(g -> {
+                    if (invite_hasTarget(g, userId)) {
+                        g.setInviteStatus(false);
+                    }
+                    if (invited_hasTarget(g, userId)) {
+                        g.setInvitedStatus(false);
+                    }
+                });
+
+        System.out.println(this.message);
         // this.springyBot.getRecordGroupUsers().stream()
         // .filter(rgu->rgu.getUserId().equals(this.user))
 
@@ -71,10 +101,11 @@ public class LeaveGroup {
         return rgm.getBotId().equals(this.botId) && rgm.getGroupId().equals(this.groupId);
     }
 
-    private Boolean invite_hasTarget(InvitationThreshold it,Long userId) {
+    private Boolean invite_hasTarget(InvitationThreshold it, Long userId) {
         return it.getInviteId().equals(userId);
     }
-    private Boolean invited_hasTarget(InvitationThreshold it,Long userId) {
+
+    private Boolean invited_hasTarget(InvitationThreshold it, Long userId) {
         return it.getInvitedId().equals(userId);
     }
 }

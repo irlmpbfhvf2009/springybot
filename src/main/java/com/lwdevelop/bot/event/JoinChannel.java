@@ -38,6 +38,14 @@ public class JoinChannel {
         this.springyBot = springyBotServiceImpl.findById(common.getSpringyBotId()).get();
     }
 
+    public void handler(Boolean isBot){
+        if(isBot){
+
+        }else{
+
+        }
+    }
+
     public void isUserJoinChannel() {
         this.channelId = common.getUpdate().getChatMember().getChat().getId();
         this.channelTitle = common.getUpdate().getChatMember().getChat().getTitle().replaceAll("[^\\p{L}\\p{N}\\s]+", "");
