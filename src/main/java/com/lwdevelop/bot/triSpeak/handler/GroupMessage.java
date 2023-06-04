@@ -4,17 +4,14 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Timer;
-import java.util.TimerTask;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Async;
 import org.telegram.telegrambots.meta.api.methods.groupadministration.GetChatMember;
-import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.methods.updatingmessages.DeleteMessage;
-import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
-
 import com.lwdevelop.bot.Common;
-import com.lwdevelop.bot.triSpeak.utils.KeyboardButton;
 import com.lwdevelop.bot.triSpeak.utils.SpringyBotEnum;
+import com.lwdevelop.bot.triSpeak.utils.SystemMessageTask;
 import com.lwdevelop.dto.ConfigDTO;
 import com.lwdevelop.entity.SpringyBot;
 import com.lwdevelop.service.impl.SpringyBotServiceImpl;
@@ -37,10 +34,8 @@ public class GroupMessage {
     private String username;
     private String firstname;
     private String lastname;
-    private HashMap<Long, List<String>> groupMessageMap;
-    private static Timer timer;
-    private static final InlineKeyboardMarkup inlineKeyboardButton = new KeyboardButton().ddb37_url();
-
+    private static List<SystemMessageTask> systemMessageTask;
+    private static HashMap<Long, HashMap<Long, HashMap<Long, String>>> warnMessageMap;
     @Autowired
     private SpringyBotServiceImpl springyBotServiceImpl = SpringUtils.getApplicationContext()
             .getBean(SpringyBotServiceImpl.class);
@@ -54,8 +49,6 @@ public class GroupMessage {
         this.username = common.getUpdate().getMessage().getFrom().getUserName();
         this.firstname = common.getUpdate().getMessage().getFrom().getFirstName();
         this.lastname = common.getUpdate().getMessage().getFrom().getLastName();
-        this.groupMessageMap = common.getGroupMessageMap();
-
         this.loadConfig();
     }
 
@@ -64,18 +57,108 @@ public class GroupMessage {
 
         // 關注頻道系統
         if (this.followChannelSet) {
-            if (!isSubscribeChannel()) {
-                // 删除消息
-                DeleteMessage deleteMessage = new DeleteMessage(chatId, messageId);
-                this.common.executeAsync(deleteMessage);
-
-                // 发送系统消息
-                String username = generate_username();
-                String warn_text = generate_warning_text();
-                this.executeOperation(this.chatId_long, username, warn_text);
+            if (isSubscribeChannel()) {
+                return;
             }
+            // 删除消息
+            this.deleteMessage();
+
+            // 发送系统消息
+            this.executeOperation();
         }
 
+        // 邀請好友限制發言系統
+        // if (this.inviteFriendsSet && this.inviteFriendsQuantity > 0) {
+        // // 删除消息
+        // this.deleteMessage();
+        // SendMessage response = new SendMessage();
+        // response.setChatId(chatId);
+        // response.setText(channel_title);
+
+        // this.executeOperation();
+
+        // }
+
+    }
+
+    // HashMap<Botid,HashMap<chatId, warn_text>>
+    private void executeOperation() {
+
+        String first = this.firstname == null ? "" : this.firstname;
+        String last = this.lastname == null ? "" : this.lastname;
+        String name = this.username == null ? "@" + first + last : "@" + this.username;
+        String warn_text = name;
+        Long botId = this.common.getBotId();
+        String subscription_warn_text = SpringyBotEnum.warning_text(channel_title);
+
+        if (systemMessageTask == null || systemMessageTask.size() <= 0) {
+            GroupMessage.systemMessageTask = new ArrayList<>();
+            SystemMessageTask  smt = new SystemMessageTask();
+            smt.setCommon(common);
+            smt.setWarnMessageMap(GroupMessage.warnMessageMap);
+            smt.setDeleteSeconds(deleteSeconds);
+            smt.setSubscriptionWarnText(subscription_warn_text);
+            GroupMessage.systemMessageTask.add(smt);
+        }
+
+        if (GroupMessage.warnMessageMap == null) {
+            GroupMessage.warnMessageMap = new HashMap<>();
+            GroupMessage.warnMessageMap.put(botId, new HashMap<>());
+        }
+        if (GroupMessage.warnMessageMap.containsKey(botId)) {
+            HashMap<Long, HashMap<Long, String>> message = GroupMessage.warnMessageMap.get(botId);
+            if (message.containsKey(this.chatId_long)) {
+                systemMessageTask.setCommon(common);
+                systemMessageTask.setWarnMessageMap(message);
+                systemMessageTask.setDeleteSeconds(deleteSeconds);
+                systemMessageTask.setSubscriptionWarnText(subscription_warn_text);
+            } else {
+                message.put(this.chatId_long, null);
+            }
+
+        } else {
+
+        }
+        // if (GroupMessage.warnMessageMap == null) {
+        // GroupMessage.warnMessageMap = new HashMap<>();
+        // GroupMessage.warnMessageMap.put(this.chatId_long, new HashMap<>());
+        // }
+
+        // HashMap<Long, String> message = GroupMessage.warnMessageMap.getOrDefault(,
+        // new HashMap<>());
+        // message.put(this.userId, warn_text);
+
+        if (systemMessageTask == null || !systemMessageTask.getCommon().getBotId().equals(this.common.getBotId())) {
+            systemMessageTask = new SystemMessageTask();
+            Timer timer = new Timer();
+            timer.schedule(systemMessageTask, 0, 10000);
+        }
+        systemMessageTask.setCommon(common);
+        systemMessageTask.setWarnMessageMap(GroupMessage.warnMessageMap);
+        systemMessageTask.setDeleteSeconds(deleteSeconds);
+        systemMessageTask.setSubscriptionWarnText(subscription_warn_text);
+
+    }
+
+    @Async
+    private boolean isSubscribeChannel() {
+        try {
+            String parseId = String.valueOf(this.channel_id);
+            GetChatMember getChatMember = new GetChatMember(parseId, this.userId);
+            String status = this.common.executeAsync(getChatMember);
+            if (status.equals("administrator")) {
+                return true;
+            }
+            return status.equals("left") ? false : true;
+        } catch (NullPointerException e) {
+            System.out.println(e.toString());
+        }
+        return true;
+    }
+
+    private void deleteMessage() {
+        DeleteMessage deleteMessage = new DeleteMessage(this.chatId, this.messageId);
+        this.common.executeAsync(deleteMessage);
     }
 
     private void loadConfig() {
@@ -88,6 +171,9 @@ public class GroupMessage {
             this.channel_id = springyBot.getConfig().getFollowChannelSet_chatId();
             this.channel_title = springyBot.getConfig().getFollowChannelSet_chatTitle();
             this.deleteSeconds = springyBot.getConfig().getDeleteSeconds();
+            this.inviteFriendsSet = springyBot.getConfig().getInviteFriendsSet();
+            this.inviteFriendsQuantity = springyBot.getConfig().getInviteFriendsQuantity();
+            this.inviteFriendsAutoClearTime = springyBot.getConfig().getInviteFriendsAutoClearTime();
 
             ConfigDTO configDTO = new ConfigDTO();
             // 關注頻道限制發言相關參數
@@ -116,78 +202,4 @@ public class GroupMessage {
         }
 
     }
-
-    private static ArrayList<Long> recordChatIds = new ArrayList<>();
-
-    private void executeOperation(Long chatId, String name, String warn_text) {
-
-        List<String> message = this.groupMessageMap.getOrDefault(chatId, new ArrayList<>());
-
-        if (!message.contains(name)) {
-            message.add(name);
-        }
-
-        this.groupMessageMap.put(chatId, message);
-        this.common.setGroupMessageMap(this.groupMessageMap);
-
-        if (!recordChatIds.contains(chatId)) {
-            recordChatIds.add(chatId);
-
-            TimerTask systemMessageTask = new TimerTask() {
-                public void run() {
-                    int messageSize = message.size();
-                    if (messageSize != 0) {
-                        StringBuilder textBuilder = new StringBuilder();
-                        for (String msg : message) {
-                            textBuilder.append(msg).append("\n");
-                        }
-                        textBuilder.append(warn_text);
-                        message.clear();
-                        SendMessage response = new SendMessage(String.valueOf(chatId), textBuilder.toString());
-                        response.setReplyMarkup(inlineKeyboardButton);
-                        Integer msgId = common.executeAsync(response);
-                        DeleteMessage deleteMessage = new DeleteMessage(String.valueOf(chatId), msgId);
-                        common.deleteMessageTask(deleteMessage, deleteSeconds);
-                    }
-                }
-            };
-            timer = new Timer();
-            timer.scheduleAtFixedRate(systemMessageTask, 0, 7000); // 每n秒执行一次
-
-        }
-
-    }
-
-    @Async
-    private boolean isSubscribeChannel() {
-        try {
-            String parseId = String.valueOf(this.channel_id);
-            GetChatMember getChatMember = new GetChatMember(parseId, this.userId);
-            String status = this.common.executeAsync(getChatMember);
-            if (status.equals("administrator")) {
-                return true;
-            }
-            return status.equals("left") ? false : true;
-        } catch (NullPointerException e) {
-            System.out.println(e.toString());
-        }
-        return true;
-    }
-
-    private String generate_warning_text() {
-        return SpringyBotEnum.warning_text(this.channel_title);
-    }
-
-    private String generate_username() {
-        if (this.username == null) {
-            this.firstname = this.firstname == null ? "" : this.firstname;
-            this.lastname = this.lastname == null ? "" : this.lastname;
-            this.username = "@" + this.firstname + this.lastname;
-        } else {
-            this.username = "@" + this.username;
-        }
-
-        return this.username;
-    }
-
 }

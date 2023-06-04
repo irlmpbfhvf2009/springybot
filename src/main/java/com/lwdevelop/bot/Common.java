@@ -43,7 +43,7 @@ public class Common {
 
     private TelegramLongPollingBot bot;
 
-    private ChatMemberUpdated chatMemberUpdated;
+    // private ChatMemberUpdated chatMemberUpdated;
 
     // 用来存储用户的状态(会话)
     private HashMap<Long, String> userState;
@@ -176,7 +176,8 @@ public class Common {
         return type.equals("channel") ? true : false;
     }
 
-    public Boolean isBotJoinChannel(ChatMemberUpdated chatMemberUpdated) {
+    public Boolean isBotJoinChannel() {
+        ChatMemberUpdated chatMemberUpdated = this.getUpdate().getMyChatMember();
         return chatMemberUpdated.getNewChatMember().getUser().getIsBot()
                 && chatMemberUpdated.getNewChatMember().getStatus().equals("administrator");
     }
@@ -184,7 +185,8 @@ public class Common {
         return !chatMemberUpdated.getNewChatMember().getUser().getIsBot();
     }
 
-    public Boolean isBotLeftChannel(ChatMemberUpdated chatMemberUpdated) {
+    public Boolean isBotLeftChannel() {
+        ChatMemberUpdated chatMemberUpdated = this.getUpdate().getMyChatMember();
         return chatMemberUpdated.getNewChatMember().getUser().getIsBot()
                 && chatMemberUpdated.getNewChatMember().getStatus().equals("left");
     }

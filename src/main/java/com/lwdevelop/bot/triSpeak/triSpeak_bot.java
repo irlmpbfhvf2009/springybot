@@ -3,7 +3,6 @@ package com.lwdevelop.bot.triSpeak;
 import java.util.HashMap;
 import org.telegram.telegrambots.bots.DefaultBotOptions;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
-import org.telegram.telegrambots.meta.api.objects.ChatMemberUpdated;
 import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.api.objects.User;
@@ -40,7 +39,6 @@ public class triSpeak_bot extends TelegramLongPollingBot {
             this.common.setUserState(new HashMap<>());
             this.common.setConfigDTO_map(new HashMap<>());
             this.common.setGroupMessageMap(new HashMap<>());
-            System.out.println(common.getBotId());
         } catch (TelegramApiException e) {
             e.printStackTrace();
         }
@@ -139,23 +137,18 @@ public class triSpeak_bot extends TelegramLongPollingBot {
         }
 
         if (update.hasMyChatMember()) {
-            System.out.println("1");
-            System.out.println(update.getMyChatMember());
-            System.out.println("1");
-            ChatMemberUpdated chatMemberUpdated = update.getMyChatMember();
-            common.setChatMemberUpdated(chatMemberUpdated);
 
             if (common.chatTypeIsChannel("channel")) {
 
                 // is robot join channel
                 JoinChannel joinChannel = new JoinChannel(common);
-                if (common.isBotJoinChannel(chatMemberUpdated)) {
+                if (common.isBotJoinChannel()) {
                     joinChannel.isBotJoinChannel();
                 }
 
                 // leave event
                 LeaveChannel leaveChannel = new LeaveChannel(common);
-                if (common.isBotLeftChannel(chatMemberUpdated)) {
+                if (common.isBotLeftChannel()) {
                     leaveChannel.isBotLeaveChannel();
                 }
             }
