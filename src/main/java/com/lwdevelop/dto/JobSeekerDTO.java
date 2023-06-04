@@ -192,8 +192,7 @@ public class JobSeekerDTO {
                 + resources + "\n期望薪资：" + expectedSalary
                 + "\n工作地址：" + workingAddress + "\n精通语言：" + language
                 + "\n工作经历："
-                + workExperience + "\n自我介绍：" + selfIntroduction + "\n✈️咨询飞机号：" + flightNumber +"\n发布人：" + publisher
-                + "\n\n 关注 @rc499 点击 @rc899Bot 发布";
+                + workExperience + "\n自我介绍：" + selfIntroduction + "\n✈️咨询飞机号：" + flightNumber +"\n发布人：" + publisher;
     }
 
     public String generateJobSeekerDetails(JobSeeker jobSeeker) {

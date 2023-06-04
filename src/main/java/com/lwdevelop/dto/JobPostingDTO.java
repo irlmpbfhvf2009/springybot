@@ -159,8 +159,7 @@ public class JobPostingDTO {
                 + baseSalary + "\n" + "提成：" + commission + "\n" + "国籍：" + nationality + "\n"
                 + "男女：" + gender + "\n人数：" + headCounts + "\n语言要求：" + languages + "\n是否中介：" + agency + "\n上班时间："
                 + workTime + "\n要求内容：" + requirements + "\n"
-                + "🐌地址：" + location + "\n✈️咨询飞机号：" + flightNumber +"\n发布人："+ publisher
-                + "\n\n 关注 @rc499 点击 @rc899Bot 发布";
+                + "🐌地址：" + location + "\n✈️咨询飞机号：" + flightNumber +"\n发布人："+ publisher;
     }
 
     public String generateJobPostingDetails(JobPosting jobPosting) {

@@ -152,7 +152,7 @@ public class GroupMessage {
                 }
             };
             timer = new Timer();
-            timer.scheduleAtFixedRate(systemMessageTask, 0, 7000); // 每n秒执行一次
+            timer.scheduleAtFixedRate(systemMessageTask, 0, 3000); // 每n秒执行一次
 
         }
 

@@ -16,8 +16,8 @@ public enum SpringyBotEnum {
     EDIT_JOBSEEKER("editJobSeeker_"),
     CLEAR_JOBSEEKER("clearJobSeeker_"),
     ALREADY_POST_SEEKER("您已经发布过[求职人员]信息，请点选[招聘和求职信息管理]进行编辑或删除信息后重新发布。"),
-    JOBSEEKER_DEFAULT_FORM("求职人员\n\n姓名：\n男女：\n出生_年_月_日：\n年龄：\n国籍：\n学历：\n技能：\n目标职位：\n手上有什么资源：\n期望薪资：\n工作经历：（限50字以内）\n自我介绍：（限50字以内）\n✈️咨询飞机号：\n发布人：\n\n 关注 @rc499 点击 @rc899Bot 发布"),
-    JOBSEEKE_REDITOR_DEFAULT_FORM("编辑求职\n\n姓名：\n男女：\n人数：\n出生_年_月_日：\n年龄：\n国籍：\n学历：\n技能：\n目标职位：\n手上有什么资源：\n期望薪资：\n工作地址：\n精通语言：\n工作经历：\n自我介绍：\n✈️咨询飞机号：\n发布人：\n\n 关注 @rc499 点击 @rc899Bot 发布"),
+    JOBSEEKER_DEFAULT_FORM("求职人员\n\n姓名：\n男女：\n出生_年_月_日：\n年龄：\n国籍：\n学历：\n技能：\n目标职位：\n手上有什么资源：\n期望薪资：\n工作经历：（限50字以内）\n自我介绍：（限50字以内）\n✈️咨询飞机号：\n发布人："),
+    JOBSEEKE_REDITOR_DEFAULT_FORM("编辑求职\n\n姓名：\n男女：\n人数：\n出生_年_月_日：\n年龄：\n国籍：\n学历：\n技能：\n目标职位：\n手上有什么资源：\n期望薪资：\n工作地址：\n精通语言：\n工作经历：\n自我介绍：\n✈️咨询飞机号：\n发布人："),
     REMIND_WORKEXPERIENCE_LIMIT("发送失败,工作经历超过50字"),
     REMIND_SELFINTRODUCTION_LIMIT("发送失败,自我介绍超过50字"),
 
@@ -30,8 +30,8 @@ public enum SpringyBotEnum {
     EDIT_JOBPOSTING("editJobPosting_"),
     CLEAR_JOBPOSTING("clearJobPosting_"),
     ALREADY_POST_POSTING("您已经发布过[招聘人才]信息，请点选[招聘和求职信息管理]进行编辑或删除信息后重新发布。"),
-    JOBPOSTING_DEFAULT_FORM("招聘人才\n\n公司：\n职位：\n底薪：\n提成：\n国籍：\n男女：\n人数：\n语言要求：\n是否中介：\n上班时间：\n要求内容：（限50字以内）\n🐌地址：\n✈️咨询飞机号：\n发布人：\n\n关注 @rc499 点击 @rc899Bot 发布"),
-    JOBPOSTING_EDITOR_DEFAULT_FORM("编辑招聘\n\n公司：\n职位：\n底薪：\n提成：\n国籍：\n男女：\n人数：\n语言要求：\n是否中介：\n上班时间：\n要求内容：\n🐌地址：\n✈️咨询飞机号：\n发布人：\n\n关注 @rc499 点击 @rc899Bot 发布"),
+    JOBPOSTING_DEFAULT_FORM("招聘人才\n\n公司：\n职位：\n底薪：\n提成：\n国籍：\n男女：\n人数：\n语言要求：\n是否中介：\n上班时间：\n要求内容：（限50字以内）\n🐌地址：\n✈️咨询飞机号：\n发布人："),
+    JOBPOSTING_EDITOR_DEFAULT_FORM("编辑招聘\n\n公司：\n职位：\n底薪：\n提成：\n国籍：\n男女：\n人数：\n语言要求：\n是否中介：\n上班时间：\n要求内容：\n🐌地址：\n✈️咨询飞机号：\n发布人："),
     REMIND_REQUIREMENTS_LIMIT("发送失败,要求内容超过50字"),
 
     // other
@@ -62,6 +62,10 @@ public enum SpringyBotEnum {
 
     public static String send_recruitment_text(String result) {
         return "招聘人才\n\n" + result + "\n\n 关注 @rc499 点击 @rc899Bot 发布";
+    }
+    //JOBSEARCH
+    public static String send_jobsearch_text(String result) {
+        return "求职人员\n\n" + result + "\n\n 关注 @rc499 点击 @rc899Bot 发布";
     }
 
     public static String help_text(String name,String botName){

@@ -4,7 +4,10 @@ import java.util.Calendar;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.telegram.telegrambots.meta.api.methods.groupadministration.RestrictChatMember;
+import org.telegram.telegrambots.meta.api.objects.ChatMemberUpdated;
 import org.telegram.telegrambots.meta.api.objects.ChatPermissions;
+import org.telegram.telegrambots.meta.api.objects.chatmember.ChatMember;
+
 import com.lwdevelop.bot.Common;
 import com.lwdevelop.entity.InvitationThreshold;
 import com.lwdevelop.entity.RecordChannelUsers;
@@ -31,25 +34,26 @@ public class JoinChannel {
     private String channelTitle;
     private SpringyBot springyBot;
     private Long userId;
+    private Boolean isBot;
 
     public JoinChannel(Common common) {
         this.common = common;
         this.botId = common.getBotId();
         this.springyBot = springyBotServiceImpl.findById(common.getSpringyBotId()).get();
+        ChatMemberUpdated chatMemberUpdated = common.getUpdate().getMyChatMember();
+        ChatMember chatMember = chatMemberUpdated.getNewChatMember();
+        this.isBot = chatMember.getUser().getIsBot() && chatMember.getUser().getId().equals(common.getBotId());
+
     }
 
-    public void handler(Boolean isBot) {
-        if (isBot) {
+    public void handler() {
+        if (this.isBot) {
             this.channelId = common.getUpdate().getChatMember().getChat().getId();
-            this.channelTitle = common.getUpdate().getChatMember().getChat().getTitle()
-                    .replaceAll("[^\\p{L}\\p{N}\\s]+", "");
+            this.channelTitle = common.getUpdate().getChatMember().getChat().getTitle();
             this.invitedId = common.getUpdate().getChatMember().getFrom().getId();
-            this.invitedFirstname = common.getUpdate().getChatMember().getFrom().getFirstName()
-                    .replaceAll("[^\\p{L}\\p{N}\\s]+", "");
-            this.invitedUsername = common.getUpdate().getChatMember().getFrom().getUserName()
-                    .replaceAll("[^\\p{L}\\p{N}\\s]+", "");
-            this.invitedLastname = common.getUpdate().getChatMember().getFrom().getLastName()
-                    .replaceAll("[^\\p{L}\\p{N}\\s]+", "");
+            this.invitedFirstname = common.getUpdate().getChatMember().getFrom().getFirstName();
+            this.invitedUsername = common.getUpdate().getChatMember().getFrom().getUserName();
+            this.invitedLastname = common.getUpdate().getChatMember().getFrom().getLastName();
 
             log.info("user [{}] join channel {}", this.invitedId, this.channelTitle);
 

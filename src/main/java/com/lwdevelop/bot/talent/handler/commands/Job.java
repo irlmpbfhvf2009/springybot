@@ -437,7 +437,7 @@ public class Job {
                     String channelTitle = robotChannelManagement.getChannelTitle();
                     String channelLink = robotChannelManagement.getLink();
                     response.setChatId(String.valueOf(channelId));
-                    response.setText("求职人员\n\n" + result + "\n\n 关注 @rc499 点击 @rc899Bot 发布");
+                    response.setText(SpringyBotEnum.send_jobsearch_text(result));
                     response.setDisableNotification(true);
                     response.setDisableWebPagePreview(true);
                     ChannelMessageIdPostCounts channelMessageIdPostCounts = jobManagementServiceImpl
@@ -445,10 +445,9 @@ public class Job {
                                     channelId, String.valueOf(message.getChatId()), "jobSeeker");
 
                     if (isEdit) {
-                        EditMessageText editMessageText = new EditMessageText(
-                                "求职人员\n\n" + result + "\n\n 关注 @rc499 点击 @rc899Bot 发布");
+                        EditMessageText editMessageText = new EditMessageText(SpringyBotEnum.send_jobsearch_text(result));
                         editMessageText.setChatId(String.valueOf(channelId));
-                        editMessageText.setText("求职人员\n\n" + result + "\n\n 关注 @rc499 点击 @rc899Bot 发布");
+                        editMessageText.setText(SpringyBotEnum.send_jobsearch_text(result));
                         editMessageText.setMessageId(channelMessageIdPostCounts.getMessageId());
                         editMessageText.setDisableWebPagePreview(true);
                         common.executeAsync(editMessageText);
@@ -510,7 +509,7 @@ public class Job {
                     String groupTitle = robotGroupManagement.getGroupTitle();
                     String groupLink = robotGroupManagement.getLink();
                     response.setChatId(String.valueOf(groupId));
-                    response.setText("求职人员\n\n" + result + "\n\n 关注 @rc499 点击 @rc899Bot 发布");
+                    response.setText(SpringyBotEnum.send_jobsearch_text(result));
                     response.setDisableNotification(true);
                     response.setDisableWebPagePreview(true);
                     GroupMessageIdPostCounts groupMessageIdPostCounts = jobManagementServiceImpl
@@ -520,7 +519,7 @@ public class Job {
                     if (isEdit) {
                         EditMessageText editMessageText = new EditMessageText();
                         editMessageText.setChatId(String.valueOf(groupId));
-                        editMessageText.setText("求职人员\n\n" + result + "\n\n 关注 @rc499 点击 @rc899Bot 发布");
+                        editMessageText.setText(SpringyBotEnum.send_jobsearch_text(result));
                         editMessageText.setMessageId(groupMessageIdPostCounts.getMessageId());
                         editMessageText.setDisableWebPagePreview(true);
                         common.executeAsync(editMessageText);

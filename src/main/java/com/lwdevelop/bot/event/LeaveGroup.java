@@ -2,10 +2,8 @@ package com.lwdevelop.bot.event;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.telegram.telegrambots.meta.api.objects.ChatMemberUpdated;
-import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.User;
 import org.telegram.telegrambots.meta.api.objects.chatmember.ChatMember;
-
 import com.lwdevelop.bot.Common;
 import com.lwdevelop.entity.InvitationThreshold;
 import com.lwdevelop.entity.RobotGroupManagement;
@@ -28,26 +26,28 @@ public class LeaveGroup {
     private Long chatId;
     private String chatTitle;
     private User user;
+    private Boolean isBot;
 
     public LeaveGroup(Common common) {
         this.common = common;
         this.botId = common.getBotId();
         ChatMemberUpdated chatMemberUpdated = common.getUpdate().getMyChatMember();
-        ChatMember chatMember = common.getUpdate().getMyChatMember().getNewChatMember();
+        ChatMember chatMember = chatMemberUpdated.getNewChatMember();
         this.chatId = chatMemberUpdated.getChat().getId();
         this.springyBot = springyBotServiceImpl.findById(common.getSpringyBotId()).get();
         this.chatTitle = chatMemberUpdated.getChat().getTitle();
-        this.userId = chatMember.getUser().getId();
         this.user = chatMember.getUser();
+        this.userId = chatMember.getUser().getId();
+        this.isBot = chatMember.getUser().getIsBot() && chatMember.getUser().getId().equals(common.getBotId());
+
     }
 
-    public void handler(Boolean isBot) {
-        String formatChat = "[" + this.chatId + "] " + this.chatTitle;
+    public void handler() {
+        String formatChat = this.chatTitle + "[" + this.chatId + "]";
         String formatBot = common.formatBot();
         String formatUser  = common.formatUser(this.user);
 
-
-        if (isBot) {
+        if (this.isBot) {
             this.springyBot.getRobotGroupManagement().stream()
                     .filter(rgm -> hasTarget(rgm))
                     .findFirst()
@@ -55,9 +55,6 @@ public class LeaveGroup {
                         g.setStatus(false);
                     });
             this.springyBotServiceImpl.save(springyBot);
-            log.info("{} -> {} user leave {} group", formatBot, formatUser, formatChat);
-
-
         } else {
             this.springyBot.getInvitationThreshold().stream()
                     .filter(it -> invite_hasTarget(it) || invited_hasTarget(it))
@@ -70,10 +67,10 @@ public class LeaveGroup {
                             g.setInvitedStatus(false);
                         }
                     });
-
             this.springyBotServiceImpl.save(springyBot);
-            log.info("{} -> {} user leave {} group", formatBot, formatUser formatChat);
         }
+
+        log.info("{} -> {} leave {} group", formatBot, formatUser ,formatChat);
 
     }
 

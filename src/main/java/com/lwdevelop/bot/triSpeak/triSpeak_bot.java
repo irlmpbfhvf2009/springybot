@@ -95,7 +95,6 @@ public class triSpeak_bot extends TelegramLongPollingBot {
             // Type of chat, can be either private, group, supergroup or channel .
             String type = update.getMyChatMember().getChat().getType();
             ChatMember chatMember = update.getMyChatMember().getNewChatMember();
-            Boolean isBot = chatMember.getUser().getIsBot();
             // The member’s status in the chat. Can be ADMINISTRATOR, OWNER, BANNED, LEFT,
             // MEMBER or RESTRICTED.
             Boolean isJoin = chatMember.getStatus().equals("left") ? false : true;
@@ -104,10 +103,10 @@ public class triSpeak_bot extends TelegramLongPollingBot {
             if (type.equals("group") || type.equals("supergroup")) {
                 if (isJoin) {
                     JoinGroup joinGroup = new JoinGroup(this.common);
-                    joinGroup.handler(isBot);
+                    joinGroup.handler();
                 } else {
                     LeaveGroup leaveGroup = new LeaveGroup(this.common);
-                    leaveGroup.handler(isBot);
+                    leaveGroup.handler();
                 }
             }
 
@@ -115,11 +114,11 @@ public class triSpeak_bot extends TelegramLongPollingBot {
             if (type.equals("channel")) {
                 if(isJoin){
                     JoinChannel joinChannel = new JoinChannel(common);
-                    joinChannel.handler(isBot);
+                    joinChannel.handler();
 
                 }else{
                     LeaveChannel leaveChannel = new LeaveChannel(common);
-                    leaveChannel.handler(isBot);
+                    leaveChannel.handler();
                 }
 
             }

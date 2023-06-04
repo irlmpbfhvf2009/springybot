@@ -16,11 +16,9 @@ import org.telegram.telegrambots.meta.api.methods.send.SendPhoto;
 import org.telegram.telegrambots.meta.api.methods.updatingmessages.DeleteMessage;
 import org.telegram.telegrambots.meta.api.methods.updatingmessages.EditMessageText;
 import org.telegram.telegrambots.meta.api.objects.Chat;
-import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.api.objects.User;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
-import com.lwdevelop.bot.talent.utils.SpringyBotEnum;
 import com.lwdevelop.dto.ConfigDTO;
 import lombok.Data;
 import lombok.SneakyThrows;
@@ -139,8 +137,8 @@ public class Common {
         }
     }
 
-    public String formatBot(){
-        return "["+this.botId+"] "+this.username;
+    public String formatBot() {
+        return this.username + "[" + this.botId + "]" ;
     }
 
     public String formatUser(User user) {
@@ -148,22 +146,15 @@ public class Common {
         String username = user.getUserName() == null ? "" : user.getUserName();
         String lastname = user.getLastName() == null ? "" : user.getLastName();
         String name = username == null ? firstname + lastname : username;
-        return "[" + user.getId() + "] " + name;
+        return name + "[" + user.getId() + "]";
     }
 
     public void dealInviteLink(Long chatId) {
         try {
-            String inviteLink = this.bot.execute(
-                    new ExportChatInviteLink(String.valueOf(chatId)));
+            String inviteLink = this.bot.execute(new ExportChatInviteLink(String.valueOf(chatId)));
             setInviteLink(inviteLink);
         } catch (TelegramApiException e) {
-            Message message = this.update.getMessage();
-            String title = message.getChat().getTitle();
-            SendMessage response = new SendMessage();
-            response.setChatId(String.valueOf(message.getFrom().getId()));
-            response.setText(title + SpringyBotEnum.BOT_NOT_ENOUGH_RIGHTS.getText());
             setInviteLink("");
-            executeAsync(response);
             log.error(e.toString());
         }
     }
