@@ -102,14 +102,9 @@ public class Common {
     }
 
     @Async
-    // @SneakyThrows
+    @SneakyThrows
     public void executeAsync(DeleteMessage deleteMessage) {
-        try {
-            this.bot.executeAsync(deleteMessage);
-        } catch (TelegramApiException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
+        this.bot.executeAsync(deleteMessage);
     }
 
     @Async

@@ -21,7 +21,7 @@ public class enter_name {
 
         SpringyBot springyBot= springyBotServiceImpl.findById(common.getSpringyBotId()).get();
 
-        springyBot.getWhiteList().stream().filter(wl->wl.getUserId().equals(common.getUpdate().getMessage().getChatId())).findFirst().ifPresent(action->{
+        springyBot.getWhiteList().stream().filter(wl->wl.getUserId().equals(common.getUpdate().getMessage().getChatId())).findAny().ifPresent(action->{
             action.setName(text);
         });
 
@@ -31,7 +31,7 @@ public class enter_name {
         // SendMessage response = new SendMessage(chatId, text + "");
         // common.sendResponseAsync(response);
 
-        springyBot.getWhiteList().stream().filter(wl -> wl.getUserId().equals(common.getUpdate().getMessage().getChatId())).findFirst().ifPresent(action->{
+        springyBot.getWhiteList().stream().filter(wl -> wl.getUserId().equals(common.getUpdate().getMessage().getChatId())).findAny().ifPresent(action->{
             SendMessage response = new SendMessage(chatId, "Your user ID: " + chatId + "\nCurrent name: "+action.getName());
             response.setReplyMarkup(new KeyboardButton().loginMarkupInline());
             common.executeAsync(response);

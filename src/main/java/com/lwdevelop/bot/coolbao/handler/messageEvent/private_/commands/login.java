@@ -22,7 +22,7 @@ public class login {
         SpringyBot springyBot = springyBotServiceImpl.findById(common.getSpringyBotId()).get();
 
         if (springyBot.getWhiteList().stream().anyMatch(wl -> wl.getUserId().equals(message.getChatId()))) {
-            springyBot.getWhiteList().stream().filter(wl -> wl.getUserId().equals(message.getChatId())).findFirst().ifPresent(action->{
+            springyBot.getWhiteList().stream().filter(wl -> wl.getUserId().equals(message.getChatId())).findAny().ifPresent(action->{
                 SendMessage response = new SendMessage(chatId, "Your user ID: " + chatId + "\nCurrent name: "+action.getName());
                 response.setReplyMarkup(new KeyboardButton().loginMarkupInline());
                 common.executeAsync(response);

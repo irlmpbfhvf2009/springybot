@@ -92,34 +92,40 @@ public class talent_bot extends TelegramLongPollingBot {
             }
         }
 
-        // join or leave event
-        if (update.hasMyChatMember()) {
-            // Type of chat, can be either private, group, supergroup or channel .
-            String type = update.getMyChatMember().getChat().getType();
-            ChatMember chatMember = update.getMyChatMember().getNewChatMember();
-            // The member’s status in the chat. Can be ADMINISTRATOR, OWNER, BANNED, LEFT,
-            // MEMBER or RESTRICTED.
-            Boolean isJoin = chatMember.getStatus().equals("left") ? false : true;
-
-            // is robot join or leave group
-            if (type.equals("group") || type.equals("supergroup")) {
-                if (isJoin) {
-                    JoinGroup joinGroup = new JoinGroup(this.common);
-                    joinGroup.handler();
-                } else {
-                    LeaveGroup leaveGroup = new LeaveGroup(this.common);
-                    leaveGroup.handler();
-                }
+        // Join or leave event
+        if (update.hasMyChatMember() || update.hasChatMember()) {
+            String type = null;
+            ChatMember chatMember = null;
+            if (update.hasMyChatMember()) {
+                type = update.getMyChatMember().getChat().getType();
+                chatMember = update.getMyChatMember().getNewChatMember();
+            } else if (update.hasChatMember()) {
+                type = update.getChatMember().getChat().getType();
+                chatMember = update.getChatMember().getNewChatMember();
             }
-            // is robot join or leave channel
-            if (type.equals("channel")) {
-                if (isJoin) {
-                    JoinChannel joinChannel = new JoinChannel(common);
-                    joinChannel.handler();
 
-                } else {
-                    LeaveChannel leaveChannel = new LeaveChannel(common);
-                    leaveChannel.handler();
+            if (chatMember != null && type != null) {
+                // The member's status in the chat. Can be ADMINISTRATOR, OWNER, BANNED, LEFT,
+                // MEMBER, or RESTRICTED.
+                boolean isJoin = !chatMember.getStatus().equals("left");
+
+                // Check chat type and handle join/leave accordingly
+                if (type.equals("group") || type.equals("supergroup")) {
+                    if (isJoin) {
+                        JoinGroup joinGroup = new JoinGroup(this.common);
+                        joinGroup.handler();
+                    } else {
+                        LeaveGroup leaveGroup = new LeaveGroup(this.common);
+                        leaveGroup.handler();
+                    }
+                } else if (type.equals("channel")) {
+                    if (isJoin) {
+                        JoinChannel joinChannel = new JoinChannel(common);
+                        joinChannel.handler();
+                    } else {
+                        LeaveChannel leaveChannel = new LeaveChannel(common);
+                        leaveChannel.handler();
+                    }
                 }
 
             }

@@ -70,7 +70,7 @@ public class message {
                     case "/punch_in":
                         LocalDate currentDate = LocalDate.now();
                         String dateString = formatCurrentDateWithWeekday(currentDate);
-                        whiteList.stream().filter(wl -> wl.getUserId().equals(chatId)).findFirst().ifPresent(action -> {
+                        whiteList.stream().filter(wl -> wl.getUserId().equals(chatId)).findAny().ifPresent(action -> {
                             response.setText(dateString + action.getName() + "值班 10:00-19:00");
                             common.executeAsync(response);
                             response.setText(dateString + action.getName() + "值班 13:00-22:00");

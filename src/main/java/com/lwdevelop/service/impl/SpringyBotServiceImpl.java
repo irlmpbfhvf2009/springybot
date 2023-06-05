@@ -45,7 +45,7 @@ public class SpringyBotServiceImpl implements SpringyBotService {
 
     @Value("${telegram.webhook-host}")
     private String webhookHost;
-    
+
     @Value("${telegram.internal.url}")
     private String internalUrl;
 
@@ -103,25 +103,32 @@ public class SpringyBotServiceImpl implements SpringyBotService {
             }
 
             SpringyBot springyBot = findById(springyBotDTO.getId()).get();
-            springyBot.setState(true);
-            save(springyBot);
-
             BotSession botSession = null;
-            
+            Long botId = null;
             String botType = springyBot.getBotType();
+            List<String> allowedUpdates = Arrays.asList("update_id", "message", "edited_message",
+                    "channel_post", "edited_channel_post", "inline_query", "chosen_inline_result",
+                    "callback_query", "shipping_query", "pre_checkout_query", "poll", "poll_answer",
+                    "my_chat_member", "chat_member");
+
             switch (botType) {
                 case "talent":
-                    botSession = telegramBotsApi.registerBot(new talent_bot(springyBotDTO));
+                    talent_bot talent_bot = new talent_bot(springyBotDTO);
+                    talent_bot.getOptions().setAllowedUpdates(allowedUpdates);
+                    botId = talent_bot.getMe().getId();
+                    botSession = telegramBotsApi.registerBot(talent_bot);
                     break;
                 case "coolbao":
-                    botSession = telegramBotsApi.registerBot(new coolbao_bot(springyBotDTO));
+                    coolbao_bot coolbao_bot = new coolbao_bot(springyBotDTO);
+                    coolbao_bot.getOptions().setAllowedUpdates(allowedUpdates);
+                    botId = coolbao_bot.getMe().getId();
+                    botSession = telegramBotsApi.registerBot(coolbao_bot);
                     break;
                 case "triSpeak":
-                    triSpeak_bot bot = new triSpeak_bot(springyBotDTO);
-                    List<String> allowedUpdates = Arrays.asList("update_id", "message", "edited_message", "channel_post", "edited_channel_post", "inline_query", "chosen_inline_result", "callback_query", "shipping_query", "pre_checkout_query", "poll", "poll_answer", "my_chat_member", "chat_member");
-                    bot.getOptions().setAllowedUpdates(allowedUpdates);
-                    botSession = telegramBotsApi.registerBot(bot);
-                    // botSession = telegramBotsApi.registerBot(new triSpeak_bot(springyBotDTO));
+                    triSpeak_bot triSpeak_bot = new triSpeak_bot(springyBotDTO);
+                    triSpeak_bot.getOptions().setAllowedUpdates(allowedUpdates);
+                    botId = triSpeak_bot.getMe().getId();
+                    botSession = telegramBotsApi.registerBot(triSpeak_bot);
                     break;
                 case "telegrambot":
                     DefaultWebhook defaultWebhook = new DefaultWebhook();
@@ -133,11 +140,18 @@ public class SpringyBotServiceImpl implements SpringyBotService {
                 default:
                     break;
             }
+
             if (botSession != null) {
                 springyBotMap.put(id, botSession);
             }
+            if(botId!=null){
+                springyBot.setBotId(botId);
+            }
+            springyBot.setState(true);
+            save(springyBot);
 
-            log.info("Common Telegram bot started.");
+
+            log.info("{} Telegram bot started.", springyBotDTO.getUsername());
             run_time.put(springyBot.getUsername(), new Date());
 
             return ResponseUtils.response(RetEnum.RET_SUCCESS, "启动成功");
@@ -166,7 +180,7 @@ public class SpringyBotServiceImpl implements SpringyBotService {
             springyBot.setState(false);
             save(springyBot);
 
-            log.info("Common Telegram bot stoped.");
+            log.info("{} Telegram bot stoped.", springyBotDTO.getUsername());
 
             return ResponseUtils.response(RetEnum.RET_SUCCESS, "已停止");
         } catch (Exception e) {
@@ -221,9 +235,8 @@ public class SpringyBotServiceImpl implements SpringyBotService {
                 springyBot.setState(false);
                 save(springyBot);
             }
-            ;
         }
-        ;
+        
         Object pager = CommUtils.Pager(page, pageSize, springyBotList.size());
         data.put("list", springyBotList);
         data.put("pager", pager);

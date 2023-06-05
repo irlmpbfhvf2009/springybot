@@ -61,7 +61,7 @@ public class Job {
 
         SpringyBot springyBot = springyBotServiceImpl.findById(id).orElseThrow();
 
-        springyBot.getJobUser().stream().filter(j -> j.getUserId().equals(userId)).findFirst()
+        springyBot.getJobUser().stream().filter(j -> j.getUserId().equals(userId)).findAny()
                         .ifPresentOrElse(ju -> {
                                 ju.setFirstname(firstname);
                                 ju.setLastname(lastname);
@@ -101,7 +101,7 @@ public class Job {
                             String.valueOf(id));
 
                     SpringyBot springyBot = springyBotServiceImpl.findById(id).orElseThrow();
-                    springyBot.getJobUser().stream().filter(j -> j.getUserId().equals(userId)).findFirst()
+                    springyBot.getJobUser().stream().filter(j -> j.getUserId().equals(userId)).findAny()
                             .orElseGet(() -> {
                                 JobUser ju = new JobUser();
                                 ju.setUserId(userId);
@@ -147,7 +147,7 @@ public class Job {
                             String.valueOf(id));
 
                     SpringyBot springyBot = springyBotServiceImpl.findById(id).orElseThrow();
-                    springyBot.getJobUser().stream().filter(j -> j.getUserId().equals(userId)).findFirst()
+                    springyBot.getJobUser().stream().filter(j -> j.getUserId().equals(userId)).findAny()
                             .orElseGet(() -> {
                                 JobUser ju = new JobUser();
                                 ju.setUserId(userId);
@@ -196,7 +196,7 @@ public class Job {
             Long id = common.getSpringyBotId();
             String userId = String.valueOf(common.getUpdate().getMessage().getChatId());
             SpringyBot springyBot = springyBotServiceImpl.findById(id).orElseThrow();
-            JobUser jobUser = springyBot.getJobUser().stream().filter(j -> j.getUserId().equals(userId)).findFirst()
+            JobUser jobUser = springyBot.getJobUser().stream().filter(j -> j.getUserId().equals(userId)).findAny()
                     .orElseGet(() -> {
                         JobUser ju = new JobUser();
                         ju.setUserId(userId);
@@ -215,7 +215,7 @@ public class Job {
                 jobManagementServiceImpl.saveJobPosting(jobPosting);
                 springyBotServiceImpl.save(springyBot);
             } else {
-                jobUser.getJobPosting().stream().filter(jp -> jp.getId().equals(final_jobPostingId)).findFirst()
+                jobUser.getJobPosting().stream().filter(jp -> jp.getId().equals(final_jobPostingId)).findAny()
                         .ifPresent(action -> {
                             jobManagementServiceImpl.saveJobPosting(final_jobPosting);
                         });
@@ -401,7 +401,7 @@ public class Job {
             Long id = common.getSpringyBotId();
             String userId = String.valueOf(common.getUpdate().getMessage().getChatId());
             SpringyBot springyBot = springyBotServiceImpl.findById(id).orElseThrow();
-            JobUser jobUser = springyBot.getJobUser().stream().filter(j -> j.getUserId().equals(userId)).findFirst()
+            JobUser jobUser = springyBot.getJobUser().stream().filter(j -> j.getUserId().equals(userId)).findAny()
                     .orElseGet(() -> {
                         JobUser ju = new JobUser();
                         ju.setUserId(userId);
@@ -419,7 +419,7 @@ public class Job {
                 jobManagementServiceImpl.saveJobSeeker(jobSeeker);
                 springyBotServiceImpl.save(springyBot);
             } else {
-                jobUser.getJobSeeker().stream().filter(jp -> jp.getId().equals(final_jobSeekerId)).findFirst()
+                jobUser.getJobSeeker().stream().filter(jp -> jp.getId().equals(final_jobSeekerId)).findAny()
                         .ifPresent(action -> {
                             jobManagementServiceImpl.saveJobSeeker(final_jobSeeker);
                         });
@@ -629,7 +629,7 @@ public class Job {
                     String.valueOf(id));
 
             SpringyBot springyBot = springyBotServiceImpl.findById(id).orElseThrow();
-            JobUser jobUser = springyBot.getJobUser().stream().filter(j -> j.getUserId().equals(userId)).findFirst()
+            JobUser jobUser = springyBot.getJobUser().stream().filter(j -> j.getUserId().equals(userId)).findAny()
                     .orElseGet(() -> {
                         JobUser ju = new JobUser();
                         ju.setUserId(userId);
@@ -725,7 +725,7 @@ public class Job {
 
             SpringyBot springyBot = springyBotServiceImpl.findById(id).orElseThrow();
 
-            JobUser jobUser = springyBot.getJobUser().stream().filter(j -> j.getUserId().equals(userId)).findFirst()
+            JobUser jobUser = springyBot.getJobUser().stream().filter(j -> j.getUserId().equals(userId)).findAny()
                     .orElseGet(() -> {
                         JobUser ju = new JobUser();
                         ju.setUserId(userId);

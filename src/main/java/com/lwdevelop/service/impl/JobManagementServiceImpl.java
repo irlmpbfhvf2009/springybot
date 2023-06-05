@@ -163,7 +163,7 @@ public class JobManagementServiceImpl implements JobManagementService {
                     name = name.equals("") ? jobUser.getLastname() : name;
                     jobTreeDTO.setLabel(name);
 
-                    Optional<JobPosting> jobPostingOptional = jobUser.getJobPosting().stream().filter(jp -> jp.getUserId().equals(jobUser.getUserId())).findFirst();
+                    Optional<JobPosting> jobPostingOptional = jobUser.getJobPosting().stream().filter(jp -> jp.getUserId().equals(jobUser.getUserId())).findAny();
                     if (jobPostingOptional.isPresent()) {
                         JobPosting jobPosting = jobPostingOptional.get();
                         JobPostingDTO jobPostingDTO = new JobPostingDTO();
@@ -184,7 +184,7 @@ public class JobManagementServiceImpl implements JobManagementService {
                         jobTreeDTO.setJobPostingDTO(list);
                     } 
 
-                    Optional<JobSeeker> jobSeekerOptional = jobUser.getJobSeeker().stream().filter(js -> js.getUserId().equals(jobUser.getUserId())).findFirst();
+                    Optional<JobSeeker> jobSeekerOptional = jobUser.getJobSeeker().stream().filter(js -> js.getUserId().equals(jobUser.getUserId())).findAny();
                     if (jobSeekerOptional.isPresent()) {
                         JobSeeker jobSeeker = jobSeekerOptional.get();
                         JobSeekerDTO jobSeekerDTO = new JobSeekerDTO();
@@ -499,9 +499,9 @@ public class JobManagementServiceImpl implements JobManagementService {
         // send to channel
         Iterator<RobotChannelManagement> iterator = springyBot.getRobotChannelManagement().iterator();
         springyBot.getJobUser().stream().filter(ju -> ju.getUserId().equals(userId))
-                .findFirst().ifPresent(j -> {
+                .findAny().ifPresent(j -> {
                     j.getJobPosting().stream().filter(jp -> jp.getUserId().equals(userId))
-                            .findFirst().ifPresent(
+                            .findAny().ifPresent(
                                     jp -> {
                                         while (iterator.hasNext()) {
                                             sendTextWithJobPosting(jp, custom, iterator.next());
@@ -573,13 +573,13 @@ public class JobManagementServiceImpl implements JobManagementService {
 
         Iterator<RobotChannelManagement> iterator = springyBot.getRobotChannelManagement()
                 .iterator();
-        springyBot.getJobUser().stream().filter(ju -> ju.getUserId().equals(userId)).findFirst()
+        springyBot.getJobUser().stream().filter(ju -> ju.getUserId().equals(userId)).findAny()
                 .ifPresent(j -> {
                     j.getJobSeeker()
                             .stream()
                             .filter(
                                     jp -> jp.getUserId().equals(userId))
-                            .findFirst()
+                            .findAny()
                             .ifPresent(
                                     js -> {
                                         while (iterator
