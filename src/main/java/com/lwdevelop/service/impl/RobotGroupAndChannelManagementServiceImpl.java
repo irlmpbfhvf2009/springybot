@@ -142,7 +142,7 @@ public class RobotGroupAndChannelManagementServiceImpl implements RobotGroupAndC
         GetChatMember getChatMember = new GetChatMember(chatId,userId);
         try{
             String status = common.executeAsync(getChatMember);
-            if (!status.equals("left")){
+            if (!status.equals("left") || !status.equals("kicked")){
                 return true;
             }
         }catch(Exception e){

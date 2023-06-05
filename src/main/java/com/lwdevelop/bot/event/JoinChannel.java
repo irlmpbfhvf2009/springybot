@@ -44,7 +44,6 @@ public class JoinChannel {
         this.springyBot = springyBotServiceImpl.findById(common.getSpringyBotId()).get();
 
         Update update = common.getUpdate();
-
         ChatMemberUpdated chatMemberUpdated = null;
         ChatMember chatMember = null;
 
@@ -59,6 +58,8 @@ public class JoinChannel {
 
         if (chatMemberUpdated != null && chatMember != null) {
             this.user = chatMember.getUser();
+            System.out.println(chatMemberUpdated);
+            System.out.println(chatMemberUpdated.getFrom());
             this.from = chatMemberUpdated.getFrom();
             this.chatId = chatMemberUpdated.getChat().getId();
             this.chatTitle = chatMemberUpdated.getChat().getTitle();
@@ -79,6 +80,7 @@ public class JoinChannel {
             String formatChat = this.chatTitle + "[" + this.chatId + "]";
             String formatBot = common.formatBot();
             String formatUser = common.formatUser(this.user);
+
             if (this.isBot) {
                 // bot join channel
                 springyBot.getRobotChannelManagement().stream()
@@ -105,7 +107,7 @@ public class JoinChannel {
                         });
 
                 this.springyBot.getRecordChannelUsers().stream()
-                        .filter(rcu -> rcu.getUserId() == this.invitedId)
+                        .filter(rcu -> rcu.getUserId().equals(this.invitedId))
                         .findAny()
                         .ifPresentOrElse(rcu -> {
                             rcu = this.getRecordChannelUsers(rcu);
@@ -157,10 +159,10 @@ public class JoinChannel {
         invitationThreshold.setBotId(this.botId);
         invitationThreshold.setChatId(this.chatId);
         invitationThreshold.setChatTitle(this.chatTitle);
-        invitationThreshold.setInvitedId(this.inviteId);
-        invitationThreshold.setInvitedFirstname(this.inviteFirstname);
-        invitationThreshold.setInvitedUsername(this.inviteUsername);
-        invitationThreshold.setInvitedLastname(this.inviteLastname);
+        invitationThreshold.setInviteId(this.inviteId);
+        invitationThreshold.setInviteFirstname(this.inviteFirstname);
+        invitationThreshold.setInviteUsername(this.inviteUsername);
+        invitationThreshold.setInviteLastname(this.inviteLastname);
         invitationThreshold.setInvitedId(this.invitedId);
         invitationThreshold.setInvitedFirstname(this.invitedFirstname);
         invitationThreshold.setInvitedUsername(this.invitedUsername);

@@ -77,6 +77,7 @@ public class JoinGroup {
             String formatChat = this.chatTitle + "[" + this.chatId + "]";
             String formatBot = common.formatBot();
             String formatUser = common.formatUser(this.user);
+
             if (this.isBot) {
                 // bot join group
                 this.springyBot.getRobotGroupManagement().stream()

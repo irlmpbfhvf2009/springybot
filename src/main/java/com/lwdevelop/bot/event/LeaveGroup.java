@@ -109,7 +109,7 @@ public class LeaveGroup {
     }
 
     private Boolean hasTarget(RecordGroupUsers recordGroupUsers) {
-        return recordGroupUsers.getUserId() == this.userId;
+        return recordGroupUsers.getUserId().equals(this.userId);
     }
 
     private Boolean hasTarget_invite(InvitationThreshold it) {

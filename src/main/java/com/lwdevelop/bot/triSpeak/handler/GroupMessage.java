@@ -172,7 +172,7 @@ public class GroupMessage {
             if (status.equals("administrator")) {
                 return true;
             }
-            return status.equals("left") ? false : true;
+            return status.equals("left") || status.equals("kicked") ? false : true;
         } catch (NullPointerException e) {
             System.out.println(e.toString());
         }

@@ -64,6 +64,7 @@ public class LeaveChannel {
             String formatChat = this.chatTitle + "[" + this.chatId + "]";
             String formatBot = common.formatBot();
             String formatUser = common.formatUser(this.user);
+
             if (this.isBot) {
                 this.springyBot.getRobotChannelManagement().stream()
                         .filter(rgm -> hasTarget(rgm))
@@ -111,7 +112,7 @@ public class LeaveChannel {
     }
 
     private Boolean hasTarget(RecordChannelUsers recordChannelUsers) {
-        return recordChannelUsers.getUserId() == this.userId;
+        return recordChannelUsers.getUserId().equals(this.userId);
     }
 
     private Boolean hasTarget_invite(InvitationThreshold it) {

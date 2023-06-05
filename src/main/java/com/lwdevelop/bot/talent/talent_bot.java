@@ -107,7 +107,7 @@ public class talent_bot extends TelegramLongPollingBot {
             if (chatMember != null && type != null) {
                 // The member's status in the chat. Can be ADMINISTRATOR, OWNER, BANNED, LEFT,
                 // MEMBER, or RESTRICTED.
-                boolean isJoin = !chatMember.getStatus().equals("left");
+                Boolean isJoin = chatMember.getStatus().equals("left") || chatMember.getStatus().equals("kicked") ? false : true;
 
                 // Check chat type and handle join/leave accordingly
                 if (type.equals("group") || type.equals("supergroup")) {

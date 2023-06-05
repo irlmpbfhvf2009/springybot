@@ -87,6 +87,7 @@ public class triSpeak_bot extends TelegramLongPollingBot {
                 }
             }
         }
+
         // Join or leave event
         if (update.hasMyChatMember() || update.hasChatMember()) {
             String type = null;
@@ -100,9 +101,9 @@ public class triSpeak_bot extends TelegramLongPollingBot {
             }
 
             if (chatMember != null && type != null) {
-                // The member's status in the chat. Can be ADMINISTRATOR, OWNER, BANNED, LEFT,
+                // The member's status in the chat. Can be ADMINISTRATOR, OWNER, BANNED, LEFT,kicked
                 // MEMBER, or RESTRICTED.
-                boolean isJoin = !chatMember.getStatus().equals("left");
+                Boolean isJoin = chatMember.getStatus().equals("left") || chatMember.getStatus().equals("kicked") ? false : true;
 
                 // Check chat type and handle join/leave accordingly
                 if (type.equals("group") || type.equals("supergroup")) {
