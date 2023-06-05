@@ -41,6 +41,7 @@ public class JoinGroup {
     public JoinGroup(Common common) {
         this.common = common;
         this.botId = common.getBotId();
+        this.springyBot = springyBotServiceImpl.findById(common.getSpringyBotId()).get();
 
         Update update = common.getUpdate();
         ChatMemberUpdated chatMemberUpdated = null;
@@ -82,9 +83,11 @@ public class JoinGroup {
                         .filter(rgm -> hasTarget(rgm))
                         .findAny()
                         .ifPresentOrElse(rgm -> {
-                            rgm.setStatus(true);
+                            rgm = this.getRobotGroupManagement(rgm);
                         }, () -> {
-                            springyBot.getRobotGroupManagement().add(this.getRobotGroupManagement());
+                            RobotGroupManagement robotGroupManagement = new RobotGroupManagement();
+                            RobotGroupManagement rgm = this.getRobotGroupManagement(robotGroupManagement);
+                            springyBot.getRobotGroupManagement().add(rgm);
                         });
             } else {
                 // user join group
@@ -92,20 +95,22 @@ public class JoinGroup {
                         .filter(it -> this.hasTarget(it))
                         .findAny()
                         .ifPresentOrElse(it -> {
-                            it.setInviteStatus(true);
-                            it.setInvitedStatus(true);
+                            it = this.getInvitationThreshold(it);
                         }, () -> {
-                            this.springyBot.getInvitationThreshold().add(this.getInvitationThreshold());
+                            InvitationThreshold invitationThreshold = new InvitationThreshold();
+                            InvitationThreshold it = this.getInvitationThreshold(invitationThreshold);
+                            this.springyBot.getInvitationThreshold().add(it);
                         });
 
                 this.springyBot.getRecordGroupUsers().stream()
                         .filter(rgu -> rgu.getUserId().equals(this.invitedId))
                         .findAny()
                         .ifPresentOrElse(rgu -> {
-                            rgu.setStatus(true);
+                            rgu = this.getRecordGroupUsers(rgu);
                         }, () -> {
-                            this.springyBot.getRecordGroupUsers().add(this.getRecordGroupUsers());
-                        });
+                            RecordGroupUsers recordGroupUsers = new RecordGroupUsers();
+                            RecordGroupUsers rgu = this.getRecordGroupUsers(recordGroupUsers);
+                            this.springyBot.getRecordGroupUsers().add(rgu);                        });
             }
             springyBotServiceImpl.save(springyBot);
             log.info("{} -> {} join {} group", formatBot, formatUser, formatChat);
@@ -132,8 +137,7 @@ public class JoinGroup {
 
     }
 
-    private RobotGroupManagement getRobotGroupManagement() {
-        RobotGroupManagement robotGroupManagement = new RobotGroupManagement();
+    private RobotGroupManagement getRobotGroupManagement(RobotGroupManagement robotGroupManagement) {
         robotGroupManagement.setBotId(this.botId);
         robotGroupManagement.setInviteId(this.inviteId);
         robotGroupManagement.setInviteFirstname(this.inviteFirstname);
@@ -146,8 +150,7 @@ public class JoinGroup {
         return robotGroupManagement;
     }
 
-    private InvitationThreshold getInvitationThreshold() {
-        InvitationThreshold invitationThreshold = new InvitationThreshold();
+    private InvitationThreshold getInvitationThreshold(InvitationThreshold invitationThreshold) {
         invitationThreshold.setBotId(this.botId);
         invitationThreshold.setChatId(this.chatId);
         invitationThreshold.setChatTitle(this.chatTitle);
@@ -165,8 +168,7 @@ public class JoinGroup {
         return invitationThreshold;
     }
 
-    private RecordGroupUsers getRecordGroupUsers() {
-        RecordGroupUsers recordGroupUsers = new RecordGroupUsers();
+    private RecordGroupUsers getRecordGroupUsers(RecordGroupUsers recordGroupUsers) {
         recordGroupUsers.setGroupId(this.chatId);
         recordGroupUsers.setGroupTitle(this.chatTitle);
         recordGroupUsers.setFirstname(this.invitedFirstname);
