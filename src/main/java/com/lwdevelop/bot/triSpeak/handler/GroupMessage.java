@@ -145,8 +145,7 @@ public class GroupMessage {
                         textBuilder.append(warn_text);
                         message.clear();
                         SendMessage response = new SendMessage(String.valueOf(chatId), textBuilder.toString());
-                        if (chatId_long.equals(SpringyBotEnum.DDB37_ID.getId())
-                                || chatId_long.equals(SpringyBotEnum.YUNJI_ID.getId())) {
+                        if (common.getBotId().equals(5822751184L) || common.getBotId().equals(5901295307L)) {
                             InlineKeyboardMarkup inlineKeyboardButton = new KeyboardButton(common).advertise();
                             response.setReplyMarkup(inlineKeyboardButton);
                         }

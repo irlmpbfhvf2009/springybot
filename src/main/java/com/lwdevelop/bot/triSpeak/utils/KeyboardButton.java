@@ -24,19 +24,19 @@ public class KeyboardButton {
         List<InlineKeyboardButton> rowInline2 = new ArrayList<>();
 
         // 雲集
-        if (this.common.getBotId().equals(SpringyBotEnum.YUNJI_ID.getId())) {
-            dk1.setText(SpringyBotEnum.YUNJI_DK1.getText());
-            dk2.setText(SpringyBotEnum.YUNJI_DK2.getText());
-            dk1.setUrl(SpringyBotEnum.YUNJI_URL1.getText());
-            dk2.setUrl(SpringyBotEnum.YUNJI_URL2.getText());
+        if (this.common.getBotId().equals(5901295307L)) {
+            dk1.setText("云集担保流程");
+            dk2.setText("供需资源免费发布，将开放机器人");
+            dk1.setUrl("https://t.me/yj5999");
+            dk2.setUrl("https://t.me/yunji88");
         }
 
         // ddb37
-        if (this.common.getBotId().equals(SpringyBotEnum.DDB37_ID.getId())) {
-            dk1.setText(SpringyBotEnum.DDB37_DK1.getText());
-            dk2.setText(SpringyBotEnum.DDB37_DK2.getText());
-            dk1.setUrl(SpringyBotEnum.DDB37_URL1.getText());
-            dk2.setUrl(SpringyBotEnum.DDB37_URL2.getText());
+        if (this.common.getBotId().equals(5822751184L)) {
+            dk1.setText("四方支付开户");
+            dk2.setText("im聊天系统搭建");
+            dk1.setUrl("https://t.me/ddb37/437");
+            dk2.setUrl("https://t.me/ddb37/437");
         }
 
         rowInline1.add(dk1);

@@ -55,7 +55,7 @@ public class message {
                 case "/start":
                     new start().cmd(common);
                     break;
-                case "/login":
+                case "/id_card":
                     new login().cmd(common);
                     break;
             }

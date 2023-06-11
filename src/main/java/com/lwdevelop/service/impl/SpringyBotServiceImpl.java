@@ -102,7 +102,10 @@ public class SpringyBotServiceImpl implements SpringyBotService {
                 return ResponseUtils.response(RetEnum.RET_START_EXIST);
             }
 
-            SpringyBot springyBot = findById(springyBotDTO.getId()).get();
+            System.out.println("id="+id);
+            
+            SpringyBot springyBot = findById(id).get();
+            System.out.println("springyBot="+springyBot);
             BotSession botSession = null;
             Long botId = null;
             String botType = springyBot.getBotType();

@@ -134,7 +134,7 @@ public class talent_bot extends TelegramLongPollingBot {
         if (update.hasCallbackQuery()) {
             new CallbackQuerys(this.common).handler();
             User user = update.getCallbackQuery().getFrom();
-            String username = user.getUserName() == null ? "無題" : user.getUserName();
+            String username = user.getUserName() == null ? "" : user.getUserName();
             String userInfo = String.format("[%s] %s", user.getId(), username);
             String data = update.getCallbackQuery().getData();
             log.info("CallbackQuery Data received from {}: {}", userInfo, data);
