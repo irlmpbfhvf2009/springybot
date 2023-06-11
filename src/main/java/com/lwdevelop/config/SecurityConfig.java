@@ -49,7 +49,7 @@ public class SecurityConfig {
     private static final String[] ALL_AUTH_LIST = {
             "/static/favicon.ico",
             "/static/assets/**",
-            "/admins/login",            
+            "/admins/v1/login",            
             "/springybot/start",
             "/index",
             "/groupAndChannelManagement/**",

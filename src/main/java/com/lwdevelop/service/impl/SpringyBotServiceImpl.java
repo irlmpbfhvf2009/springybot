@@ -101,11 +101,8 @@ public class SpringyBotServiceImpl implements SpringyBotService {
             if (springyBotMap.containsKey(id)) {
                 return ResponseUtils.response(RetEnum.RET_START_EXIST);
             }
-
-            System.out.println("id="+id);
             
-            SpringyBot springyBot = findById(id).get();
-            System.out.println("springyBot="+springyBot);
+            SpringyBot springyBot = findById(id).get();            
             BotSession botSession = null;
             Long botId = null;
             String botType = springyBot.getBotType();
@@ -116,6 +113,7 @@ public class SpringyBotServiceImpl implements SpringyBotService {
 
             switch (botType) {
                 case "talent":
+                    log.info("123");
                     talent_bot talent_bot = new talent_bot(springyBotDTO);
                     talent_bot.getOptions().setAllowedUpdates(allowedUpdates);
                     botId = talent_bot.getMe().getId();
@@ -147,12 +145,11 @@ public class SpringyBotServiceImpl implements SpringyBotService {
             if (botSession != null) {
                 springyBotMap.put(id, botSession);
             }
-            if(botId!=null){
+            if (botId != null) {
                 springyBot.setBotId(botId);
             }
             springyBot.setState(true);
             save(springyBot);
-
 
             log.info("{} Telegram bot started.", springyBotDTO.getUsername());
             run_time.put(springyBot.getUsername(), new Date());
@@ -239,7 +236,7 @@ public class SpringyBotServiceImpl implements SpringyBotService {
                 save(springyBot);
             }
         }
-        
+
         Object pager = CommUtils.Pager(page, pageSize, springyBotList.size());
         data.put("list", springyBotList);
         data.put("pager", pager);
@@ -250,26 +247,49 @@ public class SpringyBotServiceImpl implements SpringyBotService {
     public ResponseEntity<ResponseData> updateBot(SpringyBotDTO springyBotDTO) {
         Long id = springyBotDTO.getId();
         SpringyBot springyBot = findById(id).get();
+
         if (springyBotMap.containsKey(id)) {
             springyBotMap.get(id).stop();
             springyBotMap.remove(id);
             springyBot.setState(false);
         }
+
         springyBot.setUsername(springyBotDTO.getUsername());
         springyBot.setToken(springyBotDTO.getToken());
         springyBot.setBotType(springyBotDTO.getBotType());
-        springyBot.getConfig().setContactPerson(springyBotDTO.getConfig().getContactPerson());
-        springyBot.getConfig().setDeleteSeconds(springyBotDTO.getConfig().getDeleteSeconds());
-        springyBot.getConfig().setFollowChannelSet(springyBotDTO.getConfig().getFollowChannelSet());
-        springyBot.getConfig().setFollowChannelSet_chatId(springyBotDTO.getConfig().getFollowChannelSet_chatId());
-        springyBot.getConfig().setFollowChannelSet_chatTitle(springyBotDTO.getConfig().getFollowChannelSet_chatTitle());
-        springyBot.getConfig().setInvitationBonusSet(springyBotDTO.getConfig().getInvitationBonusSet());
-        springyBot.getConfig().setInviteEarnedOutstand(springyBotDTO.getConfig().getInviteEarnedOutstand());
-        springyBot.getConfig().setInviteFriendsAutoClearTime(springyBotDTO.getConfig().getInviteFriendsAutoClearTime());
-        springyBot.getConfig().setInviteFriendsQuantity(springyBotDTO.getConfig().getInviteFriendsQuantity());
-        springyBot.getConfig().setInviteFriendsSet(springyBotDTO.getConfig().getInviteFriendsSet());
-        springyBot.getConfig().setInviteMembers(springyBotDTO.getConfig().getInviteMembers());
-        springyBot.getConfig().setPassword(springyBotDTO.getConfig().getPassword());
+
+        if (springyBot.getConfig() == null) {
+            Config config = new Config();
+            config.setContactPerson("");
+            config.setDeleteSeconds(0);
+            config.setFollowChannelSet(false);
+            config.setFollowChannelSet_chatId(0L);
+            config.setFollowChannelSet_chatTitle("");
+            config.setInvitationBonusSet(false);
+            config.setInviteEarnedOutstand(0);
+            config.setInviteFriendsAutoClearTime(0);
+            config.setInviteFriendsQuantity(0);
+            config.setInviteFriendsSet(false);
+            config.setInviteMembers(0);
+            config.setPassword("");
+            springyBot.setConfig(config);
+        } else {
+            springyBot.getConfig().setContactPerson(springyBotDTO.getConfig().getContactPerson());
+            springyBot.getConfig().setDeleteSeconds(springyBotDTO.getConfig().getDeleteSeconds());
+            springyBot.getConfig().setFollowChannelSet(springyBotDTO.getConfig().getFollowChannelSet());
+            springyBot.getConfig().setFollowChannelSet_chatId(springyBotDTO.getConfig().getFollowChannelSet_chatId());
+            springyBot.getConfig()
+                    .setFollowChannelSet_chatTitle(springyBotDTO.getConfig().getFollowChannelSet_chatTitle());
+            springyBot.getConfig().setInvitationBonusSet(springyBotDTO.getConfig().getInvitationBonusSet());
+            springyBot.getConfig().setInviteEarnedOutstand(springyBotDTO.getConfig().getInviteEarnedOutstand());
+            springyBot.getConfig()
+                    .setInviteFriendsAutoClearTime(springyBotDTO.getConfig().getInviteFriendsAutoClearTime());
+            springyBot.getConfig().setInviteFriendsQuantity(springyBotDTO.getConfig().getInviteFriendsQuantity());
+            springyBot.getConfig().setInviteFriendsSet(springyBotDTO.getConfig().getInviteFriendsSet());
+            springyBot.getConfig().setInviteMembers(springyBotDTO.getConfig().getInviteMembers());
+            springyBot.getConfig().setPassword(springyBotDTO.getConfig().getPassword());
+        }
+
         save(springyBot);
         log.info("SpringyBotServiceImpl ==> updateBot ... [ {} ] 修改成功", springyBotDTO.getUsername());
         return ResponseUtils.response(RetEnum.RET_SUCCESS, "修改成功");

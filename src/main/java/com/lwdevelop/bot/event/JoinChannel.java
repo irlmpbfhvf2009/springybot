@@ -58,19 +58,17 @@ public class JoinChannel {
 
         if (chatMemberUpdated != null && chatMember != null) {
             this.user = chatMember.getUser();
-            System.out.println(chatMemberUpdated);
-            System.out.println(chatMemberUpdated.getFrom());
             this.from = chatMemberUpdated.getFrom();
             this.chatId = chatMemberUpdated.getChat().getId();
-            this.chatTitle = chatMemberUpdated.getChat().getTitle();
+            this.chatTitle = chatMemberUpdated.getChat().getTitle().replaceAll("[^a-zA-Z0-9]", "");
             this.inviteId = this.from.getId();
-            this.inviteFirstname = this.from.getFirstName();
-            this.inviteUsername = this.from.getUserName();
-            this.inviteLastname = this.from.getLastName();
+            this.inviteFirstname = this.from.getFirstName().replaceAll("[^a-zA-Z0-9]", "");
+            this.inviteUsername = this.from.getUserName().replaceAll("[^a-zA-Z0-9]", "");
+            this.inviteLastname = this.from.getLastName().replaceAll("[^a-zA-Z0-9]", "");
             this.invitedId = this.user.getId();
-            this.invitedFirstname = this.user.getFirstName();
-            this.invitedUsername = this.user.getUserName();
-            this.invitedLastname = this.user.getLastName();
+            this.invitedFirstname = this.user.getFirstName().replaceAll("[^a-zA-Z0-9]", "");
+            this.invitedUsername = this.user.getUserName().replaceAll("[^a-zA-Z0-9]", "");
+            this.invitedLastname = this.user.getLastName().replaceAll("[^a-zA-Z0-9]", "");
         }
 
     }
