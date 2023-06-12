@@ -40,8 +40,8 @@ public class Job {
     private JobPostingDTO posting;
     private JobSeekerDTO seeker;
 
-    public Job(){
-        
+    public Job() {
+
     }
 
     public Job(JobPostingDTO posting, JobSeekerDTO seeker) {
@@ -53,30 +53,35 @@ public class Job {
         Long id = common.getSpringyBotId();
         String userId = String.valueOf(common.getUpdate().getMessage().getChatId());
         String firstname = Optional.ofNullable(common.getUpdate().getMessage().getChat().getFirstName())
-                        .orElse("");
+                .map(s -> s.replaceAll("[^\\p{script=Han}a-zA-Z0-9]", ""))
+                .orElse("");
+
         String username = Optional.ofNullable(common.getUpdate().getMessage().getChat().getUserName())
-                        .orElse("");
+                .map(s -> s.replaceAll("[^\\p{script=Han}a-zA-Z0-9]", ""))
+                .orElse("");
+
         String lastname = Optional.ofNullable(common.getUpdate().getMessage().getChat().getLastName())
-                        .orElse("");
+                .map(s -> s.replaceAll("[^\\p{script=Han}a-zA-Z0-9]", ""))
+                .orElse("");
 
         SpringyBot springyBot = springyBotServiceImpl.findById(id).orElseThrow();
 
         springyBot.getJobUser().stream().filter(j -> j.getUserId().equals(userId)).findAny()
-                        .ifPresentOrElse(ju -> {
-                                ju.setFirstname(firstname);
-                                ju.setLastname(lastname);
-                                ju.setUsername(username);
-                        }, () -> {
-                                JobUser jobUser = new JobUser();
-                                jobUser.setUserId(userId);
-                                jobUser.setFirstname(firstname);
-                                jobUser.setLastname(lastname);
-                                jobUser.setUsername(username);
-                                springyBot.getJobUser().add(jobUser);
-                        });
+                .ifPresentOrElse(ju -> {
+                    ju.setFirstname(firstname);
+                    ju.setLastname(lastname);
+                    ju.setUsername(username);
+                }, () -> {
+                    JobUser jobUser = new JobUser();
+                    jobUser.setUserId(userId);
+                    jobUser.setFirstname(firstname);
+                    jobUser.setLastname(lastname);
+                    jobUser.setUsername(username);
+                    springyBot.getJobUser().add(jobUser);
+                });
         springyBotServiceImpl.save(springyBot);
 
-}
+    }
 
     public void setResponse_jobPosting_management(Common common) {
 
@@ -450,7 +455,8 @@ public class Job {
                                     channelId, String.valueOf(message.getChatId()), "jobSeeker");
 
                     if (isEdit) {
-                        EditMessageText editMessageText = new EditMessageText(SpringyBotEnum.send_jobsearch_text(result));
+                        EditMessageText editMessageText = new EditMessageText(
+                                SpringyBotEnum.send_jobsearch_text(result));
                         editMessageText.setChatId(String.valueOf(channelId));
                         editMessageText.setText(SpringyBotEnum.send_jobsearch_text(result));
                         editMessageText.setMessageId(channelMessageIdPostCounts.getMessageId());

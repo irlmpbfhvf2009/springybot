@@ -229,6 +229,7 @@ public class JobSeekerDTO {
 
                 String filter = SpringyBotEnum.FIFTY_CHARACTERS_LIMIT.getText();
                 value = value.replace(filter, "");
+                value = value.replaceAll("[^\\p{script=Han}a-zA-Z0-9]", "");
 
                 switch (key) {
                     case "姓名":

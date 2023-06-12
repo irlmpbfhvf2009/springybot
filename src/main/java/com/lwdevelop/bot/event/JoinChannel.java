@@ -60,15 +60,15 @@ public class JoinChannel {
             this.user = chatMember.getUser();
             this.from = chatMemberUpdated.getFrom();
             this.chatId = chatMemberUpdated.getChat().getId();
-            this.chatTitle = chatMemberUpdated.getChat().getTitle().replaceAll("[^a-zA-Z0-9]", "");
+            this.chatTitle = chatMemberUpdated.getChat().getTitle().replaceAll("[^\\p{script=Han}a-zA-Z0-9]", "");;
             this.inviteId = this.from.getId();
-            this.inviteFirstname = this.from.getFirstName().replaceAll("[^a-zA-Z0-9]", "");
-            this.inviteUsername = this.from.getUserName().replaceAll("[^a-zA-Z0-9]", "");
-            this.inviteLastname = this.from.getLastName().replaceAll("[^a-zA-Z0-9]", "");
+            this.inviteFirstname = this.from.getFirstName().replaceAll("[^\\p{script=Han}a-zA-Z0-9]", "");;
+            this.inviteUsername = this.from.getUserName().replaceAll("[^\\p{script=Han}a-zA-Z0-9]", "");;
+            this.inviteLastname = this.from.getLastName().replaceAll("[^\\p{script=Han}a-zA-Z0-9]", "");;
             this.invitedId = this.user.getId();
-            this.invitedFirstname = this.user.getFirstName().replaceAll("[^a-zA-Z0-9]", "");
-            this.invitedUsername = this.user.getUserName().replaceAll("[^a-zA-Z0-9]", "");
-            this.invitedLastname = this.user.getLastName().replaceAll("[^a-zA-Z0-9]", "");
+            this.invitedFirstname = this.user.getFirstName().replaceAll("[^\\p{script=Han}a-zA-Z0-9]", "");;
+            this.invitedUsername = this.user.getUserName().replaceAll("[^\\p{script=Han}a-zA-Z0-9]", "");;
+            this.invitedLastname = this.user.getLastName().replaceAll("[^\\p{script=Han}a-zA-Z0-9]", "");;
         }
 
     }
