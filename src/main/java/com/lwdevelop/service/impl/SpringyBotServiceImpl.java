@@ -1,7 +1,6 @@
 package com.lwdevelop.service.impl;
 
 import java.util.Arrays;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -13,6 +12,8 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.telegram.telegrambots.bots.TelegramLongPollingBot;
+import org.telegram.telegrambots.bots.TelegramWebhookBot;
 import org.telegram.telegrambots.meta.TelegramBotsApi;
 import org.telegram.telegrambots.meta.api.methods.updates.SetWebhook;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
@@ -22,7 +23,7 @@ import org.telegram.telegrambots.updatesreceivers.DefaultWebhook;
 import com.lwdevelop.bot.coolbao.coolbao_bot;
 import com.lwdevelop.bot.coolbao.utils.SpringyBotEnum;
 import com.lwdevelop.bot.talent.talent_bot;
-import com.lwdevelop.bot.test.TelegrambotWebhook;
+import com.lwdevelop.bot.test.adam;
 import com.lwdevelop.bot.triSpeak.triSpeak_bot;
 import com.lwdevelop.dto.SpringyBotDTO;
 import com.lwdevelop.entity.Config;
@@ -53,8 +54,6 @@ public class SpringyBotServiceImpl implements SpringyBotService {
     private SpringyBotRepository springyBotRepository;
 
     private static Map<Long, BotSession> springyBotMap = new HashMap<>();
-
-    private static Map<String, Date> run_time = new HashMap<>();
 
     // SpringyBot CRUD
     @Override
@@ -101,11 +100,14 @@ public class SpringyBotServiceImpl implements SpringyBotService {
             if (springyBotMap.containsKey(id)) {
                 return ResponseUtils.response(RetEnum.RET_START_EXIST);
             }
-            
-            SpringyBot springyBot = findById(id).get();            
+
+            SpringyBot springyBot = findById(id).get();
             BotSession botSession = null;
+            TelegramLongPollingBot longPollingbot = null;
+            TelegramWebhookBot webHookBot = null;
             Long botId = null;
             String botType = springyBot.getBotType();
+
             List<String> allowedUpdates = Arrays.asList("update_id", "message", "edited_message",
                     "channel_post", "edited_channel_post", "inline_query", "chosen_inline_result",
                     "callback_query", "shipping_query", "pre_checkout_query", "poll", "poll_answer",
@@ -113,46 +115,43 @@ public class SpringyBotServiceImpl implements SpringyBotService {
 
             switch (botType) {
                 case "talent":
-                    log.info("123");
-                    talent_bot talent_bot = new talent_bot(springyBotDTO);
-                    talent_bot.getOptions().setAllowedUpdates(allowedUpdates);
-                    botId = talent_bot.getMe().getId();
-                    botSession = telegramBotsApi.registerBot(talent_bot);
+                    longPollingbot = new talent_bot(springyBotDTO);
                     break;
                 case "coolbao":
-                    coolbao_bot coolbao_bot = new coolbao_bot(springyBotDTO);
-                    coolbao_bot.getOptions().setAllowedUpdates(allowedUpdates);
-                    botId = coolbao_bot.getMe().getId();
-                    botSession = telegramBotsApi.registerBot(coolbao_bot);
+                    longPollingbot = new coolbao_bot(springyBotDTO);
                     break;
                 case "triSpeak":
-                    triSpeak_bot triSpeak_bot = new triSpeak_bot(springyBotDTO);
-                    triSpeak_bot.getOptions().setAllowedUpdates(allowedUpdates);
-                    botId = triSpeak_bot.getMe().getId();
-                    botSession = telegramBotsApi.registerBot(triSpeak_bot);
+                    longPollingbot = new triSpeak_bot(springyBotDTO);
                     break;
                 case "telegrambot":
                     DefaultWebhook defaultWebhook = new DefaultWebhook();
                     defaultWebhook.setInternalUrl(internalUrl);
                     TelegramBotsApi telegramBotsApi = new TelegramBotsApi(DefaultBotSession.class, defaultWebhook);
                     SetWebhook setWebhook = SetWebhook.builder().url(webhookHost).build();
-                    telegramBotsApi.registerBot(new TelegrambotWebhook(springyBotDTO), setWebhook);
+                    webHookBot = new adam(springyBotDTO);
+                    telegramBotsApi.registerBot(webHookBot, setWebhook);
                     break;
                 default:
                     break;
             }
 
-            if (botSession != null) {
-                springyBotMap.put(id, botSession);
-            }
-            if (botId != null) {
-                springyBot.setBotId(botId);
-            }
-            springyBot.setState(true);
-            save(springyBot);
+            if (longPollingbot != null) {
+                longPollingbot.getOptions().setAllowedUpdates(allowedUpdates);
+                botId = longPollingbot.getMe().getId();
+                botSession = telegramBotsApi.registerBot(longPollingbot);
 
-            log.info("{} Telegram bot started.", springyBotDTO.getUsername());
-            run_time.put(springyBot.getUsername(), new Date());
+                if (botSession != null) {
+                    springyBotMap.put(id, botSession);
+                }
+                if (botId != null) {
+                    springyBot.setBotId(botId);
+                }
+
+                springyBot.setState(true);
+                save(springyBot);
+
+                log.info("{} Telegram bot started.", springyBotDTO.getUsername());
+            }
 
             return ResponseUtils.response(RetEnum.RET_SUCCESS, "启动成功");
         } catch (TelegramApiException e) {

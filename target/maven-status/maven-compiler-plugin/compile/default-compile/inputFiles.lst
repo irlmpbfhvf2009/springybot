@@ -4,13 +4,12 @@ C:\Users\USER\OneDrive\酷寶\TG-BOT開發\SpringyBot\src\main\java\com\lwdevelop\co
 C:\Users\USER\OneDrive\酷寶\TG-BOT開發\SpringyBot\src\main\java\com\lwdevelop\bot\talent\utils\KeyboardButton.java
 C:\Users\USER\OneDrive\酷寶\TG-BOT開發\SpringyBot\src\main\java\com\lwdevelop\utils\RedisUtils.java
 C:\Users\USER\OneDrive\酷寶\TG-BOT開發\SpringyBot\src\main\java\com\lwdevelop\repository\JobSeekerRepository.java
-C:\Users\USER\OneDrive\酷寶\TG-BOT開發\SpringyBot\src\main\java\com\lwdevelop\bot\test\TelegrambotWebhook.java
 C:\Users\USER\OneDrive\酷寶\TG-BOT開發\SpringyBot\src\main\java\com\lwdevelop\entity\RobotGroupManagement.java
 C:\Users\USER\OneDrive\酷寶\TG-BOT開發\SpringyBot\src\main\java\com\lwdevelop\BackendApplication.java
 C:\Users\USER\OneDrive\酷寶\TG-BOT開發\SpringyBot\src\main\java\com\lwdevelop\service\WhiteListService.java
-C:\Users\USER\OneDrive\酷寶\TG-BOT開發\SpringyBot\src\main\java\com\lwdevelop\controller\TelegramBotController.java
 C:\Users\USER\OneDrive\酷寶\TG-BOT開發\SpringyBot\src\main\java\com\lwdevelop\bot\triSpeak\utils\MessageTaskExecutor.java
 C:\Users\USER\OneDrive\酷寶\TG-BOT開發\SpringyBot\src\main\java\com\lwdevelop\entity\RestrictMember.java
+C:\Users\USER\OneDrive\酷寶\TG-BOT開發\SpringyBot\src\main\java\com\lwdevelop\bot\test\adam.java
 C:\Users\USER\OneDrive\酷寶\TG-BOT開發\SpringyBot\src\main\java\com\lwdevelop\bot\coolbao\handler\messageEvent\private_\commands\cgBalance.java
 C:\Users\USER\OneDrive\酷寶\TG-BOT開發\SpringyBot\src\main\java\com\lwdevelop\controller\JobManagementController.java
 C:\Users\USER\OneDrive\酷寶\TG-BOT開發\SpringyBot\src\main\java\com\lwdevelop\config\WebSocketConfig.java
@@ -93,6 +92,7 @@ C:\Users\USER\OneDrive\酷寶\TG-BOT開發\SpringyBot\src\main\java\com\lwdevelop\bo
 C:\Users\USER\OneDrive\酷寶\TG-BOT開發\SpringyBot\src\main\java\com\lwdevelop\service\impl\TestServiceImpl.java
 C:\Users\USER\OneDrive\酷寶\TG-BOT開發\SpringyBot\src\main\java\com\lwdevelop\service\JobManagementService.java
 C:\Users\USER\OneDrive\酷寶\TG-BOT開發\SpringyBot\src\main\java\com\lwdevelop\bot\triSpeak\utils\SpringyBotEnum.java
+C:\Users\USER\OneDrive\酷寶\TG-BOT開發\SpringyBot\src\main\java\com\lwdevelop\controller\WebhooksController.java
 C:\Users\USER\OneDrive\酷寶\TG-BOT開發\SpringyBot\src\main\java\com\lwdevelop\entity\ChannelMessageIdPostCounts.java
 C:\Users\USER\OneDrive\酷寶\TG-BOT開發\SpringyBot\src\main\java\com\lwdevelop\bot\triSpeak\handler\ChannelMessage.java
 C:\Users\USER\OneDrive\酷寶\TG-BOT開發\SpringyBot\src\main\java\com\lwdevelop\dto\JobPostingDTO.java

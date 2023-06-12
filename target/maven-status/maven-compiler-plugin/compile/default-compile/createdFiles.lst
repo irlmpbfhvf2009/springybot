@@ -21,6 +21,7 @@ com\lwdevelop\utils\ResponseUtils$ResponseData.class
 com\lwdevelop\bot\event\JoinGroup.class
 com\lwdevelop\repository\JobPostingRepository.class
 com\lwdevelop\controller\AdminPanelController.class
+com\lwdevelop\controller\WebhooksController.class
 com\lwdevelop\entity\RestrictMember.class
 com\lwdevelop\utils\RetEnum.class
 com\lwdevelop\dto\JobUserDTO.class
@@ -29,11 +30,10 @@ com\lwdevelop\bot\coolbao\handler\messageEvent\private_\commands\start.class
 com\lwdevelop\bot\triSpeak\utils\MessageTaskExecutor.class
 com\lwdevelop\repository\RobotGroupManagementRepository.class
 com\lwdevelop\utils\JwtAuthFilter.class
-com\lwdevelop\controller\TelegramBotController.class
 com\lwdevelop\service\WhiteListService.class
 com\lwdevelop\entity\RobotChannelManagement.class
+com\lwdevelop\bot\test\adam.class
 com\lwdevelop\utils\SpringUtils.class
-com\lwdevelop\bot\test\TelegrambotWebhook.class
 com\lwdevelop\entity\Admin.class
 com\lwdevelop\service\impl\JobManagementServiceImpl.class
 com\lwdevelop\bot\default_\utils\KeyboardButton.class

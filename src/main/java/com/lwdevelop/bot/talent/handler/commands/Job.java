@@ -116,7 +116,6 @@ public class Job {
                     } else {
                         response.setText(posting.generateJobPostingResponse(jobPosting, false));
                         log.info("Job posting found for user {}, bot id {}: {}", userId, id, jobPosting);
-
                     }
 
                     common.executeAsync(response);
@@ -185,6 +184,9 @@ public class Job {
         if (jobPosting == null) {
             jobPosting = new JobPosting();
         }
+
+        String username = "@" + common.getUpdate().getMessage().getFrom().getUserName();
+        jobPosting.setPublisher(username);
 
         String isSuccess = posting.fillJobPostingInfo(jobPosting, lines);
 
@@ -388,8 +390,11 @@ public class Job {
         if (jobSeeker == null) {
             // 清除舊資料
             jobSeeker = new JobSeeker();
-
         }
+
+        String username = "@" + common.getUpdate().getMessage().getFrom().getUserName();
+        jobSeeker.setPublisher(username);
+
         String isSuccess = seeker.fillJobSeekerInfo(jobSeeker, lines);
         if (!StringUtils.hasText(isSuccess)) {
 
