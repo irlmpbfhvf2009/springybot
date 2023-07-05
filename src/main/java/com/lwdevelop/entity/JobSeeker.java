@@ -34,6 +34,8 @@ public class JobSeeker {
 
     private String gender; // 性别
 
+    private String headCounts;  // 人数
+
     private String dateOfBirth; // 出生日期
 
     private String age; // 年龄
@@ -50,11 +52,17 @@ public class JobSeeker {
 
     private String expectedSalary; // 期望薪资
 
+    private String workingAddress;  // 工作地址
+
+    private String language;    // 精通语言
+
     private String workExperience; // 工作经历
 
     private String selfIntroduction; // 自我介绍
 
     private String flightNumber; // 咨询飞机号
+
+    private String publisher;   //發布人
     
     private Integer lastMessageId;
 
@@ -63,6 +71,10 @@ public class JobSeeker {
     @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JsonIgnore
     private Set<ChannelMessageIdPostCounts> channelMessageIdPostCounts;
+
+    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @JsonIgnore
+    private Set<GroupMessageIdPostCounts> groupMessageIdPostCounts;
 
     public JobSeeker(String userId, String botId, Integer lastMessageId) {
         this.userId = userId;

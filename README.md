@@ -1,69 +1,30 @@
-# backend
+# 項目架構和技術選擇說明
 
-這個客服系統的架構使用了多個技術，包括Spring Boot、WebSocket、RabbitMQ、和Security。以下是一些關於這個系統的詳細信息：
+為了滿足項目需求並充分利用團隊成員的技術專長,選擇使用Spring Boot做為後端開發框架,以及Vue3作為前端開發框架
 
-Spring Boot: Spring Boot是一個快速開發框架，能夠幫助開發者快速搭建Web應用程序。在這個客服系統中，Spring Boot用於構建整個應用程序的框架。
+# 技術要求跟環境配置
 
-WebSocket: WebSocket是一種基於TCP協議的通信協議，可以實現全雙工通信。在這個客服系統中，WebSocket用於實現客戶與客服人員之間的即時通信。
+適合的整合開發環境(IDE) 如Eclipse、IntelliJ IDEA、VS Code  
+Java開發環境 (建議使用Java 8 或Java 11)  
+Spring Boot框架(使用2.7.12)  
 
-RabbitMQ: RabbitMQ是一種消息隊列，可以實現分布式系統中的異步通信。在這個客服系統中，RabbitMQ用於處理客戶的請求，並將它們分發到相應的客服人員。
+# build : mvn clean package -DskipTests
 
-Security: Security是Spring框架中的安全框架，用於保護Web應用程序免受各種攻擊。在這個客服系統中，Security用於實現管理員帳號密碼登入和IP驗證。
+# 項目部署說明
 
-管理員可以使用其帳號密碼登入到系統後台，以便進行系統管理和客服人員分配。客戶的身分則通過IP地址來辨識，這樣可以避免客戶需要註冊和登入。當客戶發送消息時，系統會使用RabbitMQ將消息分發到可用的客服人員中。當客戶和客服人員之間進行通信時，系統會使用WebSocket實現即時通信。
+．導航到文件路徑/www/wwwroot/rcc.ddb99.vip  
+．點擊上傳按鈕,選擇要上傳的JAR檔,並完成上傳.重新啟動項目  
 
-project  
-│   README.md  
-│   pom.xml  
-│  
-└───src  
-│   └───main  
-│       ├───java  
-│       │   └───com.example  
-│       │       ├───config  
-│       │       │   ├───RabbitMQConfig.java  
-│       │       │   ├───SecurityConfig.java  
-│       │       │   └───WebSocketConfig.java  
-│       │       ├───controller  
-│       │       │   ├───AdminPanelController.java  
-│       │       │   └───ChatController.java  
-│       │       ├───dto  
-│       │       │   ├───AdminDTO.java  
-│       │       │   ├───ChatMessageDTO.java  
-│       │       │   └───UserDTO.java  
-│       │       ├───model  
-│       │       │   ├───Admin.java  
-│       │       │   ├───ChatMessage.java  
-│       │       │   └───User.java  
-│       │       ├───repository  
-│       │       │   ├───AdminRepository.java  
-│       │       │   ├───ChatMessageRepository.java  
-│       │       │   └───UserRepository.java  
-│       │       ├───service     
-│       │       │   ├───AdminService.java  
-│       │       │   ├───ChatMessageService.java  
-│       │       │   ├───UserService.java  
-│       │       │   └───impl  
-│       │       │       ├───AdminServiceImpl.java  
-│       │       │       ├───ChatMessageServiceImpl.java  
-│       │       │       └───UserServiceImpl.java  
-│       │       └───WebSocketHandler.java   以此架構分別寫出ChatMessageServiceImpl.java、UserServiceImpl.java  
-│       └───resources   以此架構分別寫出WebSocketHandler.java  
-│           ├───static  
-│           │   ├───css  
-│           │   ├───js  
-│           │   └───img  
-│           ├───templates  
-│           │   ├───admin_panel.html  
-│           │   └───chat.html  
-│           └───application.properties  
-└───test  
-    └───java  
-        └───com.example  
-            ├───controller  
-            ├───service  
-            │   ├───impl  
-            │   └───mock  
-            └───WebSocketHandlerTest.java  
+# Telegram機器人
 
+1. 人才機器人 - 招募及求職功能：  
+．提供招募功能,讓用戶可以發布和管理招聘信息  
+．提供求職功能,讓用戶可以發布和管理求職信息  
 
+2. 群組管理機器人 - 管理用戶發送信息資格：  
+．設置每天禁言時間,限制群組成員在指定時間段內發言  
+．刪除指定時間內的重複發言,並設置系統消息  
+．設置邀請指定人數後才能發言,並設定週期  
+．設置僅允許關注指定頻道的成員發言  
+．分析當日和昨日的新進成員、流失成員、被邀請成員和活躍度成員  
+．提供提示信息控制,根據設定的時間自動刪除信息  

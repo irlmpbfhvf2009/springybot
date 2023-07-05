@@ -1,0 +1,190 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="1e8a3fc2-d57a-46c4-b4bf-a40b13ca6d58" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/lwdevelop/bot/talentBot/handler/CallbackQuerys.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/lwdevelop/bot/talentBot/handler/CallbackQuerys.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/lwdevelop/bot/talentBot/handler/messageEvent/private_/commands/Job_II.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/lwdevelop/bot/talentBot/handler/messageEvent/private_/commands/Job_II.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/lwdevelop/service/impl/SpringyBotServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/lwdevelop/service/impl/SpringyBotServiceImpl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/lwdevelop/bot/talentBot/Custom.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/lwdevelop/bot/talentBot/Custom.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/lwdevelop/bot/talentBot/handler/CallbackQuerys.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/lwdevelop/bot/talentBot/handler/CallbackQuerys.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/lwdevelop/bot/talentBot/handler/event/JoinChannel.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/lwdevelop/bot/talentBot/handler/event/JoinChannel.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/lwdevelop/bot/talentBot/handler/event/JoinGroup.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/lwdevelop/bot/talentBot/handler/event/JoinGroup.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/lwdevelop/bot/talentBot/handler/event/LeaveChannel.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/lwdevelop/bot/talentBot/handler/event/LeaveChannel.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/lwdevelop/bot/talentBot/handler/event/LeaveGroup.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/lwdevelop/bot/talentBot/handler/event/LeaveGroup.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/lwdevelop/bot/talentBot/handler/messageEvent/channel/ChannelMessage.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/lwdevelop/bot/talentBot/handler/messageEvent/channel/ChannelMessage.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/lwdevelop/bot/talentBot/handler/messageEvent/private_/commands/Job_II.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/lwdevelop/bot/talentBot/handler/messageEvent/private_/commands/Job_II.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/lwdevelop/bot/talentBot/handler/messageEvent/private_/message.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/lwdevelop/bot/talentBot/handler/messageEvent/private_/message.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/lwdevelop/service/impl/SpringyBotServiceImpl.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/lwdevelop/service/impl/SpringyBotServiceImpl.class" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="JpbToolWindowState">
+    <option name="myId2FirstActivated">
+      <map>
+        <entry key="com.haulmont.jpb.jpaInspector" value="true" />
+        <entry key="com.haulmont.jpb.jpaPalette" value="true" />
+        <entry key="com.haulmont.jpb.jpaStructure" value="true" />
+      </map>
+    </option>
+    <option name="myId2Visible">
+      <map>
+        <entry key="com.haulmont.jpb.jpaInspector" value="false" />
+        <entry key="com.haulmont.jpb.jpaPalette" value="false" />
+        <entry key="com.haulmont.jpb.jpaStructure" value="false" />
+      </map>
+    </option>
+  </component>
+  <component name="MarkdownSettingsMigration">
+    <option name="stateVersion" value="1" />
+  </component>
+  <component name="MavenImportPreferences">
+    <option name="generalSettings">
+      <MavenGeneralSettings>
+        <option name="mavenHome" value="Use Maven wrapper" />
+        <option name="useMavenConfig" value="true" />
+      </MavenGeneralSettings>
+    </option>
+  </component>
+  <component name="ProjectId" id="2P0Ku0LuvcViVMj7IlelguUwTXP" />
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;last_opened_file_path&quot;: &quot;D:/TGbot/SpringyBot&quot;,
+    &quot;project.structure.last.edited&quot;: &quot;Project&quot;,
+    &quot;project.structure.proportion&quot;: &quot;0.19042969&quot;,
+    &quot;project.structure.side.proportion&quot;: &quot;0.0&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;reference.settings.ide.settings.file-colors&quot;
+  }
+}</component>
+  <component name="RunManager" selected="Application.BackendApplication">
+    <configuration name="BackendApplication" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="com.lwdevelop.BackendApplication" />
+      <module name="backend" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="com.lwdevelop.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="SpringyBot-[Install]" type="MavenRunConfiguration" factoryName="Maven">
+      <MavenSettings>
+        <option name="myGeneralSettings" />
+        <option name="myRunnerSettings" />
+        <option name="myRunnerParameters">
+          <MavenRunnerParameters>
+            <option name="profiles">
+              <set />
+            </option>
+            <option name="goals">
+              <list>
+                <option value="install" />
+              </list>
+            </option>
+            <option name="pomFileName" />
+            <option name="profilesMap">
+              <map />
+            </option>
+            <option name="resolveToWorkspace" value="false" />
+            <option name="workingDirPath" value="$PROJECT_DIR$" />
+          </MavenRunnerParameters>
+        </option>
+      </MavenSettings>
+      <method v="2" />
+    </configuration>
+    <configuration name="SpringyBot-clean" type="MavenRunConfiguration" factoryName="Maven">
+      <MavenSettings>
+        <option name="myGeneralSettings" />
+        <option name="myRunnerSettings" />
+        <option name="myRunnerParameters">
+          <MavenRunnerParameters>
+            <option name="profiles">
+              <set />
+            </option>
+            <option name="goals">
+              <list>
+                <option value="clean" />
+              </list>
+            </option>
+            <option name="pomFileName" />
+            <option name="profilesMap">
+              <map />
+            </option>
+            <option name="resolveToWorkspace" value="false" />
+            <option name="workingDirPath" value="$PROJECT_DIR$" />
+          </MavenRunnerParameters>
+        </option>
+      </MavenSettings>
+      <method v="2" />
+    </configuration>
+    <list>
+      <item itemvalue="Application.BackendApplication" />
+      <item itemvalue="Maven.SpringyBot-[Install]" />
+      <item itemvalue="Maven.SpringyBot-clean" />
+    </list>
+    <recent_temporary>
+      <list>
+        <item itemvalue="Application.BackendApplication" />
+      </list>
+    </recent_temporary>
+  </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="1e8a3fc2-d57a-46c4-b4bf-a40b13ca6d58" name="Changes" comment="" />
+      <created>1682588778027</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1682588778027</updated>
+    </task>
+    <servers />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State>
+              <option name="FILTERS">
+                <map>
+                  <entry key="branch">
+                    <value>
+                      <list>
+                        <option value="johnnt/1.0.1" />
+                      </list>
+                    </value>
+                  </entry>
+                </map>
+              </option>
+            </State>
+          </value>
+        </entry>
+      </map>
+    </option>
+  </component>
+  <component name="com.intellij.coverage.CoverageDataManagerImpl">
+    <SUITE FILE_PATH="coverage/SpringyBot$BackendApplication.ic" NAME="BackendApplication Coverage Results" MODIFIED="1682583709022" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="idea" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false">
+      <FILTER>com.lwdevelop.*</FILTER>
+    </SUITE>
+  </component>
+</project>

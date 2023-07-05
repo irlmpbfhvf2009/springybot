@@ -38,6 +38,16 @@ public class JobPosting {
 
     private String commission; // 提成
 
+    private String nationality; // 国籍
+
+    private String gender;  // 男女
+
+    private String headCounts;   //  人數
+
+    private String languages;   // 语言要求
+
+    private String agency;  //是否中介
+
     private String workTime; // 上班时间
 
     private String requirements; // 要求内容
@@ -46,18 +56,23 @@ public class JobPosting {
 
     private String flightNumber; // 咨询飞机号
 
+    private String publisher;   //發布人
+
     private Integer lastMessageId;
     
     // channelId  messageId 訊息ID  postCount 發送次數
     @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JsonIgnore
     private Set<ChannelMessageIdPostCounts> channelMessageIdPostCounts;
+    
+    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @JsonIgnore
+    private Set<GroupMessageIdPostCounts> groupMessageIdPostCounts;
 
     public JobPosting(String userId, String botId, Integer lastMessageId) {
         this.userId = userId;
         this.botId = botId;
         this.lastMessageId = lastMessageId;
     }
-
     
 }

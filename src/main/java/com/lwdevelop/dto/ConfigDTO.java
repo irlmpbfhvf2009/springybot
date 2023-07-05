@@ -1,13 +1,21 @@
 package com.lwdevelop.dto;
 
+import java.math.BigDecimal;
+
 import lombok.Data;
 
 @Data
 public class ConfigDTO {
 
+    private Long id;
+    
     private Boolean inviteFriendsSet;
 
     private Boolean followChannelSet;
+    
+    private Long followChannelSet_chatId;
+
+    private String followChannelSet_chatTitle;
 
     private Boolean invitationBonusSet;
 
@@ -19,8 +27,11 @@ public class ConfigDTO {
 
     private int inviteMembers;
 
-    private double inviteEarnedOutstand;
+    private BigDecimal inviteEarnedOutstand;
+
+    private BigDecimal minimumPayout;
 
     private String contactPerson;
-
+    
+    private String password;
 }

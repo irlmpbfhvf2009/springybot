@@ -7,16 +7,13 @@ import org.springframework.http.ResponseEntity;
 import com.lwdevelop.dto.JobPostingDTO;
 import com.lwdevelop.dto.JobSeekerDTO;
 import com.lwdevelop.entity.ChannelMessageIdPostCounts;
+import com.lwdevelop.entity.GroupMessageIdPostCounts;
 import com.lwdevelop.entity.JobPosting;
 import com.lwdevelop.entity.JobSeeker;
 import com.lwdevelop.utils.ResponseUtils;
 
 public interface JobManagementService {
     // CRUD
-    JobSeeker findByUserIdWithJobSeeker(String userId);
-
-    JobPosting findByUserIdWithJobPosting(String userId);
-
     JobSeeker findByUserIdAndBotIdWithJobSeeker(String userId,String springyBotId);
 
     JobPosting findByUserIdAndBotIdWithJobPosting(String userId,String springyBotId);
@@ -29,9 +26,16 @@ public interface JobManagementService {
     
     // ChannelMessageIdPostCounts
     ChannelMessageIdPostCounts findByChannelIdAndTypeWithChannelMessageIdPostCounts(Long channelId,String type);
+    ChannelMessageIdPostCounts findByChannelIdAndUserIdAndTypeWithChannelMessageIdPostCounts(Long channelId,String userId,String type);
     ChannelMessageIdPostCounts findByBotIdAndUserIdAndTypeWithChannelMessageIdPostCounts(String botId,String userId,String type);
     List<ChannelMessageIdPostCounts> findAllByBotIdAndUserIdAndTypeWithChannelMessageIdPostCounts(String botId,String userId,String type);
+    void deleteByIdChannelMessageIdPostCounts(Long id);
     void saveChannelMessageIdPostCounts(ChannelMessageIdPostCounts channelMessageIdPostCounts);
+    
+    List<GroupMessageIdPostCounts> findAllByBotIdAndUserIdAndTypeWithGroupMessageIdPostCounts(String botId,String userId,String type);
+    GroupMessageIdPostCounts findByGroupIdAndTypeWithGroupMessageIdPostCounts(Long groupId,String type);
+    void deleteByIdGroupMessageIdPostCounts(Long id);
+    void saveGroupMessageIdPostCounts(GroupMessageIdPostCounts groupMessageIdPostCounts);
 
 
     //

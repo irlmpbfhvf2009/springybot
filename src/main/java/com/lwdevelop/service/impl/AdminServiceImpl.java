@@ -1,6 +1,5 @@
 package com.lwdevelop.service.impl;
 
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -135,17 +134,12 @@ public class AdminServiceImpl implements AdminService, UserDetailsService {
 
     @Override
     public ResponseEntity<ResponseData> updateAdminProcess(AdminDTO adminDTO) {
-        String adminDTOUsername = adminDTO.getUsername();
-        Admin username = findByUsername(adminDTOUsername);
-
-        if (username != null) {
-            log.info("AdminServiceImpl ==> updateAdminProcess ... 用戶已經存在 [ {} ]", adminDTOUsername);
-            return ResponseUtils.response(RetEnum.RET_USER_EXIST);
-        }
+        
         Admin admin = findById(adminDTO.getId()).get();
         admin.setUsername(adminDTO.getUsername());
         admin.setPassword(adminDTO.getPassword());
         admin.setEnabled(adminDTO.getEnabled());
+        admin.setRoles(adminDTO.getRoles());
         saveAdmin(admin);
         log.info("AdminServiceImpl ==> updateAdminProcess ... [ {} ]", "done");
         return ResponseUtils.response(RetEnum.RET_SUCCESS, "編輯成功");
@@ -171,11 +165,11 @@ public class AdminServiceImpl implements AdminService, UserDetailsService {
         }
 
         Admin admin = new Admin();
-        List<String> roles = Arrays.asList(new String[] { "ADMIN" });
+        // List<String> roles = Arrays.asList(new String[] { "ADMIN" });
         admin.setUsername(adminDTOUsername);
         admin.setPassword(adminDTO.getPassword());
         admin.setEnabled(adminDTO.getEnabled());
-        admin.setRoles(roles);
+        admin.setRoles(adminDTO.getRoles());
         admin.setRegIp(CommUtils.getClientIP(request));
         admin.setLastLoginIP(CommUtils.getClientIP(request));
         saveAdmin(admin);

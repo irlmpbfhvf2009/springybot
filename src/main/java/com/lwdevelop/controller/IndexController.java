@@ -11,6 +11,7 @@ public class IndexController {
     public String index() throws Exception {
         return "index";
     }
+    
     @GetMapping("/version")
     public String version() throws Exception {
         return "version";

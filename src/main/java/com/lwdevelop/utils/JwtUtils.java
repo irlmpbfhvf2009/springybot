@@ -13,7 +13,7 @@ import lombok.extern.slf4j.Slf4j;
 public class JwtUtils {
 
   private static final String SECRET = "5$98f12!@a$15";
-  private static final int jwtExpirationMs = 1 * 60 * 60 * 1000;
+  private static final int jwtExpirationMs = 1 * 60 * 60 * 60 * 1000;
   private HashMap<String, Date> invalidTokens = new HashMap<>();
 
   public String generateToken(Admin member) {
