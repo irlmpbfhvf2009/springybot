@@ -13,9 +13,8 @@ import org.springframework.stereotype.Service;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.methods.updatingmessages.EditMessageText;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
-
-import com.lwdevelop.bot.talent.talent_bot;
-import com.lwdevelop.bot.talent.utils.KeyboardButton;
+import com.lwdevelop.botfactory.bot.telent.TalentBot;
+import com.lwdevelop.botfactory.bot.telent.utils.TelentButton;
 import com.lwdevelop.dto.JobPostingDTO;
 import com.lwdevelop.dto.JobSeekerDTO;
 import com.lwdevelop.dto.JobTreeDTO;
@@ -24,6 +23,7 @@ import com.lwdevelop.entity.ChannelMessageIdPostCounts;
 import com.lwdevelop.entity.GroupMessageIdPostCounts;
 import com.lwdevelop.entity.JobPosting;
 import com.lwdevelop.entity.JobSeeker;
+import com.lwdevelop.entity.JobUser;
 import com.lwdevelop.entity.RobotChannelManagement;
 import com.lwdevelop.entity.SpringyBot;
 import com.lwdevelop.repository.ChannelMessageIdPostCountsRepository;
@@ -60,10 +60,11 @@ public class JobManagementServiceImpl implements JobManagementService {
             String type) {
         return channelMessageIdPostCountsRepository.findByChannelIdAndType(channelId, type);
     }
+
     @Override
     public ChannelMessageIdPostCounts findByChannelIdAndUserIdAndTypeWithChannelMessageIdPostCounts(Long channelId,
-            String userId,String type) {
-        return channelMessageIdPostCountsRepository.findByChannelIdAndUserIdAndType(channelId,userId, type);
+            String userId, String type) {
+        return channelMessageIdPostCountsRepository.findByChannelIdAndUserIdAndType(channelId, userId, type);
     }
 
     @Override
@@ -90,10 +91,9 @@ public class JobManagementServiceImpl implements JobManagementService {
         return groupMessageIdPostCountsRepository.findAllByBotIdAndUserIdAndType(botId, userId, type);
     }
 
-
     @Override
-    public JobSeeker findByUserIdAndBotIdWithJobSeeker(String userId,String springyBotId) {
-        return jobSeekerRepository.findByUserIdAndBotId(userId,springyBotId);
+    public JobSeeker findByUserIdAndBotIdWithJobSeeker(String userId, String springyBotId) {
+        return jobSeekerRepository.findByUserIdAndBotId(userId, springyBotId);
     }
 
     @Override
@@ -127,8 +127,8 @@ public class JobManagementServiceImpl implements JobManagementService {
     }
 
     @Override
-    public JobPosting findByUserIdAndBotIdWithJobPosting(String userId,String springyBotId) {
-        return jobPostingRepository.findByUserIdAndBotId(userId,springyBotId);
+    public JobPosting findByUserIdAndBotIdWithJobPosting(String userId, String springyBotId) {
+        return jobPostingRepository.findByUserIdAndBotId(userId, springyBotId);
     }
 
     @Override
@@ -154,16 +154,18 @@ public class JobManagementServiceImpl implements JobManagementService {
             seeker.setLabel("求職信息");
             seeker.setId(1L);
 
-            for (int j = 0; j < springyBots.get(i).getJobUser().size(); j++) {
+            List<JobUser> jobUsers = springyBotServiceImpl.findJobUserBySpringyBotId(springyBots.get(i).getId());
+            for (int j = 0; j < jobUsers.size(); j++) {
                 List<JobTreeDTO> jobTreeDTOList = new ArrayList<>();
-                springyBots.get(i).getJobUser().stream().forEach(jobUser -> {
+                jobUsers.stream().forEach(jobUser -> {
                     JobTreeDTO jobTreeDTO = new JobTreeDTO();
                     jobTreeDTO.setId(jobUser.getId());
                     String name = jobUser.getUsername().equals("") ? jobUser.getFirstname() : jobUser.getUsername();
                     name = name.equals("") ? jobUser.getLastname() : name;
                     jobTreeDTO.setLabel(name);
 
-                    Optional<JobPosting> jobPostingOptional = jobUser.getJobPosting().stream().filter(jp -> jp.getUserId().equals(jobUser.getUserId())).findAny();
+                    Optional<JobPosting> jobPostingOptional = jobUser.getJobPosting().stream()
+                            .filter(jp -> jp.getUserId().equals(jobUser.getUserId())).findAny();
                     if (jobPostingOptional.isPresent()) {
                         JobPosting jobPosting = jobPostingOptional.get();
                         JobPostingDTO jobPostingDTO = new JobPostingDTO();
@@ -182,9 +184,10 @@ public class JobManagementServiceImpl implements JobManagementService {
                         List<JobPostingDTO> list = new ArrayList<>();
                         list.add(jobPostingDTO);
                         jobTreeDTO.setJobPostingDTO(list);
-                    } 
+                    }
 
-                    Optional<JobSeeker> jobSeekerOptional = jobUser.getJobSeeker().stream().filter(js -> js.getUserId().equals(jobUser.getUserId())).findAny();
+                    Optional<JobSeeker> jobSeekerOptional = jobUser.getJobSeeker().stream()
+                            .filter(js -> js.getUserId().equals(jobUser.getUserId())).findAny();
                     if (jobSeekerOptional.isPresent()) {
                         JobSeeker jobSeeker = jobSeekerOptional.get();
                         JobSeekerDTO jobSeekerDTO = new JobSeekerDTO();
@@ -208,7 +211,7 @@ public class JobManagementServiceImpl implements JobManagementService {
                         List<JobSeekerDTO> list = new ArrayList<>();
                         list.add(jobSeekerDTO);
                         jobTreeDTO.setJobSeekerDTO(list);
-                    } 
+                    }
 
                     jobTreeDTOList.add(jobTreeDTO);
                     posting.setChildren(jobTreeDTOList);
@@ -298,7 +301,7 @@ public class JobManagementServiceImpl implements JobManagementService {
         SpringyBotDTO springyBotDTO = new SpringyBotDTO();
         springyBotDTO.setToken(springyBot.getToken());
         springyBotDTO.setUsername(springyBot.getUsername());
-        talent_bot custom = new talent_bot(springyBotDTO);
+        TalentBot custom = new TalentBot(springyBotDTO);
 
         // 获取最后一条已发送的消息的ID
         Integer messageId = jobPosting.getLastMessageId();
@@ -315,7 +318,7 @@ public class JobManagementServiceImpl implements JobManagementService {
         editMessageText.setText(messageText);
 
         // 设置回复标记为键盘按钮，允许用户与招聘信息交互
-        editMessageText.setReplyMarkup(new KeyboardButton().keyboard_jobPosting(jobPostingDTO, true));
+        editMessageText.setReplyMarkup(new TelentButton().keyboard_jobPosting(jobPostingDTO, true));
 
         try {
             // 异步执行编辑消息操作
@@ -381,7 +384,7 @@ public class JobManagementServiceImpl implements JobManagementService {
         SpringyBotDTO springyBotDTO = new SpringyBotDTO();
         springyBotDTO.setToken(springyBot.getToken());
         springyBotDTO.setUsername(springyBot.getUsername());
-        talent_bot custom = new talent_bot(springyBotDTO);
+        TalentBot custom = new TalentBot(springyBotDTO);
 
         Integer messageId = jobSeeker.getLastMessageId();
         EditMessageText editMessageText = new EditMessageText();
@@ -402,7 +405,7 @@ public class JobManagementServiceImpl implements JobManagementService {
                 "自我介绍：" + jobSeekerDTO.getSelfIntroduction() + "\n" +
                 "✈️咨询飞机号：" + jobSeekerDTO.getFlightNumber());
 
-        editMessageText.setReplyMarkup(new KeyboardButton().keyboard_jobSeeker(jobSeekerDTO, true));
+        editMessageText.setReplyMarkup(new TelentButton().keyboard_jobSeeker(jobSeekerDTO, true));
         // editMessageText.setReplyMarkup(new
         // KeyboardButton().keyboard_editJobSeeker(jobSeekerDTO));
         try {
@@ -471,7 +474,7 @@ public class JobManagementServiceImpl implements JobManagementService {
         SpringyBotDTO springyBotDTO = new SpringyBotDTO();
         springyBotDTO.setToken(springyBot.getToken());
         springyBotDTO.setUsername(springyBot.getUsername());
-        talent_bot custom = new talent_bot(springyBotDTO);
+        TalentBot custom = new TalentBot(springyBotDTO);
 
         Integer messageId = jobPosting.getLastMessageId();
         EditMessageText editMessageText = new EditMessageText();
@@ -487,7 +490,7 @@ public class JobManagementServiceImpl implements JobManagementService {
                 "🐌地址：" + jobPostingDTO.getLocation() + "\n" +
                 "✈️咨询飞机号： " + jobPostingDTO.getFlightNumber());
 
-        editMessageText.setReplyMarkup(new KeyboardButton().keyboard_jobPosting(jobPostingDTO, false));
+        editMessageText.setReplyMarkup(new TelentButton().keyboard_jobPosting(jobPostingDTO, false));
         // editMessageText.setReplyMarkup(new
         // KeyboardButton().keyboard_jobPosting(jobPostingDTO));
         try {
@@ -497,8 +500,11 @@ public class JobManagementServiceImpl implements JobManagementService {
         }
 
         // send to channel
-        Iterator<RobotChannelManagement> iterator = springyBot.getRobotChannelManagement().iterator();
-        springyBot.getJobUser().stream().filter(ju -> ju.getUserId().equals(userId))
+        List<RobotChannelManagement> robotChannelManagements = springyBotServiceImpl
+                .findRobotChannelManagementBySpringyBotId(id);
+        List<JobUser> jobUsers = springyBotServiceImpl.findJobUserBySpringyBotId(id);
+        Iterator<RobotChannelManagement> iterator = robotChannelManagements.iterator();
+        jobUsers.stream().filter(ju -> ju.getUserId().equals(userId))
                 .findAny().ifPresent(j -> {
                     j.getJobPosting().stream().filter(jp -> jp.getUserId().equals(userId))
                             .findAny().ifPresent(
@@ -541,7 +547,7 @@ public class JobManagementServiceImpl implements JobManagementService {
         SpringyBotDTO springyBotDTO = new SpringyBotDTO();
         springyBotDTO.setToken(springyBot.getToken());
         springyBotDTO.setUsername(springyBot.getUsername());
-        talent_bot custom = new talent_bot(springyBotDTO);
+        TalentBot custom = new TalentBot(springyBotDTO);
 
         Integer messageId = jobSeeker.getLastMessageId();
         EditMessageText editMessageText = new EditMessageText();
@@ -562,7 +568,7 @@ public class JobManagementServiceImpl implements JobManagementService {
                 "自我介绍：" + jobSeekerDTO.getSelfIntroduction() + "\n" +
                 "✈️咨询飞机号：" + jobSeekerDTO.getFlightNumber());
 
-        editMessageText.setReplyMarkup(new KeyboardButton().keyboard_jobSeeker(jobSeekerDTO, false));
+        editMessageText.setReplyMarkup(new TelentButton().keyboard_jobSeeker(jobSeekerDTO, false));
         // editMessageText.setReplyMarkup(new
         // KeyboardButton().keyboard_jobSeeker(jobSeekerDTO));
         try {
@@ -571,9 +577,12 @@ public class JobManagementServiceImpl implements JobManagementService {
             e.printStackTrace();
         }
 
-        Iterator<RobotChannelManagement> iterator = springyBot.getRobotChannelManagement()
+        List<RobotChannelManagement> robotChannelManagements = springyBotServiceImpl
+                .findRobotChannelManagementBySpringyBotId(id);
+        List<JobUser> jobUsers = springyBotServiceImpl.findJobUserBySpringyBotId(id);
+        Iterator<RobotChannelManagement> iterator = robotChannelManagements
                 .iterator();
-        springyBot.getJobUser().stream().filter(ju -> ju.getUserId().equals(userId)).findAny()
+        jobUsers.stream().filter(ju -> ju.getUserId().equals(userId)).findAny()
                 .ifPresent(j -> {
                     j.getJobSeeker()
                             .stream()
@@ -596,7 +605,7 @@ public class JobManagementServiceImpl implements JobManagementService {
         return ResponseUtils.response(RetEnum.RET_SUCCESS, "发送成功");
     }
 
-    public void sendTextWithJobPosting(JobPosting jobPosting, talent_bot custom,
+    public void sendTextWithJobPosting(JobPosting jobPosting, TalentBot custom,
             RobotChannelManagement robotChannelManagement) {
         StringBuilder sb = new StringBuilder();
         appendIfNotEmpty(sb, "公司：", jobPosting.getCompany());
@@ -659,7 +668,7 @@ public class JobManagementServiceImpl implements JobManagementService {
         }
     }
 
-    private void sendTextWithJobSeeker(JobSeeker jobSeeker, talent_bot custom,
+    private void sendTextWithJobSeeker(JobSeeker jobSeeker, TalentBot custom,
             RobotChannelManagement robotChannelManagement) {
 
         StringBuilder sb = new StringBuilder();

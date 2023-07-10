@@ -5,8 +5,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-
-import com.lwdevelop.bot.Common;
+import com.lwdevelop.botfactory.Common;
 import com.lwdevelop.dto.GroupAndChannelTreeDTO;
 import com.lwdevelop.dto.RobotChannelManagementDTO;
 import com.lwdevelop.dto.RobotGroupManagementDTO;
@@ -19,10 +18,8 @@ import com.lwdevelop.service.RobotGroupAndChannelManagementService;
 import com.lwdevelop.utils.ResponseUtils;
 import com.lwdevelop.utils.RetEnum;
 import com.lwdevelop.utils.ResponseUtils.ResponseData;
-import lombok.extern.slf4j.Slf4j;
 import org.telegram.telegrambots.meta.api.methods.groupadministration.GetChatMember;
 
-@Slf4j
 @Service
 public class RobotGroupAndChannelManagementServiceImpl implements RobotGroupAndChannelManagementService {
 
@@ -68,9 +65,10 @@ public class RobotGroupAndChannelManagementServiceImpl implements RobotGroupAndC
             channel.setLabel("频道");
             channel.setId(1L);
 
-            for (int j = 0; j < springyBots.get(i).getRobotGroupManagement().size(); j++) {
+            List<RobotGroupManagement> robotGroupManagements= springyBotServiceImpl.findRobotGroupManagementBySpringyBotId(springyBots.get(i).getId());
+            for (int j = 0; j < robotGroupManagements.size(); j++) {
                 List<GroupAndChannelTreeDTO> ff = new ArrayList<>();
-                springyBots.get(i).getRobotGroupManagement().stream().forEach(g -> {
+                robotGroupManagements.stream().forEach(g -> {
                     GroupAndChannelTreeDTO gact = new GroupAndChannelTreeDTO();
                     gact.setId(g.getGroupId());
                     gact.setLabel(g.getGroupTitle());
@@ -94,10 +92,11 @@ public class RobotGroupAndChannelManagementServiceImpl implements RobotGroupAndC
                 });
                 group.setChildren(ff);
             }
+            List<RobotChannelManagement> robotChannelManagements= springyBotServiceImpl.findRobotChannelManagementBySpringyBotId(springyBots.get(i).getId());
 
-            for (int j = 0; j < springyBots.get(i).getRobotChannelManagement().size(); j++) {
+            for (int j = 0; j < robotChannelManagements.size(); j++) {
                 List<GroupAndChannelTreeDTO> ff = new ArrayList<>();
-                springyBots.get(i).getRobotChannelManagement().stream().forEach(c -> {
+                robotChannelManagements.stream().forEach(c -> {
                     GroupAndChannelTreeDTO cact = new GroupAndChannelTreeDTO();
                     cact.setId(c.getChannelId());
                     cact.setLabel(c.getChannelTitle());
@@ -139,18 +138,9 @@ public class RobotGroupAndChannelManagementServiceImpl implements RobotGroupAndC
     public boolean ifSubscribeChannel(Common common) {
         String chatId = "-1001784108917";
         Long userId = common.getUpdate().getMessage().getChatId();
-        GetChatMember getChatMember = new GetChatMember(chatId,userId);
-        try{
-            String status = common.executeAsync(getChatMember);
-            if (!status.equals("left") || !status.equals("kicked")){
-                return true;
-            }
-        }catch(Exception e){
-            log.error(e.toString());
-            
-        }
-
-        return false;
+        GetChatMember getChatMember = new GetChatMember(chatId, userId);
+        Boolean status = common.executeAsync(getChatMember);
+        return status;
     }
 
 }

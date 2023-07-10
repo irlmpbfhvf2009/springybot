@@ -1,7 +1,7 @@
 package com.lwdevelop.entity;
 
 import java.util.Date;
-import java.util.Set;
+import java.util.List;
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.EntityListeners;
@@ -11,12 +11,9 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
-import javax.persistence.OrderColumn;
-
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
-
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 
@@ -35,6 +32,8 @@ public class SpringyBot {
 
     private Boolean state;
 
+    private String botModel; // webhook , longPolling
+
     private String botType;
 
     private Long botId;
@@ -42,46 +41,42 @@ public class SpringyBot {
     @OneToOne(cascade = CascadeType.ALL)
     private Config config;
 
-    @OrderColumn
-    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JsonIgnore
-    private Set<WhiteList> whiteList;
+    private List<WhiteList> whiteList;
 
-    @OrderColumn
-    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JsonIgnore
-    private Set<RobotGroupManagement> robotGroupManagement;
+    private List<RobotGroupManagement> robotGroupManagement;
 
-    @OrderColumn
-    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JsonIgnore
-    private Set<RobotChannelManagement> robotChannelManagement;
-    
+    private List<RobotChannelManagement> robotChannelManagement;
+
     // 群組發言(邀請人數)門檻
-    @OrderColumn
-    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JsonIgnore
-    private Set<InvitationThreshold> invitationThreshold;
+    private List<InvitationThreshold> invitationThreshold;
 
-    @OrderColumn
-    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JsonIgnore
-    private  Set<JobUser> jobUser;
+    private List<JobUser> jobUser;
 
-    @OrderColumn
-    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JsonIgnore
-    private  Set<RestrictMember> restrictMember;
+    private List<RestrictMember> restrictMember;
 
-    @OrderColumn
-    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JsonIgnore
-    private  Set<RecordChannelUsers> recordChannelUsers;
+    private List<RecordChannelUsers> recordChannelUsers;
 
-    @OrderColumn
-    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JsonIgnore
-    private  Set<RecordGroupUsers> recordGroupUsers;
+    private List<RecordGroupUsers> recordGroupUsers;
+
+    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JsonIgnore
+    private List<InvitationBonusUser> invitationBonusUser;
 
     @CreatedDate
     private Date createTime;

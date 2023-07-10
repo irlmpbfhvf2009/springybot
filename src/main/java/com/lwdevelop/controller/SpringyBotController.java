@@ -10,6 +10,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.telegram.telegrambots.meta.TelegramBotsApi;
+
+import com.lwdevelop.dto.ConfigDTO;
 import com.lwdevelop.dto.SpringyBotDTO;
 import com.lwdevelop.service.impl.SpringyBotServiceImpl;
 import com.lwdevelop.utils.ResponseUtils;
@@ -31,11 +33,11 @@ public class SpringyBotController {
      * 
      * @param springyBotDTO 包含 SpringyBot 資訊的 SpringyBotDTO 物件，來自請求的 request body
      * @return 包含啟動結果的 ResponseEntity 物件
-     * @version v1
+     * @version v2
      * @since June 11, 2023
      * @author Leo
      */
-    @PostMapping("/v1/start")
+    @PostMapping("/v2/start")
     private synchronized ResponseEntity<ResponseUtils.ResponseData> start(@RequestBody SpringyBotDTO springyBotDTO) {
         return springyBotService.start(springyBotDTO);
     }
@@ -132,6 +134,43 @@ public class SpringyBotController {
             @RequestBody SpringyBotDTO springyBotDTO) throws Exception {
 
         return springyBotService.updateBot(springyBotDTO);
+    }
+
+    /**
+     * 更新 Config
+     * 
+     * 根據提供的 ConfigDTO 對象，更新指定的 Config。
+     * 
+     * @param ConfigDTO 包含 Config。 訊息的 ConfigDTO 對象，來自請求的 request body
+     * @return 包含更新結果的 ResponseEntity 物件
+     * @throws Exception 更新 Config。 過程中發生錯誤時拋出異常
+     * @version v1
+     * @since June 29, 2023
+     * @author Leo
+     */
+    @PostMapping("/v1/updateConfig")
+    public ResponseEntity<ResponseUtils.ResponseData> updateConfig(
+            @RequestBody ConfigDTO configDTO) throws Exception {
+
+        return springyBotService.updateConfig(configDTO);
+    }
+
+    /**
+     * 查詢機器人管理的頻道
+     * 
+     * 根據提供的 configId 對象，查詢相關資料。
+     * 
+     * @param configId Config 對象的 id，用於查詢關聯表中springybot.getConfig()，來自請求的 request body
+     * @return 包含查詢結果的 ResponseEntity 物件
+     * @throws Exception 抓取 chatId。 過程中發生錯誤時拋出異常
+     * @version v1
+     * @since June 29, 2023
+     * @author Leo
+     */
+    @PostMapping("/v1/fetchManagedChat")
+    public ResponseEntity<ResponseUtils.ResponseData> fetchManagedChatIds(
+            @RequestBody ConfigDTO configDTO) throws Exception {
+        return springyBotService.fetchManagedChat(configDTO);
     }
 
 }

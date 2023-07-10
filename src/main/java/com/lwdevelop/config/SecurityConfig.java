@@ -55,6 +55,7 @@ public class SecurityConfig {
             "/groupAndChannelManagement/**",
             "/debug/**",
             "/callback/**",
+            "/redis/**",
     };
 
     @Bean

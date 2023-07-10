@@ -3,13 +3,9 @@ package com.lwdevelop.dto;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Optional;
-
-import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
-
-import com.lwdevelop.bot.Common;
-import com.lwdevelop.bot.talent.utils.SpringyBotEnum;
+import com.lwdevelop.botfactory.Common;
+import com.lwdevelop.botfactory.bot.telent.utils.TelentEnum;
 import com.lwdevelop.entity.JobSeeker;
-
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -176,9 +172,9 @@ public class JobSeekerDTO {
         this.workingAddress = Optional.ofNullable(jobSeeker.getWorkingAddress()).orElse("");
         this.language = Optional.ofNullable(jobSeeker.getLanguage()).orElse("");
         this.workExperience = Optional.ofNullable(jobSeeker.getWorkExperience())
-                .orElse(SpringyBotEnum.FIFTY_CHARACTERS_LIMIT.getText());
+                .orElse(TelentEnum.FIFTY_CHARACTERS_LIMIT.getText());
         this.selfIntroduction = Optional.ofNullable(jobSeeker.getSelfIntroduction())
-                .orElse(SpringyBotEnum.FIFTY_CHARACTERS_LIMIT.getText());
+                .orElse(TelentEnum.FIFTY_CHARACTERS_LIMIT.getText());
         this.flightNumber = Optional.ofNullable(jobSeeker.getFlightNumber()).orElse("");
         this.publisher = Optional.ofNullable(jobSeeker.getPublisher()).orElse("");
 
@@ -192,7 +188,7 @@ public class JobSeekerDTO {
                 + resources + "\n期望薪资：" + expectedSalary
                 + "\n工作地址：" + workingAddress + "\n精通语言：" + language
                 + "\n工作经历："
-                + workExperience + "\n自我介绍：" + selfIntroduction + "\n✈️咨询飞机号：" + flightNumber +"\n发布人：" + publisher;
+                + workExperience + "\n自我介绍：" + selfIntroduction + "\n✈️咨询飞机号：" + flightNumber;
     }
 
     public String generateJobSeekerDetails(JobSeeker jobSeeker) {
@@ -227,9 +223,9 @@ public class JobSeekerDTO {
                 String key = line.substring(0, colonIndex).trim();
                 String value = line.substring(colonIndex + 1).trim();
 
-                String filter = SpringyBotEnum.FIFTY_CHARACTERS_LIMIT.getText();
+                String filter = TelentEnum.FIFTY_CHARACTERS_LIMIT.getText();
                 value = value.replace(filter, "");
-                value = value.replaceAll("[^\\p{script=Han}a-zA-Z0-9]", "");
+                value = value.substring(0, Math.min(255, value.length()));
 
                 switch (key) {
                     case "姓名":
@@ -273,27 +269,20 @@ public class JobSeekerDTO {
                         break;
                     case "工作经历":
                         if (value.length() >= 50) {
-                            returnStr = SpringyBotEnum.REMIND_WORKEXPERIENCE_LIMIT.getText();
+                            returnStr = TelentEnum.REMIND_WORKEXPERIENCE_LIMIT.getText();
                         }
                         jobSeeker.setWorkExperience(value);
                         break;
                     case "自我介绍":
                         if (value.length() >= 50) {
-                            returnStr = SpringyBotEnum.REMIND_SELFINTRODUCTION_LIMIT.getText();
+                            returnStr = TelentEnum.REMIND_SELFINTRODUCTION_LIMIT.getText();
                         }
                         jobSeeker.setSelfIntroduction(value);
                         break;
                     case "✈️咨询飞机号":
                         jobSeeker.setFlightNumber(value);
                         break;
-                    case "发布人" :
-                        jobSeeker.setPublisher(value);
-                        break;
                     default:
-                        // 未知键值对，可以忽略或抛出异常
-                        SendMessage response = new SendMessage(jobSeeker.getUserId(),
-                                SpringyBotEnum.FILTERKEY.getText() + key);
-                        this.common.executeAsync(response);
                         break;
                 }
             }

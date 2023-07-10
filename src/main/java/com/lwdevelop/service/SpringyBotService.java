@@ -6,8 +6,18 @@ import java.util.Optional;
 
 import org.springframework.http.ResponseEntity;
 
+import com.lwdevelop.dto.ConfigDTO;
 import com.lwdevelop.dto.SpringyBotDTO;
+import com.lwdevelop.entity.Config;
+import com.lwdevelop.entity.InvitationBonusUser;
+import com.lwdevelop.entity.InvitationThreshold;
+import com.lwdevelop.entity.JobUser;
+import com.lwdevelop.entity.RecordChannelUsers;
+import com.lwdevelop.entity.RecordGroupUsers;
+import com.lwdevelop.entity.RobotChannelManagement;
+import com.lwdevelop.entity.RobotGroupManagement;
 import com.lwdevelop.entity.SpringyBot;
+import com.lwdevelop.entity.WhiteList;
 import com.lwdevelop.utils.ResponseUtils;
 
 public interface SpringyBotService {
@@ -26,6 +36,29 @@ public interface SpringyBotService {
 
         void deleteById(Long id);
 
+        List<RecordChannelUsers> findRecordChannelUsersBySpringyBotId(Long id);
+
+        List<RecordGroupUsers> findRecordGroupUsersBySpringyBotId(Long id);
+
+        List<InvitationThreshold> findInvitationThresholdBySpringyBotId(Long id);
+
+        List<RobotGroupManagement> findRobotGroupManagementBySpringyBotId(Long id);
+
+        List<RobotChannelManagement> findRobotChannelManagementBySpringyBotId(Long id);
+
+        List<WhiteList> findWhiteListBySpringyBotId(Long id);
+
+        List<JobUser> findJobUserBySpringyBotId(Long id);
+
+        List<InvitationBonusUser> findInvitationBonusUserBySpringyBotId(Long id);
+
+        // DB CRUD For Config
+        Optional<Config> findByConfigId(Long id);
+
+        void saveConfig(Config config);
+
+        ResponseEntity<ResponseUtils.ResponseData> fetchManagedChat(ConfigDTO configDTO);
+
         // custom
         ResponseEntity<ResponseUtils.ResponseData> addBot(SpringyBotDTO springyBotDTO);
 
@@ -40,4 +73,7 @@ public interface SpringyBotService {
         ResponseEntity<ResponseUtils.ResponseData> stop(SpringyBotDTO springyBotDTO);
 
         ResponseEntity<ResponseUtils.ResponseData> getRunTime();
+
+        ResponseEntity<ResponseUtils.ResponseData> updateConfig(ConfigDTO configDTO);
+
 }

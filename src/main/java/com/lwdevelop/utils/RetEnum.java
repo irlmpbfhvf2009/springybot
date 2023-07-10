@@ -22,6 +22,7 @@ public enum RetEnum {
     RET_START_EXIST(1008, "程序進行中"),
     RET_STOP_FAIL(1009, "停止失敗"),
     RET_TOKEN_EMPTY(1010, "啟動失敗，非法Token"),
+    RET_CHANNEL_MANAGED_NOT_FOUND(1011, "無管理的頻道"),
 
     // 參數校驗
     RET_PARAM_NOT_FOUND(0101, "参数不存在"),
