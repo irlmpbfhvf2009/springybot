@@ -19,7 +19,7 @@ services:
     ports:
       - 6379:6379
     environment:
-      - REDIS_PASSWORD=RH48KBsu
+      - REDIS_PASSWORD=NqEhk6gc
   rabbitmq:
     image: rabbitmq:latest
     container_name: rabbitmq-container
@@ -30,28 +30,27 @@ services:
       - RABBITMQ_DEFAULT_USER=guest
       - RABBITMQ_DEFAULT_PASS=guest
 
-      
-  springybot:
-    build:
-      context: .
-      dockerfile: Dockerfile
-    image: ws794613/service
-    container_name: springboot-container
-    ports:
-      - 5487:5487
-    depends_on:
-      - mysql
-      - redis
-      - rabbitmq
-    environment:
-      - SPRING_DATASOURCE_URL=jdbc:mysql://mysql:3306/springy_bot?useSSL=false&allowPublicKeyRetrieval=true
-      - SPRING_DATASOURCE_USERNAME=springy_bot
-      - SPRING_DATASOURCE_PASSWORD=KzcipdAcmZ4r3CkA
-      - SPRING_REDIS_HOST=redis
-      - SPRING_REDIS_PORT=6379
-      - SPRING_REDIS_PASSWORD=RH48KBsu
-      - SPRING_RABBITMQ_HOST=rabbitmq
-      - SPRING_RABBITMQ_PORT=5672
-      - SPRING_RABBITMQ_USERNAME=guest
-      - SPRING_RABBITMQ_PASSWORD=guest
+  # springybot:
+  #   build:
+  #     context: .
+  #     dockerfile: Dockerfile
+  #   image: ws794613/service
+  #   container_name: springboot-container
+  #   ports:
+  #     - 5487:5487
+  #   depends_on:
+  #     - mysql
+  #     - redis
+  #     - rabbitmq
+  #   environment:
+  #     - SPRING_DATASOURCE_URL=jdbc:mysql://mysql:3306/springy_bot?useSSL=false&allowPublicKeyRetrieval=true
+  #     - SPRING_DATASOURCE_USERNAME=springy_bot
+  #     - SPRING_DATASOURCE_PASSWORD=KzcipdAcmZ4r3CkA
+  #     - SPRING_REDIS_HOST=redis
+  #     - SPRING_REDIS_PORT=6379
+  #     - SPRING_REDIS_PASSWORD=RH48KBsu
+  #     - SPRING_RABBITMQ_HOST=rabbitmq
+  #     - SPRING_RABBITMQ_PORT=5672
+  #     - SPRING_RABBITMQ_USERNAME=guest
+  #     - SPRING_RABBITMQ_PASSWORD=guest
 
