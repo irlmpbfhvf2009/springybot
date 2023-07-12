@@ -17,9 +17,9 @@ public class DataLoader implements CommandLineRunner {
     @Autowired
     private AdminRepository adminRepository;
 
-	@Autowired
-	private SpringyBotRepository springyBotRepository;
-    
+    @Autowired
+    private SpringyBotRepository springyBotRepository;
+
     @Override
     public void run(String... args) throws Exception {
 
@@ -32,6 +32,7 @@ public class DataLoader implements CommandLineRunner {
         try {
             Admin admin = adminRepository.findByUsername("admin");
             Admin test = adminRepository.findByUsername("test");
+
             if (admin == null) {
                 admin = new Admin();
                 admin.setUsername("admin");
@@ -41,7 +42,9 @@ public class DataLoader implements CommandLineRunner {
                 admin.setRegIp(null);
                 admin.setLastLoginIP(null);
                 adminRepository.save(admin);
-
+            }
+            
+            if (test == null) {
                 test = new Admin();
                 test.setUsername("test");
                 test.setPassword("123456");
@@ -49,8 +52,9 @@ public class DataLoader implements CommandLineRunner {
                 test.setRoles(Arrays.asList(new String[] { "ADMIN", "TEST" }));
                 test.setRegIp(null);
                 test.setLastLoginIP(null);
-                adminRepository.save(admin);
+                adminRepository.save(test);
             }
+
         } catch (Exception e) {
             throw e;
         }

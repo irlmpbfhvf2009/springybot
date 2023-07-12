@@ -11,7 +11,7 @@ public class SpringyBotConfig {
 
     @Bean
     @SneakyThrows
-    public TelegramBotsApi telegramBotsApi() {
+    TelegramBotsApi telegramBotsApi() {
         return new TelegramBotsApi(DefaultBotSession.class);
     }
 

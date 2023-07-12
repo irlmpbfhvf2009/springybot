@@ -7,13 +7,12 @@ import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.api.objects.User;
 import org.telegram.telegrambots.meta.api.objects.chatmember.ChatMember;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
-
 import com.lwdevelop.bot.utils.Common;
 import com.lwdevelop.dto.SpringyBotDTO;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
-public abstract class BaseBot extends TelegramLongPollingBot  {
+public abstract class BaseBot extends TelegramLongPollingBot {
 
     protected Common common;
     protected Message message;
@@ -23,10 +22,10 @@ public abstract class BaseBot extends TelegramLongPollingBot  {
 
     public BaseBot(SpringyBotDTO springyBotDTO) {
         this.dto = springyBotDTO;
-        this.common = initializeCommon(springyBotDTO);
+        this.common = initializeCommon();
     }
 
-    private Common initializeCommon(SpringyBotDTO springyBotDTO) {
+    private Common initializeCommon() {
         try {
             Common common = new Common(this.dto.getId(), getMe().getId(), getMe().getUserName());
             common.setBot(this);
