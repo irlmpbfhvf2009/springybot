@@ -13,9 +13,8 @@ import org.springframework.stereotype.Service;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.methods.updatingmessages.EditMessageText;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
-
-import com.lwdevelop.bot.telent.TalentBot;
-import com.lwdevelop.bot.utils.keyboardButton.TelentButton;
+import com.lwdevelop.bot.bots.telent.TalentBot;
+import com.lwdevelop.bot.bots.utils.keyboardButton.TelentButton;
 import com.lwdevelop.dto.JobPostingDTO;
 import com.lwdevelop.dto.JobSeekerDTO;
 import com.lwdevelop.dto.JobTreeDTO;

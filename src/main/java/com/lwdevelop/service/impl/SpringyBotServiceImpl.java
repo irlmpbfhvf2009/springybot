@@ -2,7 +2,6 @@ package com.lwdevelop.service.impl;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -12,11 +11,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.meta.TelegramBotsApi;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 
-import com.lwdevelop.bot._factory.BotFactory;
+import com.lwdevelop.bot.factory.BotFactory;
+import com.lwdevelop.bot.model.CustomLongPollingBot;
 import com.lwdevelop.dto.ConfigDTO;
 import com.lwdevelop.dto.SpringyBotDTO;
 import com.lwdevelop.entity.Config;
@@ -59,11 +58,6 @@ public class SpringyBotServiceImpl implements SpringyBotService {
 
     @Autowired
     private BotFactory botFactory;
-
-    private static final List<String> ALLOWED_UPDATES = Arrays.asList("update_id", "message", "edited_message",
-            "channel_post", "edited_channel_post", "inline_query", "chosen_inline_result",
-            "callback_query", "shipping_query", "pre_checkout_query", "poll", "poll_answer",
-            "my_chat_member", "chat_member");
 
     @Autowired
     private SpringyBotRepository springyBotRepository;
@@ -166,7 +160,7 @@ public class SpringyBotServiceImpl implements SpringyBotService {
         try {
             Long id = springyBotDTO.getId();
             String botType = springyBotDTO.getBotType();
-            TelegramLongPollingBot longPollingBot = null;
+            CustomLongPollingBot longPollingBot = null;
             SpringyBot springyBot = findById(id).get();
 
             switch (botType) {
@@ -188,7 +182,6 @@ public class SpringyBotServiceImpl implements SpringyBotService {
                 springyBot.setState(true);
                 save(springyBot);
 
-                longPollingBot.getOptions().setAllowedUpdates(ALLOWED_UPDATES);
                 telegramBotsApi.registerBot(longPollingBot);
 
                 // Redis
