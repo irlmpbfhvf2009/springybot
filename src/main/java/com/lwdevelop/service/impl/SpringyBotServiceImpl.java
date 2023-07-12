@@ -15,7 +15,8 @@ import org.springframework.stereotype.Service;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.meta.TelegramBotsApi;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
-import com.lwdevelop.botfactory.BotFactory;
+
+import com.lwdevelop.bot._factory.BotFactory;
 import com.lwdevelop.dto.ConfigDTO;
 import com.lwdevelop.dto.SpringyBotDTO;
 import com.lwdevelop.entity.Config;

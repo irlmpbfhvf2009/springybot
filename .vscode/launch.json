@@ -2,6 +2,13 @@
     "configurations": [
         {
             "type": "java",
+            "name": "BackendApplication",
+            "request": "launch",
+            "mainClass": "com.lwdevelop.BackendApplication",
+            "projectName": "springybot"
+        },
+        {
+            "type": "java",
             "name": "TestBotMethod",
             "request": "launch",
             "mainClass": "com.lwdevelop.TestBotMethod",

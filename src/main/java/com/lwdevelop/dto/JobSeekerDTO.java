@@ -3,8 +3,9 @@ package com.lwdevelop.dto;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Optional;
-import com.lwdevelop.botfactory.Common;
-import com.lwdevelop.botfactory.bot.telent.utils.TelentEnum;
+
+import com.lwdevelop.bot.utils.Common;
+import com.lwdevelop.bot.utils.enum_.TelentEnum;
 import com.lwdevelop.entity.JobSeeker;
 import lombok.AllArgsConstructor;
 import lombok.Data;

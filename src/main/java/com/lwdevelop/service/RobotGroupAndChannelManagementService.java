@@ -2,7 +2,7 @@ package com.lwdevelop.service;
 
 import org.springframework.http.ResponseEntity;
 
-import com.lwdevelop.botfactory.Common;
+import com.lwdevelop.bot.utils.Common;
 import com.lwdevelop.entity.RobotChannelManagement;
 import com.lwdevelop.entity.RobotGroupManagement;
 import com.lwdevelop.utils.ResponseUtils;
