@@ -9,12 +9,12 @@ import com.lwdevelop.bot.bots.triSpeak.messageHandling.CallbackQuerys;
 import com.lwdevelop.bot.bots.triSpeak.messageHandling.ChannelMessage;
 import com.lwdevelop.bot.bots.triSpeak.messageHandling.GroupMessage;
 import com.lwdevelop.bot.bots.triSpeak.messageHandling.PrivateMessage_;
-import com.lwdevelop.dto.SpringyBotDTO;
+import com.lwdevelop.entity.SpringyBot;
 
 public class TriSpeakLongPollingBot extends BaseLongPollingBot {
 
-    public TriSpeakLongPollingBot(SpringyBotDTO dto) {
-        super(dto);
+    public TriSpeakLongPollingBot(SpringyBot springyBot) {
+        super(springyBot);
     }
 
     @Override

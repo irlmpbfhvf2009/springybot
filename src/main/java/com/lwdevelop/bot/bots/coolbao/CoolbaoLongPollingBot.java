@@ -3,12 +3,12 @@ package com.lwdevelop.bot.bots.coolbao;
 import com.lwdevelop.bot.bots.coolbao.messageHandling.CallbackQuerys;
 import com.lwdevelop.bot.bots.coolbao.messageHandling.PrivateMessage_;
 import com.lwdevelop.bot.factory.BaseLongPollingBot;
-import com.lwdevelop.dto.SpringyBotDTO;
+import com.lwdevelop.entity.SpringyBot;
 
 public class CoolbaoLongPollingBot extends BaseLongPollingBot {
 
-    public CoolbaoLongPollingBot(SpringyBotDTO springyBotDTO) {
-        super(springyBotDTO);
+    public CoolbaoLongPollingBot(SpringyBot springyBot) {
+        super(springyBot);
     }
 
     @Override

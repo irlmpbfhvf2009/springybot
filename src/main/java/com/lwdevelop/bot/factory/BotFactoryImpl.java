@@ -7,24 +7,25 @@ import com.lwdevelop.bot.model.CustomLongPollingBot;
 import com.lwdevelop.bot.model.CustomWebhookBot;
 import com.lwdevelop.bot.bots.triSpeak.TriSpeakLongPollingBot;
 import com.lwdevelop.dto.SpringyBotDTO;
+import com.lwdevelop.entity.SpringyBot;
 
 @Component
 public class BotFactoryImpl implements BotFactory {
     
 
     @Override
-    public CustomLongPollingBot createCoolbaoLongPollingBot(SpringyBotDTO dto) {
-        return new CoolbaoLongPollingBot(dto);
+    public CustomLongPollingBot createCoolbaoLongPollingBot(SpringyBot springyBot) {
+        return new CoolbaoLongPollingBot(springyBot);
     }
 
     @Override
-    public CustomLongPollingBot createTalentLongPollingBot(SpringyBotDTO dto) {
-        return new TriSpeakLongPollingBot(dto);
+    public CustomLongPollingBot createTalentLongPollingBot(SpringyBot springyBot) {
+        return new TriSpeakLongPollingBot(springyBot);
     }
 
     @Override
-    public CustomLongPollingBot createTriSpeakLongPollingBot(SpringyBotDTO dto) {
-        return new TriSpeakLongPollingBot(dto);
+    public CustomLongPollingBot createTriSpeakLongPollingBot(SpringyBot springyBot) {
+        return new TriSpeakLongPollingBot(springyBot);
     }
 
     @Override

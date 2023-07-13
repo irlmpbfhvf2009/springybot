@@ -13,7 +13,6 @@ import com.lwdevelop.bot.bots.utils.enum_.TelentEnum;
 import com.lwdevelop.bot.bots.utils.keyboardButton.TelentButton;
 import com.lwdevelop.dto.JobPostingDTO;
 import com.lwdevelop.dto.JobSeekerDTO;
-import com.lwdevelop.dto.SpringyBotDTO;
 import com.lwdevelop.entity.ChannelMessageIdPostCounts;
 import com.lwdevelop.entity.GroupMessageIdPostCounts;
 import com.lwdevelop.entity.JobPosting;
@@ -61,10 +60,7 @@ public class CallbackQuerys {
             // // 清除訊息
             Long id = Long.valueOf(jobPosting.getBotId());
             SpringyBot springyBot = springyBotServiceImpl.findById(id).get();
-            SpringyBotDTO springyBotDTO = new SpringyBotDTO();
-            springyBotDTO.setToken(springyBot.getToken());
-            springyBotDTO.setUsername(springyBot.getUsername());
-            TalentLongPollingBot custom = new TalentLongPollingBot(springyBotDTO);
+            TalentLongPollingBot custom = new TalentLongPollingBot(springyBot);
 
             JobPostingDTO jobPostingDTO = new JobPostingDTO().convertToJobPostingDTO(jobPosting);
 
@@ -119,10 +115,7 @@ public class CallbackQuerys {
             // 清除訊息
             Long id = Long.valueOf(jobSeeker.getBotId());
             SpringyBot springyBot = springyBotServiceImpl.findById(id).get();
-            SpringyBotDTO springyBotDTO = new SpringyBotDTO();
-            springyBotDTO.setToken(springyBot.getToken());
-            springyBotDTO.setUsername(springyBot.getUsername());
-            TalentLongPollingBot custom = new TalentLongPollingBot(springyBotDTO);
+            TalentLongPollingBot custom = new TalentLongPollingBot(springyBot);
 
             JobSeekerDTO jobSeekerDTO = new JobSeekerDTO().convertToJobSeekerDTO(jobSeeker);
 

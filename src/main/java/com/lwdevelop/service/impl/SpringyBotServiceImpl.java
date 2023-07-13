@@ -5,18 +5,11 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.NoSuchElementException;
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import org.telegram.telegrambots.meta.TelegramBotsApi;
-import org.telegram.telegrambots.meta.api.methods.updates.SetWebhook;
-import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
-import com.lwdevelop.bot.factory.BotFactory;
-import com.lwdevelop.bot.model.CustomLongPollingBot;
-import com.lwdevelop.bot.model.CustomWebhookBot;
 import com.lwdevelop.dto.ConfigDTO;
 import com.lwdevelop.dto.SpringyBotDTO;
 import com.lwdevelop.entity.Config;
@@ -44,11 +37,11 @@ import org.springframework.data.domain.Pageable;
 @Service
 public class SpringyBotServiceImpl implements SpringyBotService {
 
-    @Autowired
-    private TelegramBotsApi telegramBotsApi;
+    // @Autowired
+    // private TelegramBotsApi telegramBotsApi;
 
-    @Autowired
-    private BotFactory botFactory;
+    // @Autowired
+    // private BotFactory botFactory;
 
     @Autowired
     private SpringyBotRepository springyBotRepository;
@@ -146,101 +139,105 @@ public class SpringyBotServiceImpl implements SpringyBotService {
         configRepository.save(config);
     }
 
-    @Override
-    public ResponseEntity<ResponseData> start(SpringyBotDTO dto) {
-        try {
-            Long id = dto.getId();
-            String botType = dto.getBotType();
-            String botModel = dto.getBotModel();
-            CustomLongPollingBot longPollingBot = null;
-            CustomWebhookBot webhookBot = null;
-            SpringyBot springyBot = findById(id).get();
+    // @Override
+    // public ResponseEntity<ResponseData> start(SpringyBotDTO dto) {
+    // return null;
+    // try {
+    // Long id = dto.getId();
+    // String botType = dto.getBotType();
+    // String botModel = dto.getBotModel();
+    // CustomLongPollingBot longPollingBot = null;
+    // CustomWebhookBot webhookBot = null;
+    // SpringyBot springyBot = findById(id).get();
 
-            switch (botModel) {
-                case "LongPolling":
-                    switch (botType) {
-                        case "talent":
-                            longPollingBot = botFactory.createTalentLongPollingBot(dto);
-                            break;
-                        case "coolbao":
-                            longPollingBot = botFactory.createCoolbaoLongPollingBot(dto);
-                            break;
-                        case "triSpeak":
-                            longPollingBot = botFactory.createTriSpeakLongPollingBot(dto);
-                            break;
-                        default:
-                            break;
-                    }
-                    break;
-                case "Webhook":
-                    switch (botType) {
-                        case "coolbao":
-                            webhookBot = botFactory.createCoolbaoWebhookBot(dto);
-                            break;
-                    }
-                    break;
-            }
+    // switch (botModel) {
+    // case "LongPolling":
+    // switch (botType) {
+    // case "talent":
+    // longPollingBot = botFactory.createTalentLongPollingBot(dto);
+    // break;
+    // case "coolbao":
+    // longPollingBot = botFactory.createCoolbaoLongPollingBot(dto);
+    // break;
+    // case "triSpeak":
+    // longPollingBot = botFactory.createTriSpeakLongPollingBot(dto);
+    // break;
+    // default:
+    // break;
+    // }
+    // break;
+    // case "Webhook":
+    // switch (botType) {
+    // case "coolbao":
+    // webhookBot = botFactory.createCoolbaoWebhookBot(dto);
+    // break;
+    // }
+    // break;
+    // }
 
-            if (webhookBot != null) {
-                SetWebhook setWebhook = SetWebhook.builder()
-                        .url("https://eb8c-61-218-87-189.ngrok-free.app/api")
-                        .build();
-                telegramBotsApi.registerBot(webhookBot, setWebhook);
-            }
+    // if (webhookBot != null) {
+    // SetWebhook setWebhook = SetWebhook.builder()
+    // .url("https://eb8c-61-218-87-189.ngrok-free.app/api")
+    // .build();
+    // telegramBotsApi.registerBot(webhookBot, setWebhook);
+    // }
 
-            if (longPollingBot != null) {
-                Long botId = longPollingBot.getMe().getId();
-                springyBot.setBotId(botId);
-                springyBot.setState(true);
-                save(springyBot);
+    // if (longPollingBot != null) {
+    // Long botId = longPollingBot.getMe().getId();
+    // springyBot.setBotId(botId);
+    // springyBot.setState(true);
+    // save(springyBot);
 
-                telegramBotsApi.registerBot(longPollingBot);
+    // telegramBotsApi.registerBot(longPollingBot);
 
-                // Redis
-                Config config = findById(id).get().getConfig();
-                List<RecordGroupUsers> recordGroupUsers = findRecordGroupUsersBySpringyBotId(id);
-                List<RecordChannelUsers> recordChannelUsers = findRecordChannelUsersBySpringyBotId(id);
-                List<InvitationThreshold> invitationThreshold = findInvitationThresholdBySpringyBotId(id);
-                redisUtils.set("Config_" + id, config);
-                redisUtils.set("RecordGroupUsers_" + id, recordGroupUsers);
-                redisUtils.set("RecordChannelUsers_" + id, recordChannelUsers);
-                redisUtils.set("InvitationThreshold_" + id, invitationThreshold);
+    // // Redis
+    // Config config = findById(id).get().getConfig();
+    // List<RecordGroupUsers> recordGroupUsers =
+    // findRecordGroupUsersBySpringyBotId(id);
+    // List<RecordChannelUsers> recordChannelUsers =
+    // findRecordChannelUsersBySpringyBotId(id);
+    // List<InvitationThreshold> invitationThreshold =
+    // findInvitationThresholdBySpringyBotId(id);
+    // redisUtils.set("Config_" + id, config);
+    // redisUtils.set("RecordGroupUsers_" + id, recordGroupUsers);
+    // redisUtils.set("RecordChannelUsers_" + id, recordChannelUsers);
+    // redisUtils.set("InvitationThreshold_" + id, invitationThreshold);
 
-                log.info("{} Telegram bot started.", dto.getUsername());
-            }
+    // log.info("{} Telegram bot started.", dto.getUsername());
+    // }
 
-            return ResponseUtils.response(RetEnum.RET_SUCCESS, "启动成功");
+    // return ResponseUtils.response(RetEnum.RET_SUCCESS, "启动成功");
 
-        } catch (TelegramApiException e) {
-            log.error("Catch TelegramApiException : {}", e.toString());
-            if (e.getMessage().equals("Bot token and username can't be empty")) {
-                return ResponseUtils.response(RetEnum.RET_TOKEN_EMPTY);
-            }
-            return ResponseUtils.response(RetEnum.RET_START_FAIL);
-        } catch (NoSuchElementException e) {
-            log.error("Catch NoSuchElementException : {}", e.toString());
-            return ResponseUtils.response(RetEnum.RET_START_NOT_EXIST);
-        }
+    // } catch (TelegramApiException e) {
+    // log.error("Catch TelegramApiException : {}", e.toString());
+    // if (e.getMessage().equals("Bot token and username can't be empty")) {
+    // return ResponseUtils.response(RetEnum.RET_TOKEN_EMPTY);
+    // }
+    // return ResponseUtils.response(RetEnum.RET_START_FAIL);
+    // } catch (NoSuchElementException e) {
+    // log.error("Catch NoSuchElementException : {}", e.toString());
+    // return ResponseUtils.response(RetEnum.RET_START_NOT_EXIST);
+    // }
 
-    }
+    // }
 
-    @Override
-    public ResponseEntity<ResponseData> stop(SpringyBotDTO springyBotDTO) {
-        try {
-            Long id = springyBotDTO.getId();
+    // @Override
+    // public ResponseEntity<ResponseData> stop(SpringyBotDTO springyBotDTO) {
+    // try {
+    // Long id = springyBotDTO.getId();
 
-            SpringyBot springyBot = findById(id).get();
-            springyBot.setState(false);
-            save(springyBot);
+    // SpringyBot springyBot = findById(id).get();
+    // springyBot.setState(false);
+    // save(springyBot);
 
-            log.info("{} Telegram bot stoped.", springyBotDTO.getUsername());
+    // log.info("{} Telegram bot stoped.", springyBotDTO.getUsername());
 
-            return ResponseUtils.response(RetEnum.RET_SUCCESS, "已停止");
-        } catch (Exception e) {
-            log.error("Catch exception : {}", e.toString());
-            return ResponseUtils.response(RetEnum.RET_STOP_FAIL);
-        }
-    }
+    // return ResponseUtils.response(RetEnum.RET_SUCCESS, "已停止");
+    // } catch (Exception e) {
+    // log.error("Catch exception : {}", e.toString());
+    // return ResponseUtils.response(RetEnum.RET_STOP_FAIL);
+    // }
+    // }
 
     @Override
     public ResponseEntity<ResponseData> addBot(SpringyBotDTO springyBotDTO) {

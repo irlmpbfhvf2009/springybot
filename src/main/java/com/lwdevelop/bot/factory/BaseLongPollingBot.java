@@ -6,10 +6,10 @@ import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.api.objects.User;
 import org.telegram.telegrambots.meta.api.objects.chatmember.ChatMember;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
-
 import com.lwdevelop.bot.model.CustomLongPollingBot;
 import com.lwdevelop.bot.bots.utils.Common;
-import com.lwdevelop.dto.SpringyBotDTO;
+import com.lwdevelop.entity.SpringyBot;
+
 import lombok.extern.slf4j.Slf4j;
 
 
@@ -21,15 +21,15 @@ public abstract class BaseLongPollingBot extends CustomLongPollingBot {
     protected String type;
     protected ChatMember chatMember;
 
-    public BaseLongPollingBot(SpringyBotDTO dto) {
-        super(dto);
-        this.common = initializeCommon(dto);
+    public BaseLongPollingBot(SpringyBot springyBot) {
+        super(springyBot);
+        this.common = initializeCommon(springyBot);
     }
 
-    private Common initializeCommon(SpringyBotDTO dto) {
+    private Common initializeCommon(SpringyBot springyBot) {
         try {
             Common common = new Common();
-            common.setSpringyBotId(dto.getId());
+            common.setSpringyBotId(springyBot.getId());
             common.setBotId(getMe().getId());
             common.setBotUsername(getMe().getUserName());
             common.setBot(this);

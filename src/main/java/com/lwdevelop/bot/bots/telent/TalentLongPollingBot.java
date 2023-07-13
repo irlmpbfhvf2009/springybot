@@ -9,12 +9,12 @@ import com.lwdevelop.bot.bots.telent.messageHandling.CallbackQuerys;
 import com.lwdevelop.bot.bots.telent.messageHandling.ChannelMessage;
 import com.lwdevelop.bot.bots.telent.messageHandling.GroupMessage;
 import com.lwdevelop.bot.bots.telent.messageHandling.PrivateMessage_;
-import com.lwdevelop.dto.SpringyBotDTO;
+import com.lwdevelop.entity.SpringyBot;
 
 public class TalentLongPollingBot extends BaseLongPollingBot {
 
-    public TalentLongPollingBot(SpringyBotDTO springyBotDTO) {
-        super(springyBotDTO);
+    public TalentLongPollingBot(SpringyBot springyBot) {
+        super(springyBot);
     }
 
     @Override

@@ -68,9 +68,9 @@ public interface SpringyBotService {
 
         ResponseEntity<ResponseUtils.ResponseData> deleteBot(Map<String, String> requestData);
 
-        ResponseEntity<ResponseUtils.ResponseData> start(SpringyBotDTO springyBotDTO);
+        // ResponseEntity<ResponseUtils.ResponseData> start(SpringyBotDTO springyBotDTO);
 
-        ResponseEntity<ResponseUtils.ResponseData> stop(SpringyBotDTO springyBotDTO);
+        // ResponseEntity<ResponseUtils.ResponseData> stop(SpringyBotDTO springyBotDTO);
 
         ResponseEntity<ResponseUtils.ResponseData> getRunTime();
 

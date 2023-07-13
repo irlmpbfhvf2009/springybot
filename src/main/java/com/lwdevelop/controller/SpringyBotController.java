@@ -37,10 +37,10 @@ public class SpringyBotController {
      * @since June 11, 2023
      * @author Leo
      */
-    @PostMapping("/v2/start")
-    private synchronized ResponseEntity<ResponseUtils.ResponseData> start(@RequestBody SpringyBotDTO springyBotDTO) {
-        return springyBotService.start(springyBotDTO);
-    }
+    // @PostMapping("/v2/start")
+    // private synchronized ResponseEntity<ResponseUtils.ResponseData> start(@RequestBody SpringyBotDTO springyBotDTO) {
+    //     return springyBotService.start(springyBotDTO);
+    // }
 
     /**
      * 停止 SpringyBot
@@ -53,10 +53,10 @@ public class SpringyBotController {
      * @since June 11, 2023
      * @author Leo
      */
-    @PostMapping("/v1/stop")
-    private synchronized ResponseEntity<ResponseUtils.ResponseData> stop(@RequestBody SpringyBotDTO springyBotDTO) {
-        return springyBotService.stop(springyBotDTO);
-    }
+    // @PostMapping("/v1/stop")
+    // private synchronized ResponseEntity<ResponseUtils.ResponseData> stop(@RequestBody SpringyBotDTO springyBotDTO) {
+    //     return springyBotService.stop(springyBotDTO);
+    // }
 
     /**
      * 新增 SpringyBot

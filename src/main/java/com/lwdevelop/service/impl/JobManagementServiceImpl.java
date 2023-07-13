@@ -18,7 +18,6 @@ import com.lwdevelop.bot.bots.utils.keyboardButton.TelentButton;
 import com.lwdevelop.dto.JobPostingDTO;
 import com.lwdevelop.dto.JobSeekerDTO;
 import com.lwdevelop.dto.JobTreeDTO;
-import com.lwdevelop.dto.SpringyBotDTO;
 import com.lwdevelop.entity.ChannelMessageIdPostCounts;
 import com.lwdevelop.entity.GroupMessageIdPostCounts;
 import com.lwdevelop.entity.JobPosting;
@@ -298,10 +297,7 @@ public class JobManagementServiceImpl implements JobManagementService {
         SpringyBot springyBot = springyBotServiceImpl.findById(id).get();
 
         // 创建Custom类的新实例
-        SpringyBotDTO springyBotDTO = new SpringyBotDTO();
-        springyBotDTO.setToken(springyBot.getToken());
-        springyBotDTO.setUsername(springyBot.getUsername());
-        TalentLongPollingBot custom = new TalentLongPollingBot(springyBotDTO);
+        TalentLongPollingBot custom = new TalentLongPollingBot(springyBot);
 
         // 获取最后一条已发送的消息的ID
         Integer messageId = jobPosting.getLastMessageId();
@@ -381,10 +377,7 @@ public class JobManagementServiceImpl implements JobManagementService {
         // 修改訊息
         Long id = Long.valueOf(jobSeekerDTO.getBotId());
         SpringyBot springyBot = springyBotServiceImpl.findById(id).get();
-        SpringyBotDTO springyBotDTO = new SpringyBotDTO();
-        springyBotDTO.setToken(springyBot.getToken());
-        springyBotDTO.setUsername(springyBot.getUsername());
-        TalentLongPollingBot custom = new TalentLongPollingBot(springyBotDTO);
+        TalentLongPollingBot custom = new TalentLongPollingBot(springyBot);
 
         Integer messageId = jobSeeker.getLastMessageId();
         EditMessageText editMessageText = new EditMessageText();
@@ -471,10 +464,7 @@ public class JobManagementServiceImpl implements JobManagementService {
         // 修改訊息
         Long id = Long.valueOf(jobPostingDTO.getBotId());
         SpringyBot springyBot = springyBotServiceImpl.findById(id).get();
-        SpringyBotDTO springyBotDTO = new SpringyBotDTO();
-        springyBotDTO.setToken(springyBot.getToken());
-        springyBotDTO.setUsername(springyBot.getUsername());
-        TalentLongPollingBot custom = new TalentLongPollingBot(springyBotDTO);
+        TalentLongPollingBot custom = new TalentLongPollingBot(springyBot);
 
         Integer messageId = jobPosting.getLastMessageId();
         EditMessageText editMessageText = new EditMessageText();
@@ -544,10 +534,7 @@ public class JobManagementServiceImpl implements JobManagementService {
         // 修改訊息
         Long id = Long.valueOf(jobSeekerDTO.getBotId());
         SpringyBot springyBot = springyBotServiceImpl.findById(id).get();
-        SpringyBotDTO springyBotDTO = new SpringyBotDTO();
-        springyBotDTO.setToken(springyBot.getToken());
-        springyBotDTO.setUsername(springyBot.getUsername());
-        TalentLongPollingBot custom = new TalentLongPollingBot(springyBotDTO);
+        TalentLongPollingBot custom = new TalentLongPollingBot(springyBot);
 
         Integer messageId = jobSeeker.getLastMessageId();
         EditMessageText editMessageText = new EditMessageText();
