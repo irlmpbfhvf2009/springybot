@@ -19,7 +19,6 @@ public class cgBalance {
 public String cmd(Common common) {
 
     String token = generateToken();
-    System.out.println(token);
     String cg01_params = "mchId=20000007&access_token=" + token;
     String cg02_params = "mchId=20000008&access_token=" + token;
     String cg03_params = "mchId=20000009&access_token=" + token;

@@ -84,6 +84,7 @@ D:\酷寶專案\HUB\SpringyBot\src\main\java\com\lwdevelop\config\RabbitMQConfig.jav
 D:\酷寶專案\HUB\SpringyBot\src\main\java\com\lwdevelop\config\DataLoader.java
 D:\酷寶專案\HUB\SpringyBot\src\main\java\com\lwdevelop\controller\SpringyBotController.java
 D:\酷寶專案\HUB\SpringyBot\src\main\java\com\lwdevelop\entity\RobotChannelManagement.java
+D:\酷寶專案\HUB\SpringyBot\src\main\java\com\lwdevelop\bot\bots\utils\AbsSender.java
 D:\酷寶專案\HUB\SpringyBot\src\main\java\com\lwdevelop\bot\bots\utils\enum_\CoolbaoEnum.java
 D:\酷寶專案\HUB\SpringyBot\src\main\java\com\lwdevelop\service\SpringyBotService.java
 D:\酷寶專案\HUB\SpringyBot\src\main\java\com\lwdevelop\bot\bots\telent\messageHandling\commands\Job.java

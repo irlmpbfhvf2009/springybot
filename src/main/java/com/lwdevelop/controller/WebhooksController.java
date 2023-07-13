@@ -14,7 +14,6 @@ public class WebhooksController {
 
     @PostMapping("/adam")
     public void getUpdateWithDifferentUrl(@RequestBody Update update){
-        System.out.println(update);
         log.info("some update recieved ");
 
         // telegrambot.onWebhookUpdateReceived(update);
