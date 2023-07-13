@@ -4,16 +4,16 @@ import com.lwdevelop.bot.chatMembershipHandlers.JoinChannel;
 import com.lwdevelop.bot.chatMembershipHandlers.JoinGroup;
 import com.lwdevelop.bot.chatMembershipHandlers.LeaveChannel;
 import com.lwdevelop.bot.chatMembershipHandlers.LeaveGroup;
-import com.lwdevelop.bot.factory.BaseBot;
+import com.lwdevelop.bot.factory.BaseLongPollingBot;
 import com.lwdevelop.bot.bots.telent.messageHandling.CallbackQuerys;
 import com.lwdevelop.bot.bots.telent.messageHandling.ChannelMessage;
 import com.lwdevelop.bot.bots.telent.messageHandling.GroupMessage;
 import com.lwdevelop.bot.bots.telent.messageHandling.PrivateMessage_;
 import com.lwdevelop.dto.SpringyBotDTO;
 
-public class TalentBot extends BaseBot {
+public class TalentLongPollingBot extends BaseLongPollingBot {
 
-    public TalentBot(SpringyBotDTO springyBotDTO) {
+    public TalentLongPollingBot(SpringyBotDTO springyBotDTO) {
         super(springyBotDTO);
     }
 

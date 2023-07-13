@@ -2,6 +2,7 @@ package com.lwdevelop.bot.bots.utils;
 
 import java.util.concurrent.ExecutionException;
 import org.springframework.scheduling.annotation.Async;
+import org.telegram.telegrambots.bots.DefaultAbsSender;
 import org.telegram.telegrambots.meta.api.methods.groupadministration.GetChat;
 import org.telegram.telegrambots.meta.api.methods.groupadministration.GetChatMember;
 import org.telegram.telegrambots.meta.api.methods.groupadministration.RestrictChatMember;
@@ -12,7 +13,6 @@ import org.telegram.telegrambots.meta.api.methods.updatingmessages.EditMessageTe
 import org.telegram.telegrambots.meta.api.objects.Chat;
 import org.telegram.telegrambots.meta.api.objects.chatmember.ChatMember;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
-import com.lwdevelop.bot.factory.BaseBot;
 
 import lombok.Data;
 import lombok.SneakyThrows;
@@ -20,7 +20,7 @@ import lombok.SneakyThrows;
 @Data
 public class AbsSender {
 
-    protected BaseBot bot;
+    protected DefaultAbsSender bot;
 
     @Async
     @SneakyThrows

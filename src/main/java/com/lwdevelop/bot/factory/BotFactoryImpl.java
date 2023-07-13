@@ -1,29 +1,35 @@
 package com.lwdevelop.bot.factory;
 
 import org.springframework.stereotype.Component;
-import com.lwdevelop.bot.bots.coolbao.CoolbaoBot;
+import com.lwdevelop.bot.bots.coolbao.CoolbaoLongPollingBot;
+import com.lwdevelop.bot.bots.coolbao.CoolbaoWebhookBot;
 import com.lwdevelop.bot.model.CustomLongPollingBot;
-import com.lwdevelop.bot.bots.telent.TalentBot;
-import com.lwdevelop.bot.bots.triSpeak.TriSpeakBot;
+import com.lwdevelop.bot.model.CustomWebhookBot;
+import com.lwdevelop.bot.bots.triSpeak.TriSpeakLongPollingBot;
 import com.lwdevelop.dto.SpringyBotDTO;
 
 @Component
 public class BotFactoryImpl implements BotFactory {
+    
 
     @Override
-    public CustomLongPollingBot createCoolbaoBot(SpringyBotDTO dto) {
-        return new CoolbaoBot(dto);
+    public CustomLongPollingBot createCoolbaoLongPollingBot(SpringyBotDTO dto) {
+        return new CoolbaoLongPollingBot(dto);
     }
 
     @Override
-    public CustomLongPollingBot createTalentBot(SpringyBotDTO dto) {
-        return new TalentBot(dto);
+    public CustomLongPollingBot createTalentLongPollingBot(SpringyBotDTO dto) {
+        return new TriSpeakLongPollingBot(dto);
     }
-    
+
     @Override
-    public CustomLongPollingBot createTriSpeakBot(SpringyBotDTO dto) {
-        return new TriSpeakBot(dto);
+    public CustomLongPollingBot createTriSpeakLongPollingBot(SpringyBotDTO dto) {
+        return new TriSpeakLongPollingBot(dto);
     }
-    
-    
+
+    @Override
+    public CustomWebhookBot createCoolbaoWebhookBot(SpringyBotDTO dto) {
+        return new CoolbaoWebhookBot(dto);
+    }
+
 }

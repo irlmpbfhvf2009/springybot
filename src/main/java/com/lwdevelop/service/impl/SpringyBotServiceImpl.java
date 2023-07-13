@@ -12,9 +12,11 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.telegram.telegrambots.meta.TelegramBotsApi;
+import org.telegram.telegrambots.meta.api.methods.updates.SetWebhook;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 import com.lwdevelop.bot.factory.BotFactory;
 import com.lwdevelop.bot.model.CustomLongPollingBot;
+import com.lwdevelop.bot.model.CustomWebhookBot;
 import com.lwdevelop.dto.ConfigDTO;
 import com.lwdevelop.dto.SpringyBotDTO;
 import com.lwdevelop.entity.Config;
@@ -42,18 +44,8 @@ import org.springframework.data.domain.Pageable;
 @Service
 public class SpringyBotServiceImpl implements SpringyBotService {
 
-    // @Resource
-    // private TelegramBotsApi telegramBotsApi;
-
     @Autowired
     private TelegramBotsApi telegramBotsApi;
-
-
-    // @Value("${telegram.webhook-host}")
-    // private String webhookHost;
-
-    // @Value("${telegram.internal.url}")
-    // private String internalUrl;
 
     @Autowired
     private BotFactory botFactory;
@@ -155,26 +147,47 @@ public class SpringyBotServiceImpl implements SpringyBotService {
     }
 
     @Override
-    public ResponseEntity<ResponseData> start(SpringyBotDTO springyBotDTO) {
+    public ResponseEntity<ResponseData> start(SpringyBotDTO dto) {
         try {
-            Long id = springyBotDTO.getId();
-            String botType = springyBotDTO.getBotType();
+            Long id = dto.getId();
+            String botType = dto.getBotType();
+            String botModel = dto.getBotModel();
             CustomLongPollingBot longPollingBot = null;
+            CustomWebhookBot webhookBot = null;
             SpringyBot springyBot = findById(id).get();
 
-            switch (botType) {
-                case "talent":
-                    longPollingBot = botFactory.createTalentBot(springyBotDTO);
+            switch (botModel) {
+                case "LongPolling":
+                    switch (botType) {
+                        case "talent":
+                            longPollingBot = botFactory.createTalentLongPollingBot(dto);
+                            break;
+                        case "coolbao":
+                            longPollingBot = botFactory.createCoolbaoLongPollingBot(dto);
+                            break;
+                        case "triSpeak":
+                            longPollingBot = botFactory.createTriSpeakLongPollingBot(dto);
+                            break;
+                        default:
+                            break;
+                    }
                     break;
-                case "coolbao":
-                    longPollingBot = botFactory.createCoolbaoBot(springyBotDTO);
-                    break;
-                case "triSpeak":
-                    longPollingBot = botFactory.createTriSpeakBot(springyBotDTO);
-                    break;
-                default:
+                case "Webhook":
+                    switch (botType) {
+                        case "coolbao":
+                            webhookBot = botFactory.createCoolbaoWebhookBot(dto);
+                            break;
+                    }
                     break;
             }
+
+            if (webhookBot != null) {
+                SetWebhook setWebhook = SetWebhook.builder()
+                        .url("https://eb8c-61-218-87-189.ngrok-free.app/api")
+                        .build();
+                telegramBotsApi.registerBot(webhookBot, setWebhook);
+            }
+
             if (longPollingBot != null) {
                 Long botId = longPollingBot.getMe().getId();
                 springyBot.setBotId(botId);
@@ -193,9 +206,9 @@ public class SpringyBotServiceImpl implements SpringyBotService {
                 redisUtils.set("RecordChannelUsers_" + id, recordChannelUsers);
                 redisUtils.set("InvitationThreshold_" + id, invitationThreshold);
 
-                log.info("{} Telegram bot started.", springyBotDTO.getUsername());
-
+                log.info("{} Telegram bot started.", dto.getUsername());
             }
+
             return ResponseUtils.response(RetEnum.RET_SUCCESS, "启动成功");
 
         } catch (TelegramApiException e) {

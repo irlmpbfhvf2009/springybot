@@ -4,16 +4,16 @@ import com.lwdevelop.bot.chatMembershipHandlers.JoinChannel;
 import com.lwdevelop.bot.chatMembershipHandlers.JoinGroup;
 import com.lwdevelop.bot.chatMembershipHandlers.LeaveChannel;
 import com.lwdevelop.bot.chatMembershipHandlers.LeaveGroup;
-import com.lwdevelop.bot.factory.BaseBot;
+import com.lwdevelop.bot.factory.BaseLongPollingBot;
 import com.lwdevelop.bot.bots.triSpeak.messageHandling.CallbackQuerys;
 import com.lwdevelop.bot.bots.triSpeak.messageHandling.ChannelMessage;
 import com.lwdevelop.bot.bots.triSpeak.messageHandling.GroupMessage;
 import com.lwdevelop.bot.bots.triSpeak.messageHandling.PrivateMessage_;
 import com.lwdevelop.dto.SpringyBotDTO;
 
-public class TriSpeakBot extends BaseBot {
+public class TriSpeakLongPollingBot extends BaseLongPollingBot {
 
-    public TriSpeakBot(SpringyBotDTO dto) {
+    public TriSpeakLongPollingBot(SpringyBotDTO dto) {
         super(dto);
     }
 

@@ -2,13 +2,13 @@ package com.lwdevelop.bot.bots.coolbao;
 
 import com.lwdevelop.bot.bots.coolbao.messageHandling.CallbackQuerys;
 import com.lwdevelop.bot.bots.coolbao.messageHandling.PrivateMessage_;
-import com.lwdevelop.bot.factory.BaseBot;
+import com.lwdevelop.bot.factory.BaseWebhookBot;
 import com.lwdevelop.dto.SpringyBotDTO;
 
-public class CoolbaoBot extends BaseBot {
+public class CoolbaoWebhookBot extends BaseWebhookBot {
 
-    public CoolbaoBot(SpringyBotDTO springyBotDTO) {
-        super(springyBotDTO);
+    public CoolbaoWebhookBot(SpringyBotDTO dto) {
+        super(dto);
     }
 
     @Override
@@ -35,6 +35,11 @@ public class CoolbaoBot extends BaseBot {
 
     @Override
     protected void handleChatMemberUpdate() {
+    }
+    
+    @Override
+    public String getBotPath() {
+        return "adam";
     }
 
 

@@ -7,7 +7,7 @@ import org.telegram.telegrambots.meta.api.methods.updatingmessages.DeleteMessage
 import org.telegram.telegrambots.meta.api.methods.updatingmessages.EditMessageText;
 import org.telegram.telegrambots.meta.api.objects.CallbackQuery;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
-import com.lwdevelop.bot.bots.telent.TalentBot;
+import com.lwdevelop.bot.bots.telent.TalentLongPollingBot;
 import com.lwdevelop.bot.bots.utils.Common;
 import com.lwdevelop.bot.bots.utils.enum_.TelentEnum;
 import com.lwdevelop.bot.bots.utils.keyboardButton.TelentButton;
@@ -64,7 +64,7 @@ public class CallbackQuerys {
             SpringyBotDTO springyBotDTO = new SpringyBotDTO();
             springyBotDTO.setToken(springyBot.getToken());
             springyBotDTO.setUsername(springyBot.getUsername());
-            TalentBot custom = new TalentBot(springyBotDTO);
+            TalentLongPollingBot custom = new TalentLongPollingBot(springyBotDTO);
 
             JobPostingDTO jobPostingDTO = new JobPostingDTO().convertToJobPostingDTO(jobPosting);
 
@@ -122,7 +122,7 @@ public class CallbackQuerys {
             SpringyBotDTO springyBotDTO = new SpringyBotDTO();
             springyBotDTO.setToken(springyBot.getToken());
             springyBotDTO.setUsername(springyBot.getUsername());
-            TalentBot custom = new TalentBot(springyBotDTO);
+            TalentLongPollingBot custom = new TalentLongPollingBot(springyBotDTO);
 
             JobSeekerDTO jobSeekerDTO = new JobSeekerDTO().convertToJobSeekerDTO(jobSeeker);
 

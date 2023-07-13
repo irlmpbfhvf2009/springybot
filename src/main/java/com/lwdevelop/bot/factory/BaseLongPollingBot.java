@@ -14,14 +14,14 @@ import lombok.extern.slf4j.Slf4j;
 
 
 @Slf4j
-public abstract class BaseBot extends CustomLongPollingBot {
+public abstract class BaseLongPollingBot extends CustomLongPollingBot {
 
     protected Common common;
     protected Message message;
     protected String type;
     protected ChatMember chatMember;
 
-    public BaseBot(SpringyBotDTO dto) {
+    public BaseLongPollingBot(SpringyBotDTO dto) {
         super(dto);
         this.common = initializeCommon(dto);
     }
