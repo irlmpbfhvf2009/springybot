@@ -57,7 +57,6 @@ public abstract class BaseHandler {
     protected String formatChat;
     protected String formatBot;
     protected String formatUser;
-
     protected List<RobotGroupManagement> robotGroupManagement;
     protected List<RecordGroupUsers> recordGroupUsers;
     protected List<InvitationBonusUser> invitationBonusUsers;
@@ -104,8 +103,8 @@ public abstract class BaseHandler {
         }
         this.isBot = this.isBot(chatMember);
         this.formatChat = this.chatTitle + "[" + this.chatId + "]";
-        this.formatBot = common.formatBot();
-        this.formatUser = common.formatUser(this.user);
+        this.formatBot = formatBot();
+        this.formatUser = formatUser(this.user);
     }
 
     public abstract void handler();
@@ -136,4 +135,15 @@ public abstract class BaseHandler {
         return isBot;
     }
 
+    public String formatBot() {
+        return this.common.getBotUsername() + "[" + this.botId + "]";
+    }
+
+    public String formatUser(User user) {
+        String firstname = user.getFirstName() == null ? "" : user.getFirstName();
+        String username = user.getUserName() == null ? "" : user.getUserName();
+        String lastname = user.getLastName() == null ? "" : user.getLastName();
+        String name = username == null ? firstname + lastname : username;
+        return name + "[" + user.getId() + "]";
+    }
 }

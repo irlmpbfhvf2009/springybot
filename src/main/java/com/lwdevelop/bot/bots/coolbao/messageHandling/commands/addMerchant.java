@@ -10,6 +10,8 @@ import java.text.DecimalFormat;
 import java.util.Random;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Message;
+import org.telegram.telegrambots.meta.api.objects.User;
+
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.lwdevelop.bot.bots.utils.enum_.CoolbaoEnum;
@@ -26,18 +28,27 @@ public class addMerchant {
 
     static String name;
     static String token;
+    private String botUsername;
+    private Message message;
+    private String chatId;
+    private String text;
+    private User user;
 
     public void am(Common common) {
-        Message message = common.getUpdate().getMessage();
-        String chatId = String.valueOf(message.getChatId());
-        String text = message.getText();
+        this.message = common.getUpdate().getMessage();
+        this.chatId = String.valueOf(message.getChatId());
+        this.text = message.getText();
+        this.botUsername = common.getBotUsername();
+        this.user = common.getUpdate().getMessage().getFrom();
 
         if (text.equals("/quit")) {
 
             common.getUserState().put(message.getChatId(), "");
             SendMessage response = new SendMessage();
             response.setChatId(chatId);
-            response.setText("歡迎使用 @" + common.getUsername() + "\n\n" + CoolbaoEnum.COMMANDS_HELP.getText());
+            response.setText(CoolbaoEnum.commandsHelp(this.botUsername, user));
+            response.setParseMode("HTML");
+            response.setDisableWebPagePreview(true);
             common.executeAsync(response);
 
         } else {
@@ -72,7 +83,7 @@ public class addMerchant {
             String timestampString = formatTimestamp(timestamp);
 
             String params = "name=" + name + "&userName=" + text + "&email=" + text + "@abc.com&status=1&access_token="
-                    + token + "&mobile="+timestampString;
+                    + token + "&mobile=" + timestampString;
             String create_mch_response = sendPostRequest(xxpay_mch_info_add_url, params);
 
             response = new SendMessage(chatId, "新增成功 response : " + create_mch_response);
@@ -85,7 +96,7 @@ public class addMerchant {
         DecimalFormat decimalFormat = new DecimalFormat("0000000000000");
         return decimalFormat.format(timestamp);
     }
-    
+
     private static String generateToken() {
         String params = "username=leo&password=as794613";
         String response = sendGetRequest(xxpay_login_url, params, "access_token");

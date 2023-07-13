@@ -105,7 +105,7 @@ public class JoinChannel extends BaseHandler {
         robotChannelManagement.setInviteLastname(this.inviteLastname);
         robotChannelManagement.setChannelId(this.chatId);
         robotChannelManagement.setChannelTitle(this.chatTitle);
-        robotChannelManagement.setLink(this.common.getInviteLink());
+        // robotChannelManagement.setLink(this.common.getInviteLink());
         robotChannelManagement.setStatus(true);
         return robotChannelManagement;
     }

@@ -175,7 +175,7 @@ public class JoinGroup extends BaseHandler {
         robotGroupManagement.setInviteLastname(this.inviteLastname);
         robotGroupManagement.setGroupId(this.chatId);
         robotGroupManagement.setGroupTitle(this.chatTitle);
-        robotGroupManagement.setLink(this.common.getInviteLink());
+        // robotGroupManagement.setLink(this.common.getInviteLink());
         robotGroupManagement.setStatus(true);
         return robotGroupManagement;
     }

@@ -19,8 +19,8 @@ public class Manage{
     
     public void setResponse_addToGroupOrChannel(Common common,String type) {
         this.manageMessageSetting(common.getUpdate().getMessage());
-        this.response.setText(howToAddForText(common.getUsername(), getUrl(type, common.getUsername()), type));
-        this.response.setReplyMarkup(new TelentButton().addToGroupOrChannelMarkupInline(getUrl(type, common.getUsername()), type));
+        this.response.setText(howToAddForText(common.getBotUsername(), getUrl(type, common.getBotUsername()), type));
+        this.response.setReplyMarkup(new TelentButton().addToGroupOrChannelMarkupInline(getUrl(type, common.getBotUsername()), type));
         common.executeAsync(this.response);
     }
 

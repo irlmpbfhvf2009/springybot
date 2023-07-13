@@ -7,9 +7,9 @@ import java.util.Locale;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.StringUtils;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
-import org.telegram.telegrambots.meta.api.methods.send.SendPhoto;
-import org.telegram.telegrambots.meta.api.objects.InputFile;
 import org.telegram.telegrambots.meta.api.objects.Message;
+import org.telegram.telegrambots.meta.api.objects.User;
+
 import com.lwdevelop.bot.bots.coolbao.messageHandling.commands.addMerchant;
 import com.lwdevelop.bot.bots.coolbao.messageHandling.commands.cgBalance;
 import com.lwdevelop.bot.bots.coolbao.messageHandling.commands.enter_name;
@@ -27,6 +27,10 @@ public class PrivateMessage_ {
     private Message message;
     private String text;
     private Common common;
+    private User user;
+    private Long chatId;
+    private String state;
+    private String botUsername;
 
     @Autowired
     private SpringyBotServiceImpl springyBotServiceImpl = SpringUtils.getApplicationContext()
@@ -34,15 +38,15 @@ public class PrivateMessage_ {
 
     public PrivateMessage_(Common common) {
         this.common = common;
+        this.message = common.getUpdate().getMessage();
+        this.text = common.getUpdate().getMessage().getText();
+        this.chatId = common.getUpdate().getMessage().getChatId();
+        this.state = common.getUserState().get(chatId);
+        this.user = common.getUpdate().getMessage().getFrom();
+        this.botUsername = common.getBotUsername();
     }
 
     public void handler() {
-
-        this.message = common.getUpdate().getMessage();
-        this.text = this.message.getText();
-
-        Long chatId = common.getUpdate().getMessage().getChatId();
-        String state = common.getUserState().get(chatId);
 
         if (StringUtils.hasText(state)) {
             switch (state) {
@@ -80,8 +84,9 @@ public class PrivateMessage_ {
                             common.executeAsync(response);
                             response.setText(dateString + action.getName() + "值班 13:00-22:00");
                             common.executeAsync(response);
-                            response.setText(
-                                    "歡迎使用 @" + common.getUsername() + "\n\n" + CoolbaoEnum.COMMANDS_HELP.getText());
+                            response.setText(CoolbaoEnum.commandsHelp(this.botUsername, user));
+                            response.setParseMode("HTML");
+                            response.setDisableWebPagePreview(true);
                         });
                         ;
                         break;
@@ -92,48 +97,10 @@ public class PrivateMessage_ {
                         response.setText("輸入預設定商戶帳號 /quit - 退出模式");
                         common.getUserState().put(message.getChatId(), "addMerchant");
                         break;
-                    case "/info":
-                        response.setText(CoolbaoEnum.COMMANDS_INFO.getText());
-                        break;
-                    case "/xxpay":
-                        response.setText(CoolbaoEnum.COMMANDS_XXPAY.getText());
-                        common.executeAsync(response);
-                        response.setText(
-                                "歡迎使用 @" + common.getUsername() + "\n\n" + CoolbaoEnum.COMMANDS_HELP.getText());
-                        break;
-                    case "/sevendays":
-                        response.setText(CoolbaoEnum.COMMANDS_SEVENDAYS.getText());
-                        common.executeAsync(response);
-                        SendPhoto sendPhoto = new SendPhoto();
-                        sendPhoto.setChatId(String.valueOf(chatId));
-                        String fileId = "AgACAgUAAxkBAAIoj2RbOJRM-e6bIs7pNQbBcY4a9uA5AAIYtjEbO9PYVhYO1zjC8iI5AQADAgADcwADLwQ";
-                        InputFile inputFile = new InputFile(fileId);
-                        sendPhoto.setPhoto(inputFile);
-                        common.executeAsync(sendPhoto);
-                        response.setText(
-                                "歡迎使用 @" + common.getUsername() + "\n\n" + CoolbaoEnum.COMMANDS_HELP.getText());
-                        break;
-                    case "/bbippo":
-                        response.setText(CoolbaoEnum.COMMANDS_BBIPPO.getText());
-                        common.executeAsync(response);
-                        response.setText(
-                                "歡迎使用 @" + common.getUsername() + "\n\n" + CoolbaoEnum.COMMANDS_HELP.getText());
-                        break;
-                    case "/dahe":
-                        response.setText(CoolbaoEnum.COMMANDS_DAHE.getText());
-                        common.executeAsync(response);
-                        response.setText(
-                                "歡迎使用 @" + common.getUsername() + "\n\n" + CoolbaoEnum.COMMANDS_HELP.getText());
-                        break;
-                    case "/white_dove":
-                        response.setText(CoolbaoEnum.COMMANDS_WHITEDOVE.getText());
-                        common.executeAsync(response);
-                        response.setText(
-                                "歡迎使用 @" + common.getUsername() + "\n\n" + CoolbaoEnum.COMMANDS_HELP.getText());
-                        break;
                     case "/help":
-                        response.setText(
-                                "歡迎使用 @" + common.getUsername() + "\n\n" + CoolbaoEnum.COMMANDS_HELP.getText());
+                        response.setText(CoolbaoEnum.commandsHelp(this.botUsername, user));
+                        response.setParseMode("HTML");
+                        response.setDisableWebPagePreview(true);
                         break;
                 }
                 if (response.getText() != null) {
@@ -147,6 +114,8 @@ public class PrivateMessage_ {
 
     private static String formatCurrentDateWithWeekday(LocalDate date) {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("M/d（E）", Locale.TAIWAN);
-        return date.format(formatter);
+        String str = date.format(formatter);
+        str = str.replace("週", "");
+        return str;
     }
 }

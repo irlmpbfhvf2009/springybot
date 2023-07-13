@@ -3,6 +3,7 @@ package com.lwdevelop.bot.bots.coolbao.messageHandling.commands;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
+import org.telegram.telegrambots.meta.api.objects.User;
 
 import com.lwdevelop.bot.bots.utils.Common;
 import com.lwdevelop.bot.bots.utils.enum_.CoolbaoEnum;
@@ -13,14 +14,21 @@ import com.lwdevelop.service.impl.SpringyBotServiceImpl;
 import com.lwdevelop.utils.SpringUtils;
 
 public class enter_name {
-    
+
     @Autowired
     private SpringyBotServiceImpl springyBotServiceImpl = SpringUtils.getApplicationContext()
             .getBean(SpringyBotServiceImpl.class);
 
+    private String text;
+    private String chatId;
+    private User user;
+    private String botUsername;
+
     public void en(Common common) {
-        String text = common.getUpdate().getMessage().getText();
-        String chatId = String.valueOf(common.getUpdate().getMessage().getChatId());
+        this.text = common.getUpdate().getMessage().getText();
+        this.chatId = String.valueOf(common.getUpdate().getMessage().getChatId());
+        this.user = common.getUpdate().getMessage().getFrom();
+        this.botUsername = common.getBotUsername();
 
         SpringyBot springyBot= springyBotServiceImpl.findById(common.getSpringyBotId()).get();
         List<WhiteList> whiteList = springyBotServiceImpl.findWhiteListBySpringyBotId(common.getSpringyBotId());
@@ -31,9 +39,6 @@ public class enter_name {
         springyBot.setWhiteList(whiteList);
         springyBotServiceImpl.save(springyBot);
 
-        
-        // SendMessage response = new SendMessage(chatId, text + "");
-        // common.sendResponseAsync(response);
 
         whiteList.stream().filter(wl -> wl.getUserId().equals(common.getUpdate().getMessage().getChatId())).findAny().ifPresent(action->{
             SendMessage response = new SendMessage(chatId, "Your user ID: " + chatId + "\nCurrent name: "+action.getName());
@@ -42,7 +47,9 @@ public class enter_name {
             common.getUserState().put(common.getUpdate().getMessage().getChatId(), "");
         });
 
-        SendMessage response = new SendMessage(chatId, "歡迎使用 @" + common.getUsername() + "\n\n" + CoolbaoEnum.COMMANDS_HELP.getText());
+        SendMessage response = new SendMessage(chatId, CoolbaoEnum.commandsHelp(this.botUsername, user));
+        response.setParseMode("HTML");
+        response.setDisableWebPagePreview(true);
         common.executeAsync(response);
 
 

@@ -11,18 +11,18 @@ import com.lwdevelop.dto.SpringyBotDTO;
 public class BotFactoryImpl implements BotFactory {
 
     @Override
-    public CustomLongPollingBot createCoolbaoBot(SpringyBotDTO springyBotDTO) {
-        return new CoolbaoBot(springyBotDTO);
+    public CustomLongPollingBot createCoolbaoBot(SpringyBotDTO dto) {
+        return new CoolbaoBot(dto);
     }
 
     @Override
-    public CustomLongPollingBot createTalentBot(SpringyBotDTO springyBotDTO) {
-        return new TalentBot(springyBotDTO);
+    public CustomLongPollingBot createTalentBot(SpringyBotDTO dto) {
+        return new TalentBot(dto);
     }
     
     @Override
-    public CustomLongPollingBot createTriSpeakBot(SpringyBotDTO springyBotDTO) {
-        return new TriSpeakBot(springyBotDTO);
+    public CustomLongPollingBot createTriSpeakBot(SpringyBotDTO dto) {
+        return new TriSpeakBot(dto);
     }
     
     

@@ -1,0 +1,94 @@
+package com.lwdevelop.bot.bots.utils;
+
+import java.util.concurrent.ExecutionException;
+import org.springframework.scheduling.annotation.Async;
+import org.telegram.telegrambots.meta.api.methods.groupadministration.GetChat;
+import org.telegram.telegrambots.meta.api.methods.groupadministration.GetChatMember;
+import org.telegram.telegrambots.meta.api.methods.groupadministration.RestrictChatMember;
+import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
+import org.telegram.telegrambots.meta.api.methods.send.SendPhoto;
+import org.telegram.telegrambots.meta.api.methods.updatingmessages.DeleteMessage;
+import org.telegram.telegrambots.meta.api.methods.updatingmessages.EditMessageText;
+import org.telegram.telegrambots.meta.api.objects.Chat;
+import org.telegram.telegrambots.meta.api.objects.chatmember.ChatMember;
+import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
+import com.lwdevelop.bot.factory.BaseBot;
+
+import lombok.Data;
+import lombok.SneakyThrows;
+
+@Data
+public class AbsSender {
+
+    protected BaseBot bot;
+
+    @Async
+    @SneakyThrows
+    public Integer executeAsync(SendMessage sendMessage) {
+        return this.bot.executeAsync(sendMessage).get().getMessageId();
+    }
+
+    @Async
+    @SneakyThrows
+    public void executeAsync_(SendMessage sendMessage) {
+        this.bot.execute(sendMessage);
+    }
+
+    @Async
+    @SneakyThrows
+    public Integer executeAsync(SendPhoto sendPhoto) {
+        return this.bot.executeAsync(sendPhoto).get().getMessageId();
+    }
+
+    @Async
+    @SneakyThrows
+    public void executeAsync(EditMessageText editMessageText) {
+        this.bot.executeAsync(editMessageText);
+    }
+
+    @Async
+    @SneakyThrows
+    public void executeAsync(DeleteMessage deleteMessage) {
+        this.bot.executeAsync(deleteMessage);
+    }
+
+    @Async
+    public Boolean executeAsync(GetChatMember getChatMember) {
+        String status;
+        try {
+            status = this.bot.executeAsync(getChatMember).get().getStatus();
+            if (status.equals("left") || status.equals("kicked")) {
+                return false;
+            } else {
+                return true;
+            }
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        } catch (ExecutionException e) {
+            SendMessage sendMessage = new SendMessage(getChatMember.getUserId().toString(), "调用资料失败");
+            this.executeAsync_(sendMessage);
+            e.printStackTrace();
+        } catch (TelegramApiException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    @Async
+    @SneakyThrows
+    public ChatMember getChatMember(GetChatMember getChatMember) {
+        return this.bot.executeAsync(getChatMember).get();
+    }
+
+    @Async
+    @SneakyThrows
+    public Chat executeAsync(GetChat getChat) {
+        return this.bot.executeAsync(getChat).get();
+    }
+
+    @Async
+    @SneakyThrows
+    public void executeAsync(RestrictChatMember restrictChatMember) {
+        this.bot.executeAsync(restrictChatMember);
+    }
+}

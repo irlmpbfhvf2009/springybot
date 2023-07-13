@@ -18,24 +18,20 @@ public abstract class BaseBot extends CustomLongPollingBot {
 
     protected Common common;
     protected Message message;
-    protected SpringyBotDTO dto;
     protected String type;
     protected ChatMember chatMember;
 
     public BaseBot(SpringyBotDTO dto) {
         super(dto);
-        System.out.println(dto);
-        this.dto= dto;
-        this.common = initializeCommon();
+        this.common = initializeCommon(dto);
     }
 
-    private Common initializeCommon() {
+    private Common initializeCommon(SpringyBotDTO dto) {
         try {
-            System.out.println("getMe()");
-            System.out.println(getMe());
-            System.out.println("getMeAsync()");
-            // System.out.println(get());
-            Common common = new Common(this.dto.getId(), getMe().getId(), getMe().getUserName());
+            Common common = new Common();
+            common.setSpringyBotId(dto.getId());
+            common.setBotId(getMe().getId());
+            common.setBotUsername(getMe().getUserName());
             common.setBot(this);
             common.setUserState(new HashMap<>());
             common.setGroupMessageMap(new HashMap<>());
@@ -59,7 +55,7 @@ public abstract class BaseBot extends CustomLongPollingBot {
                     User user = message.getFrom();
                     String userInfo = String.format("[%s] @%s (%s %s)", user.getId(), user.getUserName(),
                             user.getFirstName(), user.getLastName());
-                    log.info("[{}] Private message received from {}: {}", this.common.getUsername(), userInfo,
+                    log.info("[{}] Private message received from {}: {}", this.common.getBotUsername(), userInfo,
                             this.message.getText());
                 }
                 if (message.isSuperGroupMessage() || message.isGroupMessage()) {
@@ -116,13 +112,4 @@ public abstract class BaseBot extends CustomLongPollingBot {
 
     protected abstract void handleChatMemberUpdate();
 
-    @Override
-    public String getBotToken() {
-        return this.dto.getToken();
-    }
-
-    @Override
-    public String getBotUsername() {
-        return this.dto.getUsername();
-    }
 }

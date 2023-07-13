@@ -27,5 +27,5 @@ public class SpringyBotDTO {
 
     private String botType;
     
-    private ConfigDTO config;
+    // private ConfigDTO config;
 }

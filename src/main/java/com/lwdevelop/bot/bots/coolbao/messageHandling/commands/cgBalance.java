@@ -7,7 +7,6 @@ import java.math.BigDecimal;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
-
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.lwdevelop.bot.bots.utils.Common;
@@ -20,6 +19,7 @@ public class cgBalance {
 public String cmd(Common common) {
 
     String token = generateToken();
+    System.out.println(token);
     String cg01_params = "mchId=20000007&access_token=" + token;
     String cg02_params = "mchId=20000008&access_token=" + token;
     String cg03_params = "mchId=20000009&access_token=" + token;
@@ -44,11 +44,11 @@ public String cmd(Common common) {
 
     BigDecimal totalAmount = cg01_result.add(cg02_result).add(cg03_result).add(cg04_result);
 
-    String str = "cg01   " + cg01_ + "\n" +
-            "cg02 : " + cg02_ + "\n" +
-            "cg03 : " + cg03_ + "\n" +
-            "cg04 : " + cg04_ + "\n\n" +
-            "总余额 : " + totalAmount.toString();
+    String str = "cg01    " + cg01_ + "\n" +
+            "cg02    " + cg02_ + "\n" +
+            "cg03    " + cg03_ + "\n" +
+            "cg04    " + cg04_ + "\n\n" +
+            "总余额    " + totalAmount.toString();
 
     return str;
 }
@@ -91,7 +91,7 @@ public String cmd(Common common) {
     }
 
     private static String generateToken() {
-        String params = "username=leo&password=as794613";
+        String params = "username=ddbpay99_bot&password=tt186186";
         String response = sendGetRequest(xxpay_login_url, params, "access_token");
         return response;
     }

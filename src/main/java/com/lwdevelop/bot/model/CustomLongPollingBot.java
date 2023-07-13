@@ -2,16 +2,16 @@ package com.lwdevelop.bot.model;
 
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.meta.api.objects.Update;
-
 import com.lwdevelop.dto.SpringyBotDTO;
 
 public class CustomLongPollingBot extends TelegramLongPollingBot {
 
-
+    private String token;
     private String botUsername;
 
     public CustomLongPollingBot(SpringyBotDTO dto) {
         super(new CustomBotOptions(), dto.getToken());
+        this.token = dto.getToken();
         this.botUsername = dto.getUsername();
     }
 
@@ -21,6 +21,11 @@ public class CustomLongPollingBot extends TelegramLongPollingBot {
     @Override
     public String getBotUsername() {
         return this.botUsername;
+    }
+
+    @Override
+    public String getBotToken() {
+        return this.token;
     }
 
 }

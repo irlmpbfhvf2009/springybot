@@ -24,10 +24,10 @@ public class start {
         String chatId = String.valueOf(message.getChatId());
 
         if (whiteList.stream().anyMatch(wl -> wl.getUserId().equals(message.getChatId()))) {
-            SendMessage response = new SendMessage(chatId, "歡迎使用 @" + common.getUsername() + "\n\n" + CoolbaoEnum.COMMANDS_START.getText() +"\n\n/help - 幫助");
+            SendMessage response = new SendMessage(chatId, "歡迎使用 @" + common.getBotUsername() + "\n\n" + CoolbaoEnum.COMMANDS_START.getText() +"\n\n/help - 幫助");
             common.executeAsync(response);
         }else{
-            SendMessage response = new SendMessage(chatId, "歡迎使用 @" + common.getUsername() + "\n\n" + CoolbaoEnum.COMMANDS_START.getText() +"\n\n");
+            SendMessage response = new SendMessage(chatId, "歡迎使用 @" + common.getBotUsername() + "\n\n" + CoolbaoEnum.COMMANDS_START.getText() +"\n\n");
             common.executeAsync(response);
         }
     }
