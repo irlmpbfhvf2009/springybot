@@ -33,7 +33,6 @@ public class JoinGroup extends BaseHandler {
                 .findRobotGroupManagementBySpringyBotId(springyBotId);
         this.recordGroupUsers = springyBotServiceImpl.findRecordGroupUsersBySpringyBotId(springyBotId);
         this.invitationBonusUsers = springyBotServiceImpl.findInvitationBonusUserBySpringyBotId(springyBotId);
-
     }
 
     @Override
@@ -96,45 +95,39 @@ public class JoinGroup extends BaseHandler {
                                         invitedIds.add(this.invitedId.toString());
                                         ib.setPendingInvitations(invitedIds);
                                         int validInviteCount = invitedIds.size();
-                                        Boolean isInvitationsDivisibleByMembers = (invitedIds.size()
-                                                % this.inviteMembers) == 0;
 
-                                        if (isInvitationsDivisibleByMembers) {
-                                            BigDecimal outstandingAmount = ib.getOutstandingAmount()
-                                                    .add(this.inviteEarnedOutstand);
-                                            ib.setOutstandingAmount(outstandingAmount);
+                                        BigDecimal outstandingAmount = ib.getOutstandingAmount()
+                                                .add(this.inviteEarnedOutstand);
+                                        ib.setOutstandingAmount(outstandingAmount);
 
-                                            SendMessage sendMessage = new SendMessage();
-                                            sendMessage.setChatId(String.valueOf(this.chatId));
-                                            BigDecimal settlementAmount = ib.getSettlementAmount();
-                                            sendMessage.setText(
-                                                    "您邀请" + validInviteCount + "位成员，赚取" + outstandingAmount
-                                                            + "元未结算，已经结算" + settlementAmount + "元，满"
-                                                            + this.minimumPayout + "元请联系 "
-                                                            + this.contactPerson + " 结算。");
+                                        SendMessage sendMessage = new SendMessage();
+                                        sendMessage.setChatId(String.valueOf(this.chatId));
+                                        BigDecimal settlementAmount = ib.getSettlementAmount();
+                                        sendMessage.setText(
+                                                "您邀请" + validInviteCount + "位成员，赚取" + outstandingAmount
+                                                        + "元未结算，已经结算" + settlementAmount + "元，满"
+                                                        + this.minimumPayout + "元请联系 "
+                                                        + this.contactPerson + " 结算。");
 
-                                            Integer msgId = this.common.executeAsync(sendMessage);
-                                            DeleteMessage deleteMessage = new DeleteMessage(this.chatId.toString(),
-                                                    msgId);
-                                            this.common.deleteMessageTask(deleteMessage, 1000);
+                                        Integer msgId = this.common.executeAsync(sendMessage);
+                                        DeleteMessage deleteMessage = new DeleteMessage(this.chatId.toString(),
+                                                msgId);
+                                        this.common.deleteMessageTask(deleteMessage, 7);
 
-                                        }
                                     }
                                 }, () -> {
                                     InvitationBonusUser invitationBonusUser = new InvitationBonusUser();
                                     InvitationBonusUser ib = this.getInvitationBonusUser(invitationBonusUser);
                                     this.invitationBonusUsers.add(ib);
-                                    if (1 % this.inviteMembers == 0) {
-                                        SendMessage sendMessage = new SendMessage();
-                                        sendMessage.setChatId(String.valueOf(this.chatId));
-                                        sendMessage.setText(
-                                                "您邀请1位成员，赚取" + this.inviteEarnedOutstand + "元未结算，满" + this.minimumPayout
-                                                        + "元请联系 " + this.contactPerson + " 结算。");
-                                        Integer msgId = this.common.executeAsync(sendMessage);
-                                        DeleteMessage deleteMessage = new DeleteMessage(this.chatId.toString(),
-                                                msgId);
-                                        this.common.deleteMessageTask(deleteMessage, 1000);
-                                    }
+                                    SendMessage sendMessage = new SendMessage();
+                                    sendMessage.setChatId(String.valueOf(this.chatId));
+                                    sendMessage.setText(
+                                            "您邀请1位成员，赚取" + this.inviteEarnedOutstand + "元未结算，满" + this.minimumPayout
+                                                    + "元请联系 " + this.contactPerson + " 结算。");
+                                    Integer msgId = this.common.executeAsync(sendMessage);
+                                    DeleteMessage deleteMessage = new DeleteMessage(this.chatId.toString(),
+                                            msgId);
+                                    this.common.deleteMessageTask(deleteMessage, 1000);
                                 });
                         this.springyBot.setInvitationBonusUser(this.invitationBonusUsers);
                     }
@@ -221,14 +214,13 @@ public class JoinGroup extends BaseHandler {
         invitationBonusUser.setLastname(this.inviteLastname);
         invitationBonusUser.setChatId(this.chatId);
         invitationBonusUser.setChatTitle(this.chatTitle);
-        if (1 % this.inviteMembers == 0) {
-            invitationBonusUser.setOutstandingAmount(this.inviteEarnedOutstand);
-        }
+        invitationBonusUser.setOutstandingAmount(this.inviteEarnedOutstand);
         invitationBonusUser.setSettlementAmount(BigDecimal.valueOf(0));
         List<String> invitedIds = new ArrayList<>();
         invitedIds.add(this.invitedId.toString());
         invitationBonusUser.setPendingInvitations(invitedIds);
         invitationBonusUser.setAccumulatedInvitations(new ArrayList<>());
+        invitationBonusUser.setOutstandingAmount(inviteEarnedOutstand);
         return invitationBonusUser;
     }
 

@@ -35,7 +35,6 @@ public class CustomWebhookBot extends TelegramWebhookBot {
 
     @Override
     public BotApiMethod<?> onWebhookUpdateReceived(Update arg0) {
-        System.out.println("asdasdasd");
         return null;
     }
 

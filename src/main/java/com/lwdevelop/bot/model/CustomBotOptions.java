@@ -12,10 +12,10 @@ public class CustomBotOptions extends DefaultBotOptions {
         // 調用父類別的建構子
         super();
         // 設定自定義的allowedUpdates列表
-        this.allowedUpdates = Arrays.asList("update_id", "message", "edited_message",
+        setAllowedUpdates(Arrays.asList("update_id", "message", "edited_message",
             "channel_post", "edited_channel_post", "inline_query", "chosen_inline_result",
             "callback_query", "shipping_query", "pre_checkout_query", "poll", "poll_answer",
-            "my_chat_member", "chat_member");
+            "my_chat_member", "chat_member"));
     }
 
 }
