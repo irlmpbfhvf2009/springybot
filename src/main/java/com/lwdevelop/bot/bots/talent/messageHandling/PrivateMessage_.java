@@ -1,15 +1,19 @@
-package com.lwdevelop.bot.bots.telent.messageHandling;
+package com.lwdevelop.bot.bots.talent.messageHandling;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.telegram.telegrambots.meta.api.methods.groupadministration.GetChatMember;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
-import com.lwdevelop.bot.bots.telent.messageHandling.commands.Job;
+
+import com.lwdevelop.bot.bots.talent.messageHandling.commands.Job;
 import com.lwdevelop.bot.bots.utils.Common;
 import com.lwdevelop.bot.bots.utils.enum_.TelentEnum;
 import com.lwdevelop.bot.bots.utils.keyboardButton.TelentButton;
 import com.lwdevelop.dto.JobPostingDTO;
 import com.lwdevelop.dto.JobSeekerDTO;
+import com.lwdevelop.service.impl.SpringyBotServiceImpl;
+import com.lwdevelop.utils.SpringUtils;
 
 public class PrivateMessage_ {
 
@@ -17,21 +21,27 @@ public class PrivateMessage_ {
     private Message message;
     private String text;
     private Job job;
+    
     private Boolean isSubscribeChannel;
-
+    @Autowired
+    private SpringyBotServiceImpl springyBotServiceImpl = SpringUtils.getApplicationContext()
+            .getBean(SpringyBotServiceImpl.class);
     public PrivateMessage_(Common common) {
+        System.out.println("test3");
         this.message = common.getUpdate().getMessage();
         this.common = common;
-        this.text = this.message.getText();
+        this.text = common.getUpdate().getMessage().getText();
         this.job = new Job(new JobPostingDTO(common), new JobSeekerDTO(common));
         this.job.saveJobUser(common);
         this.isSubscribeChannel = isSubscribeChannel();
     }
 
     public void handler() {
-        // if (this.text.equals("/start")) {
-        // this.setResponse_job();
-        // }
+                System.out.println("test4");
+
+        if (this.text.equals("/start")) {
+            this.setResponse_job();
+        }
 
         // if (true) {
         if (this.isSubscribeChannel) {
@@ -59,7 +69,7 @@ public class PrivateMessage_ {
                     this.job.generateTextJobPosting(common, false);
                 } else if (post.equals(TelentEnum.EDIT_RECRUITMENT.getText())) {
                     this.job.generateTextJobPosting(common, true);
-                // 發布求職
+                    // 發布求職
                 } else if (post.equals(TelentEnum.JOBSEARCH.getText())) {
                     this.job.generateTextJobSeeker(common, false);
                 } else if (post.equals(TelentEnum.EDIT_JOBSEARCH.getText())) {

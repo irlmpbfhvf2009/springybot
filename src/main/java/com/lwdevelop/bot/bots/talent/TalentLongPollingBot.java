@@ -1,14 +1,14 @@
-package com.lwdevelop.bot.bots.telent;
+package com.lwdevelop.bot.bots.talent;
 
+import com.lwdevelop.bot.bots.talent.messageHandling.CallbackQuerys;
+import com.lwdevelop.bot.bots.talent.messageHandling.ChannelMessage;
+import com.lwdevelop.bot.bots.talent.messageHandling.GroupMessage;
+import com.lwdevelop.bot.bots.talent.messageHandling.PrivateMessage_;
 import com.lwdevelop.bot.chatMembershipHandlers.JoinChannel;
 import com.lwdevelop.bot.chatMembershipHandlers.JoinGroup;
 import com.lwdevelop.bot.chatMembershipHandlers.LeaveChannel;
 import com.lwdevelop.bot.chatMembershipHandlers.LeaveGroup;
 import com.lwdevelop.bot.factory.BaseLongPollingBot;
-import com.lwdevelop.bot.bots.telent.messageHandling.CallbackQuerys;
-import com.lwdevelop.bot.bots.telent.messageHandling.ChannelMessage;
-import com.lwdevelop.bot.bots.telent.messageHandling.GroupMessage;
-import com.lwdevelop.bot.bots.telent.messageHandling.PrivateMessage_;
 import com.lwdevelop.dto.SpringyBotDTO;
 
 public class TalentLongPollingBot extends BaseLongPollingBot {
@@ -16,9 +16,9 @@ public class TalentLongPollingBot extends BaseLongPollingBot {
     public TalentLongPollingBot(SpringyBotDTO springyBotDTO) {
         super(springyBotDTO);
     }
-
     @Override
     protected void handlePrivateMessage() {
+        System.out.println("test22");
         new PrivateMessage_(this.common).handler();
     }
 

@@ -1,4 +1,4 @@
-package com.lwdevelop.bot.bots.telent.messageHandling;
+package com.lwdevelop.bot.bots.talent.messageHandling;
 
 import org.telegram.telegrambots.meta.api.methods.updatingmessages.DeleteMessage;
 import com.lwdevelop.bot.bots.utils.Common;

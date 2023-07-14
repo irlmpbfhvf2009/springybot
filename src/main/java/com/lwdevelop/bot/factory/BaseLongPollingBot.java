@@ -51,6 +51,7 @@ public abstract class BaseLongPollingBot extends CustomLongPollingBot {
         if (update.hasMessage()) {
             if (message.hasText()) {
                 if (message.isUserMessage()) {
+                    System.out.println("test1");
                     handlePrivateMessage();
                     User user = message.getFrom();
                     String userInfo = String.format("[%s] @%s (%s %s)", user.getId(), user.getUserName(),

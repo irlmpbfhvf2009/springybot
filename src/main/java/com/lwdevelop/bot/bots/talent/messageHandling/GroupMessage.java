@@ -1,4 +1,4 @@
-package com.lwdevelop.bot.bots.telent.messageHandling;
+package com.lwdevelop.bot.bots.talent.messageHandling;
 
 import com.lwdevelop.bot.bots.utils.Common;
 

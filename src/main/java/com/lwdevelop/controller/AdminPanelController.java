@@ -12,8 +12,11 @@ import org.springframework.web.bind.annotation.RequestParam;
 import com.lwdevelop.dto.AdminDTO;
 import com.lwdevelop.service.impl.AdminServiceImpl;
 import com.lwdevelop.utils.ResponseUtils;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 
 @Controller
+@Api(tags = "管理員操作")
 @RequestMapping("/admins")
 public class AdminPanelController {
 
@@ -34,6 +37,7 @@ public class AdminPanelController {
      * @since June 11, 2023
      * @author Leo
      */
+    @ApiOperation(value = "登入", notes = "處理管理員登入請求")
     @PostMapping("/v1/login")
     public ResponseEntity<ResponseUtils.ResponseData> login(
             HttpServletRequest request,
@@ -55,6 +59,7 @@ public class AdminPanelController {
      * @since June 11, 2023
      * @author Leo
      */
+    @ApiOperation(value = "登出", notes = "處理管理員登出請求")
     @PostMapping("/v1/loginOut")
     public ResponseEntity<ResponseUtils.ResponseData> loginOut(
             @RequestParam("token") String token) throws Exception {
@@ -74,6 +79,7 @@ public class AdminPanelController {
      * @since June 11, 2023
      * @author Leo
      */
+    @ApiOperation(value = "管理員資訊", notes = "獲取管理員資訊")
     @PostMapping("/v1/info")
     public ResponseEntity<ResponseUtils.ResponseData> getInfoApi(
             @RequestParam("token") String token) throws Exception {
@@ -94,6 +100,7 @@ public class AdminPanelController {
      * @since June 11, 2023
      * @author Leo
      */
+    @ApiOperation(value = "獲取所有管理員", notes = "分頁獲取管理員列表")
     @PostMapping("/v1/getAllAdmins")
     public ResponseEntity<ResponseUtils.ResponseData> getAllAdmins(
             @RequestParam(defaultValue = "0") int page,
@@ -115,6 +122,7 @@ public class AdminPanelController {
      * @since June 11, 2023
      * @author Leo
      */
+    @ApiOperation(value = "更新管理員資訊", notes = "更新管理員的詳細資訊")
     @PostMapping("/v1/updateAdmin")
     public ResponseEntity<ResponseUtils.ResponseData> updateAdmin(
             @RequestBody AdminDTO adminDTO) throws Exception {
@@ -135,6 +143,7 @@ public class AdminPanelController {
      * @since June 11, 2023
      * @author Leo
      */
+    @ApiOperation(value = "新增管理員", notes = "向系統新增新的管理員")
     @PostMapping("/v1/addAdmin")
     public ResponseEntity<ResponseUtils.ResponseData> addAdmin(
             HttpServletRequest request,
@@ -155,6 +164,7 @@ public class AdminPanelController {
      * @since June 11, 2023
      * @author Leo
      */
+    @ApiOperation(value = "刪除管理員", notes = "刪除或批量刪除指定管理員")
     @PostMapping("/v1/deleteAdmins")
     public ResponseEntity<ResponseUtils.ResponseData> delAdmin(
             @RequestBody Map<String, String> requestData) throws Exception {
@@ -174,6 +184,7 @@ public class AdminPanelController {
      * @since June 11, 2023
      * @author Leo
      */
+    @ApiOperation(value = "修改管理員密碼", notes = "修改指定管理員密碼")
     @PostMapping("/v1/passwordChange")
     public ResponseEntity<ResponseUtils.ResponseData> passwordChange(
             @RequestBody AdminDTO adminDTO) throws Exception {

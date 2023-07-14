@@ -1,7 +1,6 @@
 package com.lwdevelop.bot.bots.triSpeak.messageHandling;
 
 import org.springframework.beans.factory.annotation.Autowired;
-
 import com.lwdevelop.bot.bots.utils.Common;
 import com.lwdevelop.entity.Config;
 import com.lwdevelop.entity.SpringyBot;

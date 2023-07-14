@@ -1,4 +1,4 @@
-package com.lwdevelop.bot.bots.telent.messageHandling.commands;
+package com.lwdevelop.bot.bots.talent.messageHandling.commands;
 
 import java.util.*;
 import java.util.stream.Collectors;

@@ -12,11 +12,9 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.telegram.telegrambots.meta.TelegramBotsApi;
-import org.telegram.telegrambots.meta.api.methods.updates.SetWebhook;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 import com.lwdevelop.bot.factory.BotFactory;
 import com.lwdevelop.bot.model.CustomLongPollingBot;
-import com.lwdevelop.bot.model.CustomWebhookBot;
 import com.lwdevelop.dto.ConfigDTO;
 import com.lwdevelop.dto.SpringyBotDTO;
 import com.lwdevelop.entity.Config;
@@ -153,7 +151,7 @@ public class SpringyBotServiceImpl implements SpringyBotService {
             String botType = dto.getBotType();
             String botModel = dto.getBotModel();
             CustomLongPollingBot longPollingBot = null;
-            CustomWebhookBot webhookBot = null;
+            // CustomWebhookBot webhookBot = null;
             SpringyBot springyBot = findById(id).get();
 
             switch (botModel) {
@@ -175,18 +173,18 @@ public class SpringyBotServiceImpl implements SpringyBotService {
                 case "Webhook":
                     switch (botType) {
                         case "coolbao":
-                            webhookBot = botFactory.createCoolbaoWebhookBot(dto);
+                            // webhookBot = botFactory.createCoolbaoWebhookBot(dto);
                             break;
                     }
                     break;
             }
 
-            if (webhookBot != null) {
-                SetWebhook setWebhook = SetWebhook.builder()
-                        .url("https://eb8c-61-218-87-189.ngrok-free.app/api")
-                        .build();
-                telegramBotsApi.registerBot(webhookBot, setWebhook);
-            }
+            // if (webhookBot != null) {
+            //     SetWebhook setWebhook = SetWebhook.builder()
+            //             .url("https://eb8c-61-218-87-189.ngrok-free.app/api")
+            //             .build();
+            //     telegramBotsApi.registerBot(webhookBot, setWebhook);
+            // }
 
             if (longPollingBot != null) {
                 Long botId = longPollingBot.getMe().getId();

@@ -13,8 +13,11 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 import org.springframework.web.cors.CorsUtils;
 import com.lwdevelop.utils.JwtAuthFilter;
 
+import springfox.documentation.oas.annotations.EnableOpenApi;
+
 // import com.lwdevelop.backend.service.MemberUserDetailsService;
 
+@EnableOpenApi
 @Configuration
 @EnableWebSecurity // security 過濾器
 @EnableGlobalMethodSecurity(prePostEnabled = true) // 方法級別權限驗證
@@ -40,16 +43,20 @@ public class SecurityConfig {
     }
 
     private static final String[] ADMIN_AUTH_LIST = {
-            "/swagger-resources/**",
-            "/swagger-ui.html",
+            // "/swagger-resources/**",
+            // "/swagger-ui.html",
             "/springybot/**",
-            
+
     };
 
     private static final String[] ALL_AUTH_LIST = {
             "/static/favicon.ico",
             "/static/assets/**",
-            "/admins/v1/login",            
+            "/swagger-resources/**",
+            "/swagger-ui.html",
+            "/swagger-ui/**",
+            "/v3/**",
+            "/admins/v1/login",
             "/index",
             "/groupAndChannelManagement/**",
             "/debug/**",
