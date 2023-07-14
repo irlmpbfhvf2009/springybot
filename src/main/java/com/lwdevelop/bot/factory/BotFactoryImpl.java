@@ -1,5 +1,6 @@
 package com.lwdevelop.bot.factory;
 
+import com.lwdevelop.bot.bots.demand.DemandLongPollingBot;
 import org.springframework.stereotype.Component;
 import com.lwdevelop.bot.bots.coolbao.CoolbaoLongPollingBot;
 import com.lwdevelop.bot.bots.coolbao.CoolbaoWebhookBot;
@@ -25,6 +26,11 @@ public class BotFactoryImpl implements BotFactory {
     @Override
     public CustomLongPollingBot createTriSpeakLongPollingBot(SpringyBotDTO dto) {
         return new TriSpeakLongPollingBot(dto);
+    }
+
+    @Override
+    public CustomLongPollingBot createDemandLongPollingBot(SpringyBotDTO dto) {
+        return new DemandLongPollingBot(dto);
     }
 
     @Override

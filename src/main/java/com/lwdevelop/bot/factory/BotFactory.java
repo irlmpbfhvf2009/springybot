@@ -9,6 +9,7 @@ public interface BotFactory {
     CustomLongPollingBot createCoolbaoLongPollingBot(SpringyBotDTO dto);
     CustomLongPollingBot createTalentLongPollingBot(SpringyBotDTO dto);
     CustomLongPollingBot createTriSpeakLongPollingBot(SpringyBotDTO dto);
+    CustomLongPollingBot createDemandLongPollingBot(SpringyBotDTO dto);
 
     CustomWebhookBot createCoolbaoWebhookBot(SpringyBotDTO dto);
     // CustomWebhookBot createTalentWebhookBotBot(SpringyBotDTO dto);

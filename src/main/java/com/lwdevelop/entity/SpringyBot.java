@@ -64,6 +64,10 @@ public class SpringyBot {
 
     @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JsonIgnore
+    private List<DemandUser> demandUser;
+
+    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JsonIgnore
     private List<RestrictMember> restrictMember;
 
     @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)

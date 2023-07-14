@@ -7,6 +7,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.NoSuchElementException;
 import java.util.Optional;
+
+import com.lwdevelop.entity.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.ResponseEntity;
@@ -19,16 +21,6 @@ import com.lwdevelop.bot.model.CustomLongPollingBot;
 import com.lwdevelop.bot.model.CustomWebhookBot;
 import com.lwdevelop.dto.ConfigDTO;
 import com.lwdevelop.dto.SpringyBotDTO;
-import com.lwdevelop.entity.Config;
-import com.lwdevelop.entity.InvitationBonusUser;
-import com.lwdevelop.entity.InvitationThreshold;
-import com.lwdevelop.entity.JobUser;
-import com.lwdevelop.entity.RecordChannelUsers;
-import com.lwdevelop.entity.RecordGroupUsers;
-import com.lwdevelop.entity.RobotChannelManagement;
-import com.lwdevelop.entity.RobotGroupManagement;
-import com.lwdevelop.entity.SpringyBot;
-import com.lwdevelop.entity.WhiteList;
 import com.lwdevelop.repository.ConfigRepository;
 import com.lwdevelop.repository.SpringyBotRepository;
 import com.lwdevelop.service.SpringyBotService;
@@ -132,6 +124,11 @@ public class SpringyBotServiceImpl implements SpringyBotService {
     }
 
     @Override
+    public List<DemandUser> findDemandUserBySpringyBotId(Long id) {
+        return springyBotRepository.findDemandUserBySpringyBotId(id);
+    }
+
+    @Override
     public List<InvitationBonusUser> findInvitationBonusUserBySpringyBotId(Long id) {
         return springyBotRepository.findInvitationBonusUserBySpringyBotId(id);
     }
@@ -167,6 +164,9 @@ public class SpringyBotServiceImpl implements SpringyBotService {
                             break;
                         case "triSpeak":
                             longPollingBot = botFactory.createTriSpeakLongPollingBot(dto);
+                            break;
+                        case "demand":
+                            longPollingBot = botFactory.createDemandLongPollingBot(dto);
                             break;
                         default:
                             break;
