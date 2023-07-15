@@ -1,19 +1,15 @@
 package com.lwdevelop.bot.bots.talent.messageHandling;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.telegram.telegrambots.meta.api.methods.groupadministration.GetChatMember;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
-
 import com.lwdevelop.bot.bots.talent.messageHandling.commands.Job;
 import com.lwdevelop.bot.bots.utils.Common;
 import com.lwdevelop.bot.bots.utils.enum_.TelentEnum;
 import com.lwdevelop.bot.bots.utils.keyboardButton.TelentButton;
 import com.lwdevelop.dto.JobPostingDTO;
 import com.lwdevelop.dto.JobSeekerDTO;
-import com.lwdevelop.service.impl.SpringyBotServiceImpl;
-import com.lwdevelop.utils.SpringUtils;
 
 public class PrivateMessage_ {
 
@@ -21,13 +17,10 @@ public class PrivateMessage_ {
     private Message message;
     private String text;
     private Job job;
-    
+
     private Boolean isSubscribeChannel;
-    @Autowired
-    private SpringyBotServiceImpl springyBotServiceImpl = SpringUtils.getApplicationContext()
-            .getBean(SpringyBotServiceImpl.class);
+
     public PrivateMessage_(Common common) {
-        System.out.println("test3");
         this.message = common.getUpdate().getMessage();
         this.common = common;
         this.text = common.getUpdate().getMessage().getText();
@@ -37,13 +30,7 @@ public class PrivateMessage_ {
     }
 
     public void handler() {
-                System.out.println("test4");
 
-        if (this.text.equals("/start")) {
-            this.setResponse_job();
-        }
-
-        // if (true) {
         if (this.isSubscribeChannel) {
             switch (this.text.toLowerCase()) {
                 case "发布招聘":

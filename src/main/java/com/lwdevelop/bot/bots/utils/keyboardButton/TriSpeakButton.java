@@ -21,7 +21,7 @@ public class TriSpeakButton {
         InlineKeyboardMarkup markupInline = new InlineKeyboardMarkup();
         List<List<InlineKeyboardButton>> rowsInline = new ArrayList<>();
         List<InlineKeyboardButton> rowInline1 = new ArrayList<>();
-        List<InlineKeyboardButton> rowInline2 = new ArrayList<>();
+        // List<InlineKeyboardButton> rowInline2 = new ArrayList<>();
 
         // 雲集
         if (this.common.getBotId().equals(5901295307L)) {
@@ -40,9 +40,9 @@ public class TriSpeakButton {
         }
 
         rowInline1.add(dk1);
-        rowInline2.add(dk2);
+        rowInline1.add(dk2);
         rowsInline.add(rowInline1);
-        rowsInline.add(rowInline2);
+        // rowsInline.add(rowInline2);
         markupInline.setKeyboard(rowsInline);
 
         return markupInline;

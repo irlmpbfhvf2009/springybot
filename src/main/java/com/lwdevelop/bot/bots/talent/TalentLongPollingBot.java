@@ -18,13 +18,12 @@ public class TalentLongPollingBot extends BaseLongPollingBot {
     }
     @Override
     protected void handlePrivateMessage() {
-        System.out.println("test22");
-        new PrivateMessage_(this.common).handler();
+        new PrivateMessage_(common).handler();
     }
 
     @Override
     protected void handleGroupMessage() {
-        new GroupMessage(this.common).handler();
+        new GroupMessage(common).handler();
     }
 
     @Override
@@ -33,12 +32,12 @@ public class TalentLongPollingBot extends BaseLongPollingBot {
 
     @Override
     protected void handleCallbackQuery() {
-        new CallbackQuerys(this.common).handler();
+        new CallbackQuerys(common).handler();
     }
 
     @Override
     protected void handleChannelPost() {
-        new ChannelMessage(this.common).handler();
+        new ChannelMessage(common).handler();
     }
 
     @Override
