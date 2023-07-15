@@ -1,12 +1,13 @@
 package com.lwdevelop.bot.factory;
 
 import java.util.HashMap;
+
+import org.telegram.telegrambots.meta.api.methods.updates.GetUpdates;
 import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.api.objects.User;
 import org.telegram.telegrambots.meta.api.objects.chatmember.ChatMember;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
-
 import com.lwdevelop.bot.model.CustomLongPollingBot;
 import com.lwdevelop.bot.bots.utils.Common;
 import com.lwdevelop.dto.SpringyBotDTO;
@@ -24,6 +25,13 @@ public abstract class BaseLongPollingBot extends CustomLongPollingBot {
     public BaseLongPollingBot(SpringyBotDTO dto) {
         super(dto);
         this.common = initializeCommon(dto);
+        GetUpdates getUpdates = new GetUpdates();
+        getUpdates.setOffset(0);
+        try {
+            this.execute(getUpdates);
+        } catch (TelegramApiException e) {
+            e.printStackTrace();
+        }
     }
 
     private Common initializeCommon(SpringyBotDTO dto) {
@@ -47,7 +55,7 @@ public abstract class BaseLongPollingBot extends CustomLongPollingBot {
     public void onUpdateReceived(Update update) {
         common.setUpdate(update);
         message = update.getMessage();
-
+        
         if (update.hasMessage()) {
             if (message.hasText()) {
                 if (message.isUserMessage()) {

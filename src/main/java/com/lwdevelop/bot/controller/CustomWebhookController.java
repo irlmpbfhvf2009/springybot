@@ -10,7 +10,6 @@ public class CustomWebhookController {
 
     @PostMapping("/callback/adam")
     public void handleWebhookUpdate(@RequestBody Update update) {
-        // System.out.println(update);
         // BotApiMethod<?> response = webhookBot.onWebhookUpdateReceived(update);
         // 处理返回的BotApiMethod对象，例如发送回复消息等操作
     }

@@ -191,7 +191,6 @@ public class SpringyBotServiceImpl implements SpringyBotService {
                 springyBot.setBotId(botId);
                 springyBot.setState(true);
                 save(springyBot);
-
                 telegramBotsApi.registerBot(longPollingBot);
 
                 // Redis

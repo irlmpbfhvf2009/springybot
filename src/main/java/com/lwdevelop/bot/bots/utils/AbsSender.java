@@ -6,6 +6,7 @@ import org.telegram.telegrambots.bots.DefaultAbsSender;
 import org.telegram.telegrambots.meta.api.methods.groupadministration.GetChat;
 import org.telegram.telegrambots.meta.api.methods.groupadministration.GetChatMember;
 import org.telegram.telegrambots.meta.api.methods.groupadministration.RestrictChatMember;
+import org.telegram.telegrambots.meta.api.methods.send.SendChatAction;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.methods.send.SendPhoto;
 import org.telegram.telegrambots.meta.api.methods.updatingmessages.DeleteMessage;
@@ -44,6 +45,12 @@ public class AbsSender {
     @SneakyThrows
     public void executeAsync(EditMessageText editMessageText) {
         this.bot.executeAsync(editMessageText);
+    }
+
+    @Async
+    @SneakyThrows
+    public void executeAsync(SendChatAction sendChatAction) {
+        this.bot.executeAsync(sendChatAction);
     }
 
     @Async

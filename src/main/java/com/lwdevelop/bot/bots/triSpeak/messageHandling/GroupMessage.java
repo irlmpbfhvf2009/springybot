@@ -108,8 +108,6 @@ public class GroupMessage {
             return;
         }
 
-        this.redisUtils = null;
-
     }
 
     private void loadConfig() {
