@@ -16,12 +16,15 @@ com\lwdevelop\bot\bots\coolbao\messageHandling\commands\enter_password.class
 com\lwdevelop\entity\WhiteList.class
 com\lwdevelop\repository\AdminRepository.class
 com\lwdevelop\utils\ResponseUtils$ResponseData.class
+com\lwdevelop\bot\config\RedisToMySQLUpdater$1.class
 com\lwdevelop\repository\JobPostingRepository.class
 com\lwdevelop\controller\AdminPanelController.class
 com\lwdevelop\entity\RestrictMember.class
 com\lwdevelop\utils\RetEnum.class
+com\lwdevelop\bot\config\RedisToMySQLUpdater.class
 com\lwdevelop\bot\bots\coolbao\messageHandling\commands\addMerchant.class
 com\lwdevelop\dto\JobUserDTO.class
+com\lwdevelop\bot\factory\BaseLongPollingBot$2.class
 com\lwdevelop\repository\RobotGroupManagementRepository.class
 com\lwdevelop\utils\JwtAuthFilter.class
 com\lwdevelop\repository\ConfigRepository.class
@@ -41,6 +44,7 @@ com\lwdevelop\bot\factory\BotFactoryImpl.class
 com\lwdevelop\dto\JobPostingDTO.class
 com\lwdevelop\service\SpringyBotService.class
 com\lwdevelop\bot\bots\triSpeak\messageHandling\GroupMessage.class
+com\lwdevelop\bot\factory\BaseLongPollingBot$1.class
 com\lwdevelop\bot\bots\talent\messageHandling\commands\Job.class
 com\lwdevelop\entity\RobotGroupManagement.class
 com\lwdevelop\controller\JobManagementController.class
@@ -97,6 +101,7 @@ com\lwdevelop\controller\SpringyBotController.class
 com\lwdevelop\repository\RobotChannelManagementRepository.class
 com\lwdevelop\utils\CommUtils$Pager.class
 com\lwdevelop\utils\CryptoUtil.class
+com\lwdevelop\bot\config\RedisToMySQLUpdater$2.class
 com\lwdevelop\config\RedisConfig.class
 com\lwdevelop\controller\GroupAndChannelManagement.class
 com\lwdevelop\bot\bots\utils\enum_\CoolbaoEnum.class

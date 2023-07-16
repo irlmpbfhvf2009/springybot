@@ -1,6 +1,5 @@
 package com.lwdevelop.utils;
 
-import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -8,7 +7,7 @@ import org.springframework.stereotype.Component;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-@Slf4j
+// @Slf4j
 @Component
 public class RedisUtils {
 
@@ -73,10 +72,10 @@ public class RedisUtils {
         }
         try {
             redisTemplate.opsForValue().set(key, value);
-            log.info("Successfully wrote data to Redis.，key：{}", key);
+            // log.info("Successfully wrote data to Redis.，key：{}", key);
             return true;
         } catch (Exception e) {
-            log.error("Failed to write data to Redis.，key：{}", key);
+            // log.error("Failed to write data to Redis.，key：{}", key);
             e.printStackTrace();
         }
         return false;
@@ -88,9 +87,9 @@ public class RedisUtils {
     public void delete(final String key) {
         Boolean isDeleted = redisTemplate.delete(key);
         if (isDeleted) {
-            log.info("RecordChannelUsers key deleted successfully");
+            // log.info("RecordChannelUsers key deleted successfully");
         } else {
-            log.info("RecordChannelUsers key not found");
+            // log.info("RecordChannelUsers key not found");
         }
     }
 }

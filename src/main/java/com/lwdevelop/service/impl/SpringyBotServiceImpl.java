@@ -198,10 +198,14 @@ public class SpringyBotServiceImpl implements SpringyBotService {
                 List<RecordGroupUsers> recordGroupUsers = findRecordGroupUsersBySpringyBotId(id);
                 List<RecordChannelUsers> recordChannelUsers = findRecordChannelUsersBySpringyBotId(id);
                 List<InvitationThreshold> invitationThreshold = findInvitationThresholdBySpringyBotId(id);
+                List<RobotChannelManagement> robotChannelManagements = findRobotChannelManagementBySpringyBotId(id);                
+                List<RobotGroupManagement> robotGroupManagements = findRobotGroupManagementBySpringyBotId(id);                
                 redisUtils.set("Config_" + id, config);
                 redisUtils.set("RecordGroupUsers_" + id, recordGroupUsers);
                 redisUtils.set("RecordChannelUsers_" + id, recordChannelUsers);
                 redisUtils.set("InvitationThreshold_" + id, invitationThreshold);
+                redisUtils.set("RobotChannelManagement_" + id, robotChannelManagements);
+                redisUtils.set("RobotGroupManagement_" + id, robotGroupManagements);
 
                 log.info("{} Telegram bot started.", dto.getUsername());
             }

@@ -18,7 +18,7 @@ public interface RobotGroupAndChannelManagementService {
 
     RobotGroupManagement findByBotIdAndGroupId(Long botId, Long groupId);
 
-
+    void saveRobotGroup(RobotGroupManagement robotGroupManagement);
     
     ResponseEntity<ResponseUtils.ResponseData> getGroupAndChannelTreeData();
 

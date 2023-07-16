@@ -72,7 +72,6 @@ public class GroupMessage {
 
     // 關注頻道、邀請限制發言開關, 累積獎金開關
     public void handler() {
-
         // 關注頻道系統
         if (this.followChannelSet) {
 

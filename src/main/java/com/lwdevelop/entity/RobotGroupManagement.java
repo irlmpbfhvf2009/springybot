@@ -30,6 +30,8 @@ public class RobotGroupManagement {
 
     private String link;
 
+    private String type; // group or supergroup
+
     private Boolean status;
 
 }

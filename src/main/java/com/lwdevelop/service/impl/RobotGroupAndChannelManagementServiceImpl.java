@@ -37,6 +37,10 @@ public class RobotGroupAndChannelManagementServiceImpl implements RobotGroupAndC
     public void deleteByIdWithRobotChannelManagement(Long Id) {
         robotChannelManagementRepository.deleteById(Id);
     }
+    @Override
+    public void saveRobotGroup(RobotGroupManagement robotGroupManagement) {
+        robotGroupManagementRepository.save(robotGroupManagement);
+    }
 
     @Override
     public RobotChannelManagement findByBotIdAndChannelId(Long botId, Long channelId) {

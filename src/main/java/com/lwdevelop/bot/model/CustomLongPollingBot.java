@@ -9,10 +9,12 @@ public class CustomLongPollingBot extends TelegramLongPollingBot {
     private String token;
     private String botUsername;
 
+
     public CustomLongPollingBot(SpringyBotDTO dto) {
         super(new CustomBotOptions(), dto.getToken());
         this.token = dto.getToken();
         this.botUsername = dto.getUsername();
+
     }
 
     @Override
