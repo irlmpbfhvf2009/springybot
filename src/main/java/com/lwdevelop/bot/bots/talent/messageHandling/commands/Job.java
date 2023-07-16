@@ -198,7 +198,6 @@ public class Job {
                     SendMessage response = new SendMessage();
                     Long channelId = robotChannelManagement.getChannelId();
                     String channelTitle = robotChannelManagement.getChannelTitle();
-                    String channelLink = robotChannelManagement.getLink();
                     response.setChatId(String.valueOf(channelId));
                     response.setText(TelentEnum.send_recruitment_text(result));
                     response.setReplyMarkup(new TelentButton().keyboardJobMarkup());
@@ -235,7 +234,6 @@ public class Job {
                             channelMessageIdPostCounts.setUserId(jobPosting.getUserId());
                             channelMessageIdPostCounts.setChannelId(channelId);
                             channelMessageIdPostCounts.setChannelTitle(channelTitle);
-                            channelMessageIdPostCounts.setChannelLink(channelLink);
                             channelMessageIdPostCounts.setMessageId(channelMessageId);
                             channelMessageIdPostCounts.setPostCount(1);
                             channelMessageIdPostCounts.setType(TelentEnum.JOBPOSTING.getText());
@@ -275,15 +273,14 @@ public class Job {
                     SendMessage response = new SendMessage();
                     Long groupId = robotGroupManagement.getGroupId();
                     String groupTitle = robotGroupManagement.getGroupTitle();
-                    String groupLink = robotGroupManagement.getLink();
                     response.setChatId(String.valueOf(groupId));
                     response.setText(TelentEnum.send_recruitment_text(result));
                     response.setReplyMarkup(new TelentButton().keyboardJobMarkup());
-                    response.setDisableNotification(true);
                     response.setDisableWebPagePreview(true);
+                    // List<GroupMessageIdPostCounts> groupMessageIdPostCounts = jobManagementServiceImpl
+                    //         .findAllByGroupIdAndTypeWithGroupMessageIdPostCounts(groupId,"jobPosting");
                     GroupMessageIdPostCounts groupMessageIdPostCounts = jobManagementServiceImpl
-                            .findByGroupIdAndTypeWithGroupMessageIdPostCounts(groupId,
-                                    TelentEnum.JOBPOSTING.getText());
+                            .findByGroupIdAndTypeWithGroupMessageIdPostCounts(groupId,"jobPosting");
                     if (isEdit) {
                         EditMessageText editMessageText = new EditMessageText();
                         editMessageText.setChatId(String.valueOf(groupId));
@@ -299,7 +296,6 @@ public class Job {
 
                         if (groupMessageIdPostCounts == null) {
                             final Integer groupMessageId = common.executeAsync(response);
-
                             response.setChatId(jobPosting.getUserId());
                             response.setText("[ " + groupTitle + " ]发送 [招聘人才] 信息成功");
                             common.executeAsync(response);
@@ -309,7 +305,6 @@ public class Job {
                             groupMessageIdPostCounts.setUserId(jobPosting.getUserId());
                             groupMessageIdPostCounts.setGroupId(groupId);
                             groupMessageIdPostCounts.setGroupTitle(groupTitle);
-                            groupMessageIdPostCounts.setGroupLink(groupLink);
                             groupMessageIdPostCounts.setMessageId(groupMessageId);
                             groupMessageIdPostCounts.setPostCount(1);
                             groupMessageIdPostCounts.setType(TelentEnum.JOBPOSTING.getText());
@@ -320,7 +315,6 @@ public class Job {
                         } else {
                             if (groupMessageIdPostCounts.getPostCount() == 0) {
                                 final Integer groupMessageId = common.executeAsync(response);
-
                                 response.setChatId(jobPosting.getUserId());
                                 response.setText("[ " + groupTitle + " ]发送 [招聘人才] 成功");
                                 common.executeAsync(response);

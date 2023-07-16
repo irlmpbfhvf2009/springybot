@@ -81,7 +81,7 @@ public abstract class BaseLongPollingBot extends CustomLongPollingBot {
                 if (message.isSuperGroupMessage() || message.isGroupMessage()) {
 
                     // 監聽群組消息,檢查數據庫是否記錄到該群組,無則紀錄
-                    this.checkAndRecordGroupInDatabase();
+                    checkAndRecordGroupInDatabase();
 
                     handleGroupMessage();
                 }
@@ -103,7 +103,7 @@ public abstract class BaseLongPollingBot extends CustomLongPollingBot {
         if (update.hasChannelPost()) {
             if (update.getChannelPost().getChat().getType().equals("channel")) {
                 // 監聽群組消息,檢查數據庫是否記錄到該群組,無則紀錄
-                this.checkAndRecordChannelInDatabase();
+                checkAndRecordChannelInDatabase();
                 handleChannelPost();
             }
 
@@ -140,43 +140,50 @@ public abstract class BaseLongPollingBot extends CustomLongPollingBot {
 
     private void checkAndRecordGroupInDatabase() {
         // 監聽群组消息，檢查Redis數據庫是否紀錄到該群組，無則紀錄
-        List<RobotGroupManagement> robotGroupManagements = redisUtils.get("RobotGroupManagement_" + common.getSpringyBotId(),
+        List<RobotGroupManagement> robotGroupManagements = redisUtils.get(
+                "RobotGroupManagement_" + common.getSpringyBotId(),
                 new TypeReference<List<RobotGroupManagement>>() {
                 });
-        robotGroupManagements.stream()
-                .filter(rgm -> rgm.getGroupId().equals(message.getChatId()))
-                .findAny()
-                .ifPresentOrElse(rgm -> {
-                    rgm.setType(message.getChat().getType());
-                }, () -> {
-                    RobotGroupManagement robotGroupManagement = new RobotGroupManagement();
-                    robotGroupManagement.setBotId(common.getBotId());
-                    robotGroupManagement.setGroupId(message.getChatId());
-                    robotGroupManagement.setGroupTitle(message.getChat().getTitle());
-                    robotGroupManagement.setStatus(true);
-                    robotGroupManagement.setType(message.getChat().getType());
-                    robotGroupManagements.add(robotGroupManagement);
-                });
-        redisUtils.set("RobotGroupManagement_" + common.getSpringyBotId(), robotGroupManagements);
+                
+        if(robotGroupManagements!=null){
+            robotGroupManagements.stream()
+                    .filter(rgm -> rgm.getGroupId().equals(message.getChatId()))
+                    .findAny()
+                    .ifPresentOrElse(rgm -> {
+                        rgm.setType(message.getChat().getType());
+                    }, () -> {
+                        RobotGroupManagement robotGroupManagement = new RobotGroupManagement();
+                        robotGroupManagement.setBotId(common.getBotId());
+                        robotGroupManagement.setGroupId(message.getChatId());
+                        robotGroupManagement.setGroupTitle(message.getChat().getTitle());
+                        robotGroupManagement.setStatus(true);
+                        robotGroupManagement.setType(message.getChat().getType());
+                        robotGroupManagements.add(robotGroupManagement);
+                    });
+            redisUtils.set("RobotGroupManagement_" + common.getSpringyBotId(), robotGroupManagements);
+        }
     }
 
     private void checkAndRecordChannelInDatabase() {
         // 監聽頻道消息，檢查Redis數據庫是否紀錄到該頻道，無則紀錄
-        List<RobotChannelManagement> robotChannelManagements = redisUtils.get("RobotChannelManagement_" + common.getSpringyBotId(),
+        List<RobotChannelManagement> robotChannelManagements = redisUtils.get(
+                "RobotChannelManagement_" + common.getSpringyBotId(),
                 new TypeReference<List<RobotChannelManagement>>() {
                 });
-        robotChannelManagements.stream()
-                .filter(rcm -> rcm.getChannelId().equals(update.getChannelPost().getChat().getId()))
-                .findAny()
-                .ifPresentOrElse(rcm -> {
-                }, () -> {
-                    RobotChannelManagement robotChannelManagement = new RobotChannelManagement();
-                    robotChannelManagement.setBotId(common.getBotId());
-                    robotChannelManagement.setChannelId(update.getChannelPost().getChat().getId());
-                    robotChannelManagement.setChannelTitle(message.getChat().getTitle());
-                    robotChannelManagement.setStatus(true);
-                    robotChannelManagements.add(robotChannelManagement);
-                });
-        redisUtils.set("RobotChannelManagement_" + common.getSpringyBotId(), robotChannelManagements);
+        if (robotChannelManagements != null) {
+            robotChannelManagements.stream()
+                    .filter(rcm -> rcm.getChannelId().equals(update.getChannelPost().getChat().getId()))
+                    .findAny()
+                    .ifPresentOrElse(rcm -> {
+                    }, () -> {
+                        RobotChannelManagement robotChannelManagement = new RobotChannelManagement();
+                        robotChannelManagement.setBotId(common.getBotId());
+                        robotChannelManagement.setChannelId(update.getChannelPost().getChat().getId());
+                        robotChannelManagement.setChannelTitle(update.getChannelPost().getChat().getTitle());
+                        robotChannelManagement.setStatus(true);
+                        robotChannelManagements.add(robotChannelManagement);
+                    });
+            redisUtils.set("RobotChannelManagement_" + common.getSpringyBotId(), robotChannelManagements);
+        }
     }
 }

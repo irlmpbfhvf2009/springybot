@@ -1,27 +1,26 @@
 package com.lwdevelop.controller;
 
 import java.util.Map;
-import javax.annotation.Resource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import org.telegram.telegrambots.meta.TelegramBotsApi;
-
 import com.lwdevelop.dto.ConfigDTO;
 import com.lwdevelop.dto.SpringyBotDTO;
 import com.lwdevelop.service.impl.SpringyBotServiceImpl;
+import com.lwdevelop.utils.RedisUtils;
 import com.lwdevelop.utils.ResponseUtils;
 
 @RestController
 @RequestMapping("/springybot")
 public class SpringyBotController {
 
-    @Resource
-    private TelegramBotsApi telegramBotsApi;
+    @Autowired
+    RedisUtils redisUtils;
 
     @Autowired
     private SpringyBotServiceImpl springyBotService;
@@ -173,4 +172,9 @@ public class SpringyBotController {
         return springyBotService.fetchManagedChat(configDTO);
     }
 
+    @GetMapping("/clearCache")
+    public String clearCache() throws Exception {
+        redisUtils.clearAllData();
+        return "clearCache";
+    }
 }

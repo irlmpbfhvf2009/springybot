@@ -1,5 +1,7 @@
 package com.lwdevelop.utils;
 
+import java.util.Set;
+
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -92,4 +94,22 @@ public class RedisUtils {
             // log.info("RecordChannelUsers key not found");
         }
     }
+    /**
+     * 清空數據
+     */
+    public void clearRedisData(final String key) {
+        redisTemplate.opsForHash().delete(key); // 清空指定键的数据
+    }
+
+    public void clearAllData() {
+        try {
+            Set<String> keys = redisTemplate.keys("*");
+            if (keys != null && !keys.isEmpty()) {
+                redisTemplate.delete(keys);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+    
 }

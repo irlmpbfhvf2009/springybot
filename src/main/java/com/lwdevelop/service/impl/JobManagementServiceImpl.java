@@ -63,6 +63,12 @@ public class JobManagementServiceImpl implements JobManagementService {
     }
 
     @Override
+    public List<ChannelMessageIdPostCounts> findAllByChannelIdAndTypeWithChannelMessageIdPostCounts(Long channelId,
+            String type) {
+        return channelMessageIdPostCountsRepository.findAllByChannelIdAndType(channelId, type);
+    }
+
+    @Override
     public ChannelMessageIdPostCounts findByChannelIdAndUserIdAndTypeWithChannelMessageIdPostCounts(Long channelId,
             String userId, String type) {
         return channelMessageIdPostCountsRepository.findByChannelIdAndUserIdAndType(channelId, userId, type);
@@ -72,6 +78,11 @@ public class JobManagementServiceImpl implements JobManagementService {
     public GroupMessageIdPostCounts findByGroupIdAndTypeWithGroupMessageIdPostCounts(Long grouplId,
             String type) {
         return groupMessageIdPostCountsRepository.findByGroupIdAndType(grouplId, type);
+    }
+    @Override
+    public List<GroupMessageIdPostCounts> findAllByGroupIdAndTypeWithGroupMessageIdPostCounts(Long grouplId,
+            String type) {
+        return groupMessageIdPostCountsRepository.findAllByGroupIdAndType(grouplId, type);
     }
 
     @Override

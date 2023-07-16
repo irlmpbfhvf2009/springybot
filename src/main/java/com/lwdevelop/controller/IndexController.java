@@ -1,16 +1,18 @@
 package com.lwdevelop.controller;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-@Controller("/")
+import com.lwdevelop.utils.RedisUtils;
+
+@Controller
+@RequestMapping("/index")
 public class IndexController {
 
-    @RequestMapping("/index")
-    public String index() throws Exception {
-        return "index";
-    }
+    @Autowired
+    RedisUtils redisUtils;
     
     @GetMapping("/version")
     public String version() throws Exception {

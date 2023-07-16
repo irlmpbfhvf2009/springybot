@@ -11,6 +11,8 @@ public interface ChannelMessageIdPostCountsRepository extends JpaRepository<Chan
     ChannelMessageIdPostCounts findByChannelIdAndType(Long channelId,String type);
     ChannelMessageIdPostCounts findByChannelIdAndUserIdAndType(Long channelId,String userId,String type);
     ChannelMessageIdPostCounts findByBotIdAndUserIdAndType(String botId,String userId,String type);
+    
+    List<ChannelMessageIdPostCounts> findAllByChannelIdAndType(Long channelId,String type);
     List<ChannelMessageIdPostCounts> findAllByBotIdAndUserIdAndType(String botId,String userId,String type);
     
 }

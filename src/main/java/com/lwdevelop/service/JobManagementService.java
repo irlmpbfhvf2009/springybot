@@ -26,6 +26,7 @@ public interface JobManagementService {
     
     // ChannelMessageIdPostCounts
     ChannelMessageIdPostCounts findByChannelIdAndTypeWithChannelMessageIdPostCounts(Long channelId,String type);
+    List<ChannelMessageIdPostCounts> findAllByChannelIdAndTypeWithChannelMessageIdPostCounts(Long channelId,String type);
     ChannelMessageIdPostCounts findByChannelIdAndUserIdAndTypeWithChannelMessageIdPostCounts(Long channelId,String userId,String type);
     ChannelMessageIdPostCounts findByBotIdAndUserIdAndTypeWithChannelMessageIdPostCounts(String botId,String userId,String type);
     List<ChannelMessageIdPostCounts> findAllByBotIdAndUserIdAndTypeWithChannelMessageIdPostCounts(String botId,String userId,String type);
@@ -34,6 +35,7 @@ public interface JobManagementService {
     
     List<GroupMessageIdPostCounts> findAllByBotIdAndUserIdAndTypeWithGroupMessageIdPostCounts(String botId,String userId,String type);
     GroupMessageIdPostCounts findByGroupIdAndTypeWithGroupMessageIdPostCounts(Long groupId,String type);
+    List<GroupMessageIdPostCounts> findAllByGroupIdAndTypeWithGroupMessageIdPostCounts(Long groupId,String type);
     void deleteByIdGroupMessageIdPostCounts(Long id);
     void saveGroupMessageIdPostCounts(GroupMessageIdPostCounts groupMessageIdPostCounts);
 

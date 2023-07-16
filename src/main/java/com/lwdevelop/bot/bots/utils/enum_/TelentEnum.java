@@ -30,7 +30,6 @@ public enum TelentEnum {
     UNPUBLISHED_RECRUITMENT("未发布招聘"),
     JOBPOSTING("jobPosting"),
     EDIT_JOBPOSTING("editJobPosting_"),
-    CLEAR_JOBPOSTING("clearJobPosting_"),
     ALREADY_POST_POSTING("您已经发布过[招聘人才]信息，请点选[招聘和求职信息管理]进行编辑或删除信息后重新发布。"),
     JOBPOSTING_DEFAULT_FORM(
             "招聘人才\n\n公司：\n职位：\n底薪：\n提成：\n国籍：\n男女：\n人数：\n语言要求：\n是否中介：\n上班时间：\n要求内容：（限50字以内）\n🐌地址：\n✈️咨询飞机号："),

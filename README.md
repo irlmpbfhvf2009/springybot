@@ -6,7 +6,7 @@
 
 適合的整合開發環境(IDE) 如Eclipse、IntelliJ IDEA、VS Code  
 Java開發環境 (建議使用Java 8 或Java 11)  
-Spring Boot框架(使用2.7.12)  
+Spring Boot框架(lastest)  
 
 # build : mvn clean package -DskipTests
 

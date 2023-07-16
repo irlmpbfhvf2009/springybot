@@ -48,13 +48,13 @@ public class CallbackQuerys {
 
     public void handler() {
 
-        if (callbackQuery.getData().startsWith(TelentEnum.CLEAR_JOBPOSTING.getText())) {
+        if (callbackQuery.getData().startsWith("clearJobPosting_")) {
 
-            String userId = callbackQuery.getData().substring(TelentEnum.CLEAR_JOBPOSTING.getText().length(),
+            String userId = callbackQuery.getData().substring("clearJobPosting_".length(),
                     callbackQuery.getData().lastIndexOf("_"));
             String botId = callbackQuery.getData().substring(callbackQuery.getData().lastIndexOf("_") + 1);
 
-            // 在这里根据 springyBotId 和 userId 进行相应的清除操作
+            // springyBotId 和 userId 進行相應的清除操作
             JobPosting jobPosting = jobManagementServiceImpl.findByUserIdAndBotIdWithJobPosting(userId, botId);
             jobManagementServiceImpl.saveJobPosting(new JobPostingDTO().resetJobPostingFields(jobPosting));
 
@@ -82,11 +82,9 @@ public class CallbackQuerys {
             }
 
             List<ChannelMessageIdPostCounts> channelMessageIdPostCounts = jobManagementServiceImpl
-                    .findAllByBotIdAndUserIdAndTypeWithChannelMessageIdPostCounts(jobPosting.getBotId(), userId,
-                            TelentEnum.JOBPOSTING.getText());
+                    .findAllByBotIdAndUserIdAndTypeWithChannelMessageIdPostCounts(jobPosting.getBotId(), userId,"jobPosting");
             List<GroupMessageIdPostCounts> groupMessageIdPostCounts = jobManagementServiceImpl
-                    .findAllByBotIdAndUserIdAndTypeWithGroupMessageIdPostCounts(jobPosting.getBotId(), userId,
-                            TelentEnum.JOBPOSTING.getText());
+                    .findAllByBotIdAndUserIdAndTypeWithGroupMessageIdPostCounts(jobPosting.getBotId(), userId,"jobPosting");
 
             channelMessageIdPostCounts.stream().forEach(cmp -> {
                 DeleteMessage dm = new DeleteMessage(String.valueOf(cmp.getChannelId()),cmp.getMessageId());

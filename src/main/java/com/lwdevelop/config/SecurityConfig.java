@@ -62,6 +62,7 @@ public class SecurityConfig {
             "/debug/**",
             "/callback/**",
             "/redis/**",
+            "/index/**"
     };
 
     @Bean
