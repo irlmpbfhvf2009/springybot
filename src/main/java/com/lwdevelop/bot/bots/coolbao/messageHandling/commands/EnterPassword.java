@@ -12,7 +12,7 @@ import com.lwdevelop.entity.WhiteList;
 import com.lwdevelop.service.impl.SpringyBotServiceImpl;
 import com.lwdevelop.utils.SpringUtils;
 
-public class enter_password {
+public class EnterPassword {
 
     @Autowired
     private SpringyBotServiceImpl springyBotServiceImpl = SpringUtils.getApplicationContext()

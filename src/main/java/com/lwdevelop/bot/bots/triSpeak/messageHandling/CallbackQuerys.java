@@ -1,24 +1,17 @@
 package com.lwdevelop.bot.bots.triSpeak.messageHandling;
 
-import org.telegram.telegrambots.meta.api.objects.CallbackQuery;
 import com.lwdevelop.bot.bots.utils.Common;
+import com.lwdevelop.bot.chatMessageHandlers.BaseCallbackQuerys;
 
 
-public class CallbackQuerys {
+public class CallbackQuerys extends BaseCallbackQuerys{
 
-    private Common common;
 
     public CallbackQuerys(Common common){
-        this.common = common;
+        super(common);
     }
     
+    @Override
     public void handler() {
-
-        CallbackQuery callbackQuery = common.getUpdate().getCallbackQuery();
-
-        switch (callbackQuery.getData()) {
-            
-        }
-
     }
 }

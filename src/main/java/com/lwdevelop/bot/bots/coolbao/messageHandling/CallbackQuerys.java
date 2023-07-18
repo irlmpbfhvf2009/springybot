@@ -1,26 +1,22 @@
 package com.lwdevelop.bot.bots.coolbao.messageHandling;
 
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
-import org.telegram.telegrambots.meta.api.objects.CallbackQuery;
 import com.lwdevelop.bot.bots.utils.Common;
+import com.lwdevelop.bot.chatMessageHandlers.BaseCallbackQuerys;
 
-public class CallbackQuerys {
-    private Common common;
+public class CallbackQuerys extends BaseCallbackQuerys{
 
     public CallbackQuerys(Common common) {
-        this.common = common;
+        super(common);
     }
 
+    @Override
     public void handler() {
-
-        CallbackQuery callbackQuery = common.getUpdate().getCallbackQuery();
-
         switch (callbackQuery.getData()) {
             case "editName":
-                String chatId = String.valueOf(callbackQuery.getFrom().getId());
-                SendMessage responst = new SendMessage(chatId, "enter name");
+                SendMessage responst = new SendMessage(chatId_str, "enter name");
                 common.executeAsync(responst);
-                common.getUserState().put(callbackQuery.getFrom().getId(), "enter_name");
+                common.getUserState().put(chatId, "enter_name");
                 break;
         }
 

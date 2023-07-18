@@ -2,33 +2,29 @@ package com.lwdevelop.bot.bots.talent.messageHandling;
 
 import org.telegram.telegrambots.meta.api.methods.groupadministration.GetChatMember;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
-import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 import com.lwdevelop.bot.bots.talent.messageHandling.commands.Job;
 import com.lwdevelop.bot.bots.utils.Common;
 import com.lwdevelop.bot.bots.utils.enum_.TelentEnum;
 import com.lwdevelop.bot.bots.utils.keyboardButton.TelentButton;
+import com.lwdevelop.bot.chatMessageHandlers.BasePrivateMessage;
 import com.lwdevelop.dto.JobPostingDTO;
 import com.lwdevelop.dto.JobSeekerDTO;
 
-public class PrivateMessage_ {
+public class PrivateMessage_ extends BasePrivateMessage{
 
-    private Common common;
-    private Message message;
-    private String text;
     private Job job;
-
     private Boolean isSubscribeChannel;
 
     public PrivateMessage_(Common common) {
-        this.message = common.getUpdate().getMessage();
-        this.common = common;
-        this.text = common.getUpdate().getMessage().getText();
-        this.job = new Job(new JobPostingDTO(common), new JobSeekerDTO(common));
-        this.job.saveJobUser(common);
+        super(common);
+        Job job = new Job(new JobPostingDTO(common), new JobSeekerDTO(common));
+        job.saveJobUser(common);
+        this.job = job;
         this.isSubscribeChannel = isSubscribeChannel();
     }
 
+    @Override
     public void handler() {
 
         if (this.isSubscribeChannel) {

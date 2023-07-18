@@ -11,7 +11,7 @@ import com.lwdevelop.entity.WhiteList;
 import com.lwdevelop.service.impl.SpringyBotServiceImpl;
 import com.lwdevelop.utils.SpringUtils;
 
-public class login {
+public class Login {
 
     @Autowired
     private SpringyBotServiceImpl springyBotServiceImpl = SpringUtils.getApplicationContext()

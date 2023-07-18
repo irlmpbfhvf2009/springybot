@@ -1,12 +1,6 @@
 package com.lwdevelop.bot.chatMembershipHandlers;
 
 import com.lwdevelop.bot.bots.utils.Common;
-import com.lwdevelop.entity.InvitationBonusUser;
-import com.lwdevelop.entity.InvitationThreshold;
-import com.lwdevelop.entity.RecordChannelUsers;
-import com.lwdevelop.entity.RecordGroupUsers;
-import com.lwdevelop.entity.RobotChannelManagement;
-import com.lwdevelop.entity.RobotGroupManagement;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
@@ -22,7 +16,9 @@ public class LeaveChannel extends BaseHandler {
 
     @Override
     public void handler() {
-        if (this.isBot != null) {
+        if (this.isBot == null) {
+            return;
+        }
 
             if (this.isBot) {
                 this.robotChannelManagement.stream()
@@ -63,60 +59,6 @@ public class LeaveChannel extends BaseHandler {
             log.info("{} -> {} leave {} channel", formatBot, formatUser, formatChat);
         }
 
-    }
-
-    @Override
-    protected Boolean hasTarget(RobotChannelManagement rcm) {
-        return rcm.getChannelId().equals(this.chatId);
-    }
-
-    @Override
-    protected Boolean hasTarget(RecordChannelUsers rcu) {
-        return rcu.getUserId().equals(this.userId)
-                && rcu.getChannelId().equals(this.chatId);
-    }
-
-    private Boolean hasTarget_invite(InvitationThreshold it) {
-        return it.getInviteId().equals(this.userId);
-    }
-
-    private Boolean hasTarget_invited(InvitationThreshold it) {
-        return it.getInvitedId().equals(this.userId);
-    }
-
-    @Override
-    protected Boolean hasTarget(RobotGroupManagement rgm) {
-        return null;
-    }
-
-    @Override
-    protected Boolean hasTarget(InvitationThreshold it) {
-        return null;
-    }
-
-    @Override
-    protected RobotChannelManagement getRobotChannelManagement(RobotChannelManagement robotChannelManagement) {
-        return null;
-    }
-
-    @Override
-    protected InvitationThreshold getInvitationThreshold(InvitationThreshold invitationThreshold) {
-        return null;
-    }
-
-    @Override
-    protected RecordChannelUsers getRecordChannelUsers(RecordChannelUsers recordChannelUsers) {
-        return null;
-    }
-
-    @Override
-    protected RecordGroupUsers getRecordGroupUsers(RecordGroupUsers recordGroupUsers) {
-        return null;
-    }
-
-    @Override
-    protected InvitationBonusUser getInvitationBonusUser(InvitationBonusUser invitationBonusUser) {
-        return null;
-    }
+    
 
 }

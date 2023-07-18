@@ -1,16 +1,15 @@
 package com.lwdevelop.bot.bots.talent.messageHandling;
 
 import java.util.List;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.methods.updatingmessages.DeleteMessage;
 import org.telegram.telegrambots.meta.api.methods.updatingmessages.EditMessageText;
-import org.telegram.telegrambots.meta.api.objects.CallbackQuery;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 import com.lwdevelop.bot.bots.talent.TalentLongPollingBot;
 import com.lwdevelop.bot.bots.utils.Common;
 import com.lwdevelop.bot.bots.utils.enum_.TelentEnum;
 import com.lwdevelop.bot.bots.utils.keyboardButton.TelentButton;
+import com.lwdevelop.bot.chatMessageHandlers.BaseCallbackQuerys;
 import com.lwdevelop.dto.JobPostingDTO;
 import com.lwdevelop.dto.JobSeekerDTO;
 import com.lwdevelop.dto.SpringyBotDTO;
@@ -19,34 +18,17 @@ import com.lwdevelop.entity.GroupMessageIdPostCounts;
 import com.lwdevelop.entity.JobPosting;
 import com.lwdevelop.entity.JobSeeker;
 import com.lwdevelop.entity.SpringyBot;
-import com.lwdevelop.service.impl.JobManagementServiceImpl;
-import com.lwdevelop.service.impl.SpringyBotServiceImpl;
-import com.lwdevelop.utils.SpringUtils;
 
-public class CallbackQuerys {
+public class CallbackQuerys extends BaseCallbackQuerys{
 
-    @Autowired
-    private JobManagementServiceImpl jobManagementServiceImpl = SpringUtils.getApplicationContext()
-            .getBean(JobManagementServiceImpl.class);
-    @Autowired
-    private SpringyBotServiceImpl springyBotServiceImpl = SpringUtils.getApplicationContext()
-            .getBean(SpringyBotServiceImpl.class);
-
-    private SendMessage response;
-    private Common common;
-    private CallbackQuery callbackQuery;
-
-    public CallbackQuerys(Common common){
-        this.common = common;
-        this.callbackQuery = common.getUpdate().getCallbackQuery();
-        String chatId = String.valueOf(common.getUpdate().getCallbackQuery().getFrom().getId());
-        this.response = new SendMessage();
-        this.response.setChatId(chatId);
-        this.response.setDisableNotification(false);
-        this.response.setDisableWebPagePreview(false);
+    public CallbackQuerys(Common common) {
+        super(common);
     }
 
     public void handler() {
+        SendMessage response = new SendMessage();
+        response.setChatId(chatId_str);
+        response.setDisableWebPagePreview(true);
 
         if (callbackQuery.getData().startsWith("clearJobPosting_")) {
 
@@ -82,12 +64,14 @@ public class CallbackQuerys {
             }
 
             List<ChannelMessageIdPostCounts> channelMessageIdPostCounts = jobManagementServiceImpl
-                    .findAllByBotIdAndUserIdAndTypeWithChannelMessageIdPostCounts(jobPosting.getBotId(), userId,"jobPosting");
+                    .findAllByBotIdAndUserIdAndTypeWithChannelMessageIdPostCounts(jobPosting.getBotId(), userId,
+                            "jobPosting");
             List<GroupMessageIdPostCounts> groupMessageIdPostCounts = jobManagementServiceImpl
-                    .findAllByBotIdAndUserIdAndTypeWithGroupMessageIdPostCounts(jobPosting.getBotId(), userId,"jobPosting");
+                    .findAllByBotIdAndUserIdAndTypeWithGroupMessageIdPostCounts(jobPosting.getBotId(), userId,
+                            "jobPosting");
 
             channelMessageIdPostCounts.stream().forEach(cmp -> {
-                DeleteMessage dm = new DeleteMessage(String.valueOf(cmp.getChannelId()),cmp.getMessageId());
+                DeleteMessage dm = new DeleteMessage(String.valueOf(cmp.getChannelId()), cmp.getMessageId());
                 common.executeAsync(dm);
                 cmp.setMessageId(-1);
                 cmp.setPostCount(0);
@@ -95,15 +79,15 @@ public class CallbackQuerys {
             });
 
             groupMessageIdPostCounts.stream().forEach(cmp -> {
-                DeleteMessage dm = new DeleteMessage(String.valueOf(cmp.getGroupId()),cmp.getMessageId());
+                DeleteMessage dm = new DeleteMessage(String.valueOf(cmp.getGroupId()), cmp.getMessageId());
                 common.executeAsync(dm);
                 cmp.setMessageId(-1);
                 cmp.setPostCount(0);
                 jobManagementServiceImpl.saveGroupMessageIdPostCounts(cmp);
             });
 
-            this.response.setText(TelentEnum.SUCCESSFULLYDELETED.getText());
-            common.executeAsync(this.response);
+            response.setText(TelentEnum.SUCCESSFULLYDELETED.getText());
+            common.executeAsync(response);
         } else if (callbackQuery.getData().startsWith(TelentEnum.CLEAR_JOBSEEKER.getText())) {
 
             String userId = callbackQuery.getData().substring(TelentEnum.CLEAR_JOBSEEKER.getText().length(),
@@ -143,7 +127,7 @@ public class CallbackQuerys {
                     .findAllByBotIdAndUserIdAndTypeWithGroupMessageIdPostCounts(jobSeeker.getBotId(), userId,
                             TelentEnum.JOBSEEKER.getText());
             channelMessageIdPostCounts.stream().forEach(cmp -> {
-                DeleteMessage dm = new DeleteMessage(String.valueOf(cmp.getChannelId()),cmp.getMessageId());
+                DeleteMessage dm = new DeleteMessage(String.valueOf(cmp.getChannelId()), cmp.getMessageId());
                 common.executeAsync(dm);
                 cmp.setMessageId(-1);
                 cmp.setPostCount(0);
@@ -151,22 +135,22 @@ public class CallbackQuerys {
             });
 
             groupMessageIdPostCounts.stream().forEach(cmp -> {
-                DeleteMessage dm = new DeleteMessage(String.valueOf(cmp.getGroupId()),cmp.getMessageId());
+                DeleteMessage dm = new DeleteMessage(String.valueOf(cmp.getGroupId()), cmp.getMessageId());
                 common.executeAsync(dm);
                 cmp.setMessageId(-1);
                 cmp.setPostCount(0);
                 jobManagementServiceImpl.saveGroupMessageIdPostCounts(cmp);
             });
 
-            this.response.setText(TelentEnum.SUCCESSFULLYDELETED.getText());
-            common.executeAsync(this.response);
+            response.setText(TelentEnum.SUCCESSFULLYDELETED.getText());
+            common.executeAsync(response);
         } else if (callbackQuery.getData().equals(TelentEnum.EDIT_JOBPOSTING.getText())) {
             response.setText(TelentEnum.REMIND_EDITOR.getText());
 
-            common.executeAsync(this.response);
+            common.executeAsync(response);
         } else if (callbackQuery.getData().equals(TelentEnum.EDIT_JOBSEEKER.getText())) {
             response.setText(TelentEnum.REMIND_EDITOR.getText());
-            common.executeAsync(this.response);
+            common.executeAsync(response);
         }
 
     }

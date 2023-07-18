@@ -1,15 +1,15 @@
 package com.lwdevelop.bot.bots.talent.messageHandling;
 
 import com.lwdevelop.bot.bots.utils.Common;
+import com.lwdevelop.bot.chatMessageHandlers.BaseGroupMessage;
 
-public class GroupMessage {
+public class GroupMessage extends BaseGroupMessage {
 
-    // private Common common;
-
-    public GroupMessage(Common common){
-        // this.common = common;
+    public GroupMessage(Common common) {
+        super(common);
     }
 
+    @Override
     public void handler() {
 
     }

@@ -2,13 +2,11 @@ package com.lwdevelop.bot.chatMembershipHandlers;
 
 import java.math.BigDecimal;
 import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.telegram.telegrambots.meta.api.objects.ChatMemberUpdated;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.api.objects.User;
 import org.telegram.telegrambots.meta.api.objects.chatmember.ChatMember;
-
 import com.lwdevelop.bot.bots.utils.Common;
 import com.lwdevelop.entity.InvitationBonusUser;
 import com.lwdevelop.entity.InvitationThreshold;
@@ -109,24 +107,6 @@ public abstract class BaseHandler {
 
     public abstract void handler();
 
-    protected abstract Boolean hasTarget(RobotGroupManagement rgm);
-
-    protected abstract Boolean hasTarget(RobotChannelManagement rcm);
-
-    protected abstract Boolean hasTarget(RecordChannelUsers rcu);
-
-    protected abstract Boolean hasTarget(InvitationThreshold it);
-
-    protected abstract InvitationThreshold getInvitationThreshold(InvitationThreshold invitationThreshold);
-
-    protected abstract RobotChannelManagement getRobotChannelManagement(RobotChannelManagement robotChannelManagement);
-
-    protected abstract RecordChannelUsers getRecordChannelUsers(RecordChannelUsers recordChannelUsers);
-
-    protected abstract RecordGroupUsers getRecordGroupUsers(RecordGroupUsers recordGroupUsers);
-
-    protected abstract InvitationBonusUser getInvitationBonusUser(InvitationBonusUser invitationBonusUser);
-
     private Boolean isBot(ChatMember chatMember) {
         if (chatMember == null) {
             return null;
@@ -135,15 +115,68 @@ public abstract class BaseHandler {
         return isBot;
     }
 
-    public String formatBot() {
+    protected String formatBot() {
         return this.common.getBotUsername() + "[" + this.botId + "]";
     }
 
-    public String formatUser(User user) {
+    protected String formatUser(User user) {
         String firstname = user.getFirstName() == null ? "" : user.getFirstName();
         String username = user.getUserName() == null ? "" : user.getUserName();
         String lastname = user.getLastName() == null ? "" : user.getLastName();
         String name = username == null ? firstname + lastname : username;
         return name + "[" + user.getId() + "]";
+    }
+
+    protected Boolean hasTarget(RobotChannelManagement rcm) {
+        return rcm.getChannelId().equals(this.chatId);
+    }
+
+    protected Boolean hasTarget(RecordChannelUsers rcu) {
+        return rcu.getUserId().equals(this.invitedId)
+                && rcu.getChannelId().equals(this.chatId);
+    }
+
+    protected Boolean hasTarget_invite(InvitationThreshold it) {
+        return it.getInviteId().equals(this.userId);
+    }
+
+    protected Boolean hasTarget_invited(InvitationThreshold it) {
+        return it.getInvitedId().equals(this.userId);
+    }
+
+    protected Boolean hasTarget(RobotGroupManagement rgm) {
+        return rgm.getGroupId().equals(this.chatId);
+    }
+
+    protected Boolean hasTarget(RecordGroupUsers rgu) {
+        return rgu.getUserId().equals(this.invitedId)
+                && rgu.getGroupId().equals(this.chatId);
+    }
+
+    protected Boolean hasTarget(InvitationBonusUser ib) {
+        return ib.getUserId().equals(this.inviteId) && ib.getChatId().equals(this.chatId);
+    }
+
+    protected Boolean hasTarget(InvitationThreshold it,String type) {
+        return it.getChatId().equals(this.chatId) && it.getType().equals(type)
+                && it.getInvitedId().equals(this.invitedId);
+    }
+
+    protected InvitationThreshold initializeInvitationThreshold(InvitationThreshold invitationThreshold,String type) {
+        invitationThreshold.setBotId(this.botId);
+        invitationThreshold.setChatId(this.chatId);
+        invitationThreshold.setChatTitle(this.chatTitle);
+        invitationThreshold.setInviteId(this.inviteId);
+        invitationThreshold.setInviteFirstname(this.inviteFirstname);
+        invitationThreshold.setInviteUsername(this.inviteUsername);
+        invitationThreshold.setInviteLastname(this.inviteLastname);
+        invitationThreshold.setInvitedId(this.invitedId);
+        invitationThreshold.setInvitedFirstname(this.invitedFirstname);
+        invitationThreshold.setInvitedUsername(this.invitedUsername);
+        invitationThreshold.setInvitedLastname(this.invitedLastname);
+        invitationThreshold.setType(type);
+        invitationThreshold.setInviteStatus(true);
+        invitationThreshold.setInvitedStatus(true);
+        return invitationThreshold;
     }
 }

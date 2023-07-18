@@ -33,7 +33,7 @@ public class RedisToMySQLUpdater {
                     "RobotChannelManagement_" + springyBot.getId(),
                     new TypeReference<List<RobotChannelManagement>>() {
                     });
-            // 將數據更新到 MySQL
+            // 將數據更新到 SQL
             if (robotGroupManagements != null) {
                 springyBot.setRobotGroupManagement(robotGroupManagements);
                 springyBotService.save(springyBot);

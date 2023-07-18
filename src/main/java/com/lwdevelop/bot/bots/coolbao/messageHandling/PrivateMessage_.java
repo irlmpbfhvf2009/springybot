@@ -7,66 +7,79 @@ import java.util.Locale;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.StringUtils;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
-import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.User;
-
-import com.lwdevelop.bot.bots.coolbao.messageHandling.commands.addMerchant;
-import com.lwdevelop.bot.bots.coolbao.messageHandling.commands.cgBalance;
-import com.lwdevelop.bot.bots.coolbao.messageHandling.commands.enter_name;
-import com.lwdevelop.bot.bots.coolbao.messageHandling.commands.enter_password;
-import com.lwdevelop.bot.bots.coolbao.messageHandling.commands.login;
-import com.lwdevelop.bot.bots.coolbao.messageHandling.commands.start;
+import com.lwdevelop.bot.bots.coolbao.messageHandling.commands.EnterName;
+import com.lwdevelop.bot.bots.coolbao.messageHandling.commands.EnterPassword;
+import com.lwdevelop.bot.bots.coolbao.messageHandling.commands.Login;
+import com.lwdevelop.bot.bots.coolbao.messageHandling.commands.Start;
+import com.lwdevelop.bot.bots.coolbao.messageHandling.commands.servendayapi.SevenDaysEnterImageCode;
+import com.lwdevelop.bot.bots.coolbao.messageHandling.commands.servendayapi.SevenDaysLogin;
+import com.lwdevelop.bot.bots.coolbao.messageHandling.commands.xxpayapi.addMerchant;
+import com.lwdevelop.bot.bots.coolbao.messageHandling.commands.xxpayapi.cgBalance;
 import com.lwdevelop.bot.bots.utils.Common;
 import com.lwdevelop.bot.bots.utils.enum_.CoolbaoEnum;
+import com.lwdevelop.bot.chatMessageHandlers.BasePrivateMessage;
 import com.lwdevelop.entity.WhiteList;
 import com.lwdevelop.service.impl.SpringyBotServiceImpl;
 import com.lwdevelop.utils.SpringUtils;
 
-public class PrivateMessage_ {
+public class PrivateMessage_ extends BasePrivateMessage{
 
-    private Message message;
-    private String text;
-    private Common common;
+
     private User user;
     private Long chatId;
     private String state;
     private String botUsername;
+
+    public static String vt;
+    public static String vc;
+    public static String gc;
 
     @Autowired
     private SpringyBotServiceImpl springyBotServiceImpl = SpringUtils.getApplicationContext()
             .getBean(SpringyBotServiceImpl.class);
 
     public PrivateMessage_(Common common) {
-        this.common = common;
-        this.message = common.getUpdate().getMessage();
-        this.text = common.getUpdate().getMessage().getText();
-        this.chatId = common.getUpdate().getMessage().getChatId();
+        super(common);
         this.state = common.getUserState().get(chatId);
         this.user = common.getUpdate().getMessage().getFrom();
         this.botUsername = common.getBotUsername();
     }
 
+    @Override
     public void handler() {
 
         if (StringUtils.hasText(state)) {
             switch (state) {
                 case "enter_password":
-                    new enter_password().ep(common);
+                    new EnterPassword().ep(common);
                     break;
                 case "addMerchant":
                     new addMerchant().am(common);
                     break;
                 case "enter_name":
-                    new enter_name().en(common);
+                    new EnterName().en(common);
+                    break;
+                case "enterImageCode":
+                    PrivateMessage_.vc = this.message.getText();
+                    common.getUserState().put(chatId, "");
+                    SendMessage response = new SendMessage(chatId.toString(), "輸入google驗證碼");
+                    common.executeAsync_(response);
+                    common.getUserState().put(chatId, "enterGoogleCode");
+                    break;
+                case "enterGoogleCode":
+                    PrivateMessage_.gc = this.message.getText();
+                    common.getUserState().put(chatId, "");
+                    new SevenDaysLogin(common);
                     break;
             }
         } else {
             switch (this.text.toLowerCase()) {
                 case "/start":
-                    new start().cmd(common);
+                    new Start().cmd(common);
                     break;
                 case "/id_card":
-                    new login().cmd(common);
+                    new Login().cmd(common);
                     break;
             }
 
@@ -96,6 +109,10 @@ public class PrivateMessage_ {
                     case "/add_merchant":
                         response.setText("輸入預設定商戶帳號 /quit - 退出模式");
                         common.getUserState().put(message.getChatId(), "addMerchant");
+                        break;
+                    case "/test":
+                        SevenDaysEnterImageCode sevenDaysEnterImageCode = new SevenDaysEnterImageCode(common);
+                        PrivateMessage_.vt = sevenDaysEnterImageCode.vercodeToken;
                         break;
                     case "/help":
                         response.setText(CoolbaoEnum.commandsHelp(this.botUsername, user));

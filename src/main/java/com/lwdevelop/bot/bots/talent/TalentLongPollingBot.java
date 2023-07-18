@@ -4,10 +4,7 @@ import com.lwdevelop.bot.bots.talent.messageHandling.CallbackQuerys;
 import com.lwdevelop.bot.bots.talent.messageHandling.ChannelMessage;
 import com.lwdevelop.bot.bots.talent.messageHandling.GroupMessage;
 import com.lwdevelop.bot.bots.talent.messageHandling.PrivateMessage_;
-import com.lwdevelop.bot.chatMembershipHandlers.JoinChannel;
-import com.lwdevelop.bot.chatMembershipHandlers.JoinGroup;
-import com.lwdevelop.bot.chatMembershipHandlers.LeaveChannel;
-import com.lwdevelop.bot.chatMembershipHandlers.LeaveGroup;
+import com.lwdevelop.bot.chatMembershipHandlers.ChatHandler;
 import com.lwdevelop.bot.factory.BaseLongPollingBot;
 import com.lwdevelop.dto.SpringyBotDTO;
 
@@ -42,22 +39,9 @@ public class TalentLongPollingBot extends BaseLongPollingBot {
 
     @Override
     protected void handleChatMemberUpdate() {
-        Boolean isJoin = chatMember.getStatus().equals("left") || chatMember.getStatus().equals("kicked") ? false
-                : true;
 
-        if (type.equals("group") || type.equals("supergroup")) {
-            if (isJoin) {
-                new JoinGroup(common).handler();
-            } else {
-                new LeaveGroup(common).handler();
-            }
-        } else if (type.equals("channel")) {
-            if (isJoin) {
-                new JoinChannel(common).handler();
-            } else {
-                new LeaveChannel(common).handler();
-            }
-        }
+        new ChatHandler(common).handleChatMemberStatus(type, chatMember);
+
     }
 
 }

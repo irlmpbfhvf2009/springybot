@@ -29,13 +29,10 @@ public class AbsSender {
         try {
             return this.bot.executeAsync(sendMessage).get().getMessageId();
         } catch (InterruptedException e) {
-            // TODO Auto-generated catch block
             e.printStackTrace();
         } catch (ExecutionException e) {
-            // TODO Auto-generated catch block
             e.printStackTrace();
         } catch (TelegramApiException e) {
-            // TODO Auto-generated catch block
             e.printStackTrace();
         }
         return null;

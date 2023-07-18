@@ -31,6 +31,7 @@ public class CoolbaoLongPollingBot extends BaseLongPollingBot {
 
     @Override
     protected void handleChannelPost() {
+        
     }
 
     @Override

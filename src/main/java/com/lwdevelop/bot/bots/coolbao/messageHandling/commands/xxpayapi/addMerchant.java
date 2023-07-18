@@ -1,30 +1,17 @@
-package com.lwdevelop.bot.bots.coolbao.messageHandling.commands;
+package com.lwdevelop.bot.bots.coolbao.messageHandling.commands.xxpayapi;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.text.DecimalFormat;
 import java.util.Random;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.User;
-
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.lwdevelop.bot.bots.utils.enum_.CoolbaoEnum;
+import com.lwdevelop.bot.bots.coolbao.messageHandling.commands.utils.XxPayApiUtil;
 import com.lwdevelop.bot.bots.utils.Common;
-
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
-public class addMerchant {
-
-    private final static String xxpay_login_url = "http://4pay.ddb22.vip/xxpay-manage/api/auth";
-    private final static String xxpay_mch_info_get_url = "http://4pay.ddb22.vip/xxpay-manage/api/mch_info/get";
-    private final static String xxpay_mch_info_add_url = "http://4pay.ddb22.vip/xxpay-manage/api/mch_info/add";
+public class addMerchant extends XxPayApiUtil {
 
     static String name;
     static String token;
@@ -84,8 +71,7 @@ public class addMerchant {
 
             String params = "name=" + name + "&userName=" + text + "&email=" + text + "@abc.com&status=1&access_token="
                     + token + "&mobile=" + timestampString;
-            String create_mch_response = sendPostRequest(xxpay_mch_info_add_url, params);
-
+            String create_mch_response = sendPostRequest(XXPAY_MCH_INFO_ADD_URL, params);
             response = new SendMessage(chatId, "新增成功 response : " + create_mch_response);
             common.executeAsync(response);
         }
@@ -95,13 +81,6 @@ public class addMerchant {
     private static String formatTimestamp(long timestamp) {
         DecimalFormat decimalFormat = new DecimalFormat("0000000000000");
         return decimalFormat.format(timestamp);
-    }
-
-    private static String generateToken() {
-        String params = "username=leo&password=as794613";
-        String response = sendGetRequest(xxpay_login_url, params, "access_token");
-        token = response;
-        return response;
     }
 
     public static String create_mch_id() {
@@ -122,9 +101,8 @@ public class addMerchant {
             access_token = generateToken();
         }
         String params = "mchId=" + mchId + "&access_token=" + access_token;
-        String response = sendGetRequest(xxpay_mch_info_get_url, params, "mchId");
-        String get_name = sendGetRequest(xxpay_mch_info_get_url, params, "name");
-
+        String response = sendGetRequest(XXPAY_MCH_INFO_GET_URL, params, "mchId");
+        String get_name = sendGetRequest(XXPAY_MCH_INFO_GET_URL, params, "name");
         String prefix = "ku";
         int number = 0;
 
@@ -143,83 +121,6 @@ public class addMerchant {
         } else {
             return true;
         }
-    }
-
-    private static String sendGetRequest(String urlString, String params, String type) {
-        String fullUrl = urlString + "?" + params;
-        try {
-            URL url = new URL(fullUrl);
-            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-            int responseCode = connection.getResponseCode();
-            if (responseCode == HttpURLConnection.HTTP_OK) {
-                BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
-                String line;
-                StringBuilder response = new StringBuilder();
-
-                while ((line = reader.readLine()) != null) {
-                    response.append(line);
-                }
-
-                reader.close();
-                try {
-                    ObjectMapper mapper = new ObjectMapper();
-                    JsonNode root = mapper.readTree(response.toString());
-                    JsonNode data;
-                    switch (type) {
-                        case "access_token":
-                            data = root.path("data").path("access_token");
-                            return data.asText();
-                        case "mchId":
-                            data = root.path("data").path("mchId");
-                            return data.asText();
-                        case "name":
-                            data = root.path("data").path("name");
-                            return data.asText();
-                        case "mobile":
-                            data = root.path("data").path("mobile");
-                            return data.asText();
-                    }
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            } else {
-                throw new IOException("GET request failed with response code: " + responseCode);
-            }
-        } catch (MalformedURLException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return null;
-    }
-
-    private static String sendPostRequest(String urlString, String params) {
-        String fullUrl = urlString + "?" + params;
-        try {
-            URL url = new URL(fullUrl);
-            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-            int responseCode = connection.getResponseCode();
-            if (responseCode == HttpURLConnection.HTTP_OK) {
-                BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
-                String line;
-                StringBuilder response = new StringBuilder();
-
-                while ((line = reader.readLine()) != null) {
-                    response.append(line);
-                }
-
-                reader.close();
-                return response.toString();
-
-            } else {
-                throw new IOException("GET request failed with response code: " + responseCode);
-            }
-        } catch (MalformedURLException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return null;
     }
 
     private static final String CHARACTERS = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
