@@ -54,14 +54,13 @@ public class PrivateMessage_ {
             }
             // 判斷事件
             if (text.length() > 4) {
-                System.out.println(text);
                 String post = text.substring(0, 4);
                 // 發布招聘
                 if (post.equals(DemandEnum.DEMAND.getText())) {
                     this.demandd.generateTextDemand(common, false);
                 } else if (post.equals(DemandEnum.EDIT_DEMAND.getText())) {
                     this.demandd.generateTextDemand(common, true);
-                // 發布求職
+                    // 發布求職
                 } else if (post.equals(DemandEnum.SUPPLY.getText())) {
                     this.demandd.generateTextSupply(common, false);
                 } else if (post.equals(DemandEnum.EDIT_SUPPLY.getText())) {
@@ -100,9 +99,9 @@ public class PrivateMessage_ {
     }
 
     private Boolean isSubscribeChannel() {
-        GetChatMember getChatMember = new GetChatMember("-1001784108917", message.getChatId());   //  缅甸招聘频道
-//        GetChatMember getChatMember = new GetChatMember("-1001893819364", message.getChatId());  //  测试频道
+        GetChatMember getChatMember = new GetChatMember("-1001784108917", message.getChatId()); // 缅甸招聘频道
         Boolean status = this.common.executeAsync(getChatMember);
+        // return true;
         return status;
     }
 

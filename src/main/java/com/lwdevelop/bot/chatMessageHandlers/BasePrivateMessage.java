@@ -22,6 +22,7 @@ public abstract class BasePrivateMessage {
     protected Message message;
     protected String text;
     protected Long chatId;
+    protected String chatId_str;
     protected Long springyBotId;
 
     public BasePrivateMessage(Common common){
@@ -29,6 +30,7 @@ public abstract class BasePrivateMessage {
         this.text = common.getUpdate().getMessage().getText();
         this.message = common.getUpdate().getMessage();
         this.chatId = common.getUpdate().getMessage().getChatId();
+        this.chatId_str = common.getUpdate().getMessage().getChatId().toString();
         this.springyBotId = this.common.getSpringyBotId();
     }
 

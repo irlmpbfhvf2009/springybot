@@ -23,7 +23,7 @@ public class InvitationBonusUser {
     // user
     private Long userId;
     private String firstname;
-    private String usrname;
+    private String username;
     private String lastname;
 
     // chat

@@ -27,7 +27,6 @@ public class PrivateMessage_ extends BasePrivateMessage{
 
 
     private User user;
-    private Long chatId;
     private String state;
     private String botUsername;
 
@@ -63,7 +62,7 @@ public class PrivateMessage_ extends BasePrivateMessage{
                 case "enterImageCode":
                     PrivateMessage_.vc = this.message.getText();
                     common.getUserState().put(chatId, "");
-                    SendMessage response = new SendMessage(chatId.toString(), "輸入google驗證碼");
+                    SendMessage response = new SendMessage(chatId_str, "輸入google驗證碼");
                     common.executeAsync_(response);
                     common.getUserState().put(chatId, "enterGoogleCode");
                     break;
@@ -84,10 +83,9 @@ public class PrivateMessage_ extends BasePrivateMessage{
             }
 
             List<WhiteList> whiteList = springyBotServiceImpl.findWhiteListBySpringyBotId(common.getSpringyBotId());
-
-            if (whiteList.stream().anyMatch(wl -> wl.getUserId().equals(message.getChatId()))) {
+            if (whiteList.stream().anyMatch(wl -> wl.getUserId().equals(chatId))) {
                 SendMessage response = new SendMessage();
-                response.setChatId(String.valueOf(chatId));
+                response.setChatId(chatId_str);
                 switch (this.text.toLowerCase()) {
                     case "/punch_in":
                         LocalDate currentDate = LocalDate.now();

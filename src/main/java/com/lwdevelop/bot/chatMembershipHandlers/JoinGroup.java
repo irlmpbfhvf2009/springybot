@@ -185,7 +185,7 @@ public class JoinGroup extends BaseHandler {
         invitationBonusUser.setBotId(this.botId);
         invitationBonusUser.setUserId(this.inviteId);
         invitationBonusUser.setFirstname(this.inviteFirstname);
-        invitationBonusUser.setUsrname(this.inviteUsername);
+        invitationBonusUser.setUsername(this.inviteUsername);
         invitationBonusUser.setLastname(this.inviteLastname);
         invitationBonusUser.setChatId(this.chatId);
         invitationBonusUser.setChatTitle(this.chatTitle);

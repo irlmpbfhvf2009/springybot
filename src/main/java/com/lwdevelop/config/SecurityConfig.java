@@ -43,22 +43,19 @@ public class SecurityConfig {
     }
 
     private static final String[] ADMIN_AUTH_LIST = {
-            // "/swagger-resources/**",
-            // "/swagger-ui.html",
             "/springybot/**",
+            "/invitationBonusUser/**",
+            "/groupAndChannelManagement/**",
+            "/swagger-resources/**",
+            "/swagger-ui.html",
+            "/swagger-ui/**",
 
     };
 
     private static final String[] ALL_AUTH_LIST = {
             "/static/favicon.ico",
             "/static/assets/**",
-            "/swagger-resources/**",
-            "/swagger-ui.html",
-            "/swagger-ui/**",
-            "/v3/**",
             "/admins/v1/login",
-            "/index",
-            "/groupAndChannelManagement/**",
             "/debug/**",
             "/callback/**",
             "/redis/**",

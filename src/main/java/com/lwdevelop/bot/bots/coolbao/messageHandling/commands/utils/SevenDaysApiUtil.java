@@ -42,9 +42,6 @@ public class SevenDaysApiUtil extends HttpRequestUtil {
         String vt = PrivateMessage_.vt;
         String gc = PrivateMessage_.gc;
 
-        System.out.println("vc=" + vc);
-        System.out.println("vt=" + vt);
-        System.out.println("gc=" + gc);
         try {
             URL url = new URL(fullUrl);
             HttpURLConnection connection = (HttpURLConnection) url.openConnection();
@@ -73,7 +70,6 @@ public class SevenDaysApiUtil extends HttpRequestUtil {
                 try {
                     ObjectMapper mapper = new ObjectMapper();
                     JsonNode root = mapper.readTree(response.toString());
-                    System.out.println(response.toString());
                     JsonNode data;
 
 

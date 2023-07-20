@@ -7,7 +7,6 @@ import com.lwdevelop.bot.bots.utils.Common;
 public class cgBalance extends XxPayApiUtil {
 
     public String cmd(Common common) {
-
         String token = generateToken();
         String cg01_params = "mchId=20000007&access_token=" + token;
         String cg02_params = "mchId=20000008&access_token=" + token;
