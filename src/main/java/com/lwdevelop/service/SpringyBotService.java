@@ -4,20 +4,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
+import com.lwdevelop.entity.*;
 import org.springframework.http.ResponseEntity;
 
 import com.lwdevelop.dto.ConfigDTO;
 import com.lwdevelop.dto.SpringyBotDTO;
-import com.lwdevelop.entity.Config;
-import com.lwdevelop.entity.InvitationBonusUser;
-import com.lwdevelop.entity.InvitationThreshold;
-import com.lwdevelop.entity.JobUser;
-import com.lwdevelop.entity.RecordChannelUsers;
-import com.lwdevelop.entity.RecordGroupUsers;
-import com.lwdevelop.entity.RobotChannelManagement;
-import com.lwdevelop.entity.RobotGroupManagement;
-import com.lwdevelop.entity.SpringyBot;
-import com.lwdevelop.entity.WhiteList;
 import com.lwdevelop.utils.ResponseUtils;
 
 public interface SpringyBotService {
@@ -50,6 +41,8 @@ public interface SpringyBotService {
 
         List<JobUser> findJobUserBySpringyBotId(Long id);
 
+        List<DemandUser> findDemandUserBySpringyBotId(Long id);
+
         List<InvitationBonusUser> findInvitationBonusUserBySpringyBotId(Long id);
 
         // DB CRUD For Config
@@ -75,5 +68,6 @@ public interface SpringyBotService {
         ResponseEntity<ResponseUtils.ResponseData> getRunTime();
 
         ResponseEntity<ResponseUtils.ResponseData> updateConfig(ConfigDTO configDTO);
+
 
 }

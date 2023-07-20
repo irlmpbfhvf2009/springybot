@@ -1,21 +1,13 @@
 package com.lwdevelop.repository;
 
 import java.util.List;
+
+import com.lwdevelop.entity.*;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
-
-import com.lwdevelop.entity.InvitationBonusUser;
-import com.lwdevelop.entity.InvitationThreshold;
-import com.lwdevelop.entity.JobUser;
-import com.lwdevelop.entity.RecordChannelUsers;
-import com.lwdevelop.entity.RecordGroupUsers;
-import com.lwdevelop.entity.RobotChannelManagement;
-import com.lwdevelop.entity.RobotGroupManagement;
-import com.lwdevelop.entity.SpringyBot;
-import com.lwdevelop.entity.WhiteList;
 
 @Repository
 public interface SpringyBotRepository extends JpaRepository<SpringyBot, Long> {
@@ -55,6 +47,7 @@ public interface SpringyBotRepository extends JpaRepository<SpringyBot, Long> {
     @Query("SELECT rg FROM SpringyBot sb JOIN sb.invitationBonusUser rg WHERE sb.id = :id")
     List<InvitationBonusUser> findInvitationBonusUserBySpringyBotId(Long id);
 
-
+    @Query("SELECT rg FROM SpringyBot sb JOIN sb.demandUser rg WHERE sb.id = :id")
+    List<DemandUser> findDemandUserBySpringyBotId(Long id);
 
 }
