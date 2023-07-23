@@ -37,12 +37,12 @@ public class JobUser {
         private Date createdDate;
 
         // （求职人员）
-        @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+        @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
         @JsonIgnore
         private Set<JobSeeker> jobSeeker;
 
         // （招聘信息）
-        @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+        @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
         @JsonIgnore
         private Set<JobPosting> jobPosting;
 

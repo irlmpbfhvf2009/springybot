@@ -156,7 +156,7 @@ public class SupplyDTO {
                         break;
                     case "項目內容":
                         if (value.length() >= 50) {
-                            returnStr = TelentEnum.REMIND_REQUIREMENTS_LIMIT.getText();
+                            returnStr = "发送失败,項目內容超过50字";
                         }
                         supply.setProjectDetail(value);
                         break;

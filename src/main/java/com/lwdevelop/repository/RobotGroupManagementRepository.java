@@ -6,7 +6,6 @@ import com.lwdevelop.entity.RobotGroupManagement;
 
 @Repository
 public interface RobotGroupManagementRepository extends JpaRepository<RobotGroupManagement, Long> {
-    void deleteById(Long id);
     RobotGroupManagement findByBotIdAndGroupId(Long botId,Long groupId);
     
 }

@@ -227,7 +227,7 @@ public class JobPostingDTO {
                         break;
                     case "要求内容":
                         if (value.length() >= 50) {
-                            returnStr = TelentEnum.REMIND_REQUIREMENTS_LIMIT.getText();
+                            returnStr = "发送失败,要求内容超过50字";
                         }
                         jobPosting.setRequirements(value);
                         break;

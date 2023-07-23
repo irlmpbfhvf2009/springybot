@@ -13,34 +13,6 @@ import java.util.List;
 
 public class DemandButton {
 
-    // manage keyboard
-    public final ReplyKeyboardMarkup manageReplyKeyboardMarkup() {
-        ReplyKeyboardMarkup keyboardMarkup = new ReplyKeyboardMarkup();
-        List<KeyboardRow> keyboard = new ArrayList<>();
-        KeyboardRow row = new KeyboardRow();
-        row.add(TelentEnum.HOW_TO_ADD_ME_TO_YOUR_GROUP.getText());
-        row.add(TelentEnum.ADMIN_PANEL.getText());
-        keyboard.add(row);
-        row = new KeyboardRow();
-        row.add(TelentEnum.HOW_TO_ADD_ME_TO_YOUR_CHANNEL.getText());
-        row.add(TelentEnum.SUPPORT_TEAM_LIST.getText());
-        keyboard.add(row);
-        keyboardMarkup.setKeyboard(keyboard);
-        return keyboardMarkup;
-    }
-
-    public final InlineKeyboardMarkup addToGroupOrChannelMarkupInline(String url, String type) {
-        InlineKeyboardButton dk1 = new InlineKeyboardButton();
-        dk1.setText("Add to " + type);
-        dk1.setUrl(url);
-        InlineKeyboardMarkup markupInline = new InlineKeyboardMarkup();
-        List<List<InlineKeyboardButton>> rowsInline = new ArrayList<>();
-        List<InlineKeyboardButton> rowInline = new ArrayList<>();
-        rowInline.add(dk1);
-        rowsInline.add(rowInline);
-        markupInline.setKeyboard(rowsInline);
-        return markupInline;
-    }
 
     // demand keyboard
     public final ReplyKeyboardMarkup demandReplyKeyboardMarkup() {

@@ -203,9 +203,8 @@ public class Demandd {
                     response.setDisableWebPagePreview(true);
                     response.setDisableNotification(true);
                     ChannelMessageIdPostCounts channelMessageIdPostCounts = demandManagementServiceImpl
-                            .findByChannelIdAndUserIdAndTypeWithChannelMessageIdPostCounts(
-                                    channelId, String.valueOf(message.getChatId()),
-                                    DemandEnum.DEMAND_.getText());
+                            .findByChannelIdAndUserIdAndTypeWithGroupMessageIdPostCounts(
+                                    channelId, userId.toString(), DemandEnum.DEMAND_.getText());
 
                     if (isEdit) {
                         EditMessageText editMessageText = new EditMessageText();
@@ -280,7 +279,7 @@ public class Demandd {
                     response.setDisableNotification(true);
                     response.setDisableWebPagePreview(true);
                     GroupMessageIdPostCounts groupMessageIdPostCounts = demandManagementServiceImpl
-                            .findByGroupIdAndTypeWithGroupMessageIdPostCounts(groupId,
+                            .findByGroupIdAndUserIdAndTypeWithGroupMessageIdPostCounts(groupId,userId.toString(),
                                     DemandEnum.DEMAND_.getText());
                     if (isEdit) {
                         EditMessageText editMessageText = new EditMessageText();
@@ -404,8 +403,8 @@ public class Demandd {
                     response.setDisableNotification(true);
                     response.setDisableWebPagePreview(true);
                     ChannelMessageIdPostCounts channelMessageIdPostCounts = demandManagementServiceImpl
-                            .findByChannelIdAndUserIdAndTypeWithChannelMessageIdPostCounts(
-                                    channelId, String.valueOf(message.getChatId()), "supply");
+                            .findByChannelIdAndUserIdAndTypeWithGroupMessageIdPostCounts(
+                                    channelId, userId.toString(), "supply");
 
                     if (isEdit) {
                         EditMessageText editMessageText = new EditMessageText(
@@ -480,8 +479,7 @@ public class Demandd {
                     response.setDisableNotification(true);
                     response.setDisableWebPagePreview(true);
                     GroupMessageIdPostCounts groupMessageIdPostCounts = demandManagementServiceImpl
-                            .findByGroupIdAndTypeWithGroupMessageIdPostCounts(
-                                    groupId, DemandEnum.SUPPLY_.getText());
+                            .findByGroupIdAndUserIdAndTypeWithGroupMessageIdPostCounts(groupId,userId.toString(), DemandEnum.SUPPLY_.getText());
 
                     if (isEdit) {
                         EditMessageText editMessageText = new EditMessageText();

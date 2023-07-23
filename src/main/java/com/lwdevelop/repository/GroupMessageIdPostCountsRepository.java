@@ -9,11 +9,7 @@ import com.lwdevelop.entity.GroupMessageIdPostCounts;
 @Repository
 public interface GroupMessageIdPostCountsRepository extends JpaRepository<GroupMessageIdPostCounts, Long> {
 
-    GroupMessageIdPostCounts findByBotIdAndUserIdAndType(String botId, String userId, String type);
-
-    GroupMessageIdPostCounts findByGroupIdAndType(Long grouplId, String type);
-
-    List<GroupMessageIdPostCounts> findAllByGroupIdAndType(Long groupId, String type);
+    GroupMessageIdPostCounts findByGroupIdAndUserIdAndType(Long grouplId,String userId, String type);
 
     List<GroupMessageIdPostCounts> findAllByBotIdAndUserIdAndType(String botId, String userId, String type);
 }

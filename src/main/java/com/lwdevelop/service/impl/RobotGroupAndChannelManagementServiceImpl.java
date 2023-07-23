@@ -5,8 +5,6 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-
-import com.lwdevelop.bot.bots.utils.Common;
 import com.lwdevelop.dto.GroupAndChannelTreeDTO;
 import com.lwdevelop.dto.RobotChannelManagementDTO;
 import com.lwdevelop.dto.RobotGroupManagementDTO;
@@ -19,7 +17,6 @@ import com.lwdevelop.service.RobotGroupAndChannelManagementService;
 import com.lwdevelop.utils.ResponseUtils;
 import com.lwdevelop.utils.RetEnum;
 import com.lwdevelop.utils.ResponseUtils.ResponseData;
-import org.telegram.telegrambots.meta.api.methods.groupadministration.GetChatMember;
 
 @Service
 public class RobotGroupAndChannelManagementServiceImpl implements RobotGroupAndChannelManagementService {
@@ -36,10 +33,6 @@ public class RobotGroupAndChannelManagementServiceImpl implements RobotGroupAndC
     @Override
     public void deleteByIdWithRobotChannelManagement(Long Id) {
         robotChannelManagementRepository.deleteById(Id);
-    }
-    @Override
-    public void saveRobotGroup(RobotGroupManagement robotGroupManagement) {
-        robotGroupManagementRepository.save(robotGroupManagement);
     }
 
     @Override
@@ -139,13 +132,5 @@ public class RobotGroupAndChannelManagementServiceImpl implements RobotGroupAndC
         return ResponseUtils.response(RetEnum.RET_SUCCESS, data);
     }
 
-    @Override
-    public boolean ifSubscribeChannel(Common common) {
-        String chatId = "-1001784108917";
-        Long userId = common.getUpdate().getMessage().getChatId();
-        GetChatMember getChatMember = new GetChatMember(chatId, userId);
-        Boolean status = common.executeAsync(getChatMember);
-        return status;
-    }
 
 }

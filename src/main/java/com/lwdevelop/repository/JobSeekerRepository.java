@@ -7,7 +7,5 @@ import com.lwdevelop.entity.JobSeeker;
 @Repository
 public interface JobSeekerRepository extends JpaRepository<JobSeeker, Long> {
     JobSeeker findByUserIdAndBotId(String userId,String springyBotId);
-    JobSeeker findAllByUserIdAndBotId(String userId,String springyBotId);
-    
     
 }

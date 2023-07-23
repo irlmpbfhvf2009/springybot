@@ -88,9 +88,9 @@ public class CallbackQuerys extends BaseCallbackQuerys{
 
             response.setText(TelentEnum.SUCCESSFULLYDELETED.getText());
             common.executeAsync(response);
-        } else if (callbackQuery.getData().startsWith(TelentEnum.CLEAR_JOBSEEKER.getText())) {
+        } else if (callbackQuery.getData().startsWith("clearJobSeeker_")) {
 
-            String userId = callbackQuery.getData().substring(TelentEnum.CLEAR_JOBSEEKER.getText().length(),
+            String userId = callbackQuery.getData().substring("clearJobSeeker_".length(),
                     callbackQuery.getData().lastIndexOf("_"));
             String botId = callbackQuery.getData().substring(callbackQuery.getData().lastIndexOf("_") + 1);
             // 在这里根据 springyBotId 和 userId 进行相应的清除操作
@@ -122,10 +122,10 @@ public class CallbackQuerys extends BaseCallbackQuerys{
             }
             List<ChannelMessageIdPostCounts> channelMessageIdPostCounts = jobManagementServiceImpl
                     .findAllByBotIdAndUserIdAndTypeWithChannelMessageIdPostCounts(jobSeeker.getBotId(), userId,
-                            TelentEnum.JOBSEEKER.getText());
+                    "jobSeeker");
             List<GroupMessageIdPostCounts> groupMessageIdPostCounts = jobManagementServiceImpl
                     .findAllByBotIdAndUserIdAndTypeWithGroupMessageIdPostCounts(jobSeeker.getBotId(), userId,
-                            TelentEnum.JOBSEEKER.getText());
+                    "jobSeeker");
             channelMessageIdPostCounts.stream().forEach(cmp -> {
                 DeleteMessage dm = new DeleteMessage(String.valueOf(cmp.getChannelId()), cmp.getMessageId());
                 common.executeAsync(dm);
@@ -144,11 +144,11 @@ public class CallbackQuerys extends BaseCallbackQuerys{
 
             response.setText(TelentEnum.SUCCESSFULLYDELETED.getText());
             common.executeAsync(response);
-        } else if (callbackQuery.getData().equals(TelentEnum.EDIT_JOBPOSTING.getText())) {
+        } else if (callbackQuery.getData().equals("editJobPosting_")) {
             response.setText(TelentEnum.REMIND_EDITOR.getText());
 
             common.executeAsync(response);
-        } else if (callbackQuery.getData().equals(TelentEnum.EDIT_JOBSEEKER.getText())) {
+        } else if (callbackQuery.getData().equals("editJobSeeker_")) {
             response.setText(TelentEnum.REMIND_EDITOR.getText());
             common.executeAsync(response);
         }

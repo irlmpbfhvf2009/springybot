@@ -25,28 +25,26 @@ public class DemandManagementServiceImpl implements DemandManagementService {
     @Autowired
     private GroupMessageIdPostCountsRepository groupMessageIdPostCountsRepository;
 
+    // @Override
+    // public ChannelMessageIdPostCounts
+    // findByChannelIdAndUserIdAndTypeWithChannelMessageIdPostCounts(Long channelId,
+    // String userId, String type) {
+    // return
+    // channelMessageIdPostCountsRepository.findByChannelIdAndUserIdAndType(channelId,
+    // userId, type);
+    // }
+
     @Override
-    public ChannelMessageIdPostCounts findByChannelIdAndTypeWithChannelMessageIdPostCounts(Long channelId,
+    public GroupMessageIdPostCounts findByGroupIdAndUserIdAndTypeWithGroupMessageIdPostCounts(Long groupId,String userId,
             String type) {
-        return channelMessageIdPostCountsRepository.findByChannelIdAndType(channelId, type);
+        return groupMessageIdPostCountsRepository.findByGroupIdAndUserIdAndType(groupId,userId, type);
     }
 
     @Override
-    public ChannelMessageIdPostCounts findByChannelIdAndUserIdAndTypeWithChannelMessageIdPostCounts(Long channelId,
-            String userId, String type) {
+    public ChannelMessageIdPostCounts findByChannelIdAndUserIdAndTypeWithGroupMessageIdPostCounts(Long channelId,
+            String userId,
+            String type) {
         return channelMessageIdPostCountsRepository.findByChannelIdAndUserIdAndType(channelId, userId, type);
-    }
-
-    @Override
-    public GroupMessageIdPostCounts findByGroupIdAndTypeWithGroupMessageIdPostCounts(Long grouplId,
-            String type) {
-        return groupMessageIdPostCountsRepository.findByGroupIdAndType(grouplId, type);
-    }
-
-    @Override
-    public ChannelMessageIdPostCounts findByBotIdAndUserIdAndTypeWithChannelMessageIdPostCounts(String botId,
-            String userId, String type) {
-        return channelMessageIdPostCountsRepository.findByBotIdAndUserIdAndType(botId, userId, type);
     }
 
     @Override
@@ -77,16 +75,6 @@ public class DemandManagementServiceImpl implements DemandManagementService {
     }
 
     @Override
-    public void deleteByIdChannelMessageIdPostCounts(Long id) {
-        channelMessageIdPostCountsRepository.deleteById(id);
-    }
-
-    @Override
-    public void deleteByIdGroupMessageIdPostCounts(Long id) {
-        groupMessageIdPostCountsRepository.deleteById(id);
-    }
-
-    @Override
     public void saveDemand(Demand demand) {
         demandRepository.save(demand);
     }
@@ -106,99 +94,98 @@ public class DemandManagementServiceImpl implements DemandManagementService {
         demandRepository.deleteById(id);
     }
 
-
     @Override
     public ResponseEntity<ResponseData> getDemandTreeData() {
-//        List<JobTreeDTO> data = new ArrayList<>();
-//        List<SpringyBot> springyBots = springyBotServiceImpl.findAll();
-//
-//        for (int i = 0; i < springyBots.size(); i++) {
-//            JobTreeDTO posting = new JobTreeDTO();
-//            posting.setLabel("招聘信息");
-//            posting.setId(0L);
-//            JobTreeDTO seeker = new JobTreeDTO();
-//            seeker.setLabel("求職信息");
-//            seeker.setId(1L);
-//
-//            List<JobUser> jobUsers = springyBotServiceImpl.findJobUserBySpringyBotId(springyBots.get(i).getId());
-//            for (int j = 0; j < jobUsers.size(); j++) {
-//                List<JobTreeDTO> jobTreeDTOList = new ArrayList<>();
-//                jobUsers.stream().forEach(jobUser -> {
-//                    JobTreeDTO jobTreeDTO = new JobTreeDTO();
-//                    jobTreeDTO.setId(jobUser.getId());
-//                    String name = jobUser.getUsername().equals("") ? jobUser.getFirstname() : jobUser.getUsername();
-//                    name = name.equals("") ? jobUser.getLastname() : name;
-//                    jobTreeDTO.setLabel(name);
-//
-//                    Optional<JobPosting> jobPostingOptional = jobUser.getJobPosting().stream()
-//                            .filter(jp -> jp.getUserId().equals(jobUser.getUserId())).findAny();
-//                    if (jobPostingOptional.isPresent()) {
-//                        JobPosting jobPosting = jobPostingOptional.get();
-//                        JobPostingDTO jobPostingDTO = new JobPostingDTO();
-//                        jobPostingDTO.setBaseSalary(jobPosting.getBaseSalary());
-//                        jobPostingDTO.setBotId(jobPosting.getBotId());
-//                        jobPostingDTO.setCommission(jobPosting.getCommission());
-//                        jobPostingDTO.setCompany(jobPosting.getCompany());
-//                        jobPostingDTO.setFlightNumber(jobPosting.getFlightNumber());
-//                        jobPostingDTO.setId(jobPosting.getId());
-//                        jobPostingDTO.setLocation(jobPosting.getLocation());
-//                        jobPostingDTO.setPosition(jobPosting.getPosition());
-//                        jobPostingDTO.setRequirements(jobPosting.getRequirements());
-//                        jobPostingDTO.setUserId(jobPosting.getUserId());
-//                        jobPostingDTO.setWorkTime(jobPosting.getWorkTime());
-//
-//                        List<JobPostingDTO> list = new ArrayList<>();
-//                        list.add(jobPostingDTO);
-//                        jobTreeDTO.setJobPostingDTO(list);
-//                    }
-//
-//                    Optional<JobSeeker> jobSeekerOptional = jobUser.getJobSeeker().stream()
-//                            .filter(js -> js.getUserId().equals(jobUser.getUserId())).findAny();
-//                    if (jobSeekerOptional.isPresent()) {
-//                        JobSeeker jobSeeker = jobSeekerOptional.get();
-//                        JobSeekerDTO jobSeekerDTO = new JobSeekerDTO();
-//                        jobSeekerDTO.setAge(jobSeeker.getAge());
-//                        jobSeekerDTO.setBotId(jobSeeker.getBotId());
-//                        jobSeekerDTO.setDateOfBirth(jobSeeker.getDateOfBirth());
-//                        jobSeekerDTO.setEducation(jobSeeker.getEducation());
-//                        jobSeekerDTO.setExpectedSalary(jobSeeker.getExpectedSalary());
-//                        jobSeekerDTO.setFlightNumber(jobSeeker.getFlightNumber());
-//                        jobSeekerDTO.setGender(jobSeeker.getGender());
-//                        jobSeekerDTO.setId(jobSeeker.getId());
-//                        jobSeekerDTO.setName(jobSeeker.getName());
-//                        jobSeekerDTO.setNationality(jobSeeker.getNationality());
-//                        jobSeekerDTO.setResources(jobSeeker.getResources());
-//                        jobSeekerDTO.setSelfIntroduction(jobSeeker.getSelfIntroduction());
-//                        jobSeekerDTO.setSkills(jobSeeker.getSkills());
-//                        jobSeekerDTO.setTargetPosition(jobSeeker.getTargetPosition());
-//                        jobSeekerDTO.setUserId(jobSeeker.getUserId());
-//                        jobSeekerDTO.setWorkExperience(jobSeeker.getWorkExperience());
-//
-//                        List<JobSeekerDTO> list = new ArrayList<>();
-//                        list.add(jobSeekerDTO);
-//                        jobTreeDTO.setJobSeekerDTO(list);
-//                    }
-//
-//                    jobTreeDTOList.add(jobTreeDTO);
-//                    posting.setChildren(jobTreeDTOList);
-//                    seeker.setChildren(jobTreeDTOList);
-//                });
-//            }
-//
-//            JobTreeDTO jobTreeDTO = new JobTreeDTO();
-//            List<JobTreeDTO> children = new ArrayList<>();
-//            children.add(seeker);
-//            children.add(posting);
-//
-//            jobTreeDTO.setLabel(springyBots.get(i).getUsername());
-//            jobTreeDTO.setId((long) i);
-//            jobTreeDTO.setChildren(children);
-//            data.add(jobTreeDTO);
-//        }
-//        return ResponseUtils.response(RetEnum.RET_SUCCESS, data);
+        // List<JobTreeDTO> data = new ArrayList<>();
+        // List<SpringyBot> springyBots = springyBotServiceImpl.findAll();
+        //
+        // for (int i = 0; i < springyBots.size(); i++) {
+        // JobTreeDTO posting = new JobTreeDTO();
+        // posting.setLabel("招聘信息");
+        // posting.setId(0L);
+        // JobTreeDTO seeker = new JobTreeDTO();
+        // seeker.setLabel("求職信息");
+        // seeker.setId(1L);
+        //
+        // List<JobUser> jobUsers =
+        // springyBotServiceImpl.findJobUserBySpringyBotId(springyBots.get(i).getId());
+        // for (int j = 0; j < jobUsers.size(); j++) {
+        // List<JobTreeDTO> jobTreeDTOList = new ArrayList<>();
+        // jobUsers.stream().forEach(jobUser -> {
+        // JobTreeDTO jobTreeDTO = new JobTreeDTO();
+        // jobTreeDTO.setId(jobUser.getId());
+        // String name = jobUser.getUsername().equals("") ? jobUser.getFirstname() :
+        // jobUser.getUsername();
+        // name = name.equals("") ? jobUser.getLastname() : name;
+        // jobTreeDTO.setLabel(name);
+        //
+        // Optional<JobPosting> jobPostingOptional = jobUser.getJobPosting().stream()
+        // .filter(jp -> jp.getUserId().equals(jobUser.getUserId())).findAny();
+        // if (jobPostingOptional.isPresent()) {
+        // JobPosting jobPosting = jobPostingOptional.get();
+        // JobPostingDTO jobPostingDTO = new JobPostingDTO();
+        // jobPostingDTO.setBaseSalary(jobPosting.getBaseSalary());
+        // jobPostingDTO.setBotId(jobPosting.getBotId());
+        // jobPostingDTO.setCommission(jobPosting.getCommission());
+        // jobPostingDTO.setCompany(jobPosting.getCompany());
+        // jobPostingDTO.setFlightNumber(jobPosting.getFlightNumber());
+        // jobPostingDTO.setId(jobPosting.getId());
+        // jobPostingDTO.setLocation(jobPosting.getLocation());
+        // jobPostingDTO.setPosition(jobPosting.getPosition());
+        // jobPostingDTO.setRequirements(jobPosting.getRequirements());
+        // jobPostingDTO.setUserId(jobPosting.getUserId());
+        // jobPostingDTO.setWorkTime(jobPosting.getWorkTime());
+        //
+        // List<JobPostingDTO> list = new ArrayList<>();
+        // list.add(jobPostingDTO);
+        // jobTreeDTO.setJobPostingDTO(list);
+        // }
+        //
+        // Optional<JobSeeker> jobSeekerOptional = jobUser.getJobSeeker().stream()
+        // .filter(js -> js.getUserId().equals(jobUser.getUserId())).findAny();
+        // if (jobSeekerOptional.isPresent()) {
+        // JobSeeker jobSeeker = jobSeekerOptional.get();
+        // JobSeekerDTO jobSeekerDTO = new JobSeekerDTO();
+        // jobSeekerDTO.setAge(jobSeeker.getAge());
+        // jobSeekerDTO.setBotId(jobSeeker.getBotId());
+        // jobSeekerDTO.setDateOfBirth(jobSeeker.getDateOfBirth());
+        // jobSeekerDTO.setEducation(jobSeeker.getEducation());
+        // jobSeekerDTO.setExpectedSalary(jobSeeker.getExpectedSalary());
+        // jobSeekerDTO.setFlightNumber(jobSeeker.getFlightNumber());
+        // jobSeekerDTO.setGender(jobSeeker.getGender());
+        // jobSeekerDTO.setId(jobSeeker.getId());
+        // jobSeekerDTO.setName(jobSeeker.getName());
+        // jobSeekerDTO.setNationality(jobSeeker.getNationality());
+        // jobSeekerDTO.setResources(jobSeeker.getResources());
+        // jobSeekerDTO.setSelfIntroduction(jobSeeker.getSelfIntroduction());
+        // jobSeekerDTO.setSkills(jobSeeker.getSkills());
+        // jobSeekerDTO.setTargetPosition(jobSeeker.getTargetPosition());
+        // jobSeekerDTO.setUserId(jobSeeker.getUserId());
+        // jobSeekerDTO.setWorkExperience(jobSeeker.getWorkExperience());
+        //
+        // List<JobSeekerDTO> list = new ArrayList<>();
+        // list.add(jobSeekerDTO);
+        // jobTreeDTO.setJobSeekerDTO(list);
+        // }
+        //
+        // jobTreeDTOList.add(jobTreeDTO);
+        // posting.setChildren(jobTreeDTOList);
+        // seeker.setChildren(jobTreeDTOList);
+        // });
+        // }
+        //
+        // JobTreeDTO jobTreeDTO = new JobTreeDTO();
+        // List<JobTreeDTO> children = new ArrayList<>();
+        // children.add(seeker);
+        // children.add(posting);
+        //
+        // jobTreeDTO.setLabel(springyBots.get(i).getUsername());
+        // jobTreeDTO.setId((long) i);
+        // jobTreeDTO.setChildren(children);
+        // data.add(jobTreeDTO);
+        // }
+        // return ResponseUtils.response(RetEnum.RET_SUCCESS, data);
         return null;
     }
-
-
 
 }

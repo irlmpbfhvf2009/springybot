@@ -61,11 +61,11 @@ public class JobPosting {
     private Integer lastMessageId;
     
     // channelId  messageId 訊息ID  postCount 發送次數
-    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JsonIgnore
     private Set<ChannelMessageIdPostCounts> channelMessageIdPostCounts;
     
-    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JsonIgnore
     private Set<GroupMessageIdPostCounts> groupMessageIdPostCounts;
 

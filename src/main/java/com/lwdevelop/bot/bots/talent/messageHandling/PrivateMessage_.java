@@ -8,19 +8,15 @@ import com.lwdevelop.bot.bots.utils.Common;
 import com.lwdevelop.bot.bots.utils.enum_.TelentEnum;
 import com.lwdevelop.bot.bots.utils.keyboardButton.TelentButton;
 import com.lwdevelop.bot.chatMessageHandlers.BasePrivateMessage;
-import com.lwdevelop.dto.JobPostingDTO;
-import com.lwdevelop.dto.JobSeekerDTO;
 import com.lwdevelop.entity.SpringyBot;
 
-public class PrivateMessage_ extends BasePrivateMessage{
+public class PrivateMessage_ extends BasePrivateMessage {
 
     private Job job;
 
     public PrivateMessage_(Common common) {
         super(common);
-        Job job = new Job(new JobPostingDTO(common), new JobSeekerDTO(common));
-        job.saveJobUser(common);
-        this.job = job;
+        this.job = new Job(common);
     }
 
     @Override
@@ -31,14 +27,14 @@ public class PrivateMessage_ extends BasePrivateMessage{
         if (isSubscribeChannel) {
             switch (this.text.toLowerCase()) {
                 case "发布招聘":
-                    this.job.setResponse_jobPosting_management(common);
+                    this.job.setResponse_jobPosting_management();
                     break;
                 case "发布求职":
-                    this.job.setResponse_jobSeeker_management(common);
+                    this.job.setResponse_jobSeeker_management();
                     break;
                 case "招聘和求职信息管理":
-                    this.job.setResponse_edit_jobPosting_management(common);
-                    this.job.setResponse_edit_jobSeeker_management(common);
+                    this.job.setResponse_edit_jobPosting_management();
+                    this.job.setResponse_edit_jobSeeker_management();
                     break;
                 case "/start":
                     this.setResponse_job();
@@ -49,15 +45,15 @@ public class PrivateMessage_ extends BasePrivateMessage{
             if (text.length() > 4) {
                 String post = text.substring(0, 4);
                 // 發布招聘
-                if (post.equals(TelentEnum.RECRUITMENT.getText())) {
-                    this.job.generateTextJobPosting(common, false);
-                } else if (post.equals(TelentEnum.EDIT_RECRUITMENT.getText())) {
-                    this.job.generateTextJobPosting(common, true);
+                if (post.equals("招聘人才")) {
+                    this.job.generateTextJobPosting(false);
+                } else if (post.equals("编辑招聘")) {
+                    this.job.generateTextJobPosting(true);
                     // 發布求職
-                } else if (post.equals(TelentEnum.JOBSEARCH.getText())) {
-                    this.job.generateTextJobSeeker(common, false);
-                } else if (post.equals(TelentEnum.EDIT_JOBSEARCH.getText())) {
-                    this.job.generateTextJobSeeker(common, true);
+                } else if (post.equals("求职人员")) {
+                    this.job.generateTextJobSeeker(false);
+                } else if (post.equals("编辑求职")) {
+                    this.job.generateTextJobSeeker(true);
                 }
             }
         } else {
@@ -81,7 +77,7 @@ public class PrivateMessage_ extends BasePrivateMessage{
         }
 
         SendMessage response = new SendMessage();
-        response.setChatId(String.valueOf(message.getChatId()));
+        response.setChatId(chatId_str);
         response.setText(TelentEnum.help_text(name, botName));
 
         if (isSubscribeChannel) {
@@ -95,7 +91,7 @@ public class PrivateMessage_ extends BasePrivateMessage{
     private Boolean isSubscribeChannel() {
         SpringyBot springyBot = springyBotServiceImpl.findById(springyBotId).get();
         Long chatId = springyBot.getConfig().getFollowChannelSet_chatId();
-        GetChatMember getChatMember = new GetChatMember(chatId.toString(), message.getChatId());
+        GetChatMember getChatMember = new GetChatMember(chatId_str, chatId);
         Boolean status = this.common.executeAsync(getChatMember);
         return status;
     }

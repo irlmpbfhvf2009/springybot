@@ -1,7 +1,6 @@
 package com.lwdevelop.service;
 
 import org.springframework.http.ResponseEntity;
-import com.lwdevelop.bot.bots.utils.Common;
 import com.lwdevelop.entity.RobotChannelManagement;
 import com.lwdevelop.entity.RobotGroupManagement;
 import com.lwdevelop.utils.ResponseUtils;
@@ -18,12 +17,9 @@ public interface RobotGroupAndChannelManagementService {
 
     RobotGroupManagement findByBotIdAndGroupId(Long botId, Long groupId);
 
-    void saveRobotGroup(RobotGroupManagement robotGroupManagement);
-    
+
+
     ResponseEntity<ResponseUtils.ResponseData> getGroupAndChannelTreeData();
-
-    boolean ifSubscribeChannel(Common common);
-
 
 
 }

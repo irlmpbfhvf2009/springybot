@@ -41,6 +41,8 @@ public interface SpringyBotService {
 
         List<JobUser> findJobUserBySpringyBotId(Long id);
 
+        JobUser findJobUserBySpringyBotIdAndJobUserId(Long id,String userId);
+
         List<DemandUser> findDemandUserBySpringyBotId(Long id);
 
         List<InvitationBonusUser> findInvitationBonusUserBySpringyBotId(Long id);

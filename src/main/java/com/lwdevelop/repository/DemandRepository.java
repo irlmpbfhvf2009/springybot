@@ -6,8 +6,6 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface DemandRepository extends JpaRepository<Demand, Long> {
-    Demand findByUserIdAndBotId(String userId,String springyBotId);
-    Demand findAllByUserIdAndBotId(String userId,String springyBotId);
-    
+    Demand findByUserIdAndBotId(String userId,String springyBotId);    
     
 }

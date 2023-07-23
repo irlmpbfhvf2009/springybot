@@ -269,13 +269,13 @@ public class JobSeekerDTO {
                         break;
                     case "工作经历":
                         if (value.length() >= 50) {
-                            returnStr = TelentEnum.REMIND_WORKEXPERIENCE_LIMIT.getText();
+                            returnStr = "发送失败,工作经历超过50字";
                         }
                         jobSeeker.setWorkExperience(value);
                         break;
                     case "自我介绍":
                         if (value.length() >= 50) {
-                            returnStr = TelentEnum.REMIND_SELFINTRODUCTION_LIMIT.getText();
+                            returnStr = "发送失败,自我介绍超过50字";
                         }
                         jobSeeker.setSelfIntroduction(value);
                         break;

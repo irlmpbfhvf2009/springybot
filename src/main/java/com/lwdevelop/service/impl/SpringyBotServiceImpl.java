@@ -121,6 +121,11 @@ public class SpringyBotServiceImpl implements SpringyBotService {
     }
 
     @Override
+    public JobUser findJobUserBySpringyBotIdAndJobUserId(Long id,String userId) {
+        return springyBotRepository.findJobUserBySpringyBotIdAndJobUserId(id,userId);
+    }
+
+    @Override
     public List<DemandUser> findDemandUserBySpringyBotId(Long id) {
         return springyBotRepository.findDemandUserBySpringyBotId(id);
     }
