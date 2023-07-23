@@ -99,7 +99,7 @@ public class PrivateMessage_ {
     }
 
     private Boolean isSubscribeChannel() {
-        GetChatMember getChatMember = new GetChatMember("-1001784108917", message.getChatId()); // 缅甸招聘频道
+        GetChatMember getChatMember = new GetChatMember("-1001686617172", message.getChatId()); // 缅甸招聘频道
         Boolean status = this.common.executeAsync(getChatMember);
         // return true;
         return status;

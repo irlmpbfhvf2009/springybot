@@ -10,24 +10,25 @@ import com.lwdevelop.bot.bots.utils.keyboardButton.TelentButton;
 import com.lwdevelop.bot.chatMessageHandlers.BasePrivateMessage;
 import com.lwdevelop.dto.JobPostingDTO;
 import com.lwdevelop.dto.JobSeekerDTO;
+import com.lwdevelop.entity.SpringyBot;
 
 public class PrivateMessage_ extends BasePrivateMessage{
 
     private Job job;
-    private Boolean isSubscribeChannel;
 
     public PrivateMessage_(Common common) {
         super(common);
         Job job = new Job(new JobPostingDTO(common), new JobSeekerDTO(common));
         job.saveJobUser(common);
         this.job = job;
-        this.isSubscribeChannel = isSubscribeChannel();
     }
 
     @Override
     public void handler() {
 
-        if (this.isSubscribeChannel) {
+        Boolean isSubscribeChannel = isSubscribeChannel();
+
+        if (isSubscribeChannel) {
             switch (this.text.toLowerCase()) {
                 case "发布招聘":
                     this.job.setResponse_jobPosting_management(common);
@@ -70,6 +71,7 @@ public class PrivateMessage_ extends BasePrivateMessage{
         String lastName = this.message.getFrom().getLastName() == null ? "" : this.message.getFrom().getLastName();
         String name = firstName + lastName;
         String botName;
+        Boolean isSubscribeChannel = isSubscribeChannel();
 
         try {
             botName = "@" + this.common.getBot().getMe().getUserName();
@@ -82,7 +84,7 @@ public class PrivateMessage_ extends BasePrivateMessage{
         response.setChatId(String.valueOf(message.getChatId()));
         response.setText(TelentEnum.help_text(name, botName));
 
-        if (this.isSubscribeChannel) {
+        if (isSubscribeChannel) {
             response.setReplyMarkup(new TelentButton().jobReplyKeyboardMarkup());
         } else {
             response.setReplyMarkup(new TelentButton().keyboardSubscribeChannelMarkup());
@@ -91,9 +93,9 @@ public class PrivateMessage_ extends BasePrivateMessage{
     }
 
     private Boolean isSubscribeChannel() {
-        // -1001784108917 缅甸招聘频道
-        // -1001989448617 测试频道
-        GetChatMember getChatMember = new GetChatMember("-1001784108917", message.getChatId());
+        SpringyBot springyBot = springyBotServiceImpl.findById(springyBotId).get();
+        Long chatId = springyBot.getConfig().getFollowChannelSet_chatId();
+        GetChatMember getChatMember = new GetChatMember(chatId.toString(), message.getChatId());
         Boolean status = this.common.executeAsync(getChatMember);
         return status;
     }

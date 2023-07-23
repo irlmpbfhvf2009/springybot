@@ -268,7 +268,7 @@ public class SpringyBotServiceImpl implements SpringyBotService {
         springyBot.setConfig(config);
         save(springyBot);
 
-        log.info("SpringyBotServiceImpl ==> addBot ... [ {} ] 新增成功", springyBotDTO.getId());
+        log.info("SpringyBotServiceImpl ==> addBot ... [ {} ] 新增成功", springyBotDTO.getUsername());
         return ResponseUtils.response(RetEnum.RET_SUCCESS, "新增成功");
     }
 
@@ -368,17 +368,17 @@ public class SpringyBotServiceImpl implements SpringyBotService {
     public ResponseEntity<ResponseData> fetchManagedChat(ConfigDTO configDTO) {
         Long configId = configDTO.getId();
         List<SpringyBot> springyBots = findAll();
-        List<String> chatTitles = new ArrayList<>();
+        List<RobotChannelManagement> chats = new ArrayList<>();
         HashMap<Object, Object> data = new HashMap<>();
         springyBots.stream().filter(s -> s.getConfig().getId().equals(configId)).findAny()
                 .ifPresent(springybot -> {
                     List<RobotChannelManagement> robotChannelManagements = findRobotChannelManagementBySpringyBotId(
                             springybot.getId());
                     robotChannelManagements.stream().forEach(rcm -> {
-                        chatTitles.add(rcm.getChannelTitle());
+                        chats.add(rcm);
                     });
                 });
-        data.put("list", chatTitles);
+        data.put("list", chats);
         return ResponseUtils.response(RetEnum.RET_SUCCESS, data);
     }
 

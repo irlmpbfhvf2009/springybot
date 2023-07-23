@@ -79,6 +79,7 @@ com\lwdevelop\repository\WhiteListRepository.class
 com\lwdevelop\repository\ChannelMessageIdPostCountsRepository.class
 com\lwdevelop\dto\DemandDTO.class
 com\lwdevelop\bot\bots\talent\messageHandling\CallbackQuerys.class
+com\lwdevelop\dto\InvitationBonusUserDTO.class
 com\lwdevelop\config\SwaggerConfig.class
 com\lwdevelop\bot\bots\coolbao\messageHandling\commands\EnterPassword.class
 com\lwdevelop\service\DemandManagementService.class
@@ -94,6 +95,7 @@ com\lwdevelop\repository\GroupMessageIdPostCountsRepository.class
 com\lwdevelop\bot\bots\coolbao\messageHandling\PrivateMessage_.class
 com\lwdevelop\bot\bots\demand\DemandLongPollingBot.class
 com\lwdevelop\entity\JobPosting.class
+com\lwdevelop\repository\JobUserRepository.class
 com\lwdevelop\utils\CommUtils.class
 com\lwdevelop\bot\bots\triSpeak\messageHandling\ChannelMessage.class
 com\lwdevelop\bot\bots\triSpeak\messageHandling\GroupMessage$3.class
@@ -120,6 +122,7 @@ com\lwdevelop\bot\bots\demand\messageHandling\GroupMessage.class
 com\lwdevelop\bot\bots\demand\messageHandling\PrivateMessage_.class
 com\lwdevelop\bot\chatMembershipHandlers\JoinChannel.class
 com\lwdevelop\bot\chatMembershipHandlers\LeaveGroup.class
+com\lwdevelop\service\impl\InvitationBonusUserServiceImpl.class
 com\lwdevelop\service\impl\SpringyBotServiceImpl.class
 com\lwdevelop\controller\SpringyBotController.class
 com\lwdevelop\repository\RobotChannelManagementRepository.class
@@ -130,6 +133,7 @@ com\lwdevelop\bot\config\RedisToMySQLUpdater$2.class
 com\lwdevelop\bot\bots\coolbao\messageHandling\commands\utils\SevenDaysApiUtil.class
 com\lwdevelop\config\RedisConfig.class
 com\lwdevelop\controller\GroupAndChannelManagement.class
+com\lwdevelop\controller\InvitationBonusUserController.class
 com\lwdevelop\bot\bots\utils\enum_\CoolbaoEnum.class
 com\lwdevelop\bot\bots\triSpeak\messageHandling\GroupMessage$5.class
 com\lwdevelop\bot\factory\BaseLongPollingBot.class
@@ -145,11 +149,13 @@ com\lwdevelop\bot\bots\coolbao\messageHandling\commands\xxpayapi\cgBalance.class
 com\lwdevelop\converter\StringListConverter.class
 com\lwdevelop\bot\chatMessageHandlers\BaseChannelMessage.class
 com\lwdevelop\bot\bots\utils\AbsSender.class
+com\lwdevelop\service\InvitationBonusUserService.class
 com\lwdevelop\config\DataLoader.class
 com\lwdevelop\config\SecurityConfig.class
 com\lwdevelop\dto\SpringyBotDTO.class
 com\lwdevelop\BackendApplication.class
 com\lwdevelop\dto\RobotGroupManagementDTO.class
+com\lwdevelop\repository\InvitationBonusUserRepository.class
 com\lwdevelop\bot\bots\coolbao\messageHandling\CallbackQuerys.class
 com\lwdevelop\bot\bots\talent\TalentLongPollingBot.class
 com\lwdevelop\entity\JobSeeker.class

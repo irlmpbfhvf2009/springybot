@@ -10,6 +10,7 @@ import com.lwdevelop.entity.ChannelMessageIdPostCounts;
 import com.lwdevelop.entity.GroupMessageIdPostCounts;
 import com.lwdevelop.entity.JobPosting;
 import com.lwdevelop.entity.JobSeeker;
+import com.lwdevelop.entity.JobUser;
 import com.lwdevelop.utils.ResponseUtils;
 
 public interface JobManagementService {
@@ -21,6 +22,7 @@ public interface JobManagementService {
     void deleteByIdWithJobPosting(Long id);
     void deleteByUserIdWithJobPosting(String userId);
 
+    void saveJobUser(JobUser jobUser);
     void saveJobPosting(JobPosting jobPosting);
     void saveJobSeeker(JobSeeker jobSeeker);
     

@@ -31,6 +31,7 @@ import com.lwdevelop.repository.ChannelMessageIdPostCountsRepository;
 import com.lwdevelop.repository.GroupMessageIdPostCountsRepository;
 import com.lwdevelop.repository.JobPostingRepository;
 import com.lwdevelop.repository.JobSeekerRepository;
+import com.lwdevelop.repository.JobUserRepository;
 import com.lwdevelop.service.JobManagementService;
 import com.lwdevelop.utils.CryptoUtil;
 import com.lwdevelop.utils.ResponseUtils;
@@ -55,6 +56,14 @@ public class JobManagementServiceImpl implements JobManagementService {
 
     @Autowired
     private GroupMessageIdPostCountsRepository groupMessageIdPostCountsRepository;
+
+    @Autowired
+    private JobUserRepository jobUserRepository;
+
+    @Override
+    public void saveJobUser(JobUser jobUser){
+        jobUserRepository.save(jobUser);
+    }
 
     @Override
     public ChannelMessageIdPostCounts findByChannelIdAndTypeWithChannelMessageIdPostCounts(Long channelId,
