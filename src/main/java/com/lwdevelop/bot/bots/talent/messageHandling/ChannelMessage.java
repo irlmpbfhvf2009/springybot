@@ -15,7 +15,7 @@ public class ChannelMessage extends BaseChannelMessage{
 
     @Override
     public void handler() {
-        if(text.startsWith("https://t.me/")){
+        if(text != null && text.startsWith("https://t.me/")){
             log.info("Detected URL in message with ID: {} in channel with ID: {}. Deleting message...", messageId, chatId_str);
             DeleteMessage dm = new DeleteMessage(chatId_str,messageId);
             common.executeAsync(dm);

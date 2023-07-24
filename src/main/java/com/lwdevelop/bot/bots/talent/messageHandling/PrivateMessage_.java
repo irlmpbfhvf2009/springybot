@@ -90,8 +90,8 @@ public class PrivateMessage_ extends BasePrivateMessage {
 
     private Boolean isSubscribeChannel() {
         SpringyBot springyBot = springyBotServiceImpl.findById(springyBotId).get();
-        Long chatId = springyBot.getConfig().getFollowChannelSet_chatId();
-        GetChatMember getChatMember = new GetChatMember(chatId_str, chatId);
+        Long channelId = springyBot.getConfig().getFollowChannelSet_chatId();
+        GetChatMember getChatMember = new GetChatMember(channelId.toString(), chatId);
         Boolean status = this.common.executeAsync(getChatMember);
         return status;
     }

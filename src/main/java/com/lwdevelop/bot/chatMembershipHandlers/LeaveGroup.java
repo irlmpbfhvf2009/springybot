@@ -42,6 +42,7 @@ public class LeaveGroup extends BaseHandler {
                     g.setStatus(false);
                 });
         this.springyBot.setRobotGroupManagement(this.robotGroupManagement);
+        this.redisUtils.set("RobotGroupManagement_" + this.common.getSpringyBotId(), this.robotGroupManagement);
     }
 
     private void handleUserLeaveGroup() {

@@ -18,7 +18,7 @@ public interface JobManagementService {
     void saveJobUser(JobUser jobUser);
     void saveJobSeeker(JobSeeker jobSeeker);
     
-    // JobPosting
+    List<JobSeeker> findAllByUserIdAndBotIdWithJobSeeker(String userId, String springyBotId);
     List<JobPosting> findAllByUserIdAndBotIdWithJobPosting(String userId, String springyBotId);
     void saveJobPosting(JobPosting jobPosting);
     

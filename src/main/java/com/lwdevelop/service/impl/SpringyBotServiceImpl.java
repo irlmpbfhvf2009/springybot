@@ -121,8 +121,8 @@ public class SpringyBotServiceImpl implements SpringyBotService {
     }
 
     @Override
-    public JobUser findJobUserBySpringyBotIdAndUserId(Long id,String userId) {
-        return springyBotRepository.findJobUserBySpringyBotIdAndUserId(id,userId);
+    public JobUser findJobUserBySpringyBotIdAndUserId(Long id, String userId) {
+        return springyBotRepository.findJobUserBySpringyBotIdAndUserId(id, userId);
     }
 
     @Override
@@ -184,17 +184,16 @@ public class SpringyBotServiceImpl implements SpringyBotService {
             }
 
             // if (webhookBot != null) {
-            //     SetWebhook setWebhook = SetWebhook.builder()
-            //             .url("https://eb8c-61-218-87-189.ngrok-free.app/api")
-            //             .build();
-            //     telegramBotsApi.registerBot(webhookBot, setWebhook);
+            // SetWebhook setWebhook = SetWebhook.builder()
+            // .url("https://eb8c-61-218-87-189.ngrok-free.app/api")
+            // .build();
+            // telegramBotsApi.registerBot(webhookBot, setWebhook);
             // }
 
             if (longPollingBot != null) {
                 Long botId = longPollingBot.getMe().getId();
                 springyBot.setBotId(botId);
                 springyBot.setState(true);
-                save(springyBot);
                 telegramBotsApi.registerBot(longPollingBot);
 
                 // Redis
@@ -202,15 +201,18 @@ public class SpringyBotServiceImpl implements SpringyBotService {
                 List<RecordGroupUsers> recordGroupUsers = findRecordGroupUsersBySpringyBotId(id);
                 List<RecordChannelUsers> recordChannelUsers = findRecordChannelUsersBySpringyBotId(id);
                 List<InvitationThreshold> invitationThreshold = findInvitationThresholdBySpringyBotId(id);
-                List<RobotChannelManagement> robotChannelManagements = findRobotChannelManagementBySpringyBotId(id);                
-                List<RobotGroupManagement> robotGroupManagements = findRobotGroupManagementBySpringyBotId(id);                
+                List<RobotGroupManagement> robotGroupManagements = findRobotGroupManagementBySpringyBotId(id);
+                List<RobotChannelManagement> robotChannelManagements = findRobotChannelManagementBySpringyBotId(id);
+
+                redisUtils.set("RobotChannelManagement_" + id, robotChannelManagements);
+                redisUtils.set("RobotGroupManagement_" + id, robotGroupManagements);
                 redisUtils.set("Config_" + id, config);
                 redisUtils.set("RecordGroupUsers_" + id, recordGroupUsers);
                 redisUtils.set("RecordChannelUsers_" + id, recordChannelUsers);
                 redisUtils.set("InvitationThreshold_" + id, invitationThreshold);
-                redisUtils.set("RobotChannelManagement_" + id, robotChannelManagements);
-                redisUtils.set("RobotGroupManagement_" + id, robotGroupManagements);
 
+                save(springyBot);
+                
                 log.info("{} Telegram bot started.", dto.getUsername());
             }
 

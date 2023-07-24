@@ -42,6 +42,7 @@ public abstract class BaseHandler {
     protected String invitedLastname;
     protected Long chatId;
     protected String chatTitle;
+    protected String chatType;
     protected SpringyBot springyBot;
     protected User user;
     protected User from;
@@ -89,6 +90,7 @@ public abstract class BaseHandler {
             this.from = chatMemberUpdated.getFrom();
             this.chatId = chatMemberUpdated.getChat().getId();
             this.chatTitle = chatMemberUpdated.getChat().getTitle();
+            this.chatType = chatMemberUpdated.getChat().getType();
             this.inviteId = this.from.getId();
             this.inviteFirstname = (this.from.getFirstName() != null) ? this.from.getFirstName() : "";
             this.inviteUsername = (this.from.getUserName() != null) ? this.from.getUserName() : "";

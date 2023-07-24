@@ -91,6 +91,10 @@ public class JobManagementServiceImpl implements JobManagementService {
     public List<JobPosting> findAllByUserIdAndBotIdWithJobPosting(String userId, String springyBotId) {
         return jobPostingRepository.findAllByUserIdAndBotId(userId, springyBotId);
     }
+    @Override
+    public List<JobSeeker> findAllByUserIdAndBotIdWithJobSeeker(String userId, String springyBotId) {
+        return jobSeekerRepository.findAllByUserIdAndBotId(userId, springyBotId);
+    }
 
     @Override
     public void saveChannelMessageIdPostCounts(ChannelMessageIdPostCounts channelMessageIdPostCounts) {

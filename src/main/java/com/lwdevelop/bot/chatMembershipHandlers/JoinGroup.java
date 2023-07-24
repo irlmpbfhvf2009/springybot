@@ -61,6 +61,7 @@ public class JoinGroup extends BaseHandler {
                     this.robotGroupManagement.add(rgm);
                 });
         this.springyBot.setRobotGroupManagement(this.robotGroupManagement);
+        this.redisUtils.set("RobotGroupManagement_" + this.springyBotId, this.robotGroupManagement);
     }
 
     private void handleUserJoinGroup() {
@@ -96,6 +97,7 @@ public class JoinGroup extends BaseHandler {
                     RecordGroupUsers rgu = this.initializeRecordGroupUsers(recordGroupUsers);
                     this.recordGroupUsers.add(rgu);
                 });
+
     }
 
     private void handleInvitationBonusUsers() {
@@ -164,7 +166,7 @@ public class JoinGroup extends BaseHandler {
         robotGroupManagement.setInviteLastname(this.inviteLastname);
         robotGroupManagement.setGroupId(this.chatId);
         robotGroupManagement.setGroupTitle(this.chatTitle);
-        // robotGroupManagement.setLink(this.common.getInviteLink());
+        robotGroupManagement.setType(this.chatType);
         robotGroupManagement.setStatus(true);
         return robotGroupManagement;
     }

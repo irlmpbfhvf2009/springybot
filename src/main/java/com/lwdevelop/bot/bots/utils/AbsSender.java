@@ -81,8 +81,6 @@ public class AbsSender {
         } catch (InterruptedException e) {
             e.printStackTrace();
         } catch (ExecutionException e) {
-            SendMessage sendMessage = new SendMessage(getChatMember.getUserId().toString(), "调用资料失败");
-            this.executeAsync_(sendMessage);
             e.printStackTrace();
         } catch (TelegramApiException e) {
             e.printStackTrace();

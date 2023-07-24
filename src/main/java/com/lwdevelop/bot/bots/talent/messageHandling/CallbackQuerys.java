@@ -3,12 +3,10 @@ package com.lwdevelop.bot.bots.talent.messageHandling;
 import java.util.List;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.methods.updatingmessages.DeleteMessage;
-import org.telegram.telegrambots.meta.api.methods.updatingmessages.EditMessageText;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 import com.lwdevelop.bot.bots.talent.TalentLongPollingBot;
 import com.lwdevelop.bot.bots.utils.Common;
 import com.lwdevelop.bot.bots.utils.enum_.TelentEnum;
-import com.lwdevelop.bot.bots.utils.keyboardButton.TelentButton;
 import com.lwdevelop.bot.chatMessageHandlers.BaseCallbackQuerys;
 import com.lwdevelop.dto.JobPostingDTO;
 import com.lwdevelop.dto.JobSeekerDTO;
@@ -19,7 +17,7 @@ import com.lwdevelop.entity.JobPosting;
 import com.lwdevelop.entity.JobSeeker;
 import com.lwdevelop.entity.SpringyBot;
 
-public class CallbackQuerys extends BaseCallbackQuerys{
+public class CallbackQuerys extends BaseCallbackQuerys {
 
     public CallbackQuerys(Common common) {
         super(common);
@@ -37,7 +35,7 @@ public class CallbackQuerys extends BaseCallbackQuerys{
             String botId = callbackQuery.getData().substring(callbackQuery.getData().lastIndexOf("_") + 1);
 
             // springyBotId 和 userId 進行相應的清除操作
-            JobPosting jobPosting = jobManagementServiceImpl.findByUserIdAndBotIdWithJobPosting(userId,botId);
+            JobPosting jobPosting = jobManagementServiceImpl.findByUserIdAndBotIdWithJobPosting(userId, botId);
             jobManagementServiceImpl.saveJobPosting(new JobPostingDTO().resetJobPostingFields(jobPosting));
 
             // // 清除訊息
@@ -47,21 +45,33 @@ public class CallbackQuerys extends BaseCallbackQuerys{
             springyBotDTO.setToken(springyBot.getToken());
             springyBotDTO.setUsername(springyBot.getUsername());
             TalentLongPollingBot custom = new TalentLongPollingBot(springyBotDTO);
-
-            JobPostingDTO jobPostingDTO = new JobPostingDTO().convertToJobPostingDTO(jobPosting);
-
             Integer messageId = jobPosting.getLastMessageId();
-            EditMessageText editMessageText = new EditMessageText();
-            editMessageText.setChatId(userId);
-            editMessageText.setMessageId(messageId);
-            editMessageText.setText(TelentEnum.JOBPOSTING_DEFAULT_FORM.getText());
-
-            editMessageText.setReplyMarkup(new TelentButton().keyboard_jobPosting(jobPostingDTO, true));
+            DeleteMessage deleteMessage = new DeleteMessage(userId, messageId);
             try {
-                custom.executeAsync(editMessageText);
+                custom.executeAsync(deleteMessage);
             } catch (TelegramApiException e) {
                 e.printStackTrace();
             }
+            // Long id = Long.valueOf(jobPosting.getBotId());
+            // SpringyBot springyBot = springyBotServiceImpl.findById(id).get();
+            // SpringyBotDTO springyBotDTO = new SpringyBotDTO();
+            // springyBotDTO.setToken(springyBot.getToken());
+            // springyBotDTO.setUsername(springyBot.getUsername());
+            // TalentLongPollingBot custom = new TalentLongPollingBot(springyBotDTO);
+            // JobPostingDTO jobPostingDTO = new
+            // JobPostingDTO().convertToJobPostingDTO(jobPosting);
+            // Integer messageId = jobPosting.getLastMessageId();
+            // EditMessageText editMessageText = new EditMessageText();
+            // editMessageText.setChatId(userId);
+            // editMessageText.setMessageId(messageId);
+            // editMessageText.setText(TelentEnum.JOBPOSTING_DEFAULT_FORM.getText());
+            // editMessageText.setReplyMarkup(new
+            // TelentButton().keyboard_jobPosting(jobPostingDTO, true));
+            // try {
+            // custom.executeAsync(editMessageText);
+            // } catch (TelegramApiException e) {
+            // e.printStackTrace();
+            // }
 
             List<ChannelMessageIdPostCounts> channelMessageIdPostCounts = jobManagementServiceImpl
                     .findAllByBotIdAndUserIdAndTypeWithChannelMessageIdPostCounts(jobPosting.getBotId(), userId,
@@ -105,27 +115,39 @@ public class CallbackQuerys extends BaseCallbackQuerys{
             springyBotDTO.setToken(springyBot.getToken());
             springyBotDTO.setUsername(springyBot.getUsername());
             TalentLongPollingBot custom = new TalentLongPollingBot(springyBotDTO);
-
-            JobSeekerDTO jobSeekerDTO = new JobSeekerDTO().convertToJobSeekerDTO(jobSeeker);
-
             Integer messageId = jobSeeker.getLastMessageId();
-            EditMessageText editMessageText = new EditMessageText();
-            editMessageText.setChatId(userId);
-            editMessageText.setMessageId(messageId);
-            editMessageText.setText(TelentEnum.JOBSEEKER_DEFAULT_FORM.getText());
-
-            editMessageText.setReplyMarkup(new TelentButton().keyboard_jobSeeker(jobSeekerDTO, true));
+            DeleteMessage deleteMessage = new DeleteMessage(userId, messageId);
             try {
-                custom.executeAsync(editMessageText);
+                custom.executeAsync(deleteMessage);
             } catch (TelegramApiException e) {
                 e.printStackTrace();
             }
+            // Long id = Long.valueOf(jobSeeker.getBotId());
+            // SpringyBot springyBot = springyBotServiceImpl.findById(id).get();
+            // SpringyBotDTO springyBotDTO = new SpringyBotDTO();
+            // springyBotDTO.setToken(springyBot.getToken());
+            // springyBotDTO.setUsername(springyBot.getUsername());
+            // TalentLongPollingBot custom = new TalentLongPollingBot(springyBotDTO);
+            // JobSeekerDTO jobSeekerDTO = new JobSeekerDTO().convertToJobSeekerDTO(jobSeeker);
+            // Integer messageId = jobSeeker.getLastMessageId();
+            // EditMessageText editMessageText = new EditMessageText();
+            // editMessageText.setChatId(userId);
+            // editMessageText.setMessageId(messageId);
+            // editMessageText.setText(TelentEnum.JOBSEEKER_DEFAULT_FORM.getText());
+            // editMessageText.setReplyMarkup(new TelentButton().keyboard_jobSeeker(jobSeekerDTO, true));
+            // try {
+            //     custom.executeAsync(editMessageText);
+            // } catch (TelegramApiException e) {
+            //     e.printStackTrace();
+            // }
+
+
             List<ChannelMessageIdPostCounts> channelMessageIdPostCounts = jobManagementServiceImpl
                     .findAllByBotIdAndUserIdAndTypeWithChannelMessageIdPostCounts(jobSeeker.getBotId(), userId,
-                    "jobSeeker");
+                            "jobSeeker");
             List<GroupMessageIdPostCounts> groupMessageIdPostCounts = jobManagementServiceImpl
                     .findAllByBotIdAndUserIdAndTypeWithGroupMessageIdPostCounts(jobSeeker.getBotId(), userId,
-                    "jobSeeker");
+                            "jobSeeker");
             channelMessageIdPostCounts.stream().forEach(cmp -> {
                 DeleteMessage dm = new DeleteMessage(String.valueOf(cmp.getChannelId()), cmp.getMessageId());
                 common.executeAsync(dm);

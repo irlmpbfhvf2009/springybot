@@ -46,6 +46,7 @@ public class JoinChannel extends BaseHandler {
                     this.robotChannelManagement.add(rcm);
                 });
         this.springyBot.setRobotChannelManagement(this.robotChannelManagement);
+        this.redisUtils.set("RobotChannelManagement_" + this.springyBotId, this.robotChannelManagement);
     }
 
     private void handleUserJoinGroup() {
@@ -91,6 +92,7 @@ public class JoinChannel extends BaseHandler {
         robotChannelManagement.setChannelId(this.chatId);
         robotChannelManagement.setChannelTitle(this.chatTitle);
         robotChannelManagement.setStatus(true);
+        robotChannelManagement.setType(this.chatType);
         return robotChannelManagement;
     }
 

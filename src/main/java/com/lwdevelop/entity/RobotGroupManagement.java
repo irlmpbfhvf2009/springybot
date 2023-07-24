@@ -33,5 +33,5 @@ public class RobotGroupManagement {
     private String type; // group or supergroup
 
     private Boolean status;
-
+    
 }

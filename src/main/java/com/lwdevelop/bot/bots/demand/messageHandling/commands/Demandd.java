@@ -224,7 +224,7 @@ public class Demandd {
                             final Integer channelMessageId = common.executeAsync(response);
 
                             response.setChatId(demand.getUserId());
-                            response.setText("[ " + channelTitle + " ]发送成功");
+                            response.setText("[ " + channelTitle + " ]发送 [需求] 信息成功");
                             common.executeAsync(response);
 
                             channelMessageIdPostCounts = new ChannelMessageIdPostCounts();

@@ -1,4 +1,5 @@
 package com.lwdevelop.entity;
+
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -28,6 +29,8 @@ public class RobotChannelManagement {
     private String channelTitle;
 
     private String link;
+
+    private String type; // channel
 
     private Boolean status;
     
