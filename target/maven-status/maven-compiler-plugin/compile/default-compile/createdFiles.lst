@@ -18,18 +18,15 @@ com\lwdevelop\entity\WhiteList.class
 com\lwdevelop\repository\AdminRepository.class
 com\lwdevelop\utils\ResponseUtils$ResponseData.class
 com\lwdevelop\bot\bots\coolbao\messageHandling\commands\utils\XxPayApiUtil.class
-com\lwdevelop\bot\config\RedisToMySQLUpdater$1.class
 com\lwdevelop\repository\JobPostingRepository.class
 com\lwdevelop\controller\AdminPanelController.class
 com\lwdevelop\entity\RestrictMember.class
 com\lwdevelop\utils\RetEnum.class
-com\lwdevelop\bot\config\RedisToMySQLUpdater.class
 com\lwdevelop\bot\chatMembershipHandlers\ChatHandler.class
 com\lwdevelop\bot\bots\utils\keyboardButton\DemandButton.class
 com\lwdevelop\dto\JobUserDTO.class
 com\lwdevelop\entity\Demand.class
 com\lwdevelop\bot\chatMessageHandlers\BaseCallbackQuerys.class
-com\lwdevelop\bot\factory\BaseLongPollingBot$2.class
 com\lwdevelop\repository\RobotGroupManagementRepository.class
 com\lwdevelop\utils\JwtAuthFilter.class
 com\lwdevelop\repository\ConfigRepository.class
@@ -53,7 +50,6 @@ com\lwdevelop\bot\chatMessageHandlers\BasePrivateMessage.class
 com\lwdevelop\service\SpringyBotService.class
 com\lwdevelop\utils\HttpRequestUtil.class
 com\lwdevelop\bot\bots\triSpeak\messageHandling\GroupMessage.class
-com\lwdevelop\bot\factory\BaseLongPollingBot$1.class
 com\lwdevelop\bot\bots\talent\messageHandling\commands\Job.class
 com\lwdevelop\entity\RobotGroupManagement.class
 com\lwdevelop\controller\JobManagementController.class
@@ -83,7 +79,6 @@ com\lwdevelop\dto\InvitationBonusUserDTO.class
 com\lwdevelop\config\SwaggerConfig.class
 com\lwdevelop\bot\bots\coolbao\messageHandling\commands\EnterPassword.class
 com\lwdevelop\service\DemandManagementService.class
-com\lwdevelop\bot\bots\demand\messageHandling\commands\Manage.class
 com\lwdevelop\entity\Config.class
 com\lwdevelop\bot\model\CustomBotOptions.class
 com\lwdevelop\bot\bots\triSpeak\TriSpeakLongPollingBot.class
@@ -111,7 +106,6 @@ com\lwdevelop\dto\JobTreeDTO.class
 com\lwdevelop\repository\JobSeekerRepository.class
 com\lwdevelop\dto\JobSeekerDTO.class
 com\lwdevelop\bot\bots\utils\keyboardButton\TriSpeakButton.class
-com\lwdevelop\bot\bots\talent\messageHandling\commands\Manage.class
 com\lwdevelop\entity\RecordChannelUsers.class
 com\lwdevelop\converter\ListToJsonConverter.class
 com\lwdevelop\dto\SupplyDTO.class
@@ -129,7 +123,6 @@ com\lwdevelop\repository\RobotChannelManagementRepository.class
 com\lwdevelop\repository\SupplyRepository.class
 com\lwdevelop\utils\CommUtils$Pager.class
 com\lwdevelop\utils\CryptoUtil.class
-com\lwdevelop\bot\config\RedisToMySQLUpdater$2.class
 com\lwdevelop\bot\bots\coolbao\messageHandling\commands\utils\SevenDaysApiUtil.class
 com\lwdevelop\config\RedisConfig.class
 com\lwdevelop\controller\GroupAndChannelManagement.class

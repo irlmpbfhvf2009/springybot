@@ -12,7 +12,7 @@
 	</parent>
 	<groupId>com.lwdevelop</groupId>
 	<artifactId>springybot</artifactId>
-	<version>2.0.5</version>
+	<version>2.0.8</version>
 	<name>springybot</name>
 	<description>project for Spring Boot</description>
 	<properties>

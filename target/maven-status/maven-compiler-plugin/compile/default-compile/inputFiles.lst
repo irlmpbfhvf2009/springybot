@@ -3,7 +3,6 @@ D:\酷寶專案\hub\SpringyBot\src\main\java\com\lwdevelop\repository\SupplyReposito
 D:\酷寶專案\hub\SpringyBot\src\main\java\com\lwdevelop\entity\InvitationThreshold.java
 D:\酷寶專案\hub\SpringyBot\src\main\java\com\lwdevelop\bot\bots\coolbao\messageHandling\commands\EnterPassword.java
 D:\酷寶專案\hub\SpringyBot\src\main\java\com\lwdevelop\dto\GroupAndChannelTreeDTO.java
-D:\酷寶專案\hub\SpringyBot\src\main\java\com\lwdevelop\bot\config\RedisToMySQLUpdater.java
 D:\酷寶專案\hub\SpringyBot\src\main\java\com\lwdevelop\utils\SpringUtils.java
 D:\酷寶專案\hub\SpringyBot\src\main\java\com\lwdevelop\dto\JobPostingDTO.java
 D:\酷寶專案\hub\SpringyBot\src\main\java\com\lwdevelop\repository\WhiteListRepository.java
@@ -69,7 +68,6 @@ D:\酷寶專案\hub\SpringyBot\src\main\java\com\lwdevelop\bot\bots\demand\messageHa
 D:\酷寶專案\hub\SpringyBot\src\main\java\com\lwdevelop\service\JobManagementService.java
 D:\酷寶專案\hub\SpringyBot\src\main\java\com\lwdevelop\bot\bots\demand\messageHandling\commands\Demandd.java
 D:\酷寶專案\hub\SpringyBot\src\main\java\com\lwdevelop\entity\InvitationBonusUser.java
-D:\酷寶專案\hub\SpringyBot\src\main\java\com\lwdevelop\bot\bots\talent\messageHandling\commands\Manage.java
 D:\酷寶專案\hub\SpringyBot\src\main\java\com\lwdevelop\bot\chatMembershipHandlers\JoinGroup.java
 D:\酷寶專案\hub\SpringyBot\src\main\java\com\lwdevelop\bot\bots\demand\messageHandling\CallbackQuerys.java
 D:\酷寶專案\hub\SpringyBot\src\main\java\com\lwdevelop\bot\bots\utils\keyboardButton\TriSpeakButton.java
@@ -137,7 +135,6 @@ D:\酷寶專案\hub\SpringyBot\src\main\java\com\lwdevelop\bot\chatMessageHandlers\B
 D:\酷寶專案\hub\SpringyBot\src\main\java\com\lwdevelop\service\impl\JobManagementServiceImpl.java
 D:\酷寶專案\hub\SpringyBot\src\main\java\com\lwdevelop\utils\HttpRequestUtil.java
 D:\酷寶專案\hub\SpringyBot\src\main\java\com\lwdevelop\entity\RecordChannelUsers.java
-D:\酷寶專案\hub\SpringyBot\src\main\java\com\lwdevelop\bot\bots\demand\messageHandling\commands\Manage.java
 D:\酷寶專案\hub\SpringyBot\src\main\java\com\lwdevelop\dto\DemandDTO.java
 D:\酷寶專案\hub\SpringyBot\src\main\java\com\lwdevelop\repository\SpringyBotRepository.java
 D:\酷寶專案\hub\SpringyBot\src\main\java\com\lwdevelop\entity\SpringyBot.java
