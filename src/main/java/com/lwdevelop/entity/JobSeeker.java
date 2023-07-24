@@ -1,7 +1,6 @@
 package com.lwdevelop.entity;
 
-import java.util.Set;
-
+import java.util.List;
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -9,9 +8,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
-
 import com.fasterxml.jackson.annotation.JsonIgnore;
-
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -68,13 +65,13 @@ public class JobSeeker {
 
 
     // channelId  messageId 訊息ID  postCount 發送次數
-    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JsonIgnore
-    private Set<ChannelMessageIdPostCounts> channelMessageIdPostCounts;
+    private List<ChannelMessageIdPostCounts> channelMessageIdPostCounts;
 
-    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JsonIgnore
-    private Set<GroupMessageIdPostCounts> groupMessageIdPostCounts;
+    private List<GroupMessageIdPostCounts> groupMessageIdPostCounts;
 
     public JobSeeker(String userId, String botId, Integer lastMessageId) {
         this.userId = userId;

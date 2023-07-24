@@ -1,7 +1,7 @@
 package com.lwdevelop.entity;
 
 import java.util.Date;
-import java.util.Set;
+import java.util.List;
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.EntityListeners;
@@ -39,11 +39,11 @@ public class JobUser {
         // （求职人员）
         @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
         @JsonIgnore
-        private Set<JobSeeker> jobSeeker;
+        private List<JobSeeker> jobSeeker;
 
         // （招聘信息）
         @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
         @JsonIgnore
-        private Set<JobPosting> jobPosting;
+        private List<JobPosting> jobPosting;
 
 }

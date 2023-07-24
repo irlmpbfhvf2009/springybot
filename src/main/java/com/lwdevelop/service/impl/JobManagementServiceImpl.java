@@ -88,6 +88,11 @@ public class JobManagementServiceImpl implements JobManagementService {
     }
 
     @Override
+    public List<JobPosting> findAllByUserIdAndBotIdWithJobPosting(String userId, String springyBotId) {
+        return jobPostingRepository.findAllByUserIdAndBotId(userId, springyBotId);
+    }
+
+    @Override
     public void saveChannelMessageIdPostCounts(ChannelMessageIdPostCounts channelMessageIdPostCounts) {
         channelMessageIdPostCountsRepository.save(channelMessageIdPostCounts);
     }

@@ -126,39 +126,34 @@ public class Job extends PrivateMessage_ {
         // 将文本内容按行分割成字符串数组
         String[] lines = text.split("\\r?\\n");
 
-        JobPosting jobPosting = jobManagementServiceImpl.findByUserIdAndBotIdWithJobPosting(
-                chatId_str, springyBotId.toString());
-
-        if (jobPosting == null) {
-            jobPosting = new JobPosting();
-        }
+        JobUser jobUser = springyBotServiceImpl.findJobUserBySpringyBotIdAndUserId(springyBotId, chatId_str);
 
         String username = "@" + common.getUpdate().getMessage().getFrom().getUserName();
-        jobPosting.setPublisher(username);
+
+        List<JobPosting> jobPostings = jobManagementServiceImpl.findAllByUserIdAndBotIdWithJobPosting(chatId_str,
+                springyBotId.toString());
+
+        JobPosting jobPosting = jobPostings.stream()
+                .filter(jp -> jp.getUserId().equals(chatId_str) && jp.getBotId().equals(springyBotId.toString()))
+                .findFirst()
+                .orElse(new JobPosting());
 
         String isSuccess = jobPostingDTO.fillJobPostingInfo(jobPosting, lines);
 
         if (!StringUtils.hasText(isSuccess)) {
+            jobPosting.setPublisher(username);
             jobPosting.setBotId(springyBotId.toString());
             jobPosting.setUserId(chatId_str);
             jobPosting.setLastMessageId(message.getMessageId());
-            // 處理資料表
-            List<JobUser> jobUsers = springyBotServiceImpl.findJobUserBySpringyBotId(springyBotId);
-            JobUser jobUser = jobUsers.stream().filter(j -> j.getUserId().equals(chatId_str)).findAny().get();
-            final Long final_jobPostingId = jobPosting.getId();
-
-            if (!jobUser.getJobPosting().stream().anyMatch(p -> p.getId().equals(final_jobPostingId))) {
-                jobUser.getJobPosting().add(jobPosting);
-            }
-
-            jobManagementServiceImpl.saveJobPosting(jobPosting);
-
             String result = jobPostingDTO.generateJobPostingDetails(jobPosting);
 
             List<RobotChannelManagement> robotChannelManagements = springyBotServiceImpl
                     .findRobotChannelManagementBySpringyBotId(springyBotId);
+            List<RobotGroupManagement> robotGroupManagements = springyBotServiceImpl
+                    .findRobotGroupManagementBySpringyBotId(springyBotId);
 
             Iterator<RobotChannelManagement> iterator_channel = robotChannelManagements.iterator();
+            Iterator<RobotGroupManagement> iterator_group = robotGroupManagements.iterator();
 
             while (iterator_channel.hasNext()) {
                 RobotChannelManagement robotChannelManagement = iterator_channel.next();
@@ -170,15 +165,20 @@ public class Job extends PrivateMessage_ {
                     response.setText(TelentEnum.send_recruitment_text(result));
                     response.setReplyMarkup(new TelentButton().keyboardJobMarkup());
                     response.setDisableWebPagePreview(true);
-                    ChannelMessageIdPostCounts channelMessageIdPostCounts = jobManagementServiceImpl
-                            .findByChannelIdAndUserIdAndTypeWithChannelMessageIdPostCounts(
-                                    channelId, chatId_str, "jobPosting");
+
+                    List<ChannelMessageIdPostCounts> cmpcs = jobManagementServiceImpl
+                            .findAllByBotIdAndUserIdAndTypeWithChannelMessageIdPostCounts(springyBotId.toString(),
+                                    chatId_str,
+                                    "jobPosting");
+                    ChannelMessageIdPostCounts cmpc = cmpcs.stream().filter(c -> c.getChannelId().equals(channelId)
+                            && c.getUserId().equals(chatId_str) && c.getType().equals("jobPosting"))
+                            .findFirst().orElse(null);
 
                     if (isEdit) {
                         EditMessageText editMessageText = new EditMessageText();
                         editMessageText.setChatId(String.valueOf(channelId));
                         editMessageText.setText(TelentEnum.send_recruitment_text(result));
-                        editMessageText.setMessageId(channelMessageIdPostCounts.getMessageId());
+                        editMessageText.setMessageId(cmpc.getMessageId());
                         editMessageText.setDisableWebPagePreview(true);
                         common.executeAsync(editMessageText);
 
@@ -187,35 +187,28 @@ public class Job extends PrivateMessage_ {
                         common.executeAsync(response);
 
                     } else {
-
-                        if (channelMessageIdPostCounts == null) {
+                        if (cmpc == null) {
                             final Integer channelMessageId = common.executeAsync(response);
-
                             response.setChatId(chatId_str);
                             response.setText("[ " + channelTitle + " ]发送成功");
                             common.executeAsync(response);
 
-                            channelMessageIdPostCounts = new ChannelMessageIdPostCounts();
-                            channelMessageIdPostCounts.setBotId(springyBotId.toString());
-                            channelMessageIdPostCounts.setUserId(chatId_str);
-                            channelMessageIdPostCounts.setChannelId(channelId);
-                            channelMessageIdPostCounts.setChannelTitle(channelTitle);
-                            channelMessageIdPostCounts.setMessageId(channelMessageId);
-                            channelMessageIdPostCounts.setPostCount(1);
-                            channelMessageIdPostCounts.setType("jobPosting");
-                            jobPosting = jobManagementServiceImpl.findByUserIdAndBotIdWithJobPosting(
-                                    chatId_str, springyBotId.toString());
-                            jobPosting.getChannelMessageIdPostCounts().add(channelMessageIdPostCounts);
-                            jobManagementServiceImpl.saveJobPosting(jobPosting);
+                            cmpc = new ChannelMessageIdPostCounts();
+                            cmpc.setBotId(springyBotId.toString());
+                            cmpc.setUserId(chatId_str);
+                            cmpc.setChannelId(channelId);
+                            cmpc.setChannelTitle(channelTitle);
+                            cmpc.setMessageId(channelMessageId);
+                            cmpc.setPostCount(1);
+                            cmpc.setType("jobPosting");
                         } else {
-                            if (channelMessageIdPostCounts.getPostCount() <= 0) {
+                            if (cmpc.getPostCount() <= 0) {
                                 final Integer channelMessageId = common.executeAsync(response);
                                 response.setChatId(chatId_str);
                                 response.setText("[ " + channelTitle + " ]发送 [招聘人才] 信息成功");
                                 common.executeAsync(response);
-                                channelMessageIdPostCounts.setMessageId(channelMessageId);
-                                channelMessageIdPostCounts.setPostCount(channelMessageIdPostCounts.getPostCount() + 1);
-                                jobManagementServiceImpl.saveChannelMessageIdPostCounts(channelMessageIdPostCounts);
+                                cmpc.setMessageId(channelMessageId);
+                                cmpc.setPostCount(cmpc.getPostCount() + 1);
                             } else {
                                 response.setChatId(chatId_str);
                                 response.setText("您已在[ " + channelTitle + " ]發送一條 [招聘人才] 信息");
@@ -224,14 +217,17 @@ public class Job extends PrivateMessage_ {
                         }
 
                     }
-
+                    final ChannelMessageIdPostCounts finalCmpc = cmpc;
+                    cmpcs.stream()
+                            .filter(c -> c.getChannelId().equals(channelId)
+                                    && c.getUserId().equals(chatId_str) && c.getType().equals("jobPosting"))
+                            .findFirst()
+                            .ifPresentOrElse(
+                                    c -> cmpcs.set(cmpcs.indexOf(c), finalCmpc),
+                                    () -> cmpcs.add(finalCmpc));
+                    jobPosting.setChannelMessageIdPostCounts(cmpcs);
                 }
             }
-
-            List<RobotGroupManagement> robotGroupManagements = springyBotServiceImpl
-                    .findRobotGroupManagementBySpringyBotId(springyBotId);
-
-            Iterator<RobotGroupManagement> iterator_group = robotGroupManagements.iterator();
 
             while (iterator_group.hasNext()) {
                 RobotGroupManagement robotGroupManagement = iterator_group.next();
@@ -244,49 +240,50 @@ public class Job extends PrivateMessage_ {
                     response.setReplyMarkup(new TelentButton().keyboardJobMarkup());
                     response.setDisableWebPagePreview(true);
 
-                    GroupMessageIdPostCounts groupMessageIdPostCounts = jobManagementServiceImpl
-                            .findByGroupIdAndUserIdAndTypeWithGroupMessageIdPostCounts(groupId,chatId_str, "jobPosting");
+                    List<GroupMessageIdPostCounts> gmpcs = jobManagementServiceImpl
+                            .findAllByBotIdAndUserIdAndTypeWithGroupMessageIdPostCounts(springyBotId.toString(),
+                                    chatId_str, "jobPosting");
+
+                    GroupMessageIdPostCounts gmpc = gmpcs.stream()
+                            .filter(g -> g.getGroupId().equals(groupId)
+                                    && g.getUserId().equals(chatId_str) && g.getType().equals("jobPosting"))
+                            .findFirst().orElse(null);
                     if (isEdit) {
                         EditMessageText editMessageText = new EditMessageText();
                         editMessageText.setChatId(groupId.toString());
                         editMessageText.setText(TelentEnum.send_recruitment_text(result));
-                        editMessageText.setMessageId(groupMessageIdPostCounts.getMessageId());
+                        editMessageText.setMessageId(gmpc.getMessageId());
                         editMessageText.setDisableWebPagePreview(true);
                         common.executeAsync(editMessageText);
 
                         response.setChatId(chatId_str);
                         response.setText("[ " + groupTitle + " ]编辑成功");
                         common.executeAsync(response);
-                    } else {
 
-                        if (groupMessageIdPostCounts == null) {
+                    } else {
+                        if (gmpc == null) {
                             final Integer groupMessageId = common.executeAsync(response);
                             response.setChatId(chatId_str);
                             response.setText("[ " + groupTitle + " ]发送 [招聘人才] 信息成功");
                             common.executeAsync(response);
 
-                            groupMessageIdPostCounts = new GroupMessageIdPostCounts();
-                            groupMessageIdPostCounts.setBotId(springyBotId.toString());
-                            groupMessageIdPostCounts.setUserId(chatId_str);
-                            groupMessageIdPostCounts.setGroupId(groupId);
-                            groupMessageIdPostCounts.setGroupTitle(groupTitle);
-                            groupMessageIdPostCounts.setMessageId(groupMessageId);
-                            groupMessageIdPostCounts.setPostCount(1);
-                            groupMessageIdPostCounts.setType("jobPosting");
-                            jobPosting = jobManagementServiceImpl.findByUserIdAndBotIdWithJobPosting(
-                                    chatId_str, springyBotId.toString());
-                            jobPosting.getGroupMessageIdPostCounts().add(groupMessageIdPostCounts);
-                            jobManagementServiceImpl.saveJobPosting(jobPosting);
+                            gmpc = new GroupMessageIdPostCounts();
+                            gmpc.setBotId(springyBotId.toString());
+                            gmpc.setUserId(chatId_str);
+                            gmpc.setGroupId(groupId);
+                            gmpc.setGroupTitle(groupTitle);
+                            gmpc.setMessageId(groupMessageId);
+                            gmpc.setPostCount(1);
+                            gmpc.setType("jobPosting");
                         } else {
-                            if (groupMessageIdPostCounts.getPostCount() == 0) {
+                            if (gmpc.getPostCount() == 0) {
                                 final Integer groupMessageId = common.executeAsync(response);
                                 response.setChatId(chatId_str);
                                 response.setText("[ " + groupTitle + " ]发送 [招聘人才] 成功");
                                 common.executeAsync(response);
-
-                                groupMessageIdPostCounts.setMessageId(groupMessageId);
-                                groupMessageIdPostCounts.setPostCount(groupMessageIdPostCounts.getPostCount() + 1);
-                                jobManagementServiceImpl.saveGroupMessageIdPostCounts(groupMessageIdPostCounts);
+                                gmpc.setMessageId(groupMessageId);
+                                gmpc.setPostCount(gmpc.getPostCount() + 1);
+                                jobManagementServiceImpl.saveGroupMessageIdPostCounts(gmpc);
                             } else {
                                 response.setChatId(chatId_str);
                                 response.setText("您已在[ " + groupTitle + " ]發送一條 [招聘人才] 信息");
@@ -295,6 +292,15 @@ public class Job extends PrivateMessage_ {
                         }
 
                     }
+                    final GroupMessageIdPostCounts finalGmpc = gmpc;
+                    gmpcs.stream()
+                            .filter(g -> g.getGroupId().equals(groupId)
+                                    && g.getUserId().equals(chatId_str) && g.getType().equals("jobPosting"))
+                            .findFirst()
+                            .ifPresentOrElse(
+                                    g -> gmpcs.set(gmpcs.indexOf(g), finalGmpc),
+                                    () -> gmpcs.add(finalGmpc));
+                    jobPosting.setGroupMessageIdPostCounts(gmpcs);
 
                 }
             }
@@ -305,6 +311,17 @@ public class Job extends PrivateMessage_ {
             response.setDisableWebPagePreview(true);
             common.executeAsync(response);
         }
+
+        final JobPosting finalJobPosting = jobPosting;
+        jobPostings.stream()
+                .filter(jp -> jp.getUserId().equals(chatId_str) && jp.getBotId().equals(springyBotId.toString()))
+                .findFirst()
+                .ifPresentOrElse(
+                        jp -> jobPostings.set(jobPostings.indexOf(jp), finalJobPosting),
+                        () -> jobPostings.add(finalJobPosting));
+        jobUser.setJobPosting(jobPostings);
+        jobManagementServiceImpl.saveJobUser(jobUser);
+
     }
 
     public void generateTextJobSeeker(Boolean isEdit) {
@@ -433,7 +450,7 @@ public class Job extends PrivateMessage_ {
                     response.setDisableWebPagePreview(true);
                     GroupMessageIdPostCounts groupMessageIdPostCounts = jobManagementServiceImpl
                             .findByGroupIdAndUserIdAndTypeWithGroupMessageIdPostCounts(
-                                    groupId, chatId_str,"jobSeeker");
+                                    groupId, chatId_str, "jobSeeker");
 
                     if (isEdit) {
                         EditMessageText editMessageText = new EditMessageText();

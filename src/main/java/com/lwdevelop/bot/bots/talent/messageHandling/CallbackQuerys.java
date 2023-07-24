@@ -37,7 +37,7 @@ public class CallbackQuerys extends BaseCallbackQuerys{
             String botId = callbackQuery.getData().substring(callbackQuery.getData().lastIndexOf("_") + 1);
 
             // springyBotId 和 userId 進行相應的清除操作
-            JobPosting jobPosting = jobManagementServiceImpl.findByUserIdAndBotIdWithJobPosting(userId, botId);
+            JobPosting jobPosting = jobManagementServiceImpl.findByUserIdAndBotIdWithJobPosting(userId,botId);
             jobManagementServiceImpl.saveJobPosting(new JobPostingDTO().resetJobPostingFields(jobPosting));
 
             // // 清除訊息

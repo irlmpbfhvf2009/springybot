@@ -19,6 +19,7 @@ public interface JobManagementService {
     void saveJobSeeker(JobSeeker jobSeeker);
     
     // JobPosting
+    List<JobPosting> findAllByUserIdAndBotIdWithJobPosting(String userId, String springyBotId);
     void saveJobPosting(JobPosting jobPosting);
     
     // ChannelMessageIdPostCounts
