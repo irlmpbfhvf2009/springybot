@@ -1,7 +1,7 @@
 package com.lwdevelop.bot.bots.utils.keyboardButton;
 
 import com.lwdevelop.bot.bots.utils.enum_.DemandEnum;
-import com.lwdevelop.bot.bots.utils.enum_.TelentEnum;
+import com.lwdevelop.bot.bots.utils.enum_.TalentEnum;
 import com.lwdevelop.dto.DemandDTO;
 import com.lwdevelop.dto.SupplyDTO;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
@@ -19,8 +19,8 @@ public class DemandButton {
         ReplyKeyboardMarkup keyboardMarkup = new ReplyKeyboardMarkup();
         List<KeyboardRow> keyboard = new ArrayList<>();
         KeyboardRow row = new KeyboardRow();
-        row.add(DemandEnum.POST_DEMAND.getText());
-        row.add(DemandEnum.POST_SUPPLY.getText());
+        row.add("发布需求");
+        row.add("发布供应");
         keyboard.add(row);
         row = new KeyboardRow();
         row.add(DemandEnum.SUPPLY_AND_DEMAND_MANAGEMENT.getText());
@@ -34,7 +34,7 @@ public class DemandButton {
         InlineKeyboardMarkup markupInline = new InlineKeyboardMarkup();
         List<List<InlineKeyboardButton>> rowsInline = new ArrayList<>();
         List<InlineKeyboardButton> rowInline = new ArrayList<>();
-        dk1.setText(TelentEnum.subscribeChannel_text());
+        dk1.setText(TalentEnum.subscribeChannel_text());
         dk1.setUrl("https://t.me/rc499");
         rowInline.add(dk1);
         rowsInline.add(rowInline);
@@ -67,34 +67,14 @@ public class DemandButton {
         List<List<InlineKeyboardButton>> rowsInline = new ArrayList<>();
         List<InlineKeyboardButton> rowInline = new ArrayList<>();
 
-        // String ub = "userId=" + jobPostingDTO.getUserId()
-        // + "&botId=" + jobPostingDTO.getBotId()
-        // + "&company=" + jobPostingDTO.getCompany()
-        // + "&position=" + jobPostingDTO.getPosition()
-        // + "&baseSalary=" + jobPostingDTO.getBaseSalary()
-        // + "&commission=" + jobPostingDTO.getCommission()
-        // + "&workTime=" + jobPostingDTO.getWorkTime()
-        // + "&requirements=" + jobPostingDTO.getRequirements()
-        // + "&location=" + jobPostingDTO.getLocation()
-        // + "&flightNumber=" + jobPostingDTO.getFlightNumber();
-
-        // String encryptedUb = CryptoUtil.encrypt(ub);
-        // String encodedUb = URLEncoder.encode(encryptedUb, StandardCharsets.UTF_8);
-        // String url;
-
         if (isEdit) {
-            // url = "http://192.168.0.27:3000/#/edit_jobPostingForm?ub=" + encodedUb;
-            // url = "http://rc.ddb99.vip:18889/#/jobPostingForm?ub=" + encodedUb;
             dk1.setText("编辑");
-            dk1.setCallbackData(DemandEnum.EDIT_DEMAND_CQ.getText());
+            dk1.setCallbackData("editDemand_");
             dk2.setText("删除");
-            // dk2.setCallbackData("clearJobPosting_" + jobPostingDTO.getUserId());
-            dk2.setCallbackData(DemandEnum.CLEAR_DEMAND_CQ.getText() + demandDTO.getUserId() + "_" + demandDTO.getBotId());
+            dk2.setCallbackData("clearDemand_" + demandDTO.getUserId() + "_" + demandDTO.getBotId());
         } else {
-            // url = "http://192.168.0.27:3000/#/jobPostingForm?ub=" + encodedUb;
-            // url = "http://rc.ddb99.vip:18889/#/jobPostingForm?ub=" + encodedUb;
             dk1.setText("编辑发布");
-            dk1.setCallbackData("editJobPosting_");
+            dk1.setCallbackData("editDemand_");
         }
 
         rowInline.add(dk1);
@@ -114,63 +94,20 @@ public class DemandButton {
         List<List<InlineKeyboardButton>> rowsInline = new ArrayList<>();
         List<InlineKeyboardButton> rowInline = new ArrayList<>();
 
-        // String ub = "userId=" + jobSeekerDTO.getUserId()
-        // + "&botId=" + jobSeekerDTO.getBotId()
-        // + "&name=" + jobSeekerDTO.getName()
-        // + "&gender=" + jobSeekerDTO.getGender()
-        // + "&dateOfBirth=" + jobSeekerDTO.getDateOfBirth()
-        // + "&age=" + jobSeekerDTO.getAge()
-        // + "&nationality=" + jobSeekerDTO.getNationality()
-        // + "&education=" + jobSeekerDTO.getEducation()
-        // + "&skills=" + jobSeekerDTO.getSkills()
-        // + "&targetPosition=" + jobSeekerDTO.getTargetPosition()
-        // + "&resources=" + jobSeekerDTO.getResources()
-        // + "&expectedSalary=" + jobSeekerDTO.getExpectedSalary()
-        // + "&workExperience=" + jobSeekerDTO.getWorkExperience()
-        // + "&selfIntroduction=" + jobSeekerDTO.getSelfIntroduction()
-        // + "&flightNumber=" + jobSeekerDTO.getFlightNumber();
-
-        // String encryptedUb = CryptoUtil.encrypt(ub);
-        // String encodedUb = URLEncoder.encode(encryptedUb, StandardCharsets.UTF_8);
-        // String url;
-
         if (isEdit) {
-            // url = "http://192.168.0.27:3000/#/edit_jobSeekerForm?ub=" + encodedUb;
-            // url = "http://rc.ddb99.vip:18889/#/jobSeekerForm?ub=" + encodedUb;
             dk1.setText("编辑");
-            dk1.setCallbackData(DemandEnum.EDIT_SUPPLY_CQ.getText());
+            dk1.setCallbackData("editSupply_");
             dk2.setText("删除");
-            // dk2.setCallbackData("clearJobSeeker_" + jobSeekerDTO.getUserId());
-            dk2.setCallbackData(DemandEnum.CLEAR_SUPPLY_CQ.getText() + supplyDTO.getUserId() + "_" + supplyDTO.getBotId());
+            dk2.setCallbackData("clearSupply_" + supplyDTO.getUserId() + "_" + supplyDTO.getBotId());
         } else {
-            // url = "http://192.168.0.27:3000/#/jobSeekerForm?ub=" + encodedUb;
-            // url = "http://rc.ddb99.vip:18889/#/jobSeekerForm?ub=" + encodedUb;\
-            dk1.setCallbackData(DemandEnum.EDIT_SUPPLY_CQ.getText());
+            dk1.setCallbackData("editSupply_");
             dk1.setText("编辑发布");
         }
-
-        // dk1.setUrl(url);
 
         rowInline.add(dk1);
         if (isEdit) {
             rowInline.add(dk2);
         }
-        rowsInline.add(rowInline);
-        markupInline.setKeyboard(rowsInline);
-        return markupInline;
-    }
-
-    public final InlineKeyboardMarkup keyboard_callme(String username) {
-
-        InlineKeyboardButton dk1 = new InlineKeyboardButton();
-        InlineKeyboardMarkup markupInline = new InlineKeyboardMarkup();
-        List<List<InlineKeyboardButton>> rowsInline = new ArrayList<>();
-        List<InlineKeyboardButton> rowInline = new ArrayList<>();
-
-        String url = "https://t.me/" + username;
-        dk1.setText("联系我");
-        dk1.setUrl(url);
-        rowInline.add(dk1);
         rowsInline.add(rowInline);
         markupInline.setKeyboard(rowsInline);
         return markupInline;

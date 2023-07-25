@@ -13,11 +13,14 @@ import java.util.*;
 @Service
 public class DemandManagementServiceImpl implements DemandManagementService {
 
-    @Autowired
-    private SupplyRepository supplyRepository;
+    // @Autowired
+    // private SpringyBotServiceImpl springyBotServiceImpl;
 
     @Autowired
     private DemandRepository demandRepository;
+
+    @Autowired
+    private SupplyRepository supplyRepository;
 
     @Autowired
     private ChannelMessageIdPostCountsRepository channelMessageIdPostCountsRepository;
@@ -25,26 +28,26 @@ public class DemandManagementServiceImpl implements DemandManagementService {
     @Autowired
     private GroupMessageIdPostCountsRepository groupMessageIdPostCountsRepository;
 
-    // @Override
-    // public ChannelMessageIdPostCounts
-    // findByChannelIdAndUserIdAndTypeWithChannelMessageIdPostCounts(Long channelId,
-    // String userId, String type) {
-    // return
-    // channelMessageIdPostCountsRepository.findByChannelIdAndUserIdAndType(channelId,
-    // userId, type);
-    // }
+    @Autowired
+    private TgUserRepository tgUserRepository;
 
     @Override
-    public GroupMessageIdPostCounts findByGroupIdAndUserIdAndTypeWithGroupMessageIdPostCounts(Long groupId,String userId,
-            String type) {
-        return groupMessageIdPostCountsRepository.findByGroupIdAndUserIdAndType(groupId,userId, type);
+    public void saveTgUser(TgUser tgUser) {
+        tgUserRepository.save(tgUser);
     }
 
     @Override
-    public ChannelMessageIdPostCounts findByChannelIdAndUserIdAndTypeWithGroupMessageIdPostCounts(Long channelId,
+    public ChannelMessageIdPostCounts findByChannelIdAndUserIdAndTypeWithChannelMessageIdPostCounts(Long channelId,
             String userId,
             String type) {
         return channelMessageIdPostCountsRepository.findByChannelIdAndUserIdAndType(channelId, userId, type);
+    }
+
+    @Override
+    public GroupMessageIdPostCounts findByGroupIdAndUserIdAndTypeWithGroupMessageIdPostCounts(Long grouplId,
+            String userId,
+            String type) {
+        return groupMessageIdPostCountsRepository.findByGroupIdAndUserIdAndType(grouplId, userId, type);
     }
 
     @Override
@@ -65,13 +68,8 @@ public class DemandManagementServiceImpl implements DemandManagementService {
     }
 
     @Override
-    public void saveChannelMessageIdPostCounts(ChannelMessageIdPostCounts channelMessageIdPostCounts) {
-        channelMessageIdPostCountsRepository.save(channelMessageIdPostCounts);
-    }
-
-    @Override
-    public void saveGroupMessageIdPostCounts(GroupMessageIdPostCounts groupMessageIdPostCounts) {
-        groupMessageIdPostCountsRepository.save(groupMessageIdPostCounts);
+    public Demand findByUserIdAndBotIdWithDemand(String userId, String springyBotId) {
+        return demandRepository.findByUserIdAndBotId(userId, springyBotId);
     }
 
     @Override
@@ -85,13 +83,23 @@ public class DemandManagementServiceImpl implements DemandManagementService {
     }
 
     @Override
-    public Demand findByUserIdAndBotIdWithDemand(String userId, String springyBotId) {
-        return demandRepository.findByUserIdAndBotId(userId, springyBotId);
+    public void saveChannelMessageIdPostCounts(ChannelMessageIdPostCounts channelMessageIdPostCounts) {
+        channelMessageIdPostCountsRepository.save(channelMessageIdPostCounts);
     }
 
     @Override
-    public void deleteByIdWithDemand(Long id) {
-        demandRepository.deleteById(id);
+    public void saveGroupMessageIdPostCounts(GroupMessageIdPostCounts groupMessageIdPostCounts) {
+        groupMessageIdPostCountsRepository.save(groupMessageIdPostCounts);
+    }
+
+    @Override
+    public List<Demand> findAllByUserIdAndBotIdWithDemand(String userId, String springyBotId) {
+        return demandRepository.findAllByUserIdAndBotId(userId, springyBotId);
+    }
+
+    @Override
+    public List<Supply> findAllByUserIdAndBotIdWithSupply(String userId, String springyBotId) {
+        return supplyRepository.findAllByUserIdAndBotId(userId, springyBotId);
     }
 
     @Override

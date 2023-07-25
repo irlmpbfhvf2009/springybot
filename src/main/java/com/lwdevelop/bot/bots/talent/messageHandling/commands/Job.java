@@ -6,7 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.StringUtils;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import com.lwdevelop.bot.bots.utils.Common;
-import com.lwdevelop.bot.bots.utils.enum_.TelentEnum;
+import com.lwdevelop.bot.bots.utils.enum_.TalentEnum;
 import com.lwdevelop.bot.bots.utils.keyboardButton.TelentButton;
 import com.lwdevelop.bot.chatMessageHandlers.BasePrivateMessage;
 import com.lwdevelop.dto.JobPostingDTO;
@@ -15,7 +15,7 @@ import com.lwdevelop.entity.ChannelMessageIdPostCounts;
 import com.lwdevelop.entity.GroupMessageIdPostCounts;
 import com.lwdevelop.entity.JobPosting;
 import com.lwdevelop.entity.JobSeeker;
-import com.lwdevelop.entity.JobUser;
+import com.lwdevelop.entity.TgUser;
 import com.lwdevelop.entity.RobotChannelManagement;
 import com.lwdevelop.entity.RobotGroupManagement;
 import com.lwdevelop.entity.SpringyBot;
@@ -38,34 +38,35 @@ public class Job extends BasePrivateMessage {
         super(common);
         this.jobPostingDTO = new JobPostingDTO(common);
         this.jobSeekerDTO = new JobSeekerDTO(common);
-        this.saveJobUser();
+        this.saveTgUser();
     }
 
-    private void saveJobUser() {
+    private void saveTgUser() {
         String firstname = Optional.ofNullable(common.getUpdate().getMessage().getChat().getFirstName()).orElse("");
         String username = Optional.ofNullable(common.getUpdate().getMessage().getChat().getUserName()).orElse("");
         String lastname = Optional.ofNullable(common.getUpdate().getMessage().getChat().getLastName()).orElse("");
         SpringyBot springyBot = springyBotServiceImpl.findById(springyBotId).orElseThrow();
-        List<JobUser> jobUserList = springyBotServiceImpl.findJobUserBySpringyBotId(springyBotId);
+        List<TgUser> tgUsers = springyBotServiceImpl.findTgUserBySpringyBotId(springyBotId);
 
-        jobUserList.stream().filter(j -> j.getUserId().equals(chatId_str)).findAny()
-                .ifPresentOrElse(ju -> {
-                    ju.setFirstname(firstname);
-                    ju.setLastname(lastname);
-                    ju.setUsername(username);
+        tgUsers.stream().filter(t -> t.getUserId().equals(chatId_str)).findAny()
+                .ifPresentOrElse(tu -> {
+                    tu.setFirstname(firstname);
+                    tu.setLastname(lastname);
+                    tu.setUsername(username);
                 }, () -> {
-                    JobUser jobUser = new JobUser();
-                    jobUser.setUserId(chatId_str);
-                    jobUser.setFirstname(firstname);
-                    jobUser.setLastname(lastname);
-                    jobUser.setUsername(username);
-                    jobUserList.add(jobUser);
+                    TgUser tgUser = new TgUser();
+                    tgUser.setUserId(chatId_str);
+                    tgUser.setFirstname(firstname);
+                    tgUser.setLastname(lastname);
+                    tgUser.setUsername(username);
+                    tgUsers.add(tgUser);
                 });
-        springyBot.setJobUser(jobUserList);
+        springyBot.setTgUser(tgUsers);
         springyBotServiceImpl.save(springyBot);
     }
 
     public void setResponse_jobPosting_management() {
+        
         List<GroupMessageIdPostCounts> gmpcs = jobManagementServiceImpl
                 .findAllByBotIdAndUserIdAndTypeWithGroupMessageIdPostCounts(
                         springyBotId.toString(), chatId_str, "jobPosting");
@@ -86,14 +87,14 @@ public class Job extends BasePrivateMessage {
             JobPosting jobPosting = jobManagementServiceImpl.findByUserIdAndBotIdWithJobPosting(chatId_str,
                     springyBotId.toString());
             if (jobPosting == null) {
-                response.setText(TelentEnum.JOBPOSTING_DEFAULT_FORM.getText());
+                response.setText(TalentEnum.JOBPOSTING_DEFAULT_FORM.getText());
                 log.info("No job posting found for user {}, bot id {}", chatId_str, springyBotId);
             } else {
                 response.setText(jobPostingDTO.generateJobPostingResponse(jobPosting, false));
                 log.info("Job posting found for user {}, bot id {}", chatId_str, springyBotId);
             }
             common.executeAsync(response);
-            response.setText(TelentEnum.REMIND_EDITOR_.getText());
+            response.setText(TalentEnum.REMIND_EDITOR_.getText());
             common.executeAsync(response);
         }
     }
@@ -119,14 +120,14 @@ public class Job extends BasePrivateMessage {
             JobSeeker jobSeeker = jobManagementServiceImpl.findByUserIdAndBotIdWithJobSeeker(chatId_str,
                     springyBotId.toString());
             if (jobSeeker == null) {
-                response.setText(TelentEnum.JOBSEEKER_DEFAULT_FORM.getText());
+                response.setText(TalentEnum.JOBSEEKER_DEFAULT_FORM.getText());
                 log.info("No job seeker found for user {}, bot id {}", chatId_str, springyBotId);
             } else {
                 response.setText(jobSeekerDTO.generateJobSeekerResponse(jobSeeker, false));
                 log.info("Job seeker found for user {}, bot id {}", chatId_str, springyBotId);
             }
             common.executeAsync(response);
-            response.setText(TelentEnum.REMIND_EDITOR_.getText());
+            response.setText(TalentEnum.REMIND_EDITOR_.getText());
             common.executeAsync(response);
         }
     }
@@ -135,7 +136,7 @@ public class Job extends BasePrivateMessage {
 
         String[] lines = text.split("\\r?\\n");
 
-        JobUser jobUser = springyBotServiceImpl.findJobUserBySpringyBotIdAndUserId(springyBotId, chatId_str);
+        TgUser tgUser = springyBotServiceImpl.findTgUserBySpringyBotIdAndUserId(springyBotId, chatId_str);
 
         String username = "@" + common.getUpdate().getMessage().getFrom().getUserName();
 
@@ -172,7 +173,7 @@ public class Job extends BasePrivateMessage {
                     Long groupId = robotGroupManagement.getGroupId();
                     String groupTitle = robotGroupManagement.getGroupTitle();
                     response.setChatId(groupId.toString());
-                    response.setText(TelentEnum.send_recruitment_text(result));
+                    response.setText(TalentEnum.send_recruitment_text(result));
                     response.setReplyMarkup(new TelentButton().keyboardJobMarkup());
                     response.setDisableWebPagePreview(true);
 
@@ -188,7 +189,7 @@ public class Job extends BasePrivateMessage {
                     if (isEdit) {
                         EditMessageText editMessageText = new EditMessageText();
                         editMessageText.setChatId(groupId.toString());
-                        editMessageText.setText(TelentEnum.send_recruitment_text(result));
+                        editMessageText.setText(TalentEnum.send_recruitment_text(result));
                         editMessageText.setMessageId(gmpc.getMessageId());
                         editMessageText.setDisableWebPagePreview(true);
                         common.executeAsync(editMessageText);
@@ -202,6 +203,7 @@ public class Job extends BasePrivateMessage {
                             response.setChatId(chatId_str);
                             response.setText("[ " + groupTitle + " ]发送 [招聘人才] 信息成功");
                             common.executeAsync(response);
+
                             gmpc = new GroupMessageIdPostCounts();
                             gmpc.setBotId(springyBotId.toString());
                             gmpc.setUserId(chatId_str);
@@ -224,7 +226,6 @@ public class Job extends BasePrivateMessage {
                                 common.executeAsync(response);
                             }
                         }
-
                     }
                     final GroupMessageIdPostCounts finalGmpc = gmpc;
                     gmpcs.stream()
@@ -235,7 +236,6 @@ public class Job extends BasePrivateMessage {
                                     g -> gmpcs.set(gmpcs.indexOf(g), finalGmpc),
                                     () -> gmpcs.add(finalGmpc));
                     jobPosting.setGroupMessageIdPostCounts(gmpcs);
-
                 }
             }
             while (iterator_channel.hasNext()) {
@@ -245,7 +245,7 @@ public class Job extends BasePrivateMessage {
                     Long channelId = robotChannelManagement.getChannelId();
                     String channelTitle = robotChannelManagement.getChannelTitle();
                     response.setChatId(channelId.toString());
-                    response.setText(TelentEnum.send_recruitment_text(result));
+                    response.setText(TalentEnum.send_recruitment_text(result));
                     response.setReplyMarkup(new TelentButton().keyboardJobMarkup());
                     response.setDisableWebPagePreview(true);
 
@@ -259,8 +259,8 @@ public class Job extends BasePrivateMessage {
 
                     if (isEdit) {
                         EditMessageText editMessageText = new EditMessageText();
-                        editMessageText.setChatId(String.valueOf(channelId));
-                        editMessageText.setText(TelentEnum.send_recruitment_text(result));
+                        editMessageText.setChatId(channelId.toString());
+                        editMessageText.setText(TalentEnum.send_recruitment_text(result));
                         editMessageText.setMessageId(cmpc.getMessageId());
                         editMessageText.setDisableWebPagePreview(true);
                         common.executeAsync(editMessageText);
@@ -295,7 +295,6 @@ public class Job extends BasePrivateMessage {
                                 common.executeAsync(response);
                             }
                         }
-
                     }
                     final ChannelMessageIdPostCounts finalCmpc = cmpc;
                     cmpcs.stream()
@@ -315,7 +314,6 @@ public class Job extends BasePrivateMessage {
             response.setDisableWebPagePreview(true);
             common.executeAsync(response);
         }
-
         final JobPosting finalJobPosting = jobPosting;
         jobPostings.stream()
                 .filter(jp -> jp.getUserId().equals(chatId_str) && jp.getBotId().equals(springyBotId.toString()))
@@ -323,16 +321,15 @@ public class Job extends BasePrivateMessage {
                 .ifPresentOrElse(
                         jp -> jobPostings.set(jobPostings.indexOf(jp), finalJobPosting),
                         () -> jobPostings.add(finalJobPosting));
-        jobUser.setJobPosting(jobPostings);
-        jobManagementServiceImpl.saveJobUser(jobUser);
-
+        tgUser.setJobPosting(jobPostings);
+        jobManagementServiceImpl.saveTgUser(tgUser);
     }
 
     public void generateTextJobSeeker(Boolean isEdit) {
 
         String[] lines = text.split("\\r?\\n");
 
-        JobUser jobUser = springyBotServiceImpl.findJobUserBySpringyBotIdAndUserId(springyBotId, chatId_str);
+        TgUser tgUser = springyBotServiceImpl.findTgUserBySpringyBotIdAndUserId(springyBotId, chatId_str);
 
         String username = "@" + common.getUpdate().getMessage().getFrom().getUserName();
 
@@ -368,7 +365,7 @@ public class Job extends BasePrivateMessage {
                     Long groupId = robotGroupManagement.getGroupId();
                     String groupTitle = robotGroupManagement.getGroupTitle();
                     response.setChatId(groupId.toString());
-                    response.setText(TelentEnum.send_jobsearch_text(result));
+                    response.setText(TalentEnum.send_jobsearch_text(result));
                     response.setReplyMarkup(new TelentButton().keyboardJobMarkup());
                     response.setDisableWebPagePreview(true);
 
@@ -384,7 +381,7 @@ public class Job extends BasePrivateMessage {
                     if (isEdit) {
                         EditMessageText editMessageText = new EditMessageText();
                         editMessageText.setChatId(groupId.toString());
-                        editMessageText.setText(TelentEnum.send_jobsearch_text(result));
+                        editMessageText.setText(TalentEnum.send_jobsearch_text(result));
                         editMessageText.setMessageId(gmpc.getMessageId());
                         editMessageText.setDisableWebPagePreview(true);
                         common.executeAsync(editMessageText);
@@ -436,7 +433,7 @@ public class Job extends BasePrivateMessage {
                     Long channelId = robotChannelManagement.getChannelId();
                     String channelTitle = robotChannelManagement.getChannelTitle();
                     response.setChatId(channelId.toString());
-                    response.setText(TelentEnum.send_jobsearch_text(result));
+                    response.setText(TalentEnum.send_jobsearch_text(result));
                     response.setReplyMarkup(new TelentButton().keyboardJobMarkup());
                     response.setDisableWebPagePreview(true);
 
@@ -451,7 +448,7 @@ public class Job extends BasePrivateMessage {
                     if (isEdit) {
                         EditMessageText editMessageText = new EditMessageText();
                         editMessageText.setChatId(String.valueOf(channelId));
-                        editMessageText.setText(TelentEnum.send_recruitment_text(result));
+                        editMessageText.setText(TalentEnum.send_recruitment_text(result));
                         editMessageText.setMessageId(cmpc.getMessageId());
                         editMessageText.setDisableWebPagePreview(true);
                         common.executeAsync(editMessageText);
@@ -512,8 +509,8 @@ public class Job extends BasePrivateMessage {
                 .ifPresentOrElse(
                         js -> jobSeekers.set(jobSeekers.indexOf(js), finalJobSeeker),
                         () -> jobSeekers.add(finalJobSeeker));
-        jobUser.setJobSeeker(jobSeekers);
-        jobManagementServiceImpl.saveJobUser(jobUser);
+        tgUser.setJobSeeker(jobSeekers);
+        jobManagementServiceImpl.saveTgUser(tgUser);
     }
 
     public void setResponse_edit_jobPosting_management() {
@@ -550,14 +547,15 @@ public class Job extends BasePrivateMessage {
         String alert_channel = String.join("", alertMessages_channel);
         String alert_group = String.join("", alertMessages_group);
         String alert = alert_channel + alert_group;
+
         if (!alert.isEmpty()) {
             response.setText("通知：\n" + alert + "\n下方模版可对频道内信息进行编辑和删除操作");
             response.setDisableWebPagePreview(true);
             common.executeAsync(response);
 
-            List<JobUser> jobUsers = springyBotServiceImpl.findJobUserBySpringyBotId(springyBotId);
+            List<TgUser> tgUsers = springyBotServiceImpl.findTgUserBySpringyBotId(springyBotId);
 
-            JobUser jobUser = jobUsers.stream().filter(j -> j.getUserId().equals(chatId_str)).findAny().get();
+            TgUser tgUser = tgUsers.stream().filter(tu -> tu.getUserId().equals(chatId_str)).findAny().get();
 
             List<JobPosting> jobPostings = jobManagementServiceImpl.findAllByUserIdAndBotIdWithJobPosting(chatId_str,
                     springyBotId.toString());
@@ -575,17 +573,17 @@ public class Job extends BasePrivateMessage {
                         jobPosting.setLastMessageId(messageId);
                     }, () -> {
                         JobPostingDTO jobPostingDTO = new JobPostingDTO(chatId_str, springyBotId.toString());
-                        response.setText(TelentEnum.JOBPOSTING_EDITOR_DEFAULT_FORM.getText());
+                        response.setText(TalentEnum.JOBPOSTING_EDITOR_DEFAULT_FORM.getText());
                         response.setReplyMarkup(new TelentButton().keyboard_jobPosting(jobPostingDTO, false));
                         response.setDisableWebPagePreview(true);
 
-                        JobPosting jp = new JobPosting(chatId_str, springyBotId.toString(),
+                        JobPosting jobPosting = new JobPosting(chatId_str, springyBotId.toString(),
                                 common.executeAsync(response));
-                        jobPostings.add(jp);
+                        jobPostings.add(jobPosting);
                     });
 
-            jobUser.setJobPosting(jobPostings);
-            jobManagementServiceImpl.saveJobUser(jobUser);
+            tgUser.setJobPosting(jobPostings);
+            jobManagementServiceImpl.saveTgUser(tgUser);
 
         } else {
             response.setText("未发布招聘");
@@ -635,9 +633,9 @@ public class Job extends BasePrivateMessage {
             response.setDisableWebPagePreview(true);
             common.executeAsync(response);
 
-            List<JobUser> jobUsers = springyBotServiceImpl.findJobUserBySpringyBotId(springyBotId);
+            List<TgUser> tgUsers = springyBotServiceImpl.findTgUserBySpringyBotId(springyBotId);
 
-            JobUser jobUser = jobUsers.stream().filter(j -> j.getUserId().equals(chatId_str)).findAny().get();
+            TgUser tgUser = tgUsers.stream().filter(j -> j.getUserId().equals(chatId_str)).findAny().get();
 
             List<JobSeeker> jobSeekers = jobManagementServiceImpl.findAllByUserIdAndBotIdWithJobSeeker(chatId_str,
                     springyBotId.toString());
@@ -654,15 +652,15 @@ public class Job extends BasePrivateMessage {
                         jobSeeker.setLastMessageId(messageId);
                     }, () -> {
                         JobSeekerDTO jobSeekerDTO = new JobSeekerDTO(chatId_str, springyBotId.toString());
-                        response.setText(TelentEnum.JOBSEEKE_REDITOR_DEFAULT_FORM.getText());
+                        response.setText(TalentEnum.JOBSEEKE_REDITOR_DEFAULT_FORM.getText());
                         response.setReplyMarkup(new TelentButton().keyboard_jobSeeker(jobSeekerDTO, true));
                         response.setDisableWebPagePreview(true);
                         JobSeeker js = new JobSeeker(chatId_str, springyBotId.toString(),
                                 common.executeAsync(response));
                         jobSeekers.add(js);
                     });
-            jobUser.setJobSeeker(jobSeekers);
-            jobManagementServiceImpl.saveJobUser(jobUser);
+            tgUser.setJobSeeker(jobSeekers);
+            jobManagementServiceImpl.saveTgUser(tgUser);
 
         } else {
             response.setText("未发布求职");
@@ -673,7 +671,6 @@ public class Job extends BasePrivateMessage {
 
     @Override
     public void handler() {
-        // TODO Auto-generated method stub
         throw new UnsupportedOperationException("Unimplemented method 'handler'");
     }
 

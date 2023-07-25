@@ -4,48 +4,35 @@ import com.lwdevelop.bot.bots.demand.messageHandling.commands.Demandd;
 import com.lwdevelop.bot.bots.utils.Common;
 import com.lwdevelop.bot.bots.utils.enum_.DemandEnum;
 import com.lwdevelop.bot.bots.utils.keyboardButton.DemandButton;
-import com.lwdevelop.dto.DemandDTO;
-import com.lwdevelop.dto.SupplyDTO;
+import com.lwdevelop.bot.chatMessageHandlers.BasePrivateMessage;
 import org.telegram.telegrambots.meta.api.methods.groupadministration.GetChatMember;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
-import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 
-public class PrivateMessage_ {
-
-    private Common common;
-    private Message message;
-    private String text;
+public class PrivateMessage_ extends BasePrivateMessage {
 
     private Demandd demandd;
-    private Boolean isSubscribeChannel;
 
     public PrivateMessage_(Common common) {
-        this.message = common.getUpdate().getMessage();
-        this.common = common;
-        this.text = this.message.getText();
-        this.demandd = new Demandd(new SupplyDTO(common), new DemandDTO(common));
-        this.demandd.saveDemandUser(common);
-        this.isSubscribeChannel = isSubscribeChannel();
+        super(common);
+        this.demandd = new Demandd(common);
     }
 
     public void handler() {
-        // if (this.text.equals("/start")) {
-        // this.setResponse_job();
-        // }
 
-        // if (true) {
-        if (this.isSubscribeChannel) {
+        Boolean isSubscribeChannel = isSubscribeChannel();
+
+        if (isSubscribeChannel) {
             switch (this.text.toLowerCase()) {
                 case "发布需求":
-                    this.demandd.setResponse_demand_management(common);
+                    this.demandd.setResponse_demand_management();
                     break;
                 case "发布供应":
-                    this.demandd.setResponse_supply_management(common);
+                    this.demandd.setResponse_supply_management();
                     break;
                 case "供应和需求信息管理":
-                    this.demandd.setResponse_edit_demand_management(common);
-                    this.demandd.setResponse_edit_supply_management(common);
+                    this.demandd.setResponse_edit_demand_management();
+                    this.demandd.setResponse_edit_supply_management();
                     break;
                 case "/start":
                     this.setResponse_demandd();
@@ -56,15 +43,15 @@ public class PrivateMessage_ {
             if (text.length() > 4) {
                 String post = text.substring(0, 4);
                 // 發布招聘
-                if (post.equals(DemandEnum.DEMAND.getText())) {
-                    this.demandd.generateTextDemand(common, false);
-                } else if (post.equals(DemandEnum.EDIT_DEMAND.getText())) {
-                    this.demandd.generateTextDemand(common, true);
+                if (post.equals("发布需求")) {
+                    this.demandd.generateTextDemand(false);
+                } else if (post.equals("编辑需求")) {
+                    this.demandd.generateTextDemand(true);
                     // 發布求職
-                } else if (post.equals(DemandEnum.SUPPLY.getText())) {
-                    this.demandd.generateTextSupply(common, false);
-                } else if (post.equals(DemandEnum.EDIT_SUPPLY.getText())) {
-                    this.demandd.generateTextSupply(common, true);
+                } else if (post.equals("发布供应")) {
+                    this.demandd.generateTextSupply(false);
+                } else if (post.equals("编辑供应")) {
+                    this.demandd.generateTextSupply(true);
                 }
             }
         } else {
@@ -73,11 +60,12 @@ public class PrivateMessage_ {
     }
 
     private void setResponse_demandd() {
-
+        
         String firstName = this.message.getFrom().getFirstName() == null ? "" : this.message.getFrom().getFirstName();
         String lastName = this.message.getFrom().getLastName() == null ? "" : this.message.getFrom().getLastName();
         String name = firstName + lastName;
         String botName;
+        Boolean isSubscribeChannel = isSubscribeChannel();
 
         try {
             botName = "@" + this.common.getBot().getMe().getUserName();
@@ -90,7 +78,7 @@ public class PrivateMessage_ {
         response.setChatId(String.valueOf(message.getChatId()));
         response.setText(DemandEnum.help_text(name, botName));
 
-        if (this.isSubscribeChannel) {
+        if (isSubscribeChannel) {
             response.setReplyMarkup(new DemandButton().demandReplyKeyboardMarkup());
         } else {
             response.setReplyMarkup(new DemandButton().keyboardSubscribeChannelMarkup());

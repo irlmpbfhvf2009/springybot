@@ -1,6 +1,6 @@
 package com.lwdevelop.bot.bots.utils.enum_;
 
-public enum TelentEnum {
+public enum TalentEnum {
 
     // seeker
     JOBSEEKER_DEFAULT_FORM(
@@ -27,7 +27,7 @@ public enum TelentEnum {
 
     private String text;
 
-    private TelentEnum(String text) {
+    private TalentEnum(String text) {
         this.text = text;
     }
 

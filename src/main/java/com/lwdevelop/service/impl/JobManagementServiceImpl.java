@@ -17,14 +17,14 @@ import com.lwdevelop.entity.ChannelMessageIdPostCounts;
 import com.lwdevelop.entity.GroupMessageIdPostCounts;
 import com.lwdevelop.entity.JobPosting;
 import com.lwdevelop.entity.JobSeeker;
-import com.lwdevelop.entity.JobUser;
+import com.lwdevelop.entity.TgUser;
 import com.lwdevelop.entity.RobotChannelManagement;
 import com.lwdevelop.entity.SpringyBot;
 import com.lwdevelop.repository.ChannelMessageIdPostCountsRepository;
 import com.lwdevelop.repository.GroupMessageIdPostCountsRepository;
 import com.lwdevelop.repository.JobPostingRepository;
 import com.lwdevelop.repository.JobSeekerRepository;
-import com.lwdevelop.repository.JobUserRepository;
+import com.lwdevelop.repository.TgUserRepository;
 import com.lwdevelop.service.JobManagementService;
 import com.lwdevelop.utils.ResponseUtils;
 import com.lwdevelop.utils.RetEnum;
@@ -50,11 +50,11 @@ public class JobManagementServiceImpl implements JobManagementService {
     private GroupMessageIdPostCountsRepository groupMessageIdPostCountsRepository;
 
     @Autowired
-    private JobUserRepository jobUserRepository;
+    private TgUserRepository tgUserRepository;
 
     @Override
-    public void saveJobUser(JobUser jobUser) {
-        jobUserRepository.save(jobUser);
+    public void saveTgUser(TgUser tgUser) {
+        tgUserRepository.save(tgUser);
     }
 
     @Override
@@ -134,18 +134,18 @@ public class JobManagementServiceImpl implements JobManagementService {
             seeker.setLabel("求職信息");
             seeker.setId(1L);
 
-            List<JobUser> jobUsers = springyBotServiceImpl.findJobUserBySpringyBotId(springyBots.get(i).getId());
-            for (int j = 0; j < jobUsers.size(); j++) {
+            List<TgUser> tgUsers = springyBotServiceImpl.findTgUserBySpringyBotId(springyBots.get(i).getId());
+            for (int j = 0; j < tgUsers.size(); j++) {
                 List<JobTreeDTO> jobTreeDTOList = new ArrayList<>();
-                jobUsers.stream().forEach(jobUser -> {
+                tgUsers.stream().forEach(tgUser -> {
                     JobTreeDTO jobTreeDTO = new JobTreeDTO();
-                    jobTreeDTO.setId(jobUser.getId());
-                    String name = jobUser.getUsername().equals("") ? jobUser.getFirstname() : jobUser.getUsername();
-                    name = name.equals("") ? jobUser.getLastname() : name;
+                    jobTreeDTO.setId(tgUser.getId());
+                    String name = tgUser.getUsername().equals("") ? tgUser.getFirstname() : tgUser.getUsername();
+                    name = name.equals("") ? tgUser.getLastname() : name;
                     jobTreeDTO.setLabel(name);
 
-                    Optional<JobPosting> jobPostingOptional = jobUser.getJobPosting().stream()
-                            .filter(jp -> jp.getUserId().equals(jobUser.getUserId())).findAny();
+                    Optional<JobPosting> jobPostingOptional = tgUser.getJobPosting().stream()
+                            .filter(jp -> jp.getUserId().equals(tgUser.getUserId())).findAny();
                     if (jobPostingOptional.isPresent()) {
                         JobPosting jobPosting = jobPostingOptional.get();
                         JobPostingDTO jobPostingDTO = new JobPostingDTO();
@@ -166,8 +166,8 @@ public class JobManagementServiceImpl implements JobManagementService {
                         jobTreeDTO.setJobPostingDTO(list);
                     }
 
-                    Optional<JobSeeker> jobSeekerOptional = jobUser.getJobSeeker().stream()
-                            .filter(js -> js.getUserId().equals(jobUser.getUserId())).findAny();
+                    Optional<JobSeeker> jobSeekerOptional = tgUser.getJobSeeker().stream()
+                            .filter(js -> js.getUserId().equals(tgUser.getUserId())).findAny();
                     if (jobSeekerOptional.isPresent()) {
                         JobSeeker jobSeeker = jobSeekerOptional.get();
                         JobSeekerDTO jobSeekerDTO = new JobSeekerDTO();

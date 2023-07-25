@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Optional;
 import com.lwdevelop.bot.bots.utils.Common;
-import com.lwdevelop.bot.bots.utils.enum_.TelentEnum;
+import com.lwdevelop.bot.bots.utils.enum_.TalentEnum;
 import com.lwdevelop.entity.JobSeeker;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -172,9 +172,9 @@ public class JobSeekerDTO {
         this.workingAddress = Optional.ofNullable(jobSeeker.getWorkingAddress()).orElse("");
         this.language = Optional.ofNullable(jobSeeker.getLanguage()).orElse("");
         this.workExperience = Optional.ofNullable(jobSeeker.getWorkExperience())
-                .orElse(TelentEnum.FIFTY_CHARACTERS_LIMIT.getText());
+                .orElse(TalentEnum.FIFTY_CHARACTERS_LIMIT.getText());
         this.selfIntroduction = Optional.ofNullable(jobSeeker.getSelfIntroduction())
-                .orElse(TelentEnum.FIFTY_CHARACTERS_LIMIT.getText());
+                .orElse(TalentEnum.FIFTY_CHARACTERS_LIMIT.getText());
         this.flightNumber = Optional.ofNullable(jobSeeker.getFlightNumber()).orElse("");
         this.publisher = Optional.ofNullable(jobSeeker.getPublisher()).orElse("");
 
@@ -223,7 +223,7 @@ public class JobSeekerDTO {
                 String key = line.substring(0, colonIndex).trim();
                 String value = line.substring(colonIndex + 1).trim();
 
-                String filter = TelentEnum.FIFTY_CHARACTERS_LIMIT.getText();
+                String filter = TalentEnum.FIFTY_CHARACTERS_LIMIT.getText();
                 value = value.replace(filter, "");
                 value = value.substring(0, Math.min(255, value.length()));
 

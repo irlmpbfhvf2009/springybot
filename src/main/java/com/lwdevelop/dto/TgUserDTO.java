@@ -3,7 +3,7 @@ package com.lwdevelop.dto;
 import lombok.Data;
 
 @Data
-public class JobUserDTO {
+public class TgUserDTO {
     
     private Long id;
 

@@ -2,7 +2,7 @@ package com.lwdevelop.dto;
 
 import com.lwdevelop.bot.bots.utils.Common;
 import com.lwdevelop.bot.bots.utils.enum_.DemandEnum;
-import com.lwdevelop.bot.bots.utils.enum_.TelentEnum;
+import com.lwdevelop.bot.bots.utils.enum_.TalentEnum;
 import com.lwdevelop.entity.Demand;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -101,7 +101,7 @@ public class DemandDTO {
         this.agency = Optional.ofNullable(demand.getAgency()).orElse("");
         this.workTime = Optional.ofNullable(demand.getWorkTime()).orElse("");
         this.guarantee = Optional.ofNullable(demand.getGuarantee()).orElse("");
-        this.projectDetail = Optional.ofNullable(demand.getProjectDetail()).orElse(TelentEnum.FIFTY_CHARACTERS_LIMIT.getText());
+        this.projectDetail = Optional.ofNullable(demand.getProjectDetail()).orElse(TalentEnum.FIFTY_CHARACTERS_LIMIT.getText());
         this.flightNumber = Optional.ofNullable(demand.getFlightNumber()).orElse("");
         this.publisher = Optional.ofNullable(demand.getPublisher()).orElse("");
 
@@ -135,7 +135,7 @@ public class DemandDTO {
                 String key = line.substring(0, colonIndex).trim();
                 String value = line.substring(colonIndex + 1).trim();
 
-                String filter = TelentEnum.FIFTY_CHARACTERS_LIMIT.getText();
+                String filter = TalentEnum.FIFTY_CHARACTERS_LIMIT.getText();
                 value = value.replace(filter, "");
                 value = value.substring(0, Math.min(255, value.length()));
 

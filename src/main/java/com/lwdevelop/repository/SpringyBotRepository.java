@@ -41,16 +41,13 @@ public interface SpringyBotRepository extends JpaRepository<SpringyBot, Long> {
     @Query("SELECT wl FROM SpringyBot sb JOIN sb.whiteList wl WHERE sb.id = :id")
     List<WhiteList> findWhiteListBySpringyBotId(Long id);
 
-    @Query("SELECT ju FROM SpringyBot sb JOIN sb.jobUser ju WHERE sb.id = :id")
-    List<JobUser> findJobUserBySpringyBotId(Long id);
+    @Query("SELECT ju FROM SpringyBot sb JOIN sb.tgUser ju WHERE sb.id = :id")
+    List<TgUser> findTgUserBySpringyBotId(Long id);
 
-    @Query("SELECT ju FROM SpringyBot sb JOIN sb.jobUser ju WHERE sb.id = :id and ju.userId = :userId")
-    JobUser findJobUserBySpringyBotIdAndUserId(Long id,String userId);
+    @Query("SELECT ju FROM SpringyBot sb JOIN sb.tgUser ju WHERE sb.id = :id and ju.userId = :userId")
+    TgUser findTgUserBySpringyBotIdAndUserId(Long id,String userId);
 
     @Query("SELECT ib FROM SpringyBot sb JOIN sb.invitationBonusUser ib WHERE sb.id = :id")
     List<InvitationBonusUser> findInvitationBonusUserBySpringyBotId(Long id);
-
-    @Query("SELECT du FROM SpringyBot sb JOIN sb.demandUser du WHERE sb.id = :id")
-    List<DemandUser> findDemandUserBySpringyBotId(Long id);
 
 }

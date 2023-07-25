@@ -21,7 +21,7 @@ public class ChannelMessage {
 
     public void handler() {
 
-        if(text.startsWith("https://t.me/")){
+        if(text != null && text.startsWith("https://t.me/")){
             log.info("Detected URL in message with ID: {} in channel with ID: {}. Deleting message...", messageId, chatId);
             DeleteMessage dm = new DeleteMessage(chatId,messageId);
             common.executeAsync(dm);

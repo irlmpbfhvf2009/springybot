@@ -7,7 +7,7 @@ import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboardMar
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKeyboardButton;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.KeyboardRow;
 
-import com.lwdevelop.bot.bots.utils.enum_.TelentEnum;
+import com.lwdevelop.bot.bots.utils.enum_.TalentEnum;
 import com.lwdevelop.dto.JobPostingDTO;
 import com.lwdevelop.dto.JobSeekerDTO;
 
@@ -22,7 +22,7 @@ public class TelentButton {
         row.add("发布求职");
         keyboard.add(row);
         row = new KeyboardRow();
-        row.add(TelentEnum.JOB_MANAGEMENT.getText());
+        row.add(TalentEnum.JOB_MANAGEMENT.getText());
         keyboard.add(row);
         keyboardMarkup.setKeyboard(keyboard);
         return keyboardMarkup;
@@ -33,7 +33,7 @@ public class TelentButton {
         InlineKeyboardMarkup markupInline = new InlineKeyboardMarkup();
         List<List<InlineKeyboardButton>> rowsInline = new ArrayList<>();
         List<InlineKeyboardButton> rowInline = new ArrayList<>();
-        dk1.setText(TelentEnum.subscribeChannel_text());
+        dk1.setText(TalentEnum.subscribeChannel_text());
         dk1.setUrl("https://t.me/rc499");
         rowInline.add(dk1);
         rowsInline.add(rowInline);
@@ -102,8 +102,6 @@ public class TelentButton {
             dk1.setCallbackData("editJobSeeker_");
             dk1.setText("编辑发布");
         }
-
-        // dk1.setUrl(url);
 
         rowInline.add(dk1);
         if (isEdit) {

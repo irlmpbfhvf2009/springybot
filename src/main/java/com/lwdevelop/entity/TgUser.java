@@ -19,7 +19,7 @@ import lombok.Data;
 @Data
 @Entity
 @EntityListeners(AuditingEntityListener.class)
-public class JobUser {
+public class TgUser {
 
         @Id
         @GeneratedValue(strategy = GenerationType.AUTO)
@@ -46,4 +46,13 @@ public class JobUser {
         @JsonIgnore
         private List<JobPosting> jobPosting;
 
+        // （供應信息）
+        @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+        @JsonIgnore
+        private List<Supply> supply;
+
+        // （需求信息）
+        @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+        @JsonIgnore
+        private List<Demand> demand;
 }

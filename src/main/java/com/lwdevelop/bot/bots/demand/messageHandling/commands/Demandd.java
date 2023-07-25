@@ -2,21 +2,20 @@ package com.lwdevelop.bot.bots.demand.messageHandling.commands;
 
 import com.lwdevelop.bot.bots.utils.Common;
 import com.lwdevelop.bot.bots.utils.enum_.DemandEnum;
-import com.lwdevelop.bot.bots.utils.enum_.TelentEnum;
+import com.lwdevelop.bot.bots.utils.enum_.TalentEnum;
 import com.lwdevelop.bot.bots.utils.keyboardButton.DemandButton;
 import com.lwdevelop.bot.bots.utils.keyboardButton.TelentButton;
+import com.lwdevelop.bot.chatMessageHandlers.BasePrivateMessage;
 import com.lwdevelop.dto.DemandDTO;
 import com.lwdevelop.dto.SupplyDTO;
 import com.lwdevelop.entity.*;
 import com.lwdevelop.service.impl.DemandManagementServiceImpl;
-import com.lwdevelop.service.impl.SpringyBotServiceImpl;
 import com.lwdevelop.utils.SpringUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.StringUtils;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.methods.updatingmessages.EditMessageText;
-import org.telegram.telegrambots.meta.api.objects.Message;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Objects;
@@ -24,246 +23,149 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Slf4j
-public class Demandd {
+public class Demandd extends BasePrivateMessage {
 
     @Autowired
     private DemandManagementServiceImpl demandManagementServiceImpl = SpringUtils.getApplicationContext()
             .getBean(DemandManagementServiceImpl.class);
 
-    @Autowired
-    private SpringyBotServiceImpl springyBotServiceImpl = SpringUtils.getApplicationContext()
-            .getBean(SpringyBotServiceImpl.class);
-
     private SupplyDTO supplyDTO;
     private DemandDTO demandDTO;
 
-    public Demandd() {
-
+    public Demandd(Common common) {
+        super(common);
+        this.supplyDTO = new SupplyDTO(common);
+        this.demandDTO = new DemandDTO(common);
+        this.saveTgUser(common);
     }
 
-    public Demandd(SupplyDTO supplyDTO, DemandDTO demandDTO) {
-        this.supplyDTO = supplyDTO;
-        this.demandDTO = demandDTO;
-    }
-
-    public void saveDemandUser(Common common) {
-        Long id = common.getSpringyBotId();
-        String userId = String.valueOf(common.getUpdate().getMessage().getChatId());
+    public void saveTgUser(Common common) {
         String firstname = Optional.ofNullable(common.getUpdate().getMessage().getChat().getFirstName()).orElse("");
         String username = Optional.ofNullable(common.getUpdate().getMessage().getChat().getUserName()).orElse("");
         String lastname = Optional.ofNullable(common.getUpdate().getMessage().getChat().getLastName()).orElse("");
-        SpringyBot springyBot = springyBotServiceImpl.findById(id).orElseThrow();
-        List<DemandUser> demandUserList = springyBotServiceImpl.findDemandUserBySpringyBotId(common.getSpringyBotId());
+        SpringyBot springyBot = springyBotServiceImpl.findById(springyBotId).orElseThrow();
+        List<TgUser> tgUsers = springyBotServiceImpl.findTgUserBySpringyBotId(common.getSpringyBotId());
 
-        demandUserList.stream().filter(j -> j.getUserId().equals(userId)).findAny()
-                .ifPresentOrElse(ju -> {
-                    ju.setFirstname(firstname);
-                    ju.setLastname(lastname);
-                    ju.setUsername(username);
+        tgUsers.stream().filter(t -> t.getUserId().equals(chatId_str)).findAny()
+                .ifPresentOrElse(tu -> {
+                    tu.setFirstname(firstname);
+                    tu.setLastname(lastname);
+                    tu.setUsername(username);
                 }, () -> {
-                    DemandUser demandUser = new DemandUser();
-                    demandUser.setUserId(userId);
-                    demandUser.setFirstname(firstname);
-                    demandUser.setLastname(lastname);
-                    demandUser.setUsername(username);
-                    demandUserList.add(demandUser);
+                    TgUser tgUser = new TgUser();
+                    tgUser.setUserId(chatId_str);
+                    tgUser.setFirstname(firstname);
+                    tgUser.setLastname(lastname);
+                    tgUser.setUsername(username);
+                    tgUsers.add(tgUser);
                 });
-        springyBot.setDemandUser(demandUserList);
+        springyBot.setTgUser(tgUsers);
         springyBotServiceImpl.save(springyBot);
 
     }
 
-    public void setResponse_demand_management(Common common) {
+    public void setResponse_demand_management() {
 
-        log.info("Entering setResponse_demand_management method...");
-
-        Long id = common.getSpringyBotId();
-        String userId = String.valueOf(common.getUpdate().getMessage().getChatId());
-
-        List<ChannelMessageIdPostCounts> channelMessageIdPostCounts = demandManagementServiceImpl
+        List<GroupMessageIdPostCounts> gmpcs = demandManagementServiceImpl
+                .findAllByBotIdAndUserIdAndTypeWithGroupMessageIdPostCounts(
+                        springyBotId.toString(), chatId_str, "demand");
+        List<ChannelMessageIdPostCounts> cmpcs = demandManagementServiceImpl
                 .findAllByBotIdAndUserIdAndTypeWithChannelMessageIdPostCounts(
-                        String.valueOf(id), userId, DemandEnum.DEMAND_.getText());
-        channelMessageIdPostCounts.stream().filter(cmpc -> cmpc.getPostCount() >= 1).findAny()
-                .ifPresentOrElse(action -> {
-                    SendMessage response = new SendMessage(userId, DemandEnum.ALREADY_POST_DEMAND.getText());
-                    common.executeAsync(response);
-                }, () -> {
+                        springyBotId.toString(), chatId_str, "demand");
 
-                    SendMessage response = new SendMessage();
-                    response.setChatId(userId);
+        boolean isPostToGroup = gmpcs.stream().anyMatch(gmpc -> gmpc.getPostCount() >= 1);
+        boolean isPostToChannel = cmpcs.stream().anyMatch(cmpc -> cmpc.getPostCount() >= 1);
 
-                    Demand demand = demandManagementServiceImpl.findByUserIdAndBotIdWithDemand(userId,
-                            String.valueOf(id));
-
-                    // 沒有發布過
-                    if (demand == null) {
-                        response.setText(DemandEnum.DEMAND_DEFAULT_FORM.getText());
-                        log.info("No demand found for user {}, bot id {}", userId, id);
-                    } else {
-                        response.setText(demandDTO.generateDemandResponse(demand, false));
-                        log.info("Demand found for user {}, bot id {}: {}", userId, id, demand);
-                    }
-
-                    common.executeAsync(response);
-                    response.setText(TelentEnum.REMIND_EDITOR_.getText());
-                    common.executeAsync(response);
-                });
-
-    }
-
-    public void setResponse_supply_management(Common common) {
-        Long id = common.getSpringyBotId();
-        String userId = String.valueOf(common.getUpdate().getMessage().getChatId());
-
-        List<ChannelMessageIdPostCounts> channelMessageIdPostCounts = demandManagementServiceImpl
-                .findAllByBotIdAndUserIdAndTypeWithChannelMessageIdPostCounts(
-                        String.valueOf(id), userId, DemandEnum.SUPPLY_.getText());
-        channelMessageIdPostCounts.stream().filter(cmpc -> cmpc.getPostCount() >= 1).findAny()
-                .ifPresentOrElse(action -> {
-                    SendMessage response = new SendMessage(userId, DemandEnum.ALREADY_POST_SUPPLY.getText());
-                    common.executeAsync(response);
-                }, () -> {
-                    log.info("Entering setResponse_supply_management method...");
-
-                    SendMessage response = new SendMessage();
-                    response.setChatId(userId);
-
-                    Supply supply = demandManagementServiceImpl.findByUserIdAndBotIdWithSupply(userId,
-                            String.valueOf(id));
-
-                    if (supply == null) {
-                        response.setText(DemandEnum.SUPPLY_DEFAULT_FORM.getText());
-                        log.info("No supply found for user {}, bot id {}", userId, id);
-                    } else {
-
-                        response.setText(supplyDTO.generateSupplyResponse(supply, false));
-                        log.info("Supply found for user {}, bot id {}: {}", userId, id, supply);
-
-                    }
-
-                    common.executeAsync(response);
-                    response.setText(TelentEnum.REMIND_EDITOR_.getText());
-                    common.executeAsync(response);
-                });
-
-    }
-
-    public void generateTextDemand(Common common, Boolean isEdit) {
-        Message message = common.getUpdate().getMessage();
-        String text = message.getText();
-        // 将文本内容按行分割成字符串数组
-        String[] lines = text.split("\\r?\\n");
-
-        Demand demand = demandManagementServiceImpl.findByUserIdAndBotIdWithDemand(
-                String.valueOf(message.getChatId()), String.valueOf(common.getSpringyBotId()));
-
-        if (demand == null) {
-            demand = new Demand();
+        if (isPostToGroup || isPostToChannel) {
+            String text = "您已经发布过[需求]信息，请点选[供应和需求信息管理]进行编辑或删除信息后重新发布。";
+            SendMessage response = new SendMessage(chatId_str, text);
+            common.executeAsync(response);
+        } else {
+            SendMessage response = new SendMessage();
+            response.setChatId(chatId_str);
+            Demand demand = demandManagementServiceImpl.findByUserIdAndBotIdWithDemand(chatId_str,
+                    springyBotId.toString());
+            if (demand == null) {
+                response.setText(DemandEnum.DEMAND_DEFAULT_FORM.getText());
+                log.info("No demand found for user {}, bot id {}", chatId_str, springyBotId);
+            } else {
+                response.setText(demandDTO.generateDemandResponse(demand, false));
+                log.info("demand found for user {}, bot id {}", chatId_str, springyBotId);
+            }
+            common.executeAsync(response);
+            response.setText(TalentEnum.REMIND_EDITOR_.getText());
+            common.executeAsync(response);
         }
 
+    }
+
+    public void setResponse_supply_management() {
+
+        List<GroupMessageIdPostCounts> gmpcs = demandManagementServiceImpl
+                .findAllByBotIdAndUserIdAndTypeWithGroupMessageIdPostCounts(
+                        springyBotId.toString(), chatId_str, "supply");
+        List<ChannelMessageIdPostCounts> cmpcs = demandManagementServiceImpl
+                .findAllByBotIdAndUserIdAndTypeWithChannelMessageIdPostCounts(
+                        springyBotId.toString(), chatId_str, "supply");
+
+        boolean isPostToGroup = gmpcs.stream().anyMatch(gmpc -> gmpc.getPostCount() >= 1);
+        boolean isPostToChannel = cmpcs.stream().anyMatch(cmpc -> cmpc.getPostCount() >= 1);
+
+        if (isPostToGroup || isPostToChannel) {
+            String text = "您已经发布过[供应]信息，请点选[供应和需求信息管理]进行编辑或删除信息后重新发布。";
+            SendMessage response = new SendMessage(chatId_str, text);
+            common.executeAsync(response);
+        } else {
+            SendMessage response = new SendMessage();
+            response.setChatId(chatId_str);
+            Supply supply = demandManagementServiceImpl.findByUserIdAndBotIdWithSupply(chatId_str,
+                    springyBotId.toString());
+            if (supply == null) {
+                response.setText(DemandEnum.SUPPLY_DEFAULT_FORM.getText());
+                log.info("No supply found for user {}, bot id {}", chatId_str, springyBotId);
+            } else {
+                response.setText(supplyDTO.generateSupplyResponse(supply, false));
+                log.info("supply found for user {}, bot id {}", chatId_str, springyBotId);
+            }
+            common.executeAsync(response);
+            response.setText(TalentEnum.REMIND_EDITOR_.getText());
+            common.executeAsync(response);
+        }
+
+    }
+
+    public void generateTextDemand(Boolean isEdit) {
+
+        String[] lines = text.split("\\r?\\n");
+
+        TgUser tgUser = springyBotServiceImpl.findTgUserBySpringyBotIdAndUserId(springyBotId, chatId_str);
+
         String username = "@" + common.getUpdate().getMessage().getFrom().getUserName();
-        demand.setPublisher(username);
+
+        List<Demand> demands = demandManagementServiceImpl.findAllByUserIdAndBotIdWithDemand(chatId_str,
+                springyBotId.toString());
+
+        Demand demand = demands.stream()
+                .filter(d -> d.getUserId().equals(chatId_str) && d.getBotId().equals(springyBotId.toString()))
+                .findFirst()
+                .orElse(new Demand());
 
         String isSuccess = demandDTO.fillDemandInfo(demand, lines);
 
         if (!StringUtils.hasText(isSuccess)) {
-            demand.setBotId(String.valueOf(common.getSpringyBotId()));
-            demand.setUserId(String.valueOf(message.getChatId()));
+            demand.setPublisher(username);
+            demand.setBotId(springyBotId.toString());
+            demand.setUserId(chatId_str);
             demand.setLastMessageId(message.getMessageId());
-            // 處理資料表
-            Long id = common.getSpringyBotId();
-            String userId = String.valueOf(common.getUpdate().getMessage().getChatId());
-            List<DemandUser> demandUsers = springyBotServiceImpl.findDemandUserBySpringyBotId(id);
-            DemandUser demandUser = demandUsers.stream().filter(j -> j.getUserId().equals(userId)).findAny().get();
-            final Long final_demandId = demand.getId();
-
-            if (!demandUser.getDemand().stream().anyMatch(p -> p.getId().equals(final_demandId))) {
-                demandUser.getDemand().add(demand);
-            }
-
-            demandManagementServiceImpl.saveDemand(demand);
 
             String result = demandDTO.generateDemandDetails(demand);
 
             List<RobotChannelManagement> robotChannelManagements = springyBotServiceImpl
-                    .findRobotChannelManagementBySpringyBotId(common.getSpringyBotId());
+                    .findRobotChannelManagementBySpringyBotId(springyBotId);
+            List<RobotGroupManagement> robotGroupManagements = springyBotServiceImpl
+                    .findRobotGroupManagementBySpringyBotId(springyBotId);
 
             Iterator<RobotChannelManagement> iterator_channel = robotChannelManagements.iterator();
-
-            while (iterator_channel.hasNext()) {
-                RobotChannelManagement robotChannelManagement = iterator_channel.next();
-                if (!result.isEmpty()) {
-                    SendMessage response = new SendMessage();
-                    Long channelId = robotChannelManagement.getChannelId();
-                    String channelTitle = robotChannelManagement.getChannelTitle();
-                    String channelLink = robotChannelManagement.getLink();
-                    response.setChatId(String.valueOf(channelId));
-                    response.setText(DemandEnum.send_demand_text(result));
-                    response.setReplyMarkup(new TelentButton().keyboardJobMarkup());
-                    response.setDisableWebPagePreview(true);
-                    response.setDisableNotification(true);
-                    ChannelMessageIdPostCounts channelMessageIdPostCounts = demandManagementServiceImpl
-                            .findByChannelIdAndUserIdAndTypeWithGroupMessageIdPostCounts(
-                                    channelId, userId.toString(), DemandEnum.DEMAND_.getText());
-
-                    if (isEdit) {
-                        EditMessageText editMessageText = new EditMessageText();
-                        editMessageText.setChatId(String.valueOf(channelId));
-                        editMessageText.setText(DemandEnum.send_demand_text(result));
-                        editMessageText.setMessageId(channelMessageIdPostCounts.getMessageId());
-                        editMessageText.setDisableWebPagePreview(true);
-                        common.executeAsync(editMessageText);
-
-                        response.setChatId(demand.getUserId());
-                        response.setText("[ " + channelTitle + " ]编辑成功");
-                        common.executeAsync(response);
-
-                    } else {
-
-                        if (channelMessageIdPostCounts == null) {
-                            final Integer channelMessageId = common.executeAsync(response);
-
-                            response.setChatId(demand.getUserId());
-                            response.setText("[ " + channelTitle + " ]发送 [需求] 信息成功");
-                            common.executeAsync(response);
-
-                            channelMessageIdPostCounts = new ChannelMessageIdPostCounts();
-                            channelMessageIdPostCounts.setBotId(demand.getBotId());
-                            channelMessageIdPostCounts.setUserId(demand.getUserId());
-                            channelMessageIdPostCounts.setChannelId(channelId);
-                            channelMessageIdPostCounts.setChannelTitle(channelTitle);
-                            channelMessageIdPostCounts.setChannelLink(channelLink);
-                            channelMessageIdPostCounts.setMessageId(channelMessageId);
-                            channelMessageIdPostCounts.setPostCount(1);
-                            channelMessageIdPostCounts.setType(DemandEnum.DEMAND_.getText());
-                            demand = demandManagementServiceImpl.findByUserIdAndBotIdWithDemand(
-                                    String.valueOf(message.getChatId()), String.valueOf(common.getSpringyBotId()));
-                            demand.getChannelMessageIdPostCounts().add(channelMessageIdPostCounts);
-                            demandManagementServiceImpl.saveDemand(demand);
-                        } else {
-                            if (channelMessageIdPostCounts.getPostCount() <= 0) {
-                                final Integer channelMessageId = common.executeAsync(response);
-                                response.setChatId(demand.getUserId());
-                                response.setText("[ " + channelTitle + " ]发送 [需求] 信息成功");
-                                common.executeAsync(response);
-                                channelMessageIdPostCounts.setMessageId(channelMessageId);
-                                channelMessageIdPostCounts.setPostCount(channelMessageIdPostCounts.getPostCount() + 1);
-                                demandManagementServiceImpl.saveChannelMessageIdPostCounts(channelMessageIdPostCounts);
-                            } else {
-                                response.setChatId(demand.getUserId());
-                                response.setText("您已在[ " + channelTitle + " ]發送一條 [需求] 信息");
-                                common.executeAsync(response);
-                            }
-                        }
-
-                    }
-
-                }
-            }
-
-            List<RobotGroupManagement> robotGroupManagements = springyBotServiceImpl
-                    .findRobotGroupManagementBySpringyBotId(common.getSpringyBotId());
-
             Iterator<RobotGroupManagement> iterator_group = robotGroupManagements.iterator();
 
             while (iterator_group.hasNext()) {
@@ -272,198 +174,191 @@ public class Demandd {
                     SendMessage response = new SendMessage();
                     Long groupId = robotGroupManagement.getGroupId();
                     String groupTitle = robotGroupManagement.getGroupTitle();
-                    String groupLink = robotGroupManagement.getLink();
-                    response.setChatId(String.valueOf(groupId));
-                    response.setText(DemandEnum.send_demand_text(result));
+                    response.setChatId(groupId.toString());
+                    response.setText(TalentEnum.send_recruitment_text(result));
                     response.setReplyMarkup(new TelentButton().keyboardJobMarkup());
-                    response.setDisableNotification(true);
                     response.setDisableWebPagePreview(true);
-                    GroupMessageIdPostCounts groupMessageIdPostCounts = demandManagementServiceImpl
-                            .findByGroupIdAndUserIdAndTypeWithGroupMessageIdPostCounts(groupId,userId.toString(),
-                                    DemandEnum.DEMAND_.getText());
+
+                    List<GroupMessageIdPostCounts> gmpcs = demandManagementServiceImpl
+                            .findAllByBotIdAndUserIdAndTypeWithGroupMessageIdPostCounts(springyBotId.toString(),
+                                    chatId_str, "demand");
+
+                    GroupMessageIdPostCounts gmpc = gmpcs.stream()
+                            .filter(g -> g.getGroupId().equals(groupId)
+                                    && g.getUserId().equals(chatId_str) && g.getType().equals("demand"))
+                            .findFirst().orElse(null);
+
                     if (isEdit) {
                         EditMessageText editMessageText = new EditMessageText();
-                        editMessageText.setChatId(String.valueOf(groupId));
+                        editMessageText.setChatId(groupId.toString());
                         editMessageText.setText(DemandEnum.send_demand_text(result));
-                        editMessageText.setMessageId(groupMessageIdPostCounts.getMessageId());
+                        editMessageText.setMessageId(gmpc.getMessageId());
                         editMessageText.setDisableWebPagePreview(true);
                         common.executeAsync(editMessageText);
-
-                        response.setChatId(demand.getUserId());
+                        response.setChatId(chatId_str);
                         response.setText("[ " + groupTitle + " ]编辑成功");
                         common.executeAsync(response);
+
                     } else {
-
-                        if (groupMessageIdPostCounts == null) {
+                        if (gmpc == null) {
                             final Integer groupMessageId = common.executeAsync(response);
-
-                            response.setChatId(demand.getUserId());
+                            response.setChatId(chatId_str);
                             response.setText("[ " + groupTitle + " ]发送 [需求] 信息成功");
                             common.executeAsync(response);
 
-                            groupMessageIdPostCounts = new GroupMessageIdPostCounts();
-                            groupMessageIdPostCounts.setBotId(demand.getBotId());
-                            groupMessageIdPostCounts.setUserId(demand.getUserId());
-                            groupMessageIdPostCounts.setGroupId(groupId);
-                            groupMessageIdPostCounts.setGroupTitle(groupTitle);
-                            groupMessageIdPostCounts.setGroupLink(groupLink);
-                            groupMessageIdPostCounts.setMessageId(groupMessageId);
-                            groupMessageIdPostCounts.setPostCount(1);
-                            groupMessageIdPostCounts.setType(DemandEnum.DEMAND_.getText());
-                            demand = demandManagementServiceImpl.findByUserIdAndBotIdWithDemand(
-                                    String.valueOf(message.getChatId()), String.valueOf(common.getSpringyBotId()));
-                            demand.getGroupMessageIdPostCounts().add(groupMessageIdPostCounts);
-                            demandManagementServiceImpl.saveDemand(demand);
+                            gmpc = new GroupMessageIdPostCounts();
+                            gmpc.setBotId(springyBotId.toString());
+                            gmpc.setUserId(chatId_str);
+                            gmpc.setGroupId(groupId);
+                            gmpc.setGroupTitle(groupTitle);
+                            gmpc.setMessageId(groupMessageId);
+                            gmpc.setPostCount(1);
+                            gmpc.setType("demand");
                         } else {
-                            if (groupMessageIdPostCounts.getPostCount() == 0) {
+                            if (gmpc.getPostCount() <= 0) {
                                 final Integer groupMessageId = common.executeAsync(response);
-
-                                response.setChatId(demand.getUserId());
+                                response.setChatId(chatId_str);
                                 response.setText("[ " + groupTitle + " ]发送 [需求] 成功");
                                 common.executeAsync(response);
-
-                                groupMessageIdPostCounts.setMessageId(groupMessageId);
-                                groupMessageIdPostCounts.setPostCount(groupMessageIdPostCounts.getPostCount() + 1);
-                                demandManagementServiceImpl.saveGroupMessageIdPostCounts(groupMessageIdPostCounts);
+                                gmpc.setMessageId(groupMessageId);
+                                gmpc.setPostCount(gmpc.getPostCount() + 1);
                             } else {
-                                response.setChatId(demand.getUserId());
+                                response.setChatId(chatId_str);
                                 response.setText("您已在[ " + groupTitle + " ]發送一條 [需求] 信息");
                                 common.executeAsync(response);
                             }
                         }
-
                     }
-
+                    final GroupMessageIdPostCounts finalGmpc = gmpc;
+                    gmpcs.stream()
+                            .filter(g -> g.getGroupId().equals(groupId)
+                                    && g.getUserId().equals(chatId_str) && g.getType().equals("demand"))
+                            .findFirst()
+                            .ifPresentOrElse(
+                                    g -> gmpcs.set(gmpcs.indexOf(g), finalGmpc),
+                                    () -> gmpcs.add(finalGmpc));
+                    demand.setGroupMessageIdPostCounts(gmpcs);
                 }
             }
-        } else {
-            SendMessage response = new SendMessage();
-            response.setChatId(demand.getUserId());
-            response.setText(isSuccess);
-            response.setDisableNotification(true);
-            response.setDisableWebPagePreview(true);
-            common.executeAsync(response);
-        }
-    }
-
-    public void generateTextSupply(Common common, Boolean isEdit) {
-
-        Message message = common.getUpdate().getMessage();
-        String text = message.getText();
-
-        String[] lines = text.split("\\r?\\n");
-
-        Supply supply = demandManagementServiceImpl.findByUserIdAndBotIdWithSupply(
-                String.valueOf(message.getChatId()), String.valueOf(common.getSpringyBotId()));
-
-        if (supply == null) {
-            // 清除舊資料
-            supply = new Supply();
-        }
-
-        String username = "@" + common.getUpdate().getMessage().getFrom().getUserName();
-        supply.setPublisher(username);
-
-        String isSuccess = supplyDTO.fillSupplyInfo(supply, lines);
-        if (!StringUtils.hasText(isSuccess)) {
-
-            supply.setBotId(String.valueOf(common.getSpringyBotId()));
-            supply.setUserId(String.valueOf(message.getChatId()));
-            supply.setLastMessageId(message.getMessageId());
-
-            // 處理資料表
-            Long id = common.getSpringyBotId();
-            String userId = String.valueOf(common.getUpdate().getMessage().getChatId());
-            List<DemandUser> demandUsers = springyBotServiceImpl.findDemandUserBySpringyBotId(id);
-            DemandUser demandUser = demandUsers.stream().filter(j -> j.getUserId().equals(userId)).findAny().get();
-
-            final Long final_jobSeekerId = demandUser.getId();
-
-            if (!demandUser.getSupply().stream().anyMatch(p -> p.getId().equals(final_jobSeekerId))) {
-                demandUser.getSupply().add(supply);
-            }
-            demandManagementServiceImpl.saveSupply(supply);
-
-            String result = supplyDTO.generateSupplyDetails(supply);
-
-            List<RobotChannelManagement> robotChannelManagements = springyBotServiceImpl
-                    .findRobotChannelManagementBySpringyBotId(common.getSpringyBotId());
-            Iterator<RobotChannelManagement> iterator_channel = robotChannelManagements.iterator();
-
             while (iterator_channel.hasNext()) {
                 RobotChannelManagement robotChannelManagement = iterator_channel.next();
                 if (!result.isEmpty()) {
                     SendMessage response = new SendMessage();
                     Long channelId = robotChannelManagement.getChannelId();
                     String channelTitle = robotChannelManagement.getChannelTitle();
-                    String channelLink = robotChannelManagement.getLink();
-                    response.setChatId(String.valueOf(channelId));
-                    response.setText(DemandEnum.send_supply_text(result));
+                    response.setChatId(channelId.toString());
+                    response.setText(DemandEnum.send_demand_text(result));
                     response.setReplyMarkup(new TelentButton().keyboardJobMarkup());
-                    response.setDisableNotification(true);
                     response.setDisableWebPagePreview(true);
-                    ChannelMessageIdPostCounts channelMessageIdPostCounts = demandManagementServiceImpl
-                            .findByChannelIdAndUserIdAndTypeWithGroupMessageIdPostCounts(
-                                    channelId, userId.toString(), "supply");
+
+                    List<ChannelMessageIdPostCounts> cmpcs = demandManagementServiceImpl
+                            .findAllByBotIdAndUserIdAndTypeWithChannelMessageIdPostCounts(springyBotId.toString(),
+                                    chatId_str,
+                                    "demand");
+                    ChannelMessageIdPostCounts cmpc = cmpcs.stream().filter(c -> c.getChannelId().equals(channelId)
+                            && c.getUserId().equals(chatId_str) && c.getType().equals("demand"))
+                            .findFirst().orElse(null);
 
                     if (isEdit) {
-                        EditMessageText editMessageText = new EditMessageText(
-                                DemandEnum.send_supply_text(result));
-                        editMessageText.setChatId(String.valueOf(channelId));
-                        editMessageText.setText(DemandEnum.send_supply_text(result));
-                        editMessageText.setMessageId(channelMessageIdPostCounts.getMessageId());
+                        EditMessageText editMessageText = new EditMessageText();
+                        editMessageText.setChatId(channelId.toString());
+                        editMessageText.setText(DemandEnum.send_demand_text(result));
+                        editMessageText.setMessageId(cmpc.getMessageId());
                         editMessageText.setDisableWebPagePreview(true);
                         common.executeAsync(editMessageText);
-
-                        response.setChatId(supply.getUserId());
+                        response.setChatId(chatId_str);
                         response.setText("[ " + channelTitle + " ]编辑成功");
                         common.executeAsync(response);
                     } else {
-                        if (channelMessageIdPostCounts == null) {
-
+                        if (cmpc == null) {
                             final Integer channelMessageId = common.executeAsync(response);
-                            response.setChatId(supply.getUserId());
-                            response.setText("[ " + channelTitle + " ]发送 [供应] 成功");
+                            response.setChatId(chatId_str);
+                            response.setText("[ " + channelTitle + " ]发送 [需求] 信息成功");
                             common.executeAsync(response);
-
-                            channelMessageIdPostCounts = new ChannelMessageIdPostCounts();
-                            channelMessageIdPostCounts.setBotId(supply.getBotId());
-                            channelMessageIdPostCounts.setUserId(supply.getUserId());
-                            channelMessageIdPostCounts.setChannelId(channelId);
-                            channelMessageIdPostCounts.setChannelTitle(channelTitle);
-                            channelMessageIdPostCounts.setChannelLink(channelLink);
-                            channelMessageIdPostCounts.setMessageId(channelMessageId);
-                            channelMessageIdPostCounts.setPostCount(1);
-                            channelMessageIdPostCounts.setType(DemandEnum.SUPPLY_.getText());
-
-                            supply = demandManagementServiceImpl.findByUserIdAndBotIdWithSupply(
-                                    String.valueOf(message.getChatId()), String.valueOf(common.getSpringyBotId()));
-
-                            supply.getChannelMessageIdPostCounts().add(channelMessageIdPostCounts);
-                            demandManagementServiceImpl.saveSupply(supply);
+                            cmpc = new ChannelMessageIdPostCounts();
+                            cmpc.setBotId(springyBotId.toString());
+                            cmpc.setUserId(chatId_str);
+                            cmpc.setChannelId(channelId);
+                            cmpc.setChannelTitle(channelTitle);
+                            cmpc.setMessageId(channelMessageId);
+                            cmpc.setPostCount(1);
+                            cmpc.setType("demand");
                         } else {
-                            if (channelMessageIdPostCounts.getPostCount() == 0) {
-
+                            if (cmpc.getPostCount() <= 0) {
                                 final Integer channelMessageId = common.executeAsync(response);
-                                response.setChatId(supply.getUserId());
-                                response.setText("[ " + channelTitle + " ]发送 [供应] 成功");
+                                response.setChatId(chatId_str);
+                                response.setText("[ " + channelTitle + " ]发送 [需求] 信息成功");
                                 common.executeAsync(response);
-
-                                channelMessageIdPostCounts.setMessageId(channelMessageId);
-                                channelMessageIdPostCounts.setPostCount(channelMessageIdPostCounts.getPostCount() + 1);
-                                demandManagementServiceImpl.saveChannelMessageIdPostCounts(channelMessageIdPostCounts);
+                                cmpc.setMessageId(channelMessageId);
+                                cmpc.setPostCount(cmpc.getPostCount() + 1);
                             } else {
-                                response.setChatId(supply.getUserId());
-                                response.setText("您已在[ " + channelTitle + " ]發送一條 [供应] 信息");
+                                response.setChatId(chatId_str);
+                                response.setText("您已在[ " + channelTitle + " ]發送一條 [需求] 信息");
                                 common.executeAsync(response);
                             }
                         }
                     }
+                    final ChannelMessageIdPostCounts finalCmpc = cmpc;
+                    cmpcs.stream()
+                            .filter(c -> c.getChannelId().equals(channelId)
+                                    && c.getUserId().equals(chatId_str) && c.getType().equals("demand"))
+                            .findFirst()
+                            .ifPresentOrElse(
+                                    c -> cmpcs.set(cmpcs.indexOf(c), finalCmpc),
+                                    () -> cmpcs.add(finalCmpc));
+                    demand.setChannelMessageIdPostCounts(cmpcs);
                 }
             }
+        } else {
+            SendMessage response = new SendMessage();
+            response.setChatId(chatId_str);
+            response.setText(isSuccess);
+            response.setDisableWebPagePreview(true);
+            common.executeAsync(response);
+        }
+        final Demand finalDemand = demand;
+        demands.stream()
+                .filter(d -> d.getUserId().equals(chatId_str) && d.getBotId().equals(springyBotId.toString()))
+                .findFirst()
+                .ifPresentOrElse(
+                        d -> demands.set(demands.indexOf(d), finalDemand),
+                        () -> demands.add(finalDemand));
+        tgUser.setDemand(demands);
+        demandManagementServiceImpl.saveTgUser(tgUser);
+    }
 
+    public void generateTextSupply(Boolean isEdit) {
+
+        String[] lines = text.split("\\r?\\n");
+
+        TgUser tgUser = springyBotServiceImpl.findTgUserBySpringyBotIdAndUserId(springyBotId, chatId_str);
+
+        String username = "@" + common.getUpdate().getMessage().getFrom().getUserName();
+
+        List<Supply> supplies = demandManagementServiceImpl.findAllByUserIdAndBotIdWithSupply(chatId_str,
+                springyBotId.toString());
+
+        Supply supply = supplies.stream()
+                .filter(s -> s.getUserId().equals(chatId_str) && s.getBotId().equals(springyBotId.toString()))
+                .findFirst()
+                .orElse(new Supply());
+
+        String isSuccess = supplyDTO.fillSupplyInfo(supply, lines);
+
+        if (!StringUtils.hasText(isSuccess)) {
+            supply.setPublisher(username);
+            supply.setBotId(springyBotId.toString());
+            supply.setUserId(chatId_str);
+            supply.setLastMessageId(message.getMessageId());
+
+            String result = supplyDTO.generateSupplyDetails(supply);
+
+            List<RobotChannelManagement> robotChannelManagements = springyBotServiceImpl
+                    .findRobotChannelManagementBySpringyBotId(springyBotId);
             List<RobotGroupManagement> robotGroupManagements = springyBotServiceImpl
-                    .findRobotGroupManagementBySpringyBotId(common.getSpringyBotId());
+                    .findRobotGroupManagementBySpringyBotId(springyBotId);
+
+            Iterator<RobotChannelManagement> iterator_channel = robotChannelManagements.iterator();
             Iterator<RobotGroupManagement> iterator_group = robotGroupManagements.iterator();
 
             while (iterator_group.hasNext()) {
@@ -472,93 +367,168 @@ public class Demandd {
                     SendMessage response = new SendMessage();
                     Long groupId = robotGroupManagement.getGroupId();
                     String groupTitle = robotGroupManagement.getGroupTitle();
-                    String groupLink = robotGroupManagement.getLink();
-                    response.setChatId(String.valueOf(groupId));
-                    response.setText(DemandEnum.send_supply_text(result));
+                    response.setChatId(groupId.toString());
+                    response.setText(TalentEnum.send_recruitment_text(result));
                     response.setReplyMarkup(new TelentButton().keyboardJobMarkup());
-                    response.setDisableNotification(true);
                     response.setDisableWebPagePreview(true);
-                    GroupMessageIdPostCounts groupMessageIdPostCounts = demandManagementServiceImpl
-                            .findByGroupIdAndUserIdAndTypeWithGroupMessageIdPostCounts(groupId,userId.toString(), DemandEnum.SUPPLY_.getText());
+
+                    List<GroupMessageIdPostCounts> gmpcs = demandManagementServiceImpl
+                            .findAllByBotIdAndUserIdAndTypeWithGroupMessageIdPostCounts(springyBotId.toString(),
+                                    chatId_str, "supply");
+
+                    GroupMessageIdPostCounts gmpc = gmpcs.stream()
+                            .filter(g -> g.getGroupId().equals(groupId)
+                                    && g.getUserId().equals(chatId_str) && g.getType().equals("supply"))
+                            .findFirst().orElse(null);
 
                     if (isEdit) {
                         EditMessageText editMessageText = new EditMessageText();
-                        editMessageText.setChatId(String.valueOf(groupId));
+                        editMessageText.setChatId(groupId.toString());
                         editMessageText.setText(DemandEnum.send_supply_text(result));
-                        editMessageText.setMessageId(groupMessageIdPostCounts.getMessageId());
+                        editMessageText.setMessageId(gmpc.getMessageId());
                         editMessageText.setDisableWebPagePreview(true);
                         common.executeAsync(editMessageText);
-
-                        response.setChatId(supply.getUserId());
+                        response.setChatId(chatId_str);
                         response.setText("[ " + groupTitle + " ]编辑成功");
                         common.executeAsync(response);
 
                     } else {
-                        if (groupMessageIdPostCounts == null) {
+                        if (gmpc == null) {
                             final Integer groupMessageId = common.executeAsync(response);
-                            response.setChatId(supply.getUserId());
-                            response.setText("[ " + groupTitle + " ]发送 [供应] 成功");
+                            response.setChatId(chatId_str);
+                            response.setText("[ " + groupTitle + " ]发送 [供应] 信息成功");
                             common.executeAsync(response);
 
-                            groupMessageIdPostCounts = new GroupMessageIdPostCounts();
-                            groupMessageIdPostCounts.setBotId(supply.getBotId());
-                            groupMessageIdPostCounts.setUserId(supply.getUserId());
-                            groupMessageIdPostCounts.setGroupId(groupId);
-                            groupMessageIdPostCounts.setGroupTitle(groupTitle);
-                            groupMessageIdPostCounts.setGroupLink(groupLink);
-                            groupMessageIdPostCounts.setMessageId(groupMessageId);
-                            groupMessageIdPostCounts.setPostCount(1);
-                            groupMessageIdPostCounts.setType(DemandEnum.SUPPLY_.getText());
-
-                            supply = demandManagementServiceImpl.findByUserIdAndBotIdWithSupply(
-                                    String.valueOf(message.getChatId()), String.valueOf(common.getSpringyBotId()));
-
-                            supply.getGroupMessageIdPostCounts().add(groupMessageIdPostCounts);
-                            demandManagementServiceImpl.saveSupply(supply);
+                            gmpc = new GroupMessageIdPostCounts();
+                            gmpc.setBotId(springyBotId.toString());
+                            gmpc.setUserId(chatId_str);
+                            gmpc.setGroupId(groupId);
+                            gmpc.setGroupTitle(groupTitle);
+                            gmpc.setMessageId(groupMessageId);
+                            gmpc.setPostCount(1);
+                            gmpc.setType("supply");
                         } else {
-                            if (groupMessageIdPostCounts.getPostCount() == 0) {
-
+                            if (gmpc.getPostCount() <= 0) {
                                 final Integer groupMessageId = common.executeAsync(response);
-                                response.setChatId(supply.getUserId());
+                                response.setChatId(chatId_str);
                                 response.setText("[ " + groupTitle + " ]发送 [供应] 成功");
                                 common.executeAsync(response);
-
-                                groupMessageIdPostCounts.setMessageId(groupMessageId);
-                                groupMessageIdPostCounts.setPostCount(groupMessageIdPostCounts.getPostCount() + 1);
-                                demandManagementServiceImpl.saveGroupMessageIdPostCounts(groupMessageIdPostCounts);
+                                gmpc.setMessageId(groupMessageId);
+                                gmpc.setPostCount(gmpc.getPostCount() + 1);
                             } else {
-                                response.setChatId(supply.getUserId());
+                                response.setChatId(chatId_str);
                                 response.setText("您已在[ " + groupTitle + " ]發送一條 [供应] 信息");
                                 common.executeAsync(response);
                             }
                         }
                     }
+                    final GroupMessageIdPostCounts finalGmpc = gmpc;
+                    gmpcs.stream()
+                            .filter(g -> g.getGroupId().equals(groupId)
+                                    && g.getUserId().equals(chatId_str) && g.getType().equals("supply"))
+                            .findFirst()
+                            .ifPresentOrElse(
+                                    g -> gmpcs.set(gmpcs.indexOf(g), finalGmpc),
+                                    () -> gmpcs.add(finalGmpc));
+                    supply.setGroupMessageIdPostCounts(gmpcs);
+                }
+            }
+            while (iterator_channel.hasNext()) {
+                RobotChannelManagement robotChannelManagement = iterator_channel.next();
+                if (!result.isEmpty()) {
+                    SendMessage response = new SendMessage();
+                    Long channelId = robotChannelManagement.getChannelId();
+                    String channelTitle = robotChannelManagement.getChannelTitle();
+                    response.setChatId(channelId.toString());
+                    response.setText(DemandEnum.send_supply_text(result));
+                    response.setReplyMarkup(new TelentButton().keyboardJobMarkup());
+                    response.setDisableWebPagePreview(true);
+
+                    List<ChannelMessageIdPostCounts> cmpcs = demandManagementServiceImpl
+                            .findAllByBotIdAndUserIdAndTypeWithChannelMessageIdPostCounts(springyBotId.toString(),
+                                    chatId_str,
+                                    "supply");
+                    ChannelMessageIdPostCounts cmpc = cmpcs.stream().filter(c -> c.getChannelId().equals(channelId)
+                            && c.getUserId().equals(chatId_str) && c.getType().equals("supply"))
+                            .findFirst().orElse(null);
+
+                    if (isEdit) {
+                        EditMessageText editMessageText = new EditMessageText();
+                        editMessageText.setChatId(channelId.toString());
+                        editMessageText.setText(DemandEnum.send_supply_text(result));
+                        editMessageText.setMessageId(cmpc.getMessageId());
+                        editMessageText.setDisableWebPagePreview(true);
+                        common.executeAsync(editMessageText);
+                        response.setChatId(chatId_str);
+                        response.setText("[ " + channelTitle + " ]编辑成功");
+                        common.executeAsync(response);
+                    } else {
+                        if (cmpc == null) {
+                            final Integer channelMessageId = common.executeAsync(response);
+                            response.setChatId(chatId_str);
+                            response.setText("[ " + channelTitle + " ]发送 [供应] 信息成功");
+                            common.executeAsync(response);
+                            cmpc = new ChannelMessageIdPostCounts();
+                            cmpc.setBotId(springyBotId.toString());
+                            cmpc.setUserId(chatId_str);
+                            cmpc.setChannelId(channelId);
+                            cmpc.setChannelTitle(channelTitle);
+                            cmpc.setMessageId(channelMessageId);
+                            cmpc.setPostCount(1);
+                            cmpc.setType("supply");
+                        } else {
+                            if (cmpc.getPostCount() <= 0) {
+                                final Integer channelMessageId = common.executeAsync(response);
+                                response.setChatId(chatId_str);
+                                response.setText("[ " + channelTitle + " ]发送 [供应] 信息成功");
+                                common.executeAsync(response);
+                                cmpc.setMessageId(channelMessageId);
+                                cmpc.setPostCount(cmpc.getPostCount() + 1);
+                            } else {
+                                response.setChatId(chatId_str);
+                                response.setText("您已在[ " + channelTitle + " ]發送一條 [供应] 信息");
+                                common.executeAsync(response);
+                            }
+                        }
+                    }
+                    final ChannelMessageIdPostCounts finalCmpc = cmpc;
+                    cmpcs.stream()
+                            .filter(c -> c.getChannelId().equals(channelId)
+                                    && c.getUserId().equals(chatId_str) && c.getType().equals("supply"))
+                            .findFirst()
+                            .ifPresentOrElse(
+                                    c -> cmpcs.set(cmpcs.indexOf(c), finalCmpc),
+                                    () -> cmpcs.add(finalCmpc));
+                    supply.setChannelMessageIdPostCounts(cmpcs);
                 }
             }
         } else {
             SendMessage response = new SendMessage();
-            response.setChatId(supply.getUserId());
+            response.setChatId(chatId_str);
             response.setText(isSuccess);
-            response.setDisableNotification(true);
             response.setDisableWebPagePreview(true);
             common.executeAsync(response);
         }
-
+        final Supply finalSupply = supply;
+        supplies.stream()
+                .filter(s -> s.getUserId().equals(chatId_str) && s.getBotId().equals(springyBotId.toString()))
+                .findFirst()
+                .ifPresentOrElse(
+                        d -> supplies.set(supplies.indexOf(d), finalSupply),
+                        () -> supplies.add(finalSupply));
+        tgUser.setSupply(supplies);
+        demandManagementServiceImpl.saveTgUser(tgUser);
     }
 
-    public void setResponse_edit_demand_management(Common common) {
-
-        Long id = common.getSpringyBotId();
-        String userId = String.valueOf(common.getUpdate().getMessage().getChatId());
+    public void setResponse_edit_demand_management() {
 
         SendMessage response = new SendMessage();
-        response.setChatId(userId);
-        response.setDisableNotification(true);
+        response.setChatId(chatId_str);
         response.setDisableWebPagePreview(true);
 
         List<ChannelMessageIdPostCounts> channelMessageIdPostCounts = demandManagementServiceImpl
-                .findAllByBotIdAndUserIdAndTypeWithChannelMessageIdPostCounts(String.valueOf(id),
-                        userId, DemandEnum.DEMAND_.getText());
+                .findAllByBotIdAndUserIdAndTypeWithChannelMessageIdPostCounts(springyBotId.toString(),
+                chatId_str, "demand");
 
         List<String> alertMessages_channel = channelMessageIdPostCounts.stream().map(cmpc -> {
             String markdown = "频道 [ " + cmpc.getChannelTitle() + " ] ";
@@ -569,8 +539,8 @@ public class Demandd {
         }).filter(str -> !Objects.equals(str, "")).collect(Collectors.toList());
 
         List<GroupMessageIdPostCounts> groupMessageIdPostCounts = demandManagementServiceImpl
-                .findAllByBotIdAndUserIdAndTypeWithGroupMessageIdPostCounts(String.valueOf(id),
-                        userId, DemandEnum.DEMAND_.getText());
+                .findAllByBotIdAndUserIdAndTypeWithGroupMessageIdPostCounts(springyBotId.toString(),
+                chatId_str, "demand");
 
         List<String> alertMessages_group = groupMessageIdPostCounts.stream().map(gmpc -> {
 
@@ -584,69 +554,57 @@ public class Demandd {
         String alert_channel = String.join("", alertMessages_channel);
         String alert_group = String.join("", alertMessages_group);
         String alert = alert_channel + alert_group;
+
         if (!alert.isEmpty()) {
             response.setText("通知：\n" + alert + "\n下方模版可对频道内信息进行编辑和删除操作");
-            response.setDisableNotification(true);
             response.setDisableWebPagePreview(true);
             common.executeAsync(response);
 
-            Demand demand = demandManagementServiceImpl.findByUserIdAndBotIdWithDemand(userId,
-                    String.valueOf(id));
+            List<TgUser> tgUsers = springyBotServiceImpl.findTgUserBySpringyBotId(springyBotId);
 
-            SpringyBot springyBot = springyBotServiceImpl.findById(id).orElseThrow();
-            List<DemandUser> demandUsers = springyBotServiceImpl.findDemandUserBySpringyBotId(id);
-            DemandUser demandUser = demandUsers.stream().filter(j -> j.getUserId().equals(userId)).findAny().get();
+            TgUser tgUser = tgUsers.stream().filter(tu -> tu.getUserId().equals(chatId_str)).findAny().get();
+            
+            List<Demand> demands = demandManagementServiceImpl.findAllByUserIdAndBotIdWithDemand(chatId_str,
+            springyBotId.toString());
+            
+            demands.stream()
+                .filter(d->d.getUserId().equals(chatId_str)&&d.getBotId().equals(springyBotId.toString()))
+                .findFirst().ifPresentOrElse(demand->{
+                    DemandDTO demandDTO = new DemandDTO(chatId_str, springyBotId.toString());
+                    response.setText(demandDTO.generateDemandResponse(demand, true));
+                    demandDTO = demandDTO.createDemandDTO(chatId_str,springyBotId.toString());
 
-            DemandDTO demandDTO1 = new DemandDTO(userId, String.valueOf(id));
-
-            if (demand != null) {
-
-                response.setText(demandDTO.generateDemandResponse(demand, true));
-                demandDTO1 = demandDTO.createDemandDTO(userId, String.valueOf(id));
-
-                response.setReplyMarkup(new DemandButton().keyboard_demand(demandDTO1, true));
-                response.setDisableNotification(true);
-                response.setDisableWebPagePreview(true);
-                Integer messageId = common.executeAsync(response);
-                demand.setLastMessageId(messageId);
-                demandUser.getDemand().add(demand);
-                demandManagementServiceImpl.saveDemand(demand);
-            } else {
-                response.setText(DemandEnum.DEMAND_EDITOR_DEFAULT_FORM.getText());
-                response.setReplyMarkup(new DemandButton().keyboard_demand(demandDTO1, false));
-                response.setDisableNotification(true);
-                response.setDisableWebPagePreview(true);
-
-                Demand d = new Demand(userId, String.valueOf(id),
-                        common.executeAsync(response));
-                demandUser.getDemand().add(d);
-                demandManagementServiceImpl.saveDemand(d);
-                springyBotServiceImpl.save(springyBot);
-            }
-
+                    response.setReplyMarkup(new DemandButton().keyboard_demand(demandDTO, true));
+                    response.setDisableWebPagePreview(true);
+                    Integer messageId = common.executeAsync(response);
+                    demand.setLastMessageId(messageId);
+                }, ()->{
+                    DemandDTO demandDTO = new DemandDTO(chatId_str, springyBotId.toString());
+                    response.setText(DemandEnum.DEMAND_EDITOR_DEFAULT_FORM.getText());
+                    response.setReplyMarkup(new DemandButton().keyboard_demand(demandDTO, false));
+                    response.setDisableWebPagePreview(true);
+                    Demand demand = new Demand(chatId_str, springyBotId.toString(),
+                            common.executeAsync(response));
+                    demands.add(demand);
+                });
+            tgUser.setDemand(demands);
+            demandManagementServiceImpl.saveTgUser(tgUser);
         } else {
-            response.setText(DemandEnum.UNPUBLISHED_DEMAND.getText());
-            response.setDisableNotification(true);
+            response.setText("未发布需求");
             response.setDisableWebPagePreview(true);
             common.executeAsync(response);
-
         }
-
     }
 
-    public void setResponse_edit_supply_management(Common common) {
-
-        Long id = common.getSpringyBotId();
-        String userId = String.valueOf(common.getUpdate().getMessage().getChatId());
-
+    //供应
+    public void setResponse_edit_supply_management() {
         SendMessage response = new SendMessage();
-        response.setChatId(String.valueOf(common.getUpdate().getMessage().getChatId()));
-        response.setDisableNotification(true);
+        response.setChatId(chatId_str);
         response.setDisableWebPagePreview(true);
 
         List<ChannelMessageIdPostCounts> channelMessageIdPostCounts = demandManagementServiceImpl
-                .findAllByBotIdAndUserIdAndTypeWithChannelMessageIdPostCounts(String.valueOf(id),
-                        userId, DemandEnum.SUPPLY_.getText());
+                .findAllByBotIdAndUserIdAndTypeWithChannelMessageIdPostCounts(springyBotId.toString(),
+                chatId_str, "supply");
 
         List<String> alertMessages_channel = channelMessageIdPostCounts.stream().map(cmpc -> {
             String markdown = "频道 [ " + cmpc.getChannelTitle() + " ] ";
@@ -657,8 +615,8 @@ public class Demandd {
         }).filter(str -> !Objects.equals(str, "")).collect(Collectors.toList());
 
         List<GroupMessageIdPostCounts> groupMessageIdPostCounts = demandManagementServiceImpl
-                .findAllByBotIdAndUserIdAndTypeWithGroupMessageIdPostCounts(String.valueOf(id),
-                        userId, DemandEnum.SUPPLY_.getText());
+                .findAllByBotIdAndUserIdAndTypeWithGroupMessageIdPostCounts(springyBotId.toString(),
+                chatId_str, "supply");
 
         List<String> alertMessages_group = groupMessageIdPostCounts.stream().map(gmpc -> {
 
@@ -674,55 +632,49 @@ public class Demandd {
         String alert = alert_channel + alert_group;
 
         if (!alert.isEmpty()) {
-
             response.setText("通知：\n" + alert + "\n下方模版可对频道内信息进行编辑和删除操作");
-            response.setDisableNotification(true);
             response.setDisableWebPagePreview(true);
             common.executeAsync(response);
 
-            Supply supply = demandManagementServiceImpl.findByUserIdAndBotIdWithSupply(userId,
-                    String.valueOf(id));
+            List<TgUser> tgUsers = springyBotServiceImpl.findTgUserBySpringyBotId(springyBotId);
 
-            SpringyBot springyBot = springyBotServiceImpl.findById(id).orElseThrow();
-            List<DemandUser> demandUsers = springyBotServiceImpl.findDemandUserBySpringyBotId(id);
+            TgUser tgUser = tgUsers.stream().filter(tu -> tu.getUserId().equals(chatId_str)).findAny().get();
+            
+            List<Supply> supplies = demandManagementServiceImpl.findAllByUserIdAndBotIdWithSupply(chatId_str,
+            springyBotId.toString());
+            
+            supplies.stream()
+                .filter(d->d.getUserId().equals(chatId_str)&&d.getBotId().equals(springyBotId.toString()))
+                .findFirst().ifPresentOrElse(supply->{
+                    SupplyDTO supplyDTO = new SupplyDTO(chatId_str, springyBotId.toString());
+                    response.setText(supplyDTO.generateSupplyResponse(supply, true));
+                    supplyDTO = supplyDTO.createSupplyDTO(chatId_str,springyBotId.toString());
 
-            DemandUser demandUser = demandUsers.stream().filter(j -> j.getUserId().equals(userId)).findAny().get();
-
-            SupplyDTO supplyDTO1 = new SupplyDTO(userId, String.valueOf(id));
-
-            if (supply != null) {
-
-                response.setText(supplyDTO.generateSupplyResponse(supply, true));
-
-                supplyDTO = supplyDTO.createSupplyDTO(userId, String.valueOf(id));
-
-                response.setReplyMarkup(new DemandButton().keyboard_supply(supplyDTO1, true));
-                response.setDisableNotification(true);
-                response.setDisableWebPagePreview(true);
-                Integer messageId = common.executeAsync(response);
-                supply.setLastMessageId(messageId);
-                demandUser.getSupply().add(supply);
-                demandManagementServiceImpl.saveSupply(supply);
-
-            } else {
-                response.setText(DemandEnum.SUPPLY_EDITOR_DEFAULT_FORM.getText());
-                response.setReplyMarkup(new DemandButton().keyboard_supply(supplyDTO1, true));
-
-                response.setDisableNotification(true);
-                response.setDisableWebPagePreview(true);
-                Supply s = new Supply(userId, String.valueOf(id),
-                        common.executeAsync(response));
-                demandUser.getSupply().add(s);
-                demandManagementServiceImpl.saveSupply(s);
-                springyBotServiceImpl.save(springyBot);
-            }
-
+                    response.setReplyMarkup(new DemandButton().keyboard_supply(supplyDTO, true));
+                    response.setDisableWebPagePreview(true);
+                    Integer messageId = common.executeAsync(response);
+                    supply.setLastMessageId(messageId);
+                }, ()->{
+                    SupplyDTO supplyDTO = new SupplyDTO(chatId_str, springyBotId.toString());
+                    response.setText(DemandEnum.SUPPLY_EDITOR_DEFAULT_FORM.getText());
+                    response.setReplyMarkup(new DemandButton().keyboard_supply(supplyDTO, false));
+                    response.setDisableWebPagePreview(true);
+                    Supply supply = new Supply(chatId_str, springyBotId.toString(),
+                            common.executeAsync(response));
+                    supplies.add(supply);
+                });
+            tgUser.setSupply(supplies);
+            demandManagementServiceImpl.saveTgUser(tgUser);
         } else {
-            response.setText(DemandEnum.UNPUBLISHED_SUPPLY.getText());
-            response.setDisableNotification(true);
+            response.setText("未发布供应");
             response.setDisableWebPagePreview(true);
             common.executeAsync(response);
         }
+    }
+
+    @Override
+    public void handler() {
+        throw new UnsupportedOperationException("Unimplemented method 'handler'");
     }
 
 }

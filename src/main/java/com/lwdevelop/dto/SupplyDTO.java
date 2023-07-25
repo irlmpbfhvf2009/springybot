@@ -1,7 +1,7 @@
 package com.lwdevelop.dto;
 
 import com.lwdevelop.bot.bots.utils.Common;
-import com.lwdevelop.bot.bots.utils.enum_.TelentEnum;
+import com.lwdevelop.bot.bots.utils.enum_.TalentEnum;
 import com.lwdevelop.entity.Supply;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -134,7 +134,7 @@ public class SupplyDTO {
                 String key = line.substring(0, colonIndex).trim();
                 String value = line.substring(colonIndex + 1).trim();
 
-                String filter = TelentEnum.FIFTY_CHARACTERS_LIMIT.getText();
+                String filter = TalentEnum.FIFTY_CHARACTERS_LIMIT.getText();
                 value = value.replace(filter, "");
                 value = value.substring(0, Math.min(255, value.length()));
 

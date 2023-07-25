@@ -3,7 +3,7 @@ package com.lwdevelop.dto;
 import java.util.Optional;
 
 import com.lwdevelop.bot.bots.utils.Common;
-import com.lwdevelop.bot.bots.utils.enum_.TelentEnum;
+import com.lwdevelop.bot.bots.utils.enum_.TalentEnum;
 import com.lwdevelop.entity.JobPosting;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -112,7 +112,7 @@ public class JobPostingDTO {
         jobPosting.setFlightNumber("");
         jobPosting.setLocation("");
         jobPosting.setPosition("");
-        jobPosting.setRequirements(TelentEnum.FIFTY_CHARACTERS_LIMIT.getText());
+        jobPosting.setRequirements(TalentEnum.FIFTY_CHARACTERS_LIMIT.getText());
         jobPosting.setWorkTime("");
         jobPosting.setPublisher("");
         return jobPosting;
@@ -147,7 +147,7 @@ public class JobPostingDTO {
         this.agency = Optional.ofNullable(jobPosting.getAgency()).orElse("");
         this.workTime = Optional.ofNullable(jobPosting.getWorkTime()).orElse("");
         this.requirements = Optional.ofNullable(jobPosting.getRequirements())
-                .orElse(TelentEnum.FIFTY_CHARACTERS_LIMIT.getText());
+                .orElse(TalentEnum.FIFTY_CHARACTERS_LIMIT.getText());
         this.location = Optional.ofNullable(jobPosting.getLocation()).orElse("");
         this.flightNumber = Optional.ofNullable(jobPosting.getFlightNumber()).orElse("");
         this.publisher = Optional.ofNullable(jobPosting.getPublisher()).orElse("");
@@ -190,7 +190,7 @@ public class JobPostingDTO {
                 String key = line.substring(0, colonIndex).trim();
                 String value = line.substring(colonIndex + 1).trim();
 
-                String filter = TelentEnum.FIFTY_CHARACTERS_LIMIT.getText();
+                String filter = TalentEnum.FIFTY_CHARACTERS_LIMIT.getText();
                 value = value.replace(filter, "");
                 value = value.substring(0, Math.min(255, value.length()));
 

@@ -5,7 +5,7 @@ import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 import com.lwdevelop.bot.bots.talent.messageHandling.commands.Job;
 import com.lwdevelop.bot.bots.utils.Common;
-import com.lwdevelop.bot.bots.utils.enum_.TelentEnum;
+import com.lwdevelop.bot.bots.utils.enum_.TalentEnum;
 import com.lwdevelop.bot.bots.utils.keyboardButton.TelentButton;
 import com.lwdevelop.bot.chatMessageHandlers.BasePrivateMessage;
 import com.lwdevelop.entity.SpringyBot;
@@ -78,7 +78,7 @@ public class PrivateMessage_ extends BasePrivateMessage {
 
         SendMessage response = new SendMessage();
         response.setChatId(chatId_str);
-        response.setText(TelentEnum.help_text(name, botName));
+        response.setText(TalentEnum.help_text(name, botName));
 
         if (isSubscribeChannel) {
             response.setReplyMarkup(new TelentButton().jobReplyKeyboardMarkup());
