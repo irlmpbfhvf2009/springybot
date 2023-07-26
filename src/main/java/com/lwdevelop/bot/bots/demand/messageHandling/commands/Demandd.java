@@ -4,7 +4,7 @@ import com.lwdevelop.bot.bots.utils.Common;
 import com.lwdevelop.bot.bots.utils.enum_.DemandEnum;
 import com.lwdevelop.bot.bots.utils.enum_.TalentEnum;
 import com.lwdevelop.bot.bots.utils.keyboardButton.DemandButton;
-import com.lwdevelop.bot.bots.utils.keyboardButton.TelentButton;
+import com.lwdevelop.bot.bots.utils.keyboardButton.TalentButton;
 import com.lwdevelop.bot.chatMessageHandlers.BasePrivateMessage;
 import com.lwdevelop.dto.DemandDTO;
 import com.lwdevelop.dto.SupplyDTO;
@@ -176,7 +176,7 @@ public class Demandd extends BasePrivateMessage {
                     String groupTitle = robotGroupManagement.getGroupTitle();
                     response.setChatId(groupId.toString());
                     response.setText(TalentEnum.send_recruitment_text(result));
-                    response.setReplyMarkup(new TelentButton().keyboardJobMarkup());
+                    response.setReplyMarkup(new TalentButton().keyboardJobMarkup());
                     response.setDisableWebPagePreview(true);
 
                     List<GroupMessageIdPostCounts> gmpcs = demandManagementServiceImpl
@@ -192,6 +192,7 @@ public class Demandd extends BasePrivateMessage {
                         EditMessageText editMessageText = new EditMessageText();
                         editMessageText.setChatId(groupId.toString());
                         editMessageText.setText(DemandEnum.send_demand_text(result));
+                        editMessageText.setReplyMarkup(new TalentButton().keyboardJobMarkup());
                         editMessageText.setMessageId(gmpc.getMessageId());
                         editMessageText.setDisableWebPagePreview(true);
                         common.executeAsync(editMessageText);
@@ -248,7 +249,7 @@ public class Demandd extends BasePrivateMessage {
                     String channelTitle = robotChannelManagement.getChannelTitle();
                     response.setChatId(channelId.toString());
                     response.setText(DemandEnum.send_demand_text(result));
-                    response.setReplyMarkup(new TelentButton().keyboardJobMarkup());
+                    response.setReplyMarkup(new TalentButton().keyboardJobMarkup());
                     response.setDisableWebPagePreview(true);
 
                     List<ChannelMessageIdPostCounts> cmpcs = demandManagementServiceImpl
@@ -264,6 +265,7 @@ public class Demandd extends BasePrivateMessage {
                         editMessageText.setChatId(channelId.toString());
                         editMessageText.setText(DemandEnum.send_demand_text(result));
                         editMessageText.setMessageId(cmpc.getMessageId());
+                        editMessageText.setReplyMarkup(new TalentButton().keyboardJobMarkup());
                         editMessageText.setDisableWebPagePreview(true);
                         common.executeAsync(editMessageText);
                         response.setChatId(chatId_str);
@@ -369,7 +371,7 @@ public class Demandd extends BasePrivateMessage {
                     String groupTitle = robotGroupManagement.getGroupTitle();
                     response.setChatId(groupId.toString());
                     response.setText(TalentEnum.send_recruitment_text(result));
-                    response.setReplyMarkup(new TelentButton().keyboardJobMarkup());
+                    response.setReplyMarkup(new TalentButton().keyboardJobMarkup());
                     response.setDisableWebPagePreview(true);
 
                     List<GroupMessageIdPostCounts> gmpcs = demandManagementServiceImpl
@@ -387,6 +389,7 @@ public class Demandd extends BasePrivateMessage {
                         editMessageText.setText(DemandEnum.send_supply_text(result));
                         editMessageText.setMessageId(gmpc.getMessageId());
                         editMessageText.setDisableWebPagePreview(true);
+                        editMessageText.setReplyMarkup(new TalentButton().keyboardJobMarkup());
                         common.executeAsync(editMessageText);
                         response.setChatId(chatId_str);
                         response.setText("[ " + groupTitle + " ]编辑成功");
@@ -441,7 +444,7 @@ public class Demandd extends BasePrivateMessage {
                     String channelTitle = robotChannelManagement.getChannelTitle();
                     response.setChatId(channelId.toString());
                     response.setText(DemandEnum.send_supply_text(result));
-                    response.setReplyMarkup(new TelentButton().keyboardJobMarkup());
+                    response.setReplyMarkup(new TalentButton().keyboardJobMarkup());
                     response.setDisableWebPagePreview(true);
 
                     List<ChannelMessageIdPostCounts> cmpcs = demandManagementServiceImpl
@@ -457,6 +460,7 @@ public class Demandd extends BasePrivateMessage {
                         editMessageText.setChatId(channelId.toString());
                         editMessageText.setText(DemandEnum.send_supply_text(result));
                         editMessageText.setMessageId(cmpc.getMessageId());
+                        editMessageText.setReplyMarkup(new TalentButton().keyboardJobMarkup());
                         editMessageText.setDisableWebPagePreview(true);
                         common.executeAsync(editMessageText);
                         response.setChatId(chatId_str);
@@ -528,7 +532,7 @@ public class Demandd extends BasePrivateMessage {
 
         List<ChannelMessageIdPostCounts> channelMessageIdPostCounts = demandManagementServiceImpl
                 .findAllByBotIdAndUserIdAndTypeWithChannelMessageIdPostCounts(springyBotId.toString(),
-                chatId_str, "demand");
+                        chatId_str, "demand");
 
         List<String> alertMessages_channel = channelMessageIdPostCounts.stream().map(cmpc -> {
             String markdown = "频道 [ " + cmpc.getChannelTitle() + " ] ";
@@ -540,7 +544,7 @@ public class Demandd extends BasePrivateMessage {
 
         List<GroupMessageIdPostCounts> groupMessageIdPostCounts = demandManagementServiceImpl
                 .findAllByBotIdAndUserIdAndTypeWithGroupMessageIdPostCounts(springyBotId.toString(),
-                chatId_str, "demand");
+                        chatId_str, "demand");
 
         List<String> alertMessages_group = groupMessageIdPostCounts.stream().map(gmpc -> {
 
@@ -563,30 +567,30 @@ public class Demandd extends BasePrivateMessage {
             List<TgUser> tgUsers = springyBotServiceImpl.findTgUserBySpringyBotId(springyBotId);
 
             TgUser tgUser = tgUsers.stream().filter(tu -> tu.getUserId().equals(chatId_str)).findAny().get();
-            
-            List<Demand> demands = demandManagementServiceImpl.findAllByUserIdAndBotIdWithDemand(chatId_str,
-            springyBotId.toString());
-            
-            demands.stream()
-                .filter(d->d.getUserId().equals(chatId_str)&&d.getBotId().equals(springyBotId.toString()))
-                .findFirst().ifPresentOrElse(demand->{
-                    DemandDTO demandDTO = new DemandDTO(chatId_str, springyBotId.toString());
-                    response.setText(demandDTO.generateDemandResponse(demand, true));
-                    demandDTO = demandDTO.createDemandDTO(chatId_str,springyBotId.toString());
 
-                    response.setReplyMarkup(new DemandButton().keyboard_demand(demandDTO, true));
-                    response.setDisableWebPagePreview(true);
-                    Integer messageId = common.executeAsync(response);
-                    demand.setLastMessageId(messageId);
-                }, ()->{
-                    DemandDTO demandDTO = new DemandDTO(chatId_str, springyBotId.toString());
-                    response.setText(DemandEnum.DEMAND_EDITOR_DEFAULT_FORM.getText());
-                    response.setReplyMarkup(new DemandButton().keyboard_demand(demandDTO, false));
-                    response.setDisableWebPagePreview(true);
-                    Demand demand = new Demand(chatId_str, springyBotId.toString(),
-                            common.executeAsync(response));
-                    demands.add(demand);
-                });
+            List<Demand> demands = demandManagementServiceImpl.findAllByUserIdAndBotIdWithDemand(chatId_str,
+                    springyBotId.toString());
+
+            demands.stream()
+                    .filter(d -> d.getUserId().equals(chatId_str) && d.getBotId().equals(springyBotId.toString()))
+                    .findFirst().ifPresentOrElse(demand -> {
+                        DemandDTO demandDTO = new DemandDTO(chatId_str, springyBotId.toString());
+                        response.setText(demandDTO.generateDemandResponse(demand, true));
+                        demandDTO = demandDTO.createDemandDTO(chatId_str, springyBotId.toString());
+
+                        response.setReplyMarkup(new DemandButton().keyboard_demand(demandDTO, true));
+                        response.setDisableWebPagePreview(true);
+                        Integer messageId = common.executeAsync(response);
+                        demand.setLastMessageId(messageId);
+                    }, () -> {
+                        DemandDTO demandDTO = new DemandDTO(chatId_str, springyBotId.toString());
+                        response.setText(DemandEnum.DEMAND_EDITOR_DEFAULT_FORM.getText());
+                        response.setReplyMarkup(new DemandButton().keyboard_demand(demandDTO, false));
+                        response.setDisableWebPagePreview(true);
+                        Demand demand = new Demand(chatId_str, springyBotId.toString(),
+                                common.executeAsync(response));
+                        demands.add(demand);
+                    });
             tgUser.setDemand(demands);
             demandManagementServiceImpl.saveTgUser(tgUser);
         } else {
@@ -596,7 +600,7 @@ public class Demandd extends BasePrivateMessage {
         }
     }
 
-    //供应
+    // 供应
     public void setResponse_edit_supply_management() {
         SendMessage response = new SendMessage();
         response.setChatId(chatId_str);
@@ -604,7 +608,7 @@ public class Demandd extends BasePrivateMessage {
 
         List<ChannelMessageIdPostCounts> channelMessageIdPostCounts = demandManagementServiceImpl
                 .findAllByBotIdAndUserIdAndTypeWithChannelMessageIdPostCounts(springyBotId.toString(),
-                chatId_str, "supply");
+                        chatId_str, "supply");
 
         List<String> alertMessages_channel = channelMessageIdPostCounts.stream().map(cmpc -> {
             String markdown = "频道 [ " + cmpc.getChannelTitle() + " ] ";
@@ -616,7 +620,7 @@ public class Demandd extends BasePrivateMessage {
 
         List<GroupMessageIdPostCounts> groupMessageIdPostCounts = demandManagementServiceImpl
                 .findAllByBotIdAndUserIdAndTypeWithGroupMessageIdPostCounts(springyBotId.toString(),
-                chatId_str, "supply");
+                        chatId_str, "supply");
 
         List<String> alertMessages_group = groupMessageIdPostCounts.stream().map(gmpc -> {
 
@@ -639,30 +643,30 @@ public class Demandd extends BasePrivateMessage {
             List<TgUser> tgUsers = springyBotServiceImpl.findTgUserBySpringyBotId(springyBotId);
 
             TgUser tgUser = tgUsers.stream().filter(tu -> tu.getUserId().equals(chatId_str)).findAny().get();
-            
-            List<Supply> supplies = demandManagementServiceImpl.findAllByUserIdAndBotIdWithSupply(chatId_str,
-            springyBotId.toString());
-            
-            supplies.stream()
-                .filter(d->d.getUserId().equals(chatId_str)&&d.getBotId().equals(springyBotId.toString()))
-                .findFirst().ifPresentOrElse(supply->{
-                    SupplyDTO supplyDTO = new SupplyDTO(chatId_str, springyBotId.toString());
-                    response.setText(supplyDTO.generateSupplyResponse(supply, true));
-                    supplyDTO = supplyDTO.createSupplyDTO(chatId_str,springyBotId.toString());
 
-                    response.setReplyMarkup(new DemandButton().keyboard_supply(supplyDTO, true));
-                    response.setDisableWebPagePreview(true);
-                    Integer messageId = common.executeAsync(response);
-                    supply.setLastMessageId(messageId);
-                }, ()->{
-                    SupplyDTO supplyDTO = new SupplyDTO(chatId_str, springyBotId.toString());
-                    response.setText(DemandEnum.SUPPLY_EDITOR_DEFAULT_FORM.getText());
-                    response.setReplyMarkup(new DemandButton().keyboard_supply(supplyDTO, false));
-                    response.setDisableWebPagePreview(true);
-                    Supply supply = new Supply(chatId_str, springyBotId.toString(),
-                            common.executeAsync(response));
-                    supplies.add(supply);
-                });
+            List<Supply> supplies = demandManagementServiceImpl.findAllByUserIdAndBotIdWithSupply(chatId_str,
+                    springyBotId.toString());
+
+            supplies.stream()
+                    .filter(d -> d.getUserId().equals(chatId_str) && d.getBotId().equals(springyBotId.toString()))
+                    .findFirst().ifPresentOrElse(supply -> {
+                        SupplyDTO supplyDTO = new SupplyDTO(chatId_str, springyBotId.toString());
+                        response.setText(supplyDTO.generateSupplyResponse(supply, true));
+                        supplyDTO = supplyDTO.createSupplyDTO(chatId_str, springyBotId.toString());
+
+                        response.setReplyMarkup(new DemandButton().keyboard_supply(supplyDTO, true));
+                        response.setDisableWebPagePreview(true);
+                        Integer messageId = common.executeAsync(response);
+                        supply.setLastMessageId(messageId);
+                    }, () -> {
+                        SupplyDTO supplyDTO = new SupplyDTO(chatId_str, springyBotId.toString());
+                        response.setText(DemandEnum.SUPPLY_EDITOR_DEFAULT_FORM.getText());
+                        response.setReplyMarkup(new DemandButton().keyboard_supply(supplyDTO, false));
+                        response.setDisableWebPagePreview(true);
+                        Supply supply = new Supply(chatId_str, springyBotId.toString(),
+                                common.executeAsync(response));
+                        supplies.add(supply);
+                    });
             tgUser.setSupply(supplies);
             demandManagementServiceImpl.saveTgUser(tgUser);
         } else {

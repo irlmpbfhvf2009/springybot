@@ -11,7 +11,7 @@ import com.lwdevelop.bot.bots.utils.enum_.TalentEnum;
 import com.lwdevelop.dto.JobPostingDTO;
 import com.lwdevelop.dto.JobSeekerDTO;
 
-public class TelentButton {
+public class TalentButton {
 
     // job keyboard
     public final ReplyKeyboardMarkup jobReplyKeyboardMarkup() {

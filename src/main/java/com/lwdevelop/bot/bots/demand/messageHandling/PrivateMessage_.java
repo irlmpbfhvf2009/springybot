@@ -87,10 +87,10 @@ public class PrivateMessage_ extends BasePrivateMessage {
     }
 
     private Boolean isSubscribeChannel() {
-        GetChatMember getChatMember = new GetChatMember("-1001686617172", message.getChatId()); // 缅甸招聘频道
-        Boolean status = this.common.executeAsync(getChatMember);
-        // return true;
-        return status;
+        // GetChatMember getChatMember = new GetChatMember("-1001686617172", message.getChatId()); // 缅甸招聘频道
+        // Boolean status = this.common.executeAsync(getChatMember);
+        return true;
+        // return status;
     }
 
 }

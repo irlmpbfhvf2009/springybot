@@ -7,7 +7,7 @@ import org.springframework.util.StringUtils;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import com.lwdevelop.bot.bots.utils.Common;
 import com.lwdevelop.bot.bots.utils.enum_.TalentEnum;
-import com.lwdevelop.bot.bots.utils.keyboardButton.TelentButton;
+import com.lwdevelop.bot.bots.utils.keyboardButton.TalentButton;
 import com.lwdevelop.bot.chatMessageHandlers.BasePrivateMessage;
 import com.lwdevelop.dto.JobPostingDTO;
 import com.lwdevelop.dto.JobSeekerDTO;
@@ -66,7 +66,7 @@ public class Job extends BasePrivateMessage {
     }
 
     public void setResponse_jobPosting_management() {
-        
+
         List<GroupMessageIdPostCounts> gmpcs = jobManagementServiceImpl
                 .findAllByBotIdAndUserIdAndTypeWithGroupMessageIdPostCounts(
                         springyBotId.toString(), chatId_str, "jobPosting");
@@ -174,7 +174,7 @@ public class Job extends BasePrivateMessage {
                     String groupTitle = robotGroupManagement.getGroupTitle();
                     response.setChatId(groupId.toString());
                     response.setText(TalentEnum.send_recruitment_text(result));
-                    response.setReplyMarkup(new TelentButton().keyboardJobMarkup());
+                    response.setReplyMarkup(new TalentButton().keyboardJobMarkup());
                     response.setDisableWebPagePreview(true);
 
                     List<GroupMessageIdPostCounts> gmpcs = jobManagementServiceImpl
@@ -192,6 +192,7 @@ public class Job extends BasePrivateMessage {
                         editMessageText.setText(TalentEnum.send_recruitment_text(result));
                         editMessageText.setMessageId(gmpc.getMessageId());
                         editMessageText.setDisableWebPagePreview(true);
+                        editMessageText.setReplyMarkup(new TalentButton().keyboardJobMarkup());
                         common.executeAsync(editMessageText);
                         response.setChatId(chatId_str);
                         response.setText("[ " + groupTitle + " ]编辑成功");
@@ -246,7 +247,7 @@ public class Job extends BasePrivateMessage {
                     String channelTitle = robotChannelManagement.getChannelTitle();
                     response.setChatId(channelId.toString());
                     response.setText(TalentEnum.send_recruitment_text(result));
-                    response.setReplyMarkup(new TelentButton().keyboardJobMarkup());
+                    response.setReplyMarkup(new TalentButton().keyboardJobMarkup());
                     response.setDisableWebPagePreview(true);
 
                     List<ChannelMessageIdPostCounts> cmpcs = jobManagementServiceImpl
@@ -263,6 +264,7 @@ public class Job extends BasePrivateMessage {
                         editMessageText.setText(TalentEnum.send_recruitment_text(result));
                         editMessageText.setMessageId(cmpc.getMessageId());
                         editMessageText.setDisableWebPagePreview(true);
+                        editMessageText.setReplyMarkup(new TalentButton().keyboardJobMarkup());
                         common.executeAsync(editMessageText);
                         response.setChatId(chatId_str);
                         response.setText("[ " + channelTitle + " ]编辑成功");
@@ -343,6 +345,8 @@ public class Job extends BasePrivateMessage {
 
         String isSuccess = jobSeekerDTO.fillJobSeekerInfo(jobSeeker, lines);
 
+        System.out.println("1");
+
         if (!StringUtils.hasText(isSuccess)) {
             jobSeeker.setPublisher(username);
             jobSeeker.setBotId(springyBotId.toString());
@@ -358,6 +362,8 @@ public class Job extends BasePrivateMessage {
             Iterator<RobotGroupManagement> iterator_group = robotGroupManagements.iterator();
             Iterator<RobotChannelManagement> iterator_channel = robotChannelManagements.iterator();
 
+            System.out.println("2");
+
             while (iterator_group.hasNext()) {
                 RobotGroupManagement robotGroupManagement = iterator_group.next();
                 if (!result.isEmpty()) {
@@ -366,7 +372,7 @@ public class Job extends BasePrivateMessage {
                     String groupTitle = robotGroupManagement.getGroupTitle();
                     response.setChatId(groupId.toString());
                     response.setText(TalentEnum.send_jobsearch_text(result));
-                    response.setReplyMarkup(new TelentButton().keyboardJobMarkup());
+                    response.setReplyMarkup(new TalentButton().keyboardJobMarkup());
                     response.setDisableWebPagePreview(true);
 
                     List<GroupMessageIdPostCounts> gmpcs = jobManagementServiceImpl
@@ -378,16 +384,22 @@ public class Job extends BasePrivateMessage {
                                     && g.getType().equals("jobSeeker"))
                             .findFirst().orElse(null);
 
+                    System.out.println("3");
+
                     if (isEdit) {
                         EditMessageText editMessageText = new EditMessageText();
                         editMessageText.setChatId(groupId.toString());
                         editMessageText.setText(TalentEnum.send_jobsearch_text(result));
                         editMessageText.setMessageId(gmpc.getMessageId());
+                        editMessageText.setReplyMarkup(new TalentButton().keyboardJobMarkup());
                         editMessageText.setDisableWebPagePreview(true);
                         common.executeAsync(editMessageText);
                         response.setChatId(chatId_str);
                         response.setText("[ " + groupTitle + " ]编辑成功");
                         common.executeAsync(response);
+
+                        System.out.println("4");
+
                     } else {
                         if (gmpc == null) {
                             final Integer groupMessageId = common.executeAsync(response);
@@ -402,6 +414,7 @@ public class Job extends BasePrivateMessage {
                             gmpc.setMessageId(groupMessageId);
                             gmpc.setPostCount(1);
                             gmpc.setType("jobSeeker");
+                            System.out.println("5");
                         } else {
                             if (gmpc.getPostCount() <= 0) {
                                 final Integer groupMessageId = common.executeAsync(response);
@@ -410,10 +423,12 @@ public class Job extends BasePrivateMessage {
                                 common.executeAsync(response);
                                 gmpc.setMessageId(groupMessageId);
                                 gmpc.setPostCount(gmpc.getPostCount() + 1);
+                                System.out.println("6");
                             } else {
                                 response.setChatId(chatId_str);
                                 response.setText("您已在[ " + groupTitle + " ]發送一條 [求职人员] 信息");
                                 common.executeAsync(response);
+                                System.out.println("7");
                             }
                         }
                     }
@@ -424,6 +439,7 @@ public class Job extends BasePrivateMessage {
                             .findFirst()
                             .ifPresentOrElse(g -> gmpcs.set(gmpcs.indexOf(g), finalGmpc), () -> gmpcs.add(finalGmpc));
                     jobSeeker.setGroupMessageIdPostCounts(gmpcs);
+                    System.out.println("8");
                 }
             }
             while (iterator_channel.hasNext()) {
@@ -434,7 +450,7 @@ public class Job extends BasePrivateMessage {
                     String channelTitle = robotChannelManagement.getChannelTitle();
                     response.setChatId(channelId.toString());
                     response.setText(TalentEnum.send_jobsearch_text(result));
-                    response.setReplyMarkup(new TelentButton().keyboardJobMarkup());
+                    response.setReplyMarkup(new TalentButton().keyboardJobMarkup());
                     response.setDisableWebPagePreview(true);
 
                     List<ChannelMessageIdPostCounts> cmpcs = jobManagementServiceImpl
@@ -450,6 +466,7 @@ public class Job extends BasePrivateMessage {
                         editMessageText.setChatId(String.valueOf(channelId));
                         editMessageText.setText(TalentEnum.send_recruitment_text(result));
                         editMessageText.setMessageId(cmpc.getMessageId());
+                        editMessageText.setReplyMarkup(new TalentButton().keyboardJobMarkup());
                         editMessageText.setDisableWebPagePreview(true);
                         common.executeAsync(editMessageText);
                         response.setChatId(chatId_str);
@@ -567,14 +584,14 @@ public class Job extends BasePrivateMessage {
                         response.setText(jobPostingDTO.generateJobPostingResponse(jobPosting, true));
                         jobPostingDTO = jobPostingDTO.createJobPostingDTO(chatId_str, springyBotId.toString());
 
-                        response.setReplyMarkup(new TelentButton().keyboard_jobPosting(jobPostingDTO, true));
+                        response.setReplyMarkup(new TalentButton().keyboard_jobPosting(jobPostingDTO, true));
                         response.setDisableWebPagePreview(true);
                         Integer messageId = common.executeAsync(response);
                         jobPosting.setLastMessageId(messageId);
                     }, () -> {
                         JobPostingDTO jobPostingDTO = new JobPostingDTO(chatId_str, springyBotId.toString());
                         response.setText(TalentEnum.JOBPOSTING_EDITOR_DEFAULT_FORM.getText());
-                        response.setReplyMarkup(new TelentButton().keyboard_jobPosting(jobPostingDTO, false));
+                        response.setReplyMarkup(new TalentButton().keyboard_jobPosting(jobPostingDTO, false));
                         response.setDisableWebPagePreview(true);
 
                         JobPosting jobPosting = new JobPosting(chatId_str, springyBotId.toString(),
@@ -646,14 +663,14 @@ public class Job extends BasePrivateMessage {
                         JobSeekerDTO jobSeekerDTO = new JobSeekerDTO(chatId_str, springyBotId.toString());
                         response.setText(jobSeekerDTO.generateJobSeekerResponse(jobSeeker, true));
                         jobSeekerDTO = jobSeekerDTO.createJobSeekerDTO(chatId_str, springyBotId.toString());
-                        response.setReplyMarkup(new TelentButton().keyboard_jobSeeker(jobSeekerDTO, true));
+                        response.setReplyMarkup(new TalentButton().keyboard_jobSeeker(jobSeekerDTO, true));
                         response.setDisableWebPagePreview(true);
                         Integer messageId = common.executeAsync(response);
                         jobSeeker.setLastMessageId(messageId);
                     }, () -> {
                         JobSeekerDTO jobSeekerDTO = new JobSeekerDTO(chatId_str, springyBotId.toString());
                         response.setText(TalentEnum.JOBSEEKE_REDITOR_DEFAULT_FORM.getText());
-                        response.setReplyMarkup(new TelentButton().keyboard_jobSeeker(jobSeekerDTO, true));
+                        response.setReplyMarkup(new TalentButton().keyboard_jobSeeker(jobSeekerDTO, true));
                         response.setDisableWebPagePreview(true);
                         JobSeeker js = new JobSeeker(chatId_str, springyBotId.toString(),
                                 common.executeAsync(response));

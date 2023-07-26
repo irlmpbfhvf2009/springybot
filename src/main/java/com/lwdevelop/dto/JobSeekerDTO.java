@@ -178,7 +178,7 @@ public class JobSeekerDTO {
         this.flightNumber = Optional.ofNullable(jobSeeker.getFlightNumber()).orElse("");
         this.publisher = Optional.ofNullable(jobSeeker.getPublisher()).orElse("");
 
-        String str = isEdit == true ? "编辑求职" : "求职人才";
+        String str = isEdit == true ? "编辑求职" : "求职人员";
 
         return str + "\n\n姓名：" + name + "\n男女：" + gender
                 + "\n人数：" + headCounts
