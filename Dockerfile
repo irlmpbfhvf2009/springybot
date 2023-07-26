@@ -2,7 +2,7 @@ FROM openjdk:11
 
 WORKDIR /app
 
-COPY ./target/springybot-2.0.8.jar /app/springybot.jar
+COPY ./target/springybot.jar /app/springybot.jar
 
 EXPOSE 5487
 

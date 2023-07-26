@@ -37,7 +37,7 @@ services:
     image: springybot
     container_name: springboot-container
     ports:
-      - 5487:5487
+      - 5488:5487
     depends_on:
       - mysql
       - redis

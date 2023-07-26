@@ -2,7 +2,9 @@ com\lwdevelop\repository\SpringyBotRepository.class
 com\lwdevelop\bot\bots\demand\messageHandling\CallbackQuerys.class
 com\lwdevelop\entity\InvitationThreshold.class
 com\lwdevelop\repository\RestrictMemberRepository.class
+com\lwdevelop\bot\bots\coolbao\CoolbaoWebhookBot.class
 com\lwdevelop\bot\chatMembershipHandlers\JoinGroup$1.class
+com\lwdevelop\bot\bots\coolbao\CoolbaoLongPollingBot.class
 com\lwdevelop\bot\bots\coolbao\messageHandling\commands\xxpayapi\addMerchant.class
 com\lwdevelop\bot\bots\triSpeak\messageHandling\GroupMessage$4.class
 com\lwdevelop\bot\model\CustomWebhookBot.class
@@ -36,9 +38,11 @@ com\lwdevelop\utils\SpringUtils.class
 com\lwdevelop\entity\Admin.class
 com\lwdevelop\service\impl\DemandManagementServiceImpl.class
 com\lwdevelop\service\impl\JobManagementServiceImpl.class
+com\lwdevelop\bot\bots\coolbao\messageHandling\commands\Login.class
 com\lwdevelop\bot\bots\triSpeak\messageHandling\CallbackQuerys.class
 com\lwdevelop\bot\chatMembershipHandlers\LeaveChannel.class
 com\lwdevelop\dto\ConfigDTO.class
+com\lwdevelop\bot\factory\BotFactoryImpl.class
 com\lwdevelop\dto\JobPostingDTO.class
 com\lwdevelop\bot\chatMessageHandlers\BasePrivateMessage.class
 com\lwdevelop\service\SpringyBotService.class
@@ -51,6 +55,7 @@ com\lwdevelop\dto\RobotChannelManagementDTO.class
 com\lwdevelop\bot\bots\triSpeak\messageHandling\GroupMessage$2.class
 com\lwdevelop\bot\chatMembershipHandlers\JoinGroup.class
 com\lwdevelop\bot\bots\triSpeak\messageHandling\GroupMessage$1.class
+com\lwdevelop\bot\bots\coolbao\messageHandling\commands\servendayapi\SevenDaysEnterImageCode.class
 com\lwdevelop\bot\bots\utils\enum_\DemandEnum.class
 com\lwdevelop\service\impl\AdminServiceImpl.class
 com\lwdevelop\converter\ListToJsonConverter$1.class
@@ -78,11 +83,13 @@ com\lwdevelop\entity\GroupMessageIdPostCounts.class
 com\lwdevelop\service\impl\RobotGroupAndChannelManagementServiceImpl.class
 com\lwdevelop\utils\FileUtil.class
 com\lwdevelop\repository\GroupMessageIdPostCountsRepository.class
+com\lwdevelop\bot\bots\coolbao\messageHandling\PrivateMessage_.class
 com\lwdevelop\bot\bots\demand\DemandLongPollingBot.class
 com\lwdevelop\entity\JobPosting.class
 com\lwdevelop\utils\CommUtils.class
 com\lwdevelop\bot\bots\triSpeak\messageHandling\ChannelMessage.class
 com\lwdevelop\bot\bots\triSpeak\messageHandling\GroupMessage$3.class
+com\lwdevelop\bot\bots\coolbao\messageHandling\commands\servendayapi\SevenDaysLogin.class
 com\lwdevelop\service\AdminService.class
 com\lwdevelop\bot\bots\triSpeak\messageHandling\PrivateMessage_.class
 com\lwdevelop\entity\SpringyBot.class
@@ -112,6 +119,7 @@ com\lwdevelop\repository\SupplyRepository.class
 com\lwdevelop\utils\CommUtils$Pager.class
 com\lwdevelop\utils\CryptoUtil.class
 com\lwdevelop\bot\bots\utils\keyboardButton\TalentButton.class
+com\lwdevelop\bot\bots\coolbao\messageHandling\commands\utils\SevenDaysApiUtil.class
 com\lwdevelop\config\RedisConfig.class
 com\lwdevelop\controller\GroupAndChannelManagement.class
 com\lwdevelop\controller\InvitationBonusUserController.class
@@ -127,6 +135,7 @@ com\lwdevelop\bot\model\CustomLongPollingBot.class
 com\lwdevelop\config\SpringyBotConfig.class
 com\lwdevelop\bot\controller\CustomWebhookController.class
 com\lwdevelop\bot\bots\utils\enum_\TalentEnum.class
+com\lwdevelop\bot\bots\coolbao\messageHandling\commands\Start.class
 com\lwdevelop\bot\bots\coolbao\messageHandling\commands\xxpayapi\cgBalance.class
 com\lwdevelop\converter\StringListConverter.class
 com\lwdevelop\bot\chatMessageHandlers\BaseChannelMessage.class
