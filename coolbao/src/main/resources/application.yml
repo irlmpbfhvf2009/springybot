@@ -1,0 +1,19 @@
+server:
+  port: 5489
+spring:
+  application:
+    name: coolbao
+  autoconfigure:
+    exclude: org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration
+eureka:
+  instance:
+    prefer-ip-address: true  #注册服务的时候使用服务的ip地址进行注册
+  client:
+    service-url:
+      defaultZone: http://localhost:8761/eureka/
+
+telegram:
+  botToken: 5855785269:AAH9bvPpYudd2wSAvMnBTiKakCeoB92_Z_8
+  botUsername: CCP1121_BOT
+
+

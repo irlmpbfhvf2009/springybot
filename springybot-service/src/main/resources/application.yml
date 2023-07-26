@@ -1,0 +1,27 @@
+server:
+  port: 5488
+spring:
+  application:
+    name: springybot-service
+  datasource:
+    url: jdbc:mysql://127.0.0.1:3306/springy_bot?useUnicode=true&characterEncoding=utf-8&allowPublicKeyRetrieval=true&useSSL=false&serverTimezone=GMT%2B8
+    username: springy_bot
+    password: KzcipdAcmZ4r3CkA
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    hikari:
+      minimum-idle: 5
+      maximum-pool-size: 10
+      idle-timeout: 60000
+      max-lifetime: 70000
+      connection-timeout: 60000
+  jpa:
+    properties:
+      "[hibernate.hbm2ddl.auto]": update
+    'open-in-view': false
+
+eureka:
+  instance:
+    prefer-ip-address: true  #注册服务的时候使用服务的ip地址进行注册
+  client:
+    service-url:
+      defaultZone: http://localhost:8761/eureka/

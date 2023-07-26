@@ -1,0 +1,13 @@
+spring:
+  application:
+    name: springybot-core
+server:
+  port: 5488
+
+
+eureka:
+  instance:
+    prefer-ip-address: true  #注册服务的时候使用服务的ip地址进行注册
+  client:
+    service-url:
+      defaultZone: http://localhost:8761/eureka/
