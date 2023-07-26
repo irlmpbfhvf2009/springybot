@@ -23,6 +23,7 @@ public class PrivateMessage_ extends BasePrivateMessage {
         Boolean isSubscribeChannel = isSubscribeChannel();
 
         if (isSubscribeChannel) {
+
             switch (this.text.toLowerCase()) {
                 case "发布需求":
                     this.demandd.setResponse_demand_management();
@@ -30,7 +31,7 @@ public class PrivateMessage_ extends BasePrivateMessage {
                 case "发布供应":
                     this.demandd.setResponse_supply_management();
                     break;
-                case "供应和需求信息管理":
+                case "供需信息管理":
                     this.demandd.setResponse_edit_demand_management();
                     this.demandd.setResponse_edit_supply_management();
                     break;
@@ -39,28 +40,30 @@ public class PrivateMessage_ extends BasePrivateMessage {
                 default:
                     break;
             }
+
             // 判斷事件
-            if (text.length() > 4) {
-                String post = text.substring(0, 4);
+            if (text.length() > 2) {
+                String post = text.substring(0, 2);
                 // 發布招聘
-                if (post.equals("发布需求")) {
+                if (post.equals("需求")) {
                     this.demandd.generateTextDemand(false);
                 } else if (post.equals("编辑需求")) {
                     this.demandd.generateTextDemand(true);
                     // 發布求職
-                } else if (post.equals("发布供应")) {
+                } else if (post.equals("供应")) {
                     this.demandd.generateTextSupply(false);
                 } else if (post.equals("编辑供应")) {
                     this.demandd.generateTextSupply(true);
                 }
             }
+
         } else {
             this.setResponse_demandd();
         }
     }
 
     private void setResponse_demandd() {
-        
+
         String firstName = this.message.getFrom().getFirstName() == null ? "" : this.message.getFrom().getFirstName();
         String lastName = this.message.getFrom().getLastName() == null ? "" : this.message.getFrom().getLastName();
         String name = firstName + lastName;
@@ -87,10 +90,10 @@ public class PrivateMessage_ extends BasePrivateMessage {
     }
 
     private Boolean isSubscribeChannel() {
-        // GetChatMember getChatMember = new GetChatMember("-1001686617172", message.getChatId()); // 缅甸招聘频道
-        // Boolean status = this.common.executeAsync(getChatMember);
-        return true;
-        // return status;
+        GetChatMember getChatMember = new GetChatMember("-1001686617172", message.getChatId()); // 缅甸招聘频道
+        Boolean status = this.common.executeAsync(getChatMember);
+        // return true;
+        return status;
     }
 
 }

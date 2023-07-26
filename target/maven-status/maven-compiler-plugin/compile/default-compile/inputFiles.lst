@@ -5,6 +5,7 @@ D:\酷寶專案\hub\SpringyBot\src\main\java\com\lwdevelop\bot\bots\coolbao\messageH
 D:\酷寶專案\hub\SpringyBot\src\main\java\com\lwdevelop\dto\GroupAndChannelTreeDTO.java
 D:\酷寶專案\hub\SpringyBot\src\main\java\com\lwdevelop\utils\SpringUtils.java
 D:\酷寶專案\hub\SpringyBot\src\main\java\com\lwdevelop\dto\JobPostingDTO.java
+D:\酷寶專案\hub\SpringyBot\src\main\java\com\lwdevelop\dto\TgUserDTO.java
 D:\酷寶專案\hub\SpringyBot\src\main\java\com\lwdevelop\repository\WhiteListRepository.java
 D:\酷寶專案\hub\SpringyBot\src\main\java\com\lwdevelop\repository\ConfigRepository.java
 D:\酷寶專案\hub\SpringyBot\src\main\java\com\lwdevelop\bot\bots\demand\messageHandling\PrivateMessage_.java
@@ -13,10 +14,10 @@ D:\酷寶專案\hub\SpringyBot\src\main\java\com\lwdevelop\service\impl\SpringyBotSe
 D:\酷寶專案\hub\SpringyBot\src\main\java\com\lwdevelop\converter\ListToJsonConverter.java
 D:\酷寶專案\hub\SpringyBot\src\main\java\com\lwdevelop\utils\JwtUtils.java
 D:\酷寶專案\hub\SpringyBot\src\main\java\com\lwdevelop\controller\GroupAndChannelManagement.java
-D:\酷寶專案\hub\SpringyBot\src\main\java\com\lwdevelop\entity\DemandUser.java
 D:\酷寶專案\hub\SpringyBot\src\main\java\com\lwdevelop\dto\SupplyDTO.java
 D:\酷寶專案\hub\SpringyBot\src\main\java\com\lwdevelop\repository\JobPostingRepository.java
 D:\酷寶專案\hub\SpringyBot\src\main\java\com\lwdevelop\entity\JobPosting.java
+D:\酷寶專案\hub\SpringyBot\src\main\java\com\lwdevelop\entity\TgUser.java
 D:\酷寶專案\hub\SpringyBot\src\main\java\com\lwdevelop\bot\factory\BotFactory.java
 D:\酷寶專案\hub\SpringyBot\src\main\java\com\lwdevelop\entity\GroupMessageIdPostCounts.java
 D:\酷寶專案\hub\SpringyBot\src\main\java\com\lwdevelop\repository\InvitationBonusUserRepository.java
@@ -35,7 +36,6 @@ D:\酷寶專案\hub\SpringyBot\src\main\java\com\lwdevelop\bot\chatMembershipHandler
 D:\酷寶專案\hub\SpringyBot\src\main\java\com\lwdevelop\bot\bots\talent\messageHandling\GroupMessage.java
 D:\酷寶專案\hub\SpringyBot\src\main\java\com\lwdevelop\repository\JobSeekerRepository.java
 D:\酷寶專案\hub\SpringyBot\src\main\java\com\lwdevelop\bot\bots\coolbao\messageHandling\commands\utils\SevenDaysApiUtil.java
-D:\酷寶專案\hub\SpringyBot\src\main\java\com\lwdevelop\repository\JobUserRepository.java
 D:\酷寶專案\hub\SpringyBot\src\main\java\com\lwdevelop\bot\bots\talent\TalentLongPollingBot.java
 D:\酷寶專案\hub\SpringyBot\src\main\java\com\lwdevelop\bot\bots\coolbao\messageHandling\CallbackQuerys.java
 D:\酷寶專案\hub\SpringyBot\src\main\java\com\lwdevelop\dto\JobSeekerDTO.java
@@ -45,14 +45,12 @@ D:\酷寶專案\hub\SpringyBot\src\main\java\com\lwdevelop\bot\bots\triSpeak\message
 D:\酷寶專案\hub\SpringyBot\src\main\java\com\lwdevelop\converter\StringListConverter.java
 D:\酷寶專案\hub\SpringyBot\src\main\java\com\lwdevelop\repository\ChannelMessageIdPostCountsRepository.java
 D:\酷寶專案\hub\SpringyBot\src\main\java\com\lwdevelop\repository\GroupMessageIdPostCountsRepository.java
-D:\酷寶專案\hub\SpringyBot\src\main\java\com\lwdevelop\bot\bots\utils\keyboardButton\TelentButton.java
 D:\酷寶專案\hub\SpringyBot\src\main\java\com\lwdevelop\bot\model\CustomLongPollingBot.java
 D:\酷寶專案\hub\SpringyBot\src\main\java\com\lwdevelop\bot\bots\coolbao\CoolbaoLongPollingBot.java
 D:\酷寶專案\hub\SpringyBot\src\main\java\com\lwdevelop\config\WebSocketConfig.java
 D:\酷寶專案\hub\SpringyBot\src\main\java\com\lwdevelop\bot\bots\coolbao\messageHandling\commands\Start.java
 D:\酷寶專案\hub\SpringyBot\src\main\java\com\lwdevelop\bot\bots\coolbao\messageHandling\commands\servendayapi\SevenDaysLogin.java
 D:\酷寶專案\hub\SpringyBot\src\main\java\com\lwdevelop\bot\bots\triSpeak\TriSpeakLongPollingBot.java
-D:\酷寶專案\hub\SpringyBot\src\main\java\com\lwdevelop\entity\JobUser.java
 D:\酷寶專案\hub\SpringyBot\src\main\java\com\lwdevelop\bot\bots\coolbao\messageHandling\commands\xxpayapi\addMerchant.java
 D:\酷寶專案\hub\SpringyBot\src\main\java\com\lwdevelop\config\SpringyBotConfig.java
 D:\酷寶專案\hub\SpringyBot\src\main\java\com\lwdevelop\controller\IndexController.java
@@ -61,8 +59,8 @@ D:\酷寶專案\hub\SpringyBot\src\main\java\com\lwdevelop\BackendApplication.java
 D:\酷寶專案\hub\SpringyBot\src\main\java\com\lwdevelop\entity\ChannelMessageIdPostCounts.java
 D:\酷寶專案\hub\SpringyBot\src\main\java\com\lwdevelop\bot\bots\triSpeak\messageHandling\ChannelMessage.java
 D:\酷寶專案\hub\SpringyBot\src\main\java\com\lwdevelop\repository\AdminRepository.java
+D:\酷寶專案\hub\SpringyBot\src\main\java\com\lwdevelop\repository\TgUserRepository.java
 D:\酷寶專案\hub\SpringyBot\src\main\java\com\lwdevelop\service\impl\RobotGroupAndChannelManagementServiceImpl.java
-D:\酷寶專案\hub\SpringyBot\src\main\java\com\lwdevelop\bot\bots\utils\enum_\TelentEnum.java
 D:\酷寶專案\hub\SpringyBot\src\main\java\com\lwdevelop\controller\JobManagementController.java
 D:\酷寶專案\hub\SpringyBot\src\main\java\com\lwdevelop\bot\bots\demand\messageHandling\ChannelMessage.java
 D:\酷寶專案\hub\SpringyBot\src\main\java\com\lwdevelop\service\JobManagementService.java
@@ -70,6 +68,7 @@ D:\酷寶專案\hub\SpringyBot\src\main\java\com\lwdevelop\bot\bots\demand\messageHa
 D:\酷寶專案\hub\SpringyBot\src\main\java\com\lwdevelop\entity\InvitationBonusUser.java
 D:\酷寶專案\hub\SpringyBot\src\main\java\com\lwdevelop\bot\chatMembershipHandlers\JoinGroup.java
 D:\酷寶專案\hub\SpringyBot\src\main\java\com\lwdevelop\bot\bots\demand\messageHandling\CallbackQuerys.java
+D:\酷寶專案\hub\SpringyBot\src\main\java\com\lwdevelop\bot\bots\utils\enum_\TalentEnum.java
 D:\酷寶專案\hub\SpringyBot\src\main\java\com\lwdevelop\bot\bots\utils\keyboardButton\TriSpeakButton.java
 D:\酷寶專案\hub\SpringyBot\src\main\java\com\lwdevelop\utils\CommUtils.java
 D:\酷寶專案\hub\SpringyBot\src\main\java\com\lwdevelop\service\RobotGroupAndChannelManagementService.java
@@ -90,12 +89,12 @@ D:\酷寶專案\hub\SpringyBot\src\main\java\com\lwdevelop\bot\chatMessageHandlers\B
 D:\酷寶專案\hub\SpringyBot\src\main\java\com\lwdevelop\utils\RetEnum.java
 D:\酷寶專案\hub\SpringyBot\src\main\java\com\lwdevelop\bot\bots\utils\keyboardButton\CoolbaoButton.java
 D:\酷寶專案\hub\SpringyBot\src\main\java\com\lwdevelop\entity\RobotGroupManagement.java
+D:\酷寶專案\hub\SpringyBot\src\main\java\com\lwdevelop\bot\bots\utils\keyboardButton\TalentButton.java
 D:\酷寶專案\hub\SpringyBot\src\main\java\com\lwdevelop\repository\DemandRepository.java
 D:\酷寶專案\hub\SpringyBot\src\main\java\com\lwdevelop\bot\factory\BaseWebhookBot.java
 D:\酷寶專案\hub\SpringyBot\src\main\java\com\lwdevelop\dto\AdminDTO.java
 D:\酷寶專案\hub\SpringyBot\src\main\java\com\lwdevelop\config\RedisConfig.java
 D:\酷寶專案\hub\SpringyBot\src\main\java\com\lwdevelop\dto\ConfigDTO.java
-D:\酷寶專案\hub\SpringyBot\src\main\java\com\lwdevelop\dto\JobUserDTO.java
 D:\酷寶專案\hub\SpringyBot\src\main\java\com\lwdevelop\config\SecurityConfig.java
 D:\酷寶專案\hub\SpringyBot\src\main\java\com\lwdevelop\bot\bots\coolbao\messageHandling\PrivateMessage_.java
 D:\酷寶專案\hub\SpringyBot\src\main\java\com\lwdevelop\bot\factory\BaseLongPollingBot.java

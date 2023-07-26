@@ -77,7 +77,7 @@ public class Demandd extends BasePrivateMessage {
         boolean isPostToChannel = cmpcs.stream().anyMatch(cmpc -> cmpc.getPostCount() >= 1);
 
         if (isPostToGroup || isPostToChannel) {
-            String text = "您已经发布过[需求]信息，请点选[供应和需求信息管理]进行编辑或删除信息后重新发布。";
+            String text = "您已经发布过[需求]信息，请点选[供需信息管理]进行编辑或删除信息后重新发布。";
             SendMessage response = new SendMessage(chatId_str, text);
             common.executeAsync(response);
         } else {
@@ -112,7 +112,7 @@ public class Demandd extends BasePrivateMessage {
         boolean isPostToChannel = cmpcs.stream().anyMatch(cmpc -> cmpc.getPostCount() >= 1);
 
         if (isPostToGroup || isPostToChannel) {
-            String text = "您已经发布过[供应]信息，请点选[供应和需求信息管理]进行编辑或删除信息后重新发布。";
+            String text = "您已经发布过[供应]信息，请点选[供需信息管理]进行编辑或删除信息后重新发布。";
             SendMessage response = new SendMessage(chatId_str, text);
             common.executeAsync(response);
         } else {

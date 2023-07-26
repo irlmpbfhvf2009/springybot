@@ -2,7 +2,7 @@ package com.lwdevelop.bot.bots.utils.enum_;
 
 public enum DemandEnum {
 
-    ALREADY_POST_DEMAND("您已经发布过[需求]信息，请点选[供应和需求信息管理]进行编辑或删除信息后重新发布。"),
+    ALREADY_POST_DEMAND("您已经发布过[需求]信息，请点选[供需信息管理]进行编辑或删除信息后重新发布。"),
     DEMAND_DEFAULT_FORM(
             "发布需求\n\n项目名称：\n佣金奖赏：\n是否中介：\n上班时间：\n是否支持担保：\n项目内容：（限50字以内）\n✈️咨询飞机号："),
     DEMAND_EDITOR_DEFAULT_FORM(
@@ -15,7 +15,7 @@ public enum DemandEnum {
             "编辑供应\n\n项目名称：\n佣金奖赏：\n是否中介：\n上班时间：\n是否支持担保：\n项目内容：（限50字以内）\n✈️咨询飞机号："),
 
     // other
-    SUPPLY_AND_DEMAND_MANAGEMENT("供应和需求信息管理");
+    SUPPLY_AND_DEMAND_MANAGEMENT("供需信息管理");
     private String text;
 
     private DemandEnum(String text) {
