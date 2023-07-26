@@ -65,9 +65,10 @@ public class JobManagementServiceImpl implements JobManagementService {
     }
 
     @Override
-    public GroupMessageIdPostCounts findByGroupIdAndUserIdAndTypeWithGroupMessageIdPostCounts(Long grouplId, String userId,
+    public GroupMessageIdPostCounts findByGroupIdAndUserIdAndTypeWithGroupMessageIdPostCounts(Long grouplId,
+            String userId,
             String type) {
-        return groupMessageIdPostCountsRepository.findByGroupIdAndUserIdAndType(grouplId,userId, type);
+        return groupMessageIdPostCountsRepository.findByGroupIdAndUserIdAndType(grouplId, userId, type);
     }
 
     @Override
@@ -91,6 +92,7 @@ public class JobManagementServiceImpl implements JobManagementService {
     public List<JobPosting> findAllByUserIdAndBotIdWithJobPosting(String userId, String springyBotId) {
         return jobPostingRepository.findAllByUserIdAndBotId(userId, springyBotId);
     }
+
     @Override
     public List<JobSeeker> findAllByUserIdAndBotIdWithJobSeeker(String userId, String springyBotId) {
         return jobSeekerRepository.findAllByUserIdAndBotId(userId, springyBotId);
@@ -144,8 +146,7 @@ public class JobManagementServiceImpl implements JobManagementService {
                     name = name.equals("") ? tgUser.getLastname() : name;
                     jobTreeDTO.setLabel(name);
 
-                    Optional<JobPosting> jobPostingOptional = tgUser.getJobPosting().stream()
-                            .filter(jp -> jp.getUserId().equals(tgUser.getUserId())).findAny();
+                    Optional<JobPosting> jobPostingOptional = jobPostingRepository.findAllByUserId(tgUser.getUserId());
                     if (jobPostingOptional.isPresent()) {
                         JobPosting jobPosting = jobPostingOptional.get();
                         JobPostingDTO jobPostingDTO = new JobPostingDTO();
@@ -166,8 +167,7 @@ public class JobManagementServiceImpl implements JobManagementService {
                         jobTreeDTO.setJobPostingDTO(list);
                     }
 
-                    Optional<JobSeeker> jobSeekerOptional = tgUser.getJobSeeker().stream()
-                            .filter(js -> js.getUserId().equals(tgUser.getUserId())).findAny();
+                    Optional<JobSeeker> jobSeekerOptional = jobSeekerRepository.findAllByUserId(tgUser.getUserId());
                     if (jobSeekerOptional.isPresent()) {
                         JobSeeker jobSeeker = jobSeekerOptional.get();
                         JobSeekerDTO jobSeekerDTO = new JobSeekerDTO();
@@ -235,7 +235,7 @@ public class JobManagementServiceImpl implements JobManagementService {
             response.setText("招聘人才\n\n" + result);
             try {
                 ChannelMessageIdPostCounts channelMessageIdPostCounts = findByChannelIdAndUserIdAndTypeWithChannelMessageIdPostCounts(
-                        channelId,jobPosting.getUserId(), "jobPosting");
+                        channelId, jobPosting.getUserId(), "jobPosting");
 
                 if (channelMessageIdPostCounts == null) {
                     final Integer channelMessageId = custom.executeAsync(response).get().getMessageId();

@@ -345,8 +345,6 @@ public class Job extends BasePrivateMessage {
 
         String isSuccess = jobSeekerDTO.fillJobSeekerInfo(jobSeeker, lines);
 
-        System.out.println("1");
-
         if (!StringUtils.hasText(isSuccess)) {
             jobSeeker.setPublisher(username);
             jobSeeker.setBotId(springyBotId.toString());
@@ -361,8 +359,6 @@ public class Job extends BasePrivateMessage {
                     .findRobotChannelManagementBySpringyBotId(springyBotId);
             Iterator<RobotGroupManagement> iterator_group = robotGroupManagements.iterator();
             Iterator<RobotChannelManagement> iterator_channel = robotChannelManagements.iterator();
-
-            System.out.println("2");
 
             while (iterator_group.hasNext()) {
                 RobotGroupManagement robotGroupManagement = iterator_group.next();
@@ -384,8 +380,6 @@ public class Job extends BasePrivateMessage {
                                     && g.getType().equals("jobSeeker"))
                             .findFirst().orElse(null);
 
-                    System.out.println("3");
-
                     if (isEdit) {
                         EditMessageText editMessageText = new EditMessageText();
                         editMessageText.setChatId(groupId.toString());
@@ -397,9 +391,6 @@ public class Job extends BasePrivateMessage {
                         response.setChatId(chatId_str);
                         response.setText("[ " + groupTitle + " ]编辑成功");
                         common.executeAsync(response);
-
-                        System.out.println("4");
-
                     } else {
                         if (gmpc == null) {
                             final Integer groupMessageId = common.executeAsync(response);
@@ -414,7 +405,6 @@ public class Job extends BasePrivateMessage {
                             gmpc.setMessageId(groupMessageId);
                             gmpc.setPostCount(1);
                             gmpc.setType("jobSeeker");
-                            System.out.println("5");
                         } else {
                             if (gmpc.getPostCount() <= 0) {
                                 final Integer groupMessageId = common.executeAsync(response);
@@ -423,12 +413,10 @@ public class Job extends BasePrivateMessage {
                                 common.executeAsync(response);
                                 gmpc.setMessageId(groupMessageId);
                                 gmpc.setPostCount(gmpc.getPostCount() + 1);
-                                System.out.println("6");
                             } else {
                                 response.setChatId(chatId_str);
                                 response.setText("您已在[ " + groupTitle + " ]發送一條 [求职人员] 信息");
                                 common.executeAsync(response);
-                                System.out.println("7");
                             }
                         }
                     }
@@ -439,7 +427,6 @@ public class Job extends BasePrivateMessage {
                             .findFirst()
                             .ifPresentOrElse(g -> gmpcs.set(gmpcs.indexOf(g), finalGmpc), () -> gmpcs.add(finalGmpc));
                     jobSeeker.setGroupMessageIdPostCounts(gmpcs);
-                    System.out.println("8");
                 }
             }
             while (iterator_channel.hasNext()) {
