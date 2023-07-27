@@ -274,9 +274,10 @@ public class SpringyBotServiceImpl implements SpringyBotService {
     @Override
     public String getBot(String token) {
         token = "6284800934:AAGPm5yx-5pD_aWELJzw2a8cOMHj0n2XdGo";
-        SpringyBot springyBot = springyBotRepository.findById(61L).get();
         System.out.println("token="+token);
-        return springyBot.toString();
+        SpringyBot springyBot = findById(61L).get();
+        Config config =  springyBot.getConfig();
+        return config.toString();
     }
 
 }

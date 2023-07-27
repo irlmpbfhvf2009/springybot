@@ -12,10 +12,10 @@
   <description>springybot</description>
 
   <modules>
-    <module>eureka-server</module> 
-    <module>springybot-core</module> 
-    <module>springybot-service</module> 
-    <module>coolbao</module> 
+    <module>eureka-server</module>
+    <module>springybot-core</module>
+    <module>springybot-service</module>
+    <module>coolbao</module>
   </modules>
 
   <parent>
@@ -38,7 +38,7 @@
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-starter-test</artifactId>
       <scope>test</scope>
-  </dependency>
+    </dependency>
     <dependency>
       <groupId>com.github.ben-manes.caffeine</groupId>
       <artifactId>caffeine</artifactId>

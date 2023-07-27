@@ -37,6 +37,7 @@ public class BotConfig {
 
         CoolbaoLongPollingBot bot = new CoolbaoLongPollingBot(options, botUsername, botToken);
         try {
+            
             String url = "http://localhost:5488/springybot/v1/getBot";
             String springyBot = restTemplate.postForObject(url, botToken, String.class);
             log.info("springyBot");
