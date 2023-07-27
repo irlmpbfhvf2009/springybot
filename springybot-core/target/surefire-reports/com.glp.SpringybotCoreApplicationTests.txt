@@ -1,4 +1,4 @@
 -------------------------------------------------------------------------------
-Test set: com.glp.SpringybotCoreApplicationTests
+Test set: org.springybot.SpringybotCoreApplicationTests
 -------------------------------------------------------------------------------
-Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 6.711 s - in com.glp.SpringybotCoreApplicationTests
+Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 6.711 s - in org.springybot.SpringybotCoreApplicationTests
