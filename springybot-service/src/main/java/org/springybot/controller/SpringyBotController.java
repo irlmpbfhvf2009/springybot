@@ -25,10 +25,10 @@ public class SpringyBotController {
     @Autowired
     private SpringyBotServiceImpl springyBotService;
 
-    @PostMapping("/v1/getBot")
-    public String getBot(@RequestBody String token) throws Exception {
-
-        return springyBotService.getBot(token);
+    // RPC
+    @PostMapping("/v1/cacheSpringyBotDataToRedis")
+    public void cacheSpringyBotDataToRedis(@RequestBody String token) throws Exception {
+        springyBotService.cacheSpringyBotDataToRedis(token);
     }
 
     /**

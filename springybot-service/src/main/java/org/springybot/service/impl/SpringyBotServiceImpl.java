@@ -28,7 +28,6 @@ import org.springframework.data.domain.Pageable;
 @Service
 public class SpringyBotServiceImpl implements SpringyBotService {
 
-
     @Autowired
     private SpringyBotRepository springyBotRepository;
 
@@ -130,6 +129,23 @@ public class SpringyBotServiceImpl implements SpringyBotService {
         configRepository.save(config);
     }
 
+    @Override
+    public void cacheSpringyBotDataToRedis(String token) {
+        SpringyBot springyBot = findByToken(token);
+        Long id = springyBot.getId();
+        Config config = springyBot.getConfig();
+        List<RecordGroupUsers> recordGroupUsers = findRecordGroupUsersBySpringyBotId(id);
+        List<RecordChannelUsers> recordChannelUsers = findRecordChannelUsersBySpringyBotId(id);
+        List<InvitationThreshold> invitationThreshold = findInvitationThresholdBySpringyBotId(id);
+        List<RobotGroupManagement> robotGroupManagements = findRobotGroupManagementBySpringyBotId(id);
+        List<RobotChannelManagement> robotChannelManagements = findRobotChannelManagementBySpringyBotId(id);
+        redisUtils.set("RobotChannelManagement_" + id, robotChannelManagements);
+        redisUtils.set("RobotGroupManagement_" + id, robotGroupManagements);
+        redisUtils.set("Config_" + id, config);
+        redisUtils.set("RecordGroupUsers_" + id, recordGroupUsers);
+        redisUtils.set("RecordChannelUsers_" + id, recordChannelUsers);
+        redisUtils.set("InvitationThreshold_" + id, invitationThreshold);
+    }
 
     @Override
     public ResponseEntity<ResponseData> addBot(SpringyBotDTO springyBotDTO) {
@@ -271,13 +287,5 @@ public class SpringyBotServiceImpl implements SpringyBotService {
         return ResponseUtils.response(RetEnum.RET_SUCCESS, data);
     }
 
-    @Override
-    public String getBot(String token) {
-        token = "6284800934:AAGPm5yx-5pD_aWELJzw2a8cOMHj0n2XdGo";
-        System.out.println("token="+token);
-        SpringyBot springyBot = findById(61L).get();
-        Config config =  springyBot.getConfig();
-        return config.toString();
-    }
 
 }
